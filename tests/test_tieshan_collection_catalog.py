@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_thirty_three_groups_and_three_hundred_twenty_nine_entries(self):
+    def test_group_index_contains_forty_groups_and_three_hundred_ninety_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 33)
-        self.assertEqual(data["entry_count"], 329)
+        self.assertEqual(data["group_count"], 40)
+        self.assertEqual(data["entry_count"], 399)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇", "一四八〇", "一四九〇", "一五〇〇", "一五一〇", "一五三〇", "一五四〇", "一五五〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 17)
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 24)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -337,6 +337,40 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                      if x["block_id"] == "child_collection_unheaded_block_after_1440")
         self.assertEqual(block["entry_count"], 10)
         self.assertEqual(block["pdf_text_lines"], "11476-11488")
+    def test_1480_to_1500_table_index_preserves_source_numbers(self):
+        data = get_group_index()
+        g1480, g1490, g1500 = data["groups"][33:36]
+        self.assertEqual(g1480["entries"][0]["source_index_text"], "十七")
+        self.assertEqual(g1480["entries"][9]["source_index_text"], "五十四")
+        self.assertEqual(g1490["entries"][7]["source_index_text"], "六十")
+        self.assertEqual(g1500["entries"][0]["source_index_text"], "二十一")
+        self.assertEqual(g1500["entries"][9]["source_index_text"], "四十八")
+
+    def test_1510_1530_and_1550_keep_age_candidates_and_line_spans(self):
+        data = get_group_index()
+        g1510, g1530, g1550 = data["groups"][36], data["groups"][37], data["groups"][39]
+        self.assertEqual(g1510["entries"][8]["age_markers"], ["三七十三","七十四"])
+        self.assertEqual(g1510["entries"][8]["pdf_text_lines"], "11573-11574")
+        self.assertEqual(g1530["entries"][8]["age_markers"], ["三十二","三十二","三十二"])
+        self.assertEqual(g1530["entries"][9]["age_markers"], ["九百"])
+        self.assertEqual(g1550["entries"][6]["age_markers"], ["三十六"])
+        self.assertTrue(all(e["content_present"] is True for g in (g1510,g1530,g1550) for e in g["entries"]))
+
+    def test_1520_ocr_candidate_and_1470_missing_content_are_not_promoted(self):
+        data = get_group_index()
+        candidate = next(x for x in data["candidate_groups"] if x["raw_group_marker"] == "二五二〇")
+        self.assertEqual(candidate["normalized_group_marker_candidate"], "一五二〇")
+        self.assertEqual(candidate["entries"][0]["raw_age_column_text"], "三十一")
+        self.assertTrue(any(x.get("raw_group_marker") == "一四七〇" and
+                            x["status"] == "group_marker_seen_content_not_located_before_next_header"
+                            for x in data["group_anomalies"]))
+
+    def test_unheaded_block_after_1530_remains_unassigned(self):
+        data = get_group_index()
+        block = next(x for x in data["unassigned_blocks"]
+                     if x["block_id"] == "child_collection_unheaded_block_after_1530")
+        self.assertEqual(block["entry_count"], 10)
+        self.assertEqual(block["pdf_text_lines"], "11605-11625")
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
