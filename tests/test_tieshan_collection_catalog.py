@@ -1,6 +1,6 @@
 import unittest
 
-from backend.tieshan_collection_catalog import get_collection_sample
+from backend.tieshan_collection_catalog import get_collection_sample, get_group_index
 
 
 class TieshanCollectionCatalogTests(unittest.TestCase):
@@ -46,6 +46,36 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all("image_check_pending" in x["status"] or
                             "page_image_verification" in x["status"]
                             for x in patterns))
+
+    def test_group_index_contains_1080_1090_1100_and_thirty_entries(self):
+        data = get_group_index()
+        self.assertEqual(data["group_count"], 3)
+        self.assertEqual(data["entry_count"], 30)
+        self.assertEqual(
+            [g["group_marker"] for g in data["groups"]],
+            ["一〇八〇", "一〇九〇", "一一〇〇"]
+        )
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10, 10, 10])
+
+    def test_1090_missing_number_fields_remain_empty(self):
+        data = get_group_index()
+        group = data["groups"][1]
+        self.assertIsNone(group["entries"][1]["raw_number_text"])
+        self.assertFalse(group["entries"][1]["number_field_present"])
+        self.assertIsNone(group["entries"][8]["raw_number_text"])
+
+    def test_inline_number_is_not_misclassified_as_corresponding_number(self):
+        data = get_group_index()
+        group = data["groups"][2]
+        inline_number_entry = group["entries"][8]
+        self.assertIsNone(inline_number_entry["raw_number_text"])
+        self.assertFalse(inline_number_entry["number_field_present"])
+        self.assertIn("条文句子内部含数字", inline_number_entry["note"])
+
+    def test_group_index_preserves_pdf_line_references(self):
+        data = get_group_index()
+        self.assertEqual(data["groups"][1]["entries"][0]["pdf_text_lines"], "10682")
+        self.assertEqual(data["groups"][2]["entries"][9]["pdf_text_lines"], "10704")
 
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
