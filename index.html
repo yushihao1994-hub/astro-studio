@@ -286,7 +286,39 @@
       panel.appendChild(wrap);
     }
 
+    // Render 免费实例可能休眠。先用健康检查唤醒，再发起耗时的 AI 请求。
+    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    async function wakeApiServer(statusElement) {
+      let lastError = null;
+      for (let attempt = 1; attempt <= 9; attempt++) {
+        statusElement.textContent = attempt === 1
+          ? '正在连接分析服务器…'
+          : '服务器正在启动，正在重试连接（' + attempt + '/9）…';
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        try {
+          const response = await fetch(API_BASE + '/api/health?wake=' + Date.now(), {
+            method: 'GET',
+            cache: 'no-store',
+            signal: controller.signal
+          });
+          if (response.ok) {
+            const health = await response.json().catch(() => ({}));
+            if (health.ok !== false) return;
+          }
+          lastError = new Error('服务器暂时还没有就绪');
+        } catch (error) {
+          lastError = error;
+        } finally {
+          clearTimeout(timer);
+        }
+        if (attempt < 9) await wait(4000);
+      }
+      throw new Error('分析服务器暂时无法连接。可能正在唤醒或网络不稳定，请稍等半分钟后再试。' + (lastError ? '' : ''));
+    }
+
     document.addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-ai-topic]');    document.addEventListener('click', async (event) => {
       const button = event.target.closest('[data-ai-topic]');
       if (!button) return;
       if (!currentChartData) {
@@ -296,16 +328,33 @@
       const topic = button.dataset.aiTopic;
       const output = button.parentElement.querySelector('.ai-analysis-output');
       button.disabled = true;
-      button.textContent = 'AI 正在分析，请稍候…';
-      output.textContent = '';
+      button.textContent = '正在连接服务器…';
+      output.textContent = '正在唤醒分析服务器，首次连接可能需要一点时间，请不要关闭页面…';
       try {
-        const response = await fetch(API_BASE + '/api/ai/analyze', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({topic, chart: currentChartData})
-        });
-        const body = await response.json();
-        if (!response.ok || !body.ok) throw new Error(body.error || 'AI 深度分析暂时不可用。');
+        await wakeApiServer(output);
+        output.textContent = '服务器已连接，AI 正在结合你的真实星盘分析，请稍候…';
+        button.textContent = 'AI 正在分析，请稍候…';
+        const controller = new AbortController();
+        const requestTimer = setTimeout(() => controller.abort(), 120000);
+        let response;
+        try {
+          response = await fetch(API_BASE + '/api/ai/analyze', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({topic, chart: currentChartData}),
+            signal: controller.signal
+          });
+        } finally {
+          clearTimeout(requestTimer);
+        }
+        const responseText = await response.text();
+        let body;
+        try {
+          body = JSON.parse(responseText);
+        } catch (_) {
+          throw new Error('服务器返回了无法识别的数据（HTTP ' + response.status + '）。请稍后重试。');
+        }
+        if (!response.ok || !body.ok) throw new Error(body.error || 'AI 深度分析暂时不可用（HTTP ' + response.status + '）。');
         const analysis = body.analysis;
         const first = (analysis.sections || [])[0];
         const allSections = Array.isArray(analysis.sections) ? analysis.sections : [];
@@ -323,7 +372,9 @@
           '<div class="sample-limit"><b>免费部分已经展示你的核心发现</b><span>解锁后可继续查看每个专题的具体表现、星盘依据之间的联系，以及针对现实选择的行动建议。</span></div>' +
           '<button type="button" class="primary ai-analysis-button paywall-open" data-product="' + topic + '">查看我的完整报告与价格</button></section>';
       } catch (error) {
-        output.textContent = error.message || 'AI 深度分析暂时不可用。原有基础报告不受影响。';
+        output.textContent = error.name === 'AbortError'
+          ? 'AI 分析等待超时。你的星盘数据没有丢失，请稍后重新尝试。'
+          : (error.message || 'AI 深度分析暂时不可用。原有基础报告不受影响。');
       } finally {
         button.disabled = false;
         button.textContent = '重新生成免费体验';
