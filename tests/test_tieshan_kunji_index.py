@@ -15,6 +15,7 @@ class KunjiGlossaryIndexTests(unittest.TestCase):
         rows = get_kunji_glossary()["twelve_branch_collections"]
         self.assertEqual([x["branch"] for x in rows], list("子丑寅卯辰巳午未申酉戌亥"))
         self.assertEqual([x["order"] for x in rows], list(range(1, 13)))
+        self.assertEqual([x["printed_page_start"] for x in rows], [138, 172, 206, 240, 274, 308, 342, 376, 410, 444, 478, 512])
         you = next(x for x in rows if x["branch"] == "酉")
         self.assertIn("西集", you["source_variant"])
 
