@@ -114,6 +114,122 @@ PLANET_HOUSE_MEANING = {
 }
 
 
+
+def detect_chart_patterns(positions, aspects):
+    """Identify common major natal-chart patterns and return their evidence."""
+    core = [p for p in positions if p.get("name") not in ("北交点", "南交点")]
+    by_name = {p["name"]: p for p in core}
+    names = list(by_name)
+    amap = {}
+    for a in aspects:
+        if a["planet_a"] in by_name and a["planet_b"] in by_name:
+            amap[(frozenset((a["planet_a"], a["planet_b"])), a["aspect"])] = a
+
+    def get(a, b, kind):
+        return amap.get((frozenset((a, b)), kind))
+
+    results, seen, trines = [], set(), []
+    def add(kind, members, evidence, meaning, strengths, challenges, advice):
+        key = (kind, tuple(sorted(members)))
+        if key in seen:
+            return
+        seen.add(key)
+        results.append({
+            "name": kind,
+            "planets": members,
+            "placements": [{"name": n, "sign": by_name[n]["sign"],
+                            "house": by_name[n].get("house")} for n in members],
+            "evidence": evidence, "meaning": meaning, "strengths": strengths,
+            "challenges": challenges, "advice": advice
+        })
+
+    # Grand trines
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            for k in range(j + 1, len(names)):
+                trio = [names[i], names[j], names[k]]
+                pairs = [(trio[0],trio[1]),(trio[0],trio[2]),(trio[1],trio[2])]
+                if all(get(a,b,"三分相") for a,b in pairs):
+                    ev = [f"{a}—{b} 三分相（{get(a,b,'三分相')['orb']}°）" for a,b in pairs]
+                    add("大三角", trio, ev,
+                        "三个星体形成连续的三分相，相关心理动力较容易彼此配合。",
+                        "容易形成自然优势、熟练能力和资源整合感。",
+                        "过于顺手的领域可能缺少主动突破。",
+                        "把天赋落实为训练、作品或长期成果，不要只停留在感觉容易。")
+                    trines.append(trio)
+
+    # T-squares
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            a,b = names[i],names[j]
+            if not get(a,b,"冲相"): continue
+            for c in names:
+                if c in (a,b): continue
+                if get(a,c,"四分相") and get(b,c,"四分相"):
+                    ev = [f"{x}—{y} {kind}（{get(x,y,kind)['orb']}°）"
+                          for x,y,kind in [(a,b,"冲相"),(a,c,"四分相"),(b,c,"四分相")]]
+                    add("T三角",[a,b,c],ev,
+                        "一组对立需求与第三个星体形成的压力出口相连，张力容易集中到某个生活主题。",
+                        "可能带来较强的行动、解决问题和持续成长动力。",
+                        "压力可能集中爆发，容易在两个极端之间摇摆。",
+                        "先识别冲突两端的真实需求，再为顶点主题建立稳定、可执行的出口。")
+
+    # Grand crosses
+    for i in range(len(names)):
+        for j in range(i+1,len(names)):
+            for k in range(j+1,len(names)):
+                for m in range(k+1,len(names)):
+                    q=[names[i],names[j],names[k],names[m]]
+                    pairs=[(q[x],q[y]) for x in range(4) for y in range(x+1,4)]
+                    opp=[(a,b) for a,b in pairs if get(a,b,"冲相")]
+                    sq=[(a,b) for a,b in pairs if get(a,b,"四分相")]
+                    if len(opp)==2 and len(sq)==4:
+                        ev=[f"{a}—{b} 冲相（{get(a,b,'冲相')['orb']}°）" for a,b in opp]
+                        ev += [f"{a}—{b} 四分相（{get(a,b,'四分相')['orb']}°）" for a,b in sq]
+                        add("大十字",q,ev,
+                            "四个星体形成多方向的对立与摩擦结构，多个生活主题可能同时要求回应。",
+                            "复杂环境中的适应、承担和推动改变能力可能被持续锻炼。",
+                            "容易感到多头拉扯、长期紧绷或难以取舍。",
+                            "把问题拆成优先级逐项处理，避免试图一次满足所有冲突需求。")
+
+    # Yods use exact longitude geometry, independent of major-aspect display.
+    for i in range(len(names)):
+        for j in range(i+1,len(names)):
+            a,b=names[i],names[j]
+            if not get(a,b,"六分相"): continue
+            for c in names:
+                if c in (a,b): continue
+                d1=angular_distance(by_name[a]["longitude"],by_name[c]["longitude"])
+                d2=angular_distance(by_name[b]["longitude"],by_name[c]["longitude"])
+                if abs(d1-150)<=3 and abs(d2-150)<=3:
+                    ev=[f"{a}—{b} 六分相（{get(a,b,'六分相')['orb']}°）",
+                        f"{a}—{c} 梅花相（{round(abs(d1-150),3)}°）",
+                        f"{b}—{c} 梅花相（{round(abs(d2-150),3)}°）"]
+                    add("上帝手指（Yod）",[a,b,c],ev,
+                        "两个星体的协作关系指向一个需要持续调整的焦点。",
+                        "可能善于在变化中寻找新方法，对调整信号较敏感。",
+                        "容易反复修正方向，或觉得某个领域总需要协调。",
+                        "把调整转化为阶段目标，避免把所有困难都解释成命定课题。")
+
+    # Kites: grand trine plus an opposition apex sextile to the other two vertices.
+    for tri in trines:
+        for apex in names:
+            if apex in tri: continue
+            for vertex in tri:
+                others=[n for n in tri if n!=vertex]
+                if get(apex,vertex,"冲相") and all(get(apex,n,"六分相") for n in others):
+                    ev=[f"{a}—{b} 三分相（{get(a,b,'三分相')['orb']}°）"
+                        for a,b in [(tri[0],tri[1]),(tri[0],tri[2]),(tri[1],tri[2])]]
+                    ev += [f"{apex}—{vertex} 冲相（{get(apex,vertex,'冲相')['orb']}°）"]
+                    ev += [f"{apex}—{n} 六分相（{get(apex,n,'六分相')['orb']}°）" for n in others]
+                    add("风筝格局",tri+[apex],ev,
+                        "大三角的顺畅循环被一个对冲点牵引，并通过六分相形成行动出口。",
+                        "可能把既有优势转化为目标感和实际推动力。",
+                        "可能过度依赖单一目标，或把压力集中到对冲轴线上。",
+                        "让目标服务长期价值，同时保留调整空间。")
+    return results
+
+
 def generate_life_analysis(positions, angles, houses, aspects):
     """Generate detailed, chart-grounded relationship and finance interpretations."""
     by_name = {p["name"]: p for p in positions}
@@ -639,6 +755,7 @@ def calculate_chart(payload):
         "angles": angles,
         "houses": houses,
         "aspects": aspects,
+        "patterns": detect_chart_patterns(positions, aspects),
         "analysis": generate_life_analysis(positions, angles, houses, aspects),
         "monthly_transits": generate_monthly_transit_analysis(positions, houses, tz_name),
         "warnings": timezone_warning + [
