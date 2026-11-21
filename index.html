@@ -76,9 +76,9 @@
     </header>
     <section class="hero">
       <div class="eyebrow">ASTROLOGY RESEARCH STUDIO · PROFESSIONAL</div>
-      <h2>你的星空结构，<br><em>不止于一个星座。</em></h2>
-      <p>从真实出生数据出发，逐层查看行星、宫位、相位与人生主题。把复杂星盘整理成清晰、可追溯的个人研究报告。</p>
-      <div class="hero-meta"><span>✦ 热带黄道</span><span>⌖ Placidus 宫位</span><span>◉ 真实天文计算</span></div>
+      <h2>输入出生资料，<br><em>读懂你关心的人生主题。</em></h2>
+      <p>完成出生资料后，直接查看感情、婚姻、财富、事业与个人特质。每个主题都提供深入、易懂的个性化分析；专业星盘数据在后台负责支撑结论。</p>
+      <div class="hero-meta"><span>✦ 一键生成个人分析</span><span>♡ 感情与婚姻</span><span>◇ 财富与事业</span></div>
     </section>
     <nav class="quick-nav" aria-label="页面导航">
       <a href="#birth-section">出生档案</a><a href="#chart-overview">本命盘总览</a><a href="#report-section">专业报告</a>
@@ -115,21 +115,19 @@
         </form>
       </div>
       <aside class="card" id="report-section">
-        <h3>专业分析模块</h3>
-        <p class="hint">真实星盘数据驱动的专项深度报告</p>
+        <h3>你想了解哪方面？</h3>
+        <p class="hint">出生资料计算完成后，点击主题卡片直接查看详细结论</p>
         <div class="features">
-          <button class="feature module-toggle" type="button" data-module="planets" aria-expanded="false"><div class="ico">☉</div><div><b>十大行星与交点</b><span>黄经、星座、精确度数与逆行状态</span></div><span class="feature-arrow">⌄</span></button>
-          <div class="module-panel" id="panel-planets">请先计算本命星盘，生成你的行星落点报告。</div>
-          <button class="feature module-toggle" type="button" data-module="houses" aria-expanded="false"><div class="ico">⌖</div><div><b>四轴与十二宫</b><span>上升点、天顶、宫头与宫位落点</span></div><span class="feature-arrow">⌄</span></button>
-          <div class="module-panel" id="panel-houses">请先计算本命星盘，生成你的四轴与宫位报告。</div>
-          <button class="feature module-toggle" type="button" data-module="aspects" aria-expanded="false"><div class="ico">✧</div><div><b>主要相位</b><span>合相、冲相、三分、四分、六分及容许度</span></div><span class="feature-arrow">⌄</span></button>
-          <div class="module-panel" id="panel-aspects">请先计算本命星盘，生成你的主要相位报告。</div>
-          <button class="feature module-toggle" type="button" data-module="love-money" aria-expanded="false"><div class="ico">☽</div><div><b>婚姻感情与财运分析</b><span>恋爱需求、婚姻关系、赚钱方式、财富积累与风险管理</span></div><span class="feature-arrow">⌄</span></button>
-          <div class="module-panel" id="panel-love-money">请先计算本命星盘，生成你的婚姻感情与财运专项报告。</div>
-          <button class="feature module-toggle" type="button" data-module="patterns" aria-expanded="false"><div class="ico">◇</div><div><b>专业星盘格局</b><span>大三角、T三角、大十字、风筝与上帝手指</span></div><span class="feature-arrow">⌄</span></button>
-          <div class="module-panel" id="panel-patterns">请先计算本命星盘，识别主要星盘格局。</div>
+          <button class="feature module-toggle" type="button" data-module="personality" aria-expanded="false"><div class="ico">✦</div><div><b>我的性格与人生方向</b><span>核心特质、思维方式、优势、盲点与成长方向</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-personality">请先填写出生资料并计算，生成你的个人分析。</div>
+          <button class="feature module-toggle" type="button" data-module="relationship" aria-expanded="false"><div class="ico">♡</div><div><b>感情与婚姻</b><span>恋爱模式、适合的伴侣、长期关系、婚姻课题与近期趋势</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-relationship">请先计算本命盘，生成你的感情与婚姻详细分析。</div>
+          <button class="feature module-toggle" type="button" data-module="finance" aria-expanded="false"><div class="ico">◇</div><div><b>财富与财运</b><span>赚钱方式、财富潜力、事业资源、风险与近期财运趋势</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-finance">请先计算本命盘，生成你的财富与财运详细分析。</div>
+          <button class="feature module-toggle" type="button" data-module="technical" aria-expanded="false"><div class="ico">⌖</div><div><b>专业星盘数据（可选）</b><span>行星、宫位、相位和星盘格局；普通用户无需阅读</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-technical">请先计算本命盘，生成专业星盘数据。</div>
         </div>
-        <div class="status"><strong>计算服务</strong>后端已连接。提交出生资料后，将调用真实星历计算接口；地名会发送给 OpenStreetMap Nominatim 解析坐标。</div>
+        <div class="status"><strong>分析说明</strong>前台优先展示人生主题结论，专业星盘数据作为分析依据保留在可选栏目中。</div>
       </aside>
     </section>
     <footer class="bottom">星盘研究室 · 研究与自我探索工具 · 占星内容不构成科学预测或专业决策建议</footer>
@@ -287,64 +285,40 @@
           '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' +
           esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'
         ).join('');
-        document.getElementById('panel-planets').innerHTML =
-          '<h4>十大行星与交点</h4>' + table(['星体','位置','宫位','状态'], chart.planets.map(p =>
-            '<tr><td>' + esc(p.name) + '</td><td>' + positionText(p) + '</td><td>' + (p.house ? p.house + '宫' : '—') + '</td><td>' + (p.retrograde ? '逆行' : '顺行') + '</td></tr>'));
-        document.getElementById('panel-houses').innerHTML =
-          '<h4>四轴</h4>' + table(['项目','位置'], Object.entries(chart.angles).map(([name,p]) =>
+        const technicalHtml =
+          '<h4>行星与交点</h4>' + table(['星体','位置','宫位','状态'], chart.planets.map(p =>
+            '<tr><td>' + esc(p.name) + '</td><td>' + positionText(p) + '</td><td>' + (p.house ? p.house + '宫' : '—') + '</td><td>' + (p.retrograde ? '逆行' : '顺行') + '</td></tr>')) +
+          '<h4>四轴与十二宫</h4>' + table(['项目','位置'], Object.entries(chart.angles).map(([name,p]) =>
             '<tr><td>' + esc(name) + '</td><td>' + positionText(p) + '</td></tr>')) +
-          '<h4>十二宫宫头</h4>' + table(['宫位','位置'], chart.houses.map(h =>
-            '<tr><td>第' + h.house + '宫</td><td>' + positionText(h) + '</td></tr>'));
-        document.getElementById('panel-aspects').innerHTML =
-          '<h4>主要相位（最多显示40项）</h4>' + table(['星体','相位','容许度','趋近/分离'], chart.aspects.slice(0,40).map(a =>
+          table(['宫位','位置'], chart.houses.map(h => '<tr><td>第' + h.house + '宫</td><td>' + positionText(h) + '</td></tr>')) +
+          '<h4>主要相位</h4>' + table(['星体','相位','容许度','趋近/分离'], chart.aspects.slice(0,40).map(a =>
             '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' + esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'));
         const patterns = chart.patterns || [];
-        document.getElementById('panel-patterns').innerHTML = patterns.length
+        const patternsHtml = patterns.length
           ? '<h4>识别到的主要星盘格局</h4>' + patterns.map((p,i) =>
               '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
               '<h4 style="margin:0 0 8px;color:#e6c78b">' + (i+1) + '. ' + esc(p.name) + '</h4>' +
               (p.orb_quality ? '<p><b>结构紧密度：</b>' + esc(p.orb_quality) + (p.max_orb != null ? '（最大容许度 ' + esc(p.max_orb) + '°）' : '') + '。' + esc(p.orb_note || '') + '</p>' : '') +
-              '<p><b>涉及星体：</b>' + p.placements.map(x => esc(x.name)+'（'+esc(x.sign)+'·第'+esc(x.house||'未知')+'宫）' + (p.roles && p.roles[x.name] ? '—'+esc(p.roles[x.name]) : '')).join('、') + '</p>' +
+              '<p><b>涉及星体：</b>' + p.placements.map(x => esc(x.name)+'（'+esc(x.sign)+'·第'+esc(x.house||'未知')+'宫）').join('、') + '</p>' +
               '<p><b>结构依据：</b>' + p.evidence.map(esc).join('；') + '</p>' +
               '<p><b>结构含义：</b>' + esc(p.meaning) + '</p>' +
               '<p><b>潜在优势：</b>' + esc(p.strengths) + '</p>' +
               '<p><b>需要留意：</b>' + esc(p.challenges) + '</p>' +
               '<p><b>实践建议：</b>' + esc(p.advice) + '</p></article>'
             ).join('')
-          : '<h4>未识别到当前规则覆盖的主要格局</h4><p>这不代表星盘缺少特点，只表示当前采用的主要相位与容许度规则下，没有形成已收录的完整格局。</p>';
-        const monthly = chart.monthly_transits || {};
-        const monthlyRelationship = monthly.relationship ? {
-          title: '最近一个月与未来一个月 · 感情行运专题',
-          intro: '计算基准：' + (monthly.as_of || '本次计算时间') + '。过去30天回顾与未来30天趋势分开列出。',
-          sections: monthly.relationship
-        } : null;
-        const monthlyFinance = monthly.finance ? {
-          title: '最近一个月与未来一个月 · 财运行运专题',
-          intro: '计算基准：' + (monthly.as_of || '本次计算时间') + '。过去30天回顾与未来30天趋势分开列出。',
-          sections: monthly.finance
-        } : null;
-    function renderNatalProfile(block) {
-      if (!block || !Array.isArray(block.sections)) return '';
-      return '<section style="margin-top:22px;padding-top:16px;border-top:1px solid #383d55">' +
-        '<h3 style="color:#e6c78b;margin:0 0 6px">' + esc(block.title) + '</h3>' +
-        '<p style="color:#a7a8bb;font-size:12px;line-height:1.7">' + esc(block.intro || '') + '</p>' +
-        block.sections.map((item,index) =>
-          '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
-          '<h4 style="margin:0 0 7px;color:#d8c8ff">' + (index+1) + '. ' + esc(item.title) + '</h4>' +
-          '<p style="margin:0 0 10px;white-space:pre-line;line-height:1.95">' + esc(item.content) + '</p>' +
-          '<div style="padding:10px;background:#141827;border-radius:9px;color:#b9b2ca;font-size:11px;line-height:1.8"><b style="color:#e6c78b">本节星盘依据</b><br>' +
-          (Array.isArray(item.evidence) ? item.evidence.map(x => '• ' + esc(x)).join('<br>') : '依据资料暂缺') +
-          '</div></article>'
-        ).join('') + '</section>';
-    }
-        document.getElementById('panel-love-money').innerHTML =
-          renderNatalProfile(chart.natal_profile) +
+          : '<p>当前规则下未识别到已收录的完整格局。</p>';
+        document.getElementById('panel-technical').innerHTML = technicalHtml + patternsHtml;
+
+        document.getElementById('panel-personality').innerHTML =
+          renderNatalProfile(chart.natal_profile) ||
+          '<p>个人画像报告暂未返回，请稍后重试。</p>';
+        document.getElementById('panel-relationship').innerHTML =
           renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
-          renderAnalysisBlock(monthlyRelationship) +
+          renderAnalysisBlock(monthlyRelationship);
+        document.getElementById('panel-finance').innerHTML =
           renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
-          renderAnalysisBlock(monthlyFinance) +
-          '<p style="color:#a7a8bb;font-size:11px">' + esc(chart.analysis && chart.analysis.method || '') +
-          '<br>' + esc(monthly.method || '') + '</p>';
+          renderAnalysisBlock(monthlyFinance);
+
         result.innerHTML =
           '<strong>本命星盘计算完成：' + esc(data.profileName) + '</strong>' +
           '<p>计算引擎：' + esc(chart.calculation.engine) + '</p>' +
