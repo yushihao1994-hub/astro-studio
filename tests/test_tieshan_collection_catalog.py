@@ -47,13 +47,13 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_six_groups_and_sixty_entries(self):
+    def test_group_index_contains_fifteen_groups_and_one_hundred_fifty_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 9)
-        self.assertEqual(data["entry_count"], 90)
+        self.assertEqual(data["group_count"], 15)
+        self.assertEqual(data["entry_count"], 150)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇"]
         )
         self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 9)
 
@@ -79,8 +79,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 7)
-        self.assertEqual(data["entry_count"], 70)
+        self.assertEqual(data["group_count"], 15)
+        self.assertEqual(data["entry_count"], 150)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
@@ -165,11 +165,26 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_new_group_line_ranges_are_group_level_only(self):
         data = get_group_index()
         self.assertEqual(
-            [g["pdf_text_lines"] for g in data["groups"][3:]],
+            [g["pdf_text_lines"] for g in data["groups"][3:7]],
             ["10707-10719", "10721-10741", "10743-10762", "10764-10809"]
         )
         self.assertTrue(all(e["pdf_text_lines"] is None
                             for g in data["groups"][3:6] for e in g["entries"]))
+
+
+    def test_1170_to_1230_keep_ocr_markers_and_missing_1210_gap(self):
+        data = get_group_index()
+        self.assertEqual(data['groups'][9]['pdf_text_lines'], '10904-10917')
+        self.assertEqual(data['groups'][10]['raw_group_marker'], '一九〇')
+        self.assertEqual(data['groups'][10]['normalized_group_marker_candidate'], '一一八〇')
+        self.assertEqual(data['groups'][10]['normalization_status'], 'probable_ocr_correction_pending_image_check')
+        self.assertEqual(data['groups'][11]['raw_group_marker'], '一九一')
+        self.assertEqual(data['groups'][11]['normalized_group_marker_candidate'], '一一九〇')
+        self.assertEqual(data['groups'][12]['pdf_text_lines'], '10944-10956')
+        self.assertEqual(data['groups'][13]['pdf_text_lines'], '10958-10968')
+        self.assertEqual(data['groups'][14]['pdf_text_lines'], '10970-10980')
+        self.assertEqual(data['group_gaps'][0]['expected_group_marker'], '一二一〇')
+        self.assertIn('do not fabricate', data['group_gaps'][0]['action'])
 
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
