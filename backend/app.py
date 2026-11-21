@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 import swisseph as swe
 from tieshan import calculate_tieshan_pillars
+from bazi_details import derive_bazi_details
 from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
@@ -1517,6 +1518,7 @@ def tieshan_pillars():
         }
         # Expose only explicitly documented lookup mappings from the accessible
         # 2003 compilation; this is not a complete Iron Plate number calculation.
+        result["bazi_details"] = derive_bazi_details(result.get("pillars") or {})
         result["classic_reference"] = derive_classic_reference(result.get("pillars") or {})
         # Optional classical palace lookup requires an explicitly supplied lunar month;
         # the solar-term month pillar is not a substitute for a lunar month.
