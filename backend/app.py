@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, request
+from deepseek_client import analyze_with_deepseek, DeepSeekNotConfigured, DeepSeekError
 from flask_cors import CORS
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
@@ -1230,6 +1231,118 @@ def calculate_chart(payload):
             "占星解释属于文化与自我探索内容，不构成科学预测。"
         ]
     }
+
+
+AI_TOPICS = {"personality", "relationship", "finance", "career", "trends"}
+
+
+def build_ai_evidence(chart, topic):
+    """Create a minimized, auditable evidence packet; never send birth identity data."""
+    if not isinstance(chart, dict):
+        raise ValueError("缺少有效的星盘数据。")
+    planets = chart.get("planets") or []
+    angles = chart.get("angles") or {}
+    houses = chart.get("houses") or []
+    aspects = chart.get("aspects") or []
+    patterns = chart.get("patterns") or []
+    if not planets or not houses:
+        raise ValueError("星盘数据不完整，请先完成本命盘计算。")
+
+    selected_planets = {
+        "personality": {"太阳", "月亮", "水星", "金星", "火星", "土星"},
+        "relationship": {"月亮", "金星", "火星", "土星", "木星"},
+        "finance": {"木星", "土星", "金星", "水星", "火星"},
+        "career": {"太阳", "水星", "火星", "木星", "土星"},
+        "trends": {"太阳", "月亮", "金星", "火星", "木星", "土星"}
+    }[topic]
+    relevant_houses = {
+        "personality": {1, 3, 5, 10},
+        "relationship": {5, 7, 8},
+        "finance": {2, 8, 10, 11},
+        "career": {2, 6, 10, 11},
+        "trends": {1, 2, 5, 7, 8, 10, 11}
+    }[topic]
+
+    evidence = []
+    for p in planets:
+        if p.get("name") in selected_planets:
+            evidence.append({
+                "id": "planet_" + str(p.get("name")),
+                "type": "natal_planet",
+                "name": p.get("name"),
+                "sign": p.get("sign"),
+                "degree": p.get("degree"),
+                "minute": p.get("minute"),
+                "house": p.get("house"),
+                "retrograde": bool(p.get("retrograde"))
+            })
+    for name, value in angles.items():
+        if name in {"上升点", "天顶", "下降点", "天底"}:
+            evidence.append({
+                "id": "angle_" + name, "type": "chart_angle",
+                "name": name, "sign": value.get("sign"),
+                "degree": value.get("degree"), "minute": value.get("minute")
+            })
+    for h in houses:
+        if h.get("house") in relevant_houses:
+            evidence.append({
+                "id": "house_" + str(h.get("house")), "type": "house_cusp",
+                "house": h.get("house"), "sign": h.get("sign"),
+                "degree": h.get("degree"), "minute": h.get("minute")
+            })
+    for i, aspect in enumerate(aspects):
+        names = {aspect.get("planet_a"), aspect.get("planet_b")}
+        if names & selected_planets:
+            evidence.append({
+                "id": "aspect_" + str(i), "type": "natal_aspect",
+                "planet_a": aspect.get("planet_a"),
+                "planet_b": aspect.get("planet_b"),
+                "aspect": aspect.get("aspect"),
+                "orb": aspect.get("orb"),
+                "phase": aspect.get("phase")
+            })
+    for i, pattern in enumerate(patterns):
+        evidence.append({
+            "id": "pattern_" + str(i), "type": "chart_pattern",
+            "name": pattern.get("name"),
+            "planets": pattern.get("planets"),
+            "description": pattern.get("description")
+        })
+    if topic == "trends":
+        # Only include calculated transit text; no birth date, time, place, or name.
+        transits = chart.get("monthly_transits")
+        if transits:
+            evidence.append({"id": "monthly_transits", "type": "calculated_transit_summary", "data": transits})
+    if not evidence:
+        raise ValueError("没有找到可供分析的有效星盘证据。")
+    return evidence
+
+
+@app.post("/api/ai/analyze")
+def ai_analyze():
+    payload = request.get_json(silent=True) or {}
+    topic = str(payload.get("topic") or "").strip().lower()
+    if topic not in AI_TOPICS:
+        return jsonify({"ok": False, "error": "分析主题无效。"}), 400
+    try:
+        evidence = build_ai_evidence(payload.get("chart"), topic)
+        result = analyze_with_deepseek(topic, evidence)
+        allowed_ids = {item["id"] for item in evidence}
+        for section in result.get("sections", []):
+            ids = section.get("evidence_ids", [])
+            if not isinstance(ids, list) or any(item not in allowed_ids for item in ids):
+                raise DeepSeekError("AI 返回了无法核验的证据编号，已拒绝该报告。")
+        return jsonify({"ok": True, "topic": topic, "analysis": result})
+    except DeepSeekNotConfigured as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 503
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
+    except DeepSeekError as exc:
+        app.logger.warning("DeepSeek analysis unavailable: %s", str(exc))
+        return jsonify({"ok": False, "error": "AI 深度分析暂时不可用，原有星盘计算报告不受影响。"}), 502
+    except Exception as exc:
+        app.logger.exception("AI analysis failed")
+        return jsonify({"ok": False, "error": "AI 分析发生内部错误（" + type(exc).__name__ + "）。"}), 500
 
 
 @app.get("/api/health")
