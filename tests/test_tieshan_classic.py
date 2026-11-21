@@ -47,6 +47,20 @@ class ClassicReferenceTests(unittest.TestCase):
         self.assertEqual(result["body_palace"], "卯")
         self.assertIn("闰月", " ".join(result["limitations"]))
 
+    def test_leap_month_advances_one_additional_month(self):
+        regular = derive_body_life_palaces(2, "子", False)
+        leap = derive_body_life_palaces(2, "子", True)
+        self.assertEqual(regular["month_palace"], "卯")
+        self.assertEqual(leap["month_palace"], "辰")
+        self.assertEqual(leap["effective_lunar_month_count"], 3)
+
+    def test_eight_trigram_addition_is_registered_but_not_faked_as_algorithm(self):
+        result = derive_classic_reference({"year":{"stem":"甲","branch":"子"}})
+        rule = result["eight_trigram_addition"]
+        self.assertEqual(rule["status"], "source_explained_not_executable")
+        self.assertEqual(len(rule["clauses"]), 9)
+        self.assertTrue(all(x["algorithm_status"] == "conceptual_only" for x in rule["clauses"]))
+
     def test_body_life_palace_validates_inputs(self):
         with self.assertRaises(ValueError):
             derive_body_life_palaces(0, "子")
