@@ -55,7 +55,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
             [g["group_marker"] for g in data["groups"]],
             ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 17 + [9])
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9, 10, 10])
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -80,7 +80,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
         self.assertEqual(data["group_count"], 18)
-        self.assertEqual(data["entry_count"], 150)
+        self.assertEqual(data["entry_count"], 179)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
