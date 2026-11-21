@@ -4,6 +4,7 @@ from backend.tieshan_classic import (
     BRANCH_NUMBER_CLASSES,
     DAY_MASTER_BRANCH_TO_TRIGRAM,
     HELUO_NUMBER_CLAUSES,
+    HELUO_WORKED_EXAMPLE,
     LUOSHU_NUMBER_TO_TRIGRAM,
     STEM_TO_TRIGRAM,
     derive_classic_reference,
@@ -31,6 +32,14 @@ class ClassicReferenceTests(unittest.TestCase):
     def test_heluo_preserves_source_overlap_for_ji(self):
         matches = [x["number"] for x in HELUO_NUMBER_CLAUSES if "己" in x["members"]]
         self.assertEqual(matches, [9, 4])
+
+    def test_heluo_worked_example_matches_published_totals(self):
+        example = HELUO_WORKED_EXAMPLE
+        self.assertEqual([row["sum"] for row in example["rows"]], [13, 15, 17, 14, 12, 16])
+        self.assertEqual(sum(row["sum"] for row in example["rows"][:3]), 45)
+        self.assertEqual(sum(row["sum"] for row in example["rows"][3:]), 42)
+        self.assertEqual(example["combined_reference_number"], "4542")
+        self.assertEqual(example["status"], "source_example_transcribed_not_generalized")
 
     def test_branch_number_classes(self):
         self.assertEqual(BRANCH_NUMBER_CLASSES["子"], (1, 6))
