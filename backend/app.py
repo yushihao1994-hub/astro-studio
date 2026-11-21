@@ -1475,7 +1475,8 @@ def tieshan_analyze():
         result = analyze_tieshan_profile(
             payload.get("pillars"),
             payload.get("birth") or {},
-            str(payload.get("gender") or "")
+            str(payload.get("gender") or ""),
+            payload.get("derived") or {}
         )
         return jsonify({"ok": True, "analysis_type": "四柱基础文化解读", "analysis": result})
     except DeepSeekNotConfigured as exc:
