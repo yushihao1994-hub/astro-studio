@@ -303,7 +303,8 @@
           ? '<h4>识别到的主要星盘格局</h4>' + patterns.map((p,i) =>
               '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
               '<h4 style="margin:0 0 8px;color:#e6c78b">' + (i+1) + '. ' + esc(p.name) + '</h4>' +
-              '<p><b>涉及星体：</b>' + p.placements.map(x => esc(x.name)+'（'+esc(x.sign)+'·第'+esc(x.house||'未知')+'宫）').join('、') + '</p>' +
+              (p.orb_quality ? '<p><b>结构紧密度：</b>' + esc(p.orb_quality) + (p.max_orb != null ? '（最大容许度 ' + esc(p.max_orb) + '°）' : '') + '。' + esc(p.orb_note || '') + '</p>' : '') +
+              '<p><b>涉及星体：</b>' + p.placements.map(x => esc(x.name)+'（'+esc(x.sign)+'·第'+esc(x.house||'未知')+'宫）' + (p.roles && p.roles[x.name] ? '—'+esc(p.roles[x.name]) : '')).join('、') + '</p>' +
               '<p><b>结构依据：</b>' + p.evidence.map(esc).join('；') + '</p>' +
               '<p><b>结构含义：</b>' + esc(p.meaning) + '</p>' +
               '<p><b>潜在优势：</b>' + esc(p.strengths) + '</p>' +
