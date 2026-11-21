@@ -10,7 +10,7 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 import swisseph as swe
 from tieshan import calculate_tieshan_pillars
-from tieshan_classic import derive_classic_reference
+from tieshan_classic import derive_classic_reference, derive_body_life_palaces
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -1466,7 +1466,6 @@ def tieshan_pillars():
         # Optional classical palace lookup requires an explicitly supplied lunar month;
         # the solar-term month pillar is not a substitute for a lunar month.
         if payload.get("lunar_month") not in (None, ""):
-            from tieshan_classic import derive_body_life_palaces
             lunar_month = int(payload["lunar_month"])
             hour_branch = (result.get("pillars", {}).get("hour") or {}).get("branch")
             result["body_life_palaces"] = derive_body_life_palaces(
