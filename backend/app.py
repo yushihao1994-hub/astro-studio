@@ -53,7 +53,14 @@ def angular_distance(a, b):
 
 def geocode_place(place):
     geolocator = Nominatim(user_agent="astro-studio/0.1 (birth chart calculation)")
-    result = geolocator.geocode(place, exactly_one=True, timeout=12)
+    try:
+        result = geolocator.geocode(place, exactly_one=True, timeout=12)
+    except Exception as exc:
+        app.logger.exception("Birthplace geocoding failed")
+        raise ValueError(
+            "出生地点解析服务暂时不可用（" + type(exc).__name__ +
+            "）。请稍后重试，或改用经纬度计算。"
+        ) from exc
     if not result:
         raise ValueError("无法识别出生地点。请补充到市/县/乡镇，或直接提供经纬度。")
     return float(result.latitude), float(result.longitude), result.address
@@ -220,9 +227,15 @@ def chart():
         return jsonify({"ok": True, "chart": calculate_chart(payload)})
     except ValueError as exc:
         return jsonify({"ok": False, "error": str(exc)}), 400
-    except Exception:
+    except Exception as exc:
         app.logger.exception("Chart calculation failed")
-        return jsonify({"ok": False, "error": "服务器计算失败，请稍后重试。"}), 500
+        # Return a concise diagnostic class so deployment/runtime faults can be
+        # identified without exposing a traceback or server internals.
+        return jsonify({
+            "ok": False,
+            "error": "服务器内部计算异常（" + type(exc).__name__ +
+                     "）。请把这条提示发给开发人员。"
+        }), 500
 
 
 if __name__ == "__main__":
