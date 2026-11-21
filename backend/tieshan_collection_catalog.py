@@ -472,18 +472,6 @@ UNASSIGNED_BLOCKS.append({
                      "11300-11301","11303-11304","11306-11307","11309-11312","11314-11315"], 1)]
 })
 
-GROUP_ANOMALIES.extend([
-    {"raw_group_marker":"二三六〇","normalized_group_marker_candidate":"一三六〇",
-     "pdf_text_lines":"11254","status":"probable_ocr_correction_pending_image_check"},
-    {"raw_group_marker":"二三八〇","normalized_group_marker_candidate":"一三八〇",
-     "pdf_text_lines":"11267","status":"probable_ocr_correction_pending_image_check"},
-    {"expected_group_marker":"一三七〇","status":"not_located_between_1360_and_1380_candidates",
-     "pdf_text_lines":"11254-11277"},
-    {"expected_group_marker":"一三九〇","status":"not_located_between_1380_and_1400_candidates",
-     "pdf_text_lines":"11267-11317"},
-    {"raw_group_marker":"一四〇","normalized_group_marker_candidate":"一四一〇",
-     "pdf_text_lines":"11356","status":"probable_truncated_group_marker_pending_image_check"},
-])
 UNASSIGNED_BLOCKS.append({
     "block_id": "child_collection_unheaded_block_after_1320",
     "pdf_text_lines": "11202-11213",
@@ -539,6 +527,19 @@ GROUP_ANOMALIES = [
         "pdf_text_lines": "11157-11186",
     },
 ]
+
+GROUP_ANOMALIES.extend([
+    {"raw_group_marker":"二三六〇","normalized_group_marker_candidate":"一三六〇",
+     "pdf_text_lines":"11254","status":"probable_ocr_correction_pending_image_check"},
+    {"raw_group_marker":"二三八〇","normalized_group_marker_candidate":"一三八〇",
+     "pdf_text_lines":"11267","status":"probable_ocr_correction_pending_image_check"},
+    {"expected_group_marker":"一三七〇","status":"not_located_between_1360_and_1380_candidates",
+     "pdf_text_lines":"11254-11277"},
+    {"expected_group_marker":"一三九〇","status":"not_located_between_1380_and_1400_candidates",
+     "pdf_text_lines":"11267-11317"},
+    {"raw_group_marker":"一四〇","normalized_group_marker_candidate":"一四一〇",
+     "pdf_text_lines":"11356","status":"probable_truncated_group_marker_pending_image_check"},
+])
 
 GROUP_GAPS = [{
     "expected_group_marker": "一二一〇",
