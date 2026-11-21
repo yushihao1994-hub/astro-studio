@@ -351,6 +351,23 @@ GROUP_INDEX.extend([
     }),
 ])
 
+# These two groups use sequence-age-clause layout; age is not a number column.
+for _group, _spans in [
+    (GROUP_INDEX[18], ["11071-11075","11077-11079","11081-11082","11084-11087",
+                       "11089-11090","11092-11093","11095-11097","11099-11101",
+                       "11103-11105","11107-11109"]),
+    (GROUP_INDEX[19], ["11113-11114","11117-11118","11121-11121","11124-11125",
+                       "11127-11129","11130-11137","11139-11140","11142-11143",
+                       "11145-11148","11150-11151"]),
+]:
+    for _entry, _span in zip(_group["entries"], _spans):
+        _entry["pdf_text_lines"] = _span
+        _entry["number_field_present"] = False
+        _entry["content_present"] = True
+        _entry["age_marker_association_status"] = (
+            "text_layer_sequence_associated_image_check_pending"
+            if _entry["age_markers"] else "age_not_listed_in_text_layer"
+        )
 UNASSIGNED_BLOCKS = [{
     "block_id": "child_collection_unheaded_block_before_1270",
     "pdf_text_lines": "11028-11067",
