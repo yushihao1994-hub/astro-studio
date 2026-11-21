@@ -417,10 +417,10 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     const idx=result.index;
     const groupHtml=(idx.groups||[]).map(group=>{
      const rows=(group.entries||[]).map(item=>
-      '<tr><td>'+escapeHtml(item.entry_sequence)+'</td><td>'+escapeHtml(item.raw_number_text||'未核定')+'</td><td>'+escapeHtml(item.age_marker_text||'—')+'</td><td>'+escapeHtml(item.pdf_text_lines||'组级定位')+'</td></tr>').join('');
+      '<tr><td>'+escapeHtml(item.entry_sequence)+'</td><td>'+escapeHtml(item.raw_number_text||'未核定')+'</td><td>'+escapeHtml(item.age_marker_text||'待核/—')+'</td><td>'+escapeHtml(item.pdf_text_lines||'组级定位')+'</td></tr>').join('');
      return '<details style="margin:8px 0"><summary>'+escapeHtml(group.group_marker)+' · '+escapeHtml(group.entry_count)+'条</summary><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><thead><tr><th>组内序号</th><th>独立数字栏</th><th>岁数候选</th><th>PDF行号</th></tr></thead><tbody>'+rows+'</tbody></table></div></details>';
     }).join('');
-    stepHost.innerHTML+='<div class="section-title">子集分组索引（已定位）</div><p>当前索引 '+escapeHtml(idx.group_count)+' 组、'+escapeHtml(idx.entry_count)+' 条。此表只记录结构字段，不复制完整条文。</p>'+groupHtml+'<p class="hint">一一〇〇组条文句内数字不归入独立数字栏。新增一一一〇至一一三〇组的岁数候选仅按组内位置提示保存，尚未确认其与条文的版面归属；未核定字段不会被误判为空白。状态：PDF文本层定位，待扫描图像校验。</p>';
+    stepHost.innerHTML+='<div class="section-title">子集分组索引（已定位）</div><p>当前索引 '+escapeHtml(idx.group_count)+' 组、'+escapeHtml(idx.entry_count)+' 条。此表只记录结构字段，不复制完整条文。</p>'+groupHtml+'<p class="hint">一一〇〇组条文句内数字不归入独立数字栏。新增一一一〇至一一三〇组的岁数候选仅按组内位置提示保存，尚未确认其与条文的版面归属；未核定字段不会被误判为空白。一一四〇组按“序号—岁数—正文”独立排版，岁数不记入对应数栏；所有记录仍待扫描图像校验。</p>';
    }).catch(()=>{});
   }).catch(()=>{stepHost.innerHTML+='<p class="hint">坤集分类索引接口暂时不可用，基础排盘不受影响。</p>';});
  }
