@@ -79,8 +79,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 40)
-        self.assertEqual(data["entry_count"], 399)
+        self.assertEqual(data["group_count"], 47)
+        self.assertEqual(data["entry_count"], 469)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
@@ -382,6 +382,26 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all(e["raw_number_text"] is None and e["content_present"] is True
                             for e in group["entries"]))
         self.assertEqual(group["entries"][-1]["pdf_text_lines"], "11713")
+
+
+    def test_1560_unassigned_number_sequence_is_exposed_in_api_index(self):
+        data = get_group_index()
+        group = next(g for g in data["groups"] if g["group_marker"] == "一五六〇")
+        self.assertEqual(len(group["unassigned_number_sequence"]["raw_values"]), 16)
+
+    def test_1600_to_1660_groups_and_gaps_are_indexed_without_fabrication(self):
+        data = get_group_index()
+        markers = [g["group_marker"] for g in data["groups"][-6:]]
+        self.assertEqual(markers, ["一六〇〇","一六二〇","一六三〇","一六四〇","一六五〇","一六六〇"])
+        gaps = {g["expected_group_marker"] for g in data["group_gaps"]}
+        self.assertIn("一六一〇", gaps)
+        self.assertEqual(len(data["groups"][-1]["entries"]), 10)
+        self.assertTrue(all(e["raw_number_text"] is None for e in data["groups"][-1]["entries"]))
+        self.assertIn("child_collection_unheaded_block_after_1650",
+                      {b["block_id"] for b in data["unassigned_blocks"]})
+        anomalies = {a.get("raw_group_marker") for a in data["group_anomalies"]}
+        self.assertIn("一六二〇", anomalies)
+        self.assertIn("一六三", anomalies)
 
     def test_unheaded_blocks_and_1570_to_1590_ocr_candidates_stay_separate(self):
         data = get_group_index()
