@@ -175,10 +175,24 @@
         document.getElementById('panel-aspects').innerHTML =
           '<h4>主要相位（最多显示40项）</h4>' + table(['星体','相位','容许度','趋近/分离'], chart.aspects.slice(0,40).map(a =>
             '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' + esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'));
+        const monthly = chart.monthly_transits || {};
+        const monthlyRelationship = monthly.relationship ? {
+          title: '最近一个月与未来一个月 · 感情行运专题',
+          intro: '计算基准：' + (monthly.as_of || '本次计算时间') + '。过去30天回顾与未来30天趋势分开列出。',
+          sections: monthly.relationship
+        } : null;
+        const monthlyFinance = monthly.finance ? {
+          title: '最近一个月与未来一个月 · 财运行运专题',
+          intro: '计算基准：' + (monthly.as_of || '本次计算时间') + '。过去30天回顾与未来30天趋势分开列出。',
+          sections: monthly.finance
+        } : null;
         document.getElementById('panel-love-money').innerHTML =
           renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
+          renderAnalysisBlock(monthlyRelationship) +
           renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
-          '<p style="color:#a7a8bb;font-size:11px">' + esc(chart.analysis && chart.analysis.method || '') + '</p>';
+          renderAnalysisBlock(monthlyFinance) +
+          '<p style="color:#a7a8bb;font-size:11px">' + esc(chart.analysis && chart.analysis.method || '') +
+          '<br>' + esc(monthly.method || '') + '</p>';
         result.innerHTML =
           '<strong>本命星盘计算完成：' + esc(data.profileName) + '</strong>' +
           '<p>计算引擎：' + esc(chart.calculation.engine) + '</p>' +
