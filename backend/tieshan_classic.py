@@ -91,6 +91,27 @@ HELUO_NUMBER_CLAUSES = [
 
 # 乾集「地支取数例」: PDF lines 788-808. Each branch is assigned two
 # numbers except the central group, which is assigned five.
+# Source-preserved worked example from 乾集「河洛配数例」, PDF lines 775-786.
+# This is a transcription fixture, not a generalized calculation routine.
+HELUO_WORKED_EXAMPLE = {
+    "edition": EDITION,
+    "source_lines": "775-786",
+    "hexagram": "雷地豫",
+    "rows": [
+        {"line_number": 1, "source_text": "5 戌—庚 8＝13", "left_value": 5, "stem": "庚", "stem_value": 8, "sum": 13, "trigram": "上卦"},
+        {"line_number": 2, "source_text": "7 申—庚 8＝15", "left_value": 7, "stem": "庚", "stem_value": 8, "sum": 15, "trigram": "上卦"},
+        {"line_number": 3, "source_text": "9 午—庚 8＝17", "left_value": 9, "stem": "庚", "stem_value": 8, "sum": 17, "trigram": "上卦"},
+        {"line_number": 4, "source_text": "6 卯—乙 8＝14", "left_value": 6, "stem": "乙", "stem_value": 8, "sum": 14, "trigram": "下卦"},
+        {"line_number": 5, "source_text": "4 巳—乙 8＝12", "left_value": 4, "stem": "乙", "stem_value": 8, "sum": 12, "trigram": "下卦"},
+        {"line_number": 6, "source_text": "8 未—乙 8＝16", "left_value": 8, "stem": "乙", "stem_value": 8, "sum": 16, "trigram": "下卦"},
+    ],
+    "upper_total": 45,
+    "lower_total": 42,
+    "combined_reference_number": "4542",
+    "status": "source_example_transcribed_not_generalized",
+    "warning": "仅登记原书示例及其明确加总结果；未推断其他卦的通用取数算法。",
+}
+
 BRANCH_NUMBER_CLASSES = {
     "亥": (1, 6), "子": (1, 6),
     "寅": (3, 8), "卯": (3, 8),
@@ -131,6 +152,7 @@ def derive_classic_reference(pillars):
         "luoshu_number_to_trigram": LUOSHU_NUMBER_TO_TRIGRAM,
         "pillars": result,
         "eight_trigram_addition": EIGHT_TRIGRAM_ADDITION_EXPLANATION,
+        "heluo_worked_example": HELUO_WORKED_EXAMPLE,
         "limitations": [
             "地支配卦例是洛书数到卦的定局表；日主配卦例是另一张地支到卦的表，不能混为一张表。",
             "河洛配数例原文中己同时出现在九数句与四数句，程序保留两条原文，不擅自裁定。",
