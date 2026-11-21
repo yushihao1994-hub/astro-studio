@@ -79,8 +79,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 28)
-        self.assertEqual(data["entry_count"], 279)
+        self.assertEqual(data["group_count"], 33)
+        self.assertEqual(data["entry_count"], 329)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
