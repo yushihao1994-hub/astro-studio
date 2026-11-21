@@ -36,6 +36,15 @@ class KunjiReferenceTests(unittest.TestCase):
         self.assertEqual(rows[-1]["published_number"], "2403")
         self.assertEqual(rows[-1]["status"], "partial_match_requires_source_rule")
 
+    def test_source_attested_exception_keeps_original_character_and_variant_separate(self):
+        reference = get_kunji_reference()
+        row = reference["source_attested_exceptions"][0]
+        self.assertEqual(row["code"], "丙庚月戌")
+        self.assertEqual(row["number"], "2403")
+        self.assertIn("戌", row["note"])
+        self.assertIn("丙庚月戊", row["variant_note"])
+        self.assertEqual(row["status"], "exact_example_attested_rule_unresolved")
+
     def test_no_full_cipher_or_auto_advancement_claim(self):
         reference = get_kunji_reference()
         self.assertTrue(reference["advancement_note"]["not_implemented"])
