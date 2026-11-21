@@ -23,7 +23,7 @@ def _validate_year(year):
 def lunar_month_options(year):
     year = _validate_year(year)
     result = []
-    for item in LunarYear.fromYear(year).getMonths():
+    for item in LunarYear.fromYear(year).getMonthsInYear():
         month_number = int(item.getMonth())
         is_leap = month_number < 0
         month = abs(month_number)
