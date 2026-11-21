@@ -16,6 +16,9 @@ class KunjiGlossaryIndexTests(unittest.TestCase):
         self.assertEqual([x["branch"] for x in rows], list("子丑寅卯辰巳午未申酉戌亥"))
         self.assertEqual([x["order"] for x in rows], list(range(1, 13)))
         self.assertEqual([x["printed_page_start"] for x in rows], [138, 172, 206, 240, 274, 308, 342, 376, 410, 444, 478, 512])
+        self.assertEqual([x["printed_page_end"] for x in rows[:11]], [171, 205, 239, 273, 307, 341, 375, 409, 443, 477, 511])
+        self.assertIsNone(rows[-1]["printed_page_end"])
+        self.assertEqual(rows[-1]["range_status"], "open_end_not_verified")
         you = next(x for x in rows if x["branch"] == "酉")
         self.assertIn("西集", you["source_variant"])
 
