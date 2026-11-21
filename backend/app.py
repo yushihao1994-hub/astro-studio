@@ -15,6 +15,7 @@ from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
 from tieshan_engine import build_tieshan_foundation
 from tieshan_kunji_index import get_kunji_glossary
+from tieshan_collection_catalog import get_collection_sample
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
 app = Flask(__name__)
@@ -1444,6 +1445,14 @@ def ai_full_report():
     except Exception as exc:
         app.logger.exception("Full report failed")
         return jsonify({"ok": False, "error": "完整报告发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+@app.get("/api/tieshan/collections/<branch>/entries")
+def tieshan_collection_entries(branch):
+    """Return source-located clause samples; never imply corpus completeness."""
+    if branch not in list("子丑寅卯辰巳午未申酉戌亥"):
+        return jsonify({"ok": False, "error": "unsupported_collection"}), 404
+    return jsonify({"ok": True, "catalog": get_collection_sample(branch)})
 
 
 @app.get("/api/tieshan/kunji/glossary")
