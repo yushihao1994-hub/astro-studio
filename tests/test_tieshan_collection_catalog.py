@@ -79,8 +79,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 24)
-        self.assertEqual(data["entry_count"], 239)
+        self.assertEqual(data["group_count"], 28)
+        self.assertEqual(data["entry_count"], 279)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
@@ -257,7 +257,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(candidate["normalized_group_marker_candidate"], "一三〇〇")
         self.assertEqual(candidate["entries"][0]["raw_age_column_text"], "六十一")
         self.assertIsNone(candidate["entries"][7]["raw_age_column_text"])
-        self.assertEqual(data["unassigned_blocks"][1]["pdf_text_lines"], "11202-11213")
+        block = next(x for x in data["unassigned_blocks"] if x["block_id"] == "child_collection_unheaded_block_after_1320")
+        self.assertEqual(block["pdf_text_lines"], "11202-11213")
         self.assertEqual(data["unassigned_blocks"][1]["entry_count"], 10)
     def test_1340_and_1350_keep_age_markers_and_no_number_column(self):
         data = get_group_index()
