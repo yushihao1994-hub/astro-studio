@@ -182,7 +182,7 @@ GROUP_INDEX.extend([
             {"entry_sequence": 9, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10848-10851", "age_markers": ["三十三", "三十四"], "age_marker_text": "三十三／三十四", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
             {"entry_sequence": 10, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10853-10858", "age_markers": ["三十三", "三十四", "三十五", "三十六"], "age_marker_text": "三十三／三十四／三十五／三十六", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
         ],
-    },,
+    },
 
     {
         "group_marker": "一一六〇",
@@ -256,8 +256,6 @@ def get_collection_sample(branch="子"):
         "schema_version": CATALOG_SCHEMA_VERSION,
         "layout_patterns": [dict(row) for row in CLAUSE_LAYOUT_PATTERNS],
         "entry_count": len(ENTRIES),
-        "schema_version": CATALOG_SCHEMA_VERSION,
-        "layout_patterns": [dict(row) for row in CLAUSE_LAYOUT_PATTERNS],
         "entries": [dict(row) for row in ENTRIES],
         "field_guide": dict(FIELD_GUIDE),
         "limitations": list(LIMITATIONS),
