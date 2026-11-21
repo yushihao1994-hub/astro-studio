@@ -3,7 +3,7 @@ This module orchestrates only source-traceable steps already implemented.
 It deliberately does not invent a final number, six-relative numbers, or clauses.
 """
 SYSTEM_NAME = "铁板神数推演基础引擎"
-ENGINE_VERSION = "0.1.0-foundation"
+ENGINE_VERSION = "0.2.0-eight-trigram-evidence"
 PRIMARY_REFERENCE = "康节说易全书·铁板神数，学林出版社2003年陈明点校本（现代异本）"
 QING_REFERENCE_STATUS = "清刻虚白庐藏本及秘钞密码表全文尚未取得，不能标记为已验证"
 WORKFLOW = [
@@ -26,6 +26,7 @@ RULE_REGISTRY = [
     {"id":"QIAN-BRANCH-NUMBER","name":"地支取数例","source":"乾集，PDF文本行788-808","status":"verified_table"},
     {"id":"QIAN-BODY-LIFE","name":"安身命例","source":"乾集，PDF文本行810-817；闰月口径待核","status":"partial"},
     {"id":"QIAN-EIGHT-KE","name":"每时八刻、每刻十五分","source":"乾集开篇说明；当前只实现钟表分段","status":"partial"},
+    {"id":"QIAN-EIGHT-TRIGRAM-ADD","name":"八卦加则例","source":"乾集，PDF文本行684-715；逐句解说行699-715","status":"documented_conceptual_only"},
 ]
 
 def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=None, classic_reference=None):
@@ -55,7 +56,7 @@ def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=No
         "overall_status": "foundation_only", "can_generate_final_iron_plate_number": False,
         "birth_basis": {key: birth.get(key) for key in ("input_calendar","input_date","converted_solar_date","converted_lunar_date","place_resolved","timezone")},
         "four_pillars": {key: {field: (pillars.get(key) or {}).get(field) for field in ("name","stem","branch")} for key in ("year","month","day","hour")},
-        "available_foundations": {"eight_ke":eight_ke,"body_life_palaces":body_life_palaces,"classic_reference":classic_reference},
+        "available_foundations": {"eight_ke":eight_ke,"body_life_palaces":body_life_palaces,"classic_reference":classic_reference, "eight_trigram_addition":classic_reference.get("eight_trigram_addition")},
         "workflow": steps, "rule_registry": [dict(item) for item in RULE_REGISTRY],
         "stop_reasons": [
             "目前可访问的资料为2003年现代点校本部分可检索文本，不是清刻虚白庐藏本完整影印件。",
