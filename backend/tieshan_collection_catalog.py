@@ -96,17 +96,72 @@ GROUP_INDEX = [
     ]},
 ]
 
+# Further groups located in the PDF text layer. Multi-age strings are recorded
+# only as unassigned candidates until the original page layout is checked.
+# Corresponding-number fields remain unknown (None), not assumed absent.
+def _pending_layout_group(marker, line_range, age_hints):
+    entries = []
+    for sequence in range(1, 11):
+        hint = age_hints.get(sequence)
+        entries.append({
+            "entry_sequence": sequence,
+            "raw_number_text": None,
+            "number_field_present": None,
+            "content_present": None,
+            "pdf_text_lines": None,
+            "age_markers": [],
+            "age_marker_text": hint,
+            "age_marker_association_status": (
+                "needs_layout_verification" if hint else "not_assessed"
+            ),
+        })
+    return {
+        "group_marker": marker,
+        "pdf_text_lines": line_range,
+        "entry_count": 10,
+        "layout_status": "text_layer_located_layout_unverified",
+        "age_marker_candidates": [
+            {"entry_sequence_hint": sequence, "raw_text": value,
+             "status": "unassigned_pending_page_image"}
+            for sequence, value in age_hints.items()
+        ],
+        "entries": entries,
+    }
+
+
+GROUP_INDEX.extend([
+    _pending_layout_group("一一一〇", "10707-10719", {
+        4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"
+    }),
+    _pending_layout_group("一一二〇", "10721-10741", {
+        3: "四十九／五十七／五十五／五十八",
+        5: "三十三／三十四／三十七／三十八",
+        8: "四十五／四十六／四十九／五十"
+    }),
+    _pending_layout_group("一一三〇", "10743-10762", {
+        1: "十五／十六／四十三／四十四",
+        5: "十三／十四／三十七／三十八",
+        6: "六十三／六十四",
+        8: "六十九／七十",
+        10: "三十三／三十四"
+    }),
+])
+
+
 def get_group_index():
     return {
         "edition": EDITION,
         "collection": "子集",
         "status": "text_layer_indexed_image_verification_pending",
         "group_count": len(GROUP_INDEX),
+        "status": "mixed_text_layer_index_and_layout_pending",
         "entry_count": sum(len(group["entries"]) for group in GROUP_INDEX),
         "groups": [
             {"group_marker": group["group_marker"],
              "pdf_text_lines": group["pdf_text_lines"],
              "entry_count": len(group["entries"]),
+             "layout_status": group.get("layout_status", "text_layer_indexed_image_verification_pending"),
+             "age_marker_candidates": [dict(x) for x in group.get("age_marker_candidates", [])],
              "entries": [dict(entry) for entry in group["entries"]]}
             for group in GROUP_INDEX
         ],
@@ -115,6 +170,8 @@ def get_group_index():
             "不复制完整条文正文；请按PDF行号核对。",
             "raw_number_text只记录独立数字栏，条文句内数字不转入该字段。",
             "空值表示原文该条没有独立数字栏，不允许按相邻条目补齐。",
+            "一一一〇至一一三〇组的岁数只作为待核候选，不代表已确认归属。",
+            "对应数栏未知时保留null，不得解释为原书没有对应数。",
             "本索引不构成铁板密码条号，不用于自动考刻或断命。"
         ]
     }
