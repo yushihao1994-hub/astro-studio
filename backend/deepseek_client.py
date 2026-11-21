@@ -67,6 +67,13 @@ def analyze_with_deepseek(topic, evidence):
     if not topic_name:
         raise DeepSeekError("不支持的分析主题。")
 
+    topic_guides = {
+        "personality": "重点分析外在给人的感觉、内在需求、思考沟通方式、行动驱动力、优势与容易卡住的地方。结合上升点、太阳、月亮、水星及其宫位和紧密相位；不要把性格写成单一标签。",
+        "relationship": "重点分析情感需求、表达爱与冲突的方式、恋爱和长期伴侣关系的不同需求、亲密关系中的边界。优先结合月亮、金星、火星及第5/7/8宫与宫主星证据；不得断言何时结婚、复合或对方身份。",
+        "finance": "重点区分赚钱能力/收入渠道（第2宫）、共同资金与风险（第8宫）、事业变现（第10宫）、收益网络（第11宫）。分析机会、稳定性、消费风险和可执行的财务习惯；不能承诺发财或给投资指令。",
+        "career": "重点分析职业动力、适合发挥的工作环境、技能表达、日常工作方式、长期发展与团队收益。区分第6宫日常工作、第10宫事业方向、第2宫收入、第11宫团队与收益。",
+        "trends": "严格区分过去30天回顾与未来30天提醒。只解释输入的行运时间窗口和触发点，不把相位翻译成必然事件；给出可观察的主题和现实核查建议。"
+    }
     system_prompt = (
         "你是严谨的西方占星研究报告撰写者。你只能解释用户提供的结构化星盘证据，"
         "不得自行计算星体位置、宫位、相位或行运，不得补造缺失数据。"
@@ -74,15 +81,19 @@ def analyze_with_deepseek(topic, evidence):
         "若证据不足或相互矛盾，必须明确说明不确定，不得用确定语气预测事件。"
         "输出必须是合法 json 对象，且只能输出 JSON，不得添加 Markdown 代码围栏或解释文字。"
         "必须严格使用以下结构：{\"summary\":\"总体结论\",\"sections\":[{\"title\":\"主题\",\"conclusion\":\"结论\",\"reasoning\":\"依据与解释\",\"evidence_ids\":[\"输入中真实存在的证据id\"],\"advice\":\"建议\"}],\"limitations\":[]}。"
-        "sections 是数组，每项包含 title、conclusion、reasoning、evidence_ids、advice。"
+        "sections 必须有 3 至 5 项；每项必须包含 title、conclusion、reasoning、evidence_ids、advice。"
         "evidence_ids 只能使用输入证据中真实存在的 id；每项至少引用一个直接相关的证据。"
-        "用自然、具体、易懂的简体中文，避免空话、重复句和堆砌占星术语。"
+        "每一项必须讨论不同问题，不得换词重复同一结论。reasoning 要说明具体证据如何支持结论，"
+        "并指出可能的另一面或限制；advice 必须是普通人能执行的具体动作，避免空泛鼓励。"
+        "用自然、具体、易懂的简体中文，面向不懂占星术语的付费客户；必要时用生活语言解释术语。"
+        "不要虚构用户经历、年龄、职业、伴侣状况、收入或现实事件。"
         "区分盘面倾向、现实表现和建议，不承诺发财、结婚、复合或具体事件。"
     )
     user_payload = {
         "analysis_topic": topic_name,
+        "topic_specific_method": topic_guides[topic],
         "evidence": evidence,
-        "required_style": "面向普通用户，具体解释可能表现、证据依据、现实建议；不要展示内部技术术语清单。"
+        "required_style": "输出像认真阅读个人星盘后的顾问报告，而不是通用星座文章。每一条都要有不同的具体信息、可核验依据和行动建议。"
     }
     try:
         response = requests.post(
