@@ -107,7 +107,7 @@
         block.sections.map((item, index) =>
           '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
           '<h4 style="margin:0 0 7px;color:#d8c8ff">' + (index + 1) + '. ' + esc(item.title) + '</h4>' +
-          '<p style="margin:0;white-space:normal;line-height:1.85">' + esc(item.content) + '</p></article>'
+          '<p style="margin:0;white-space:pre-line;line-height:1.95">' + esc(item.content) + '</p></article>'
         ).join('') + '</section>';
     }
     document.querySelectorAll('.module-toggle').forEach(button => {
