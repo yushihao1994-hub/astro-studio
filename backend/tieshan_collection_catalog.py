@@ -406,6 +406,24 @@ UNASSIGNED_BLOCKS = [{
                      "11063-11064", "11066-11067"], 1)]
 }]
 
+GROUP_INDEX.extend([
+    _source_group("一三四〇", "一三四〇", "11227-11238", {
+        1:["十", "三十七"], 2:["六十三"], 3:["六十四"], 4:["六十二"],
+        5:["九", "十七"], 6:["八十七"], 7:["五十五"], 9:["三十九"],
+    }),
+    _source_group("一三五〇", "一三五〇", "11240-11252", {}),
+])
+for _group, _spans in [
+    (GROUP_INDEX[22], ["11229","11230","11231","11232","11233","11234","11235","11236","11237","11238"]),
+    (GROUP_INDEX[23], ["11242-11242","11243","11244","11245","11246","11247","11248","11249","11250","11251-11252"]),
+]:
+    for _entry, _span in zip(_group["entries"], _spans):
+        _entry["pdf_text_lines"] = _span
+        _entry["number_field_present"] = False
+        _entry["content_present"] = True
+        _entry["age_marker_association_status"] = (
+            "text_layer_sequence_associated_image_check_pending" if _entry["age_markers"]
+            else "age_not_listed_in_text_layer")
 UNASSIGNED_BLOCKS.append({
     "block_id": "child_collection_unheaded_block_after_1320",
     "pdf_text_lines": "11202-11213",
