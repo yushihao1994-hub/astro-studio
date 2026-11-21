@@ -47,7 +47,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_forty_seven_groups_and_four_hundred_sixty_nine_entries(self):
+    def test_group_index_contains_seventy_five_groups_and_seven_hundred_forty_seven_entries(self):
         data = get_group_index()
         self.assertEqual(data["group_count"], 75)
         self.assertEqual(data["entry_count"], 747)
@@ -79,8 +79,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 54)
-        self.assertEqual(data["entry_count"], 537)
+        self.assertEqual(data["group_count"], 75)
+        self.assertEqual(data["entry_count"], 747)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
