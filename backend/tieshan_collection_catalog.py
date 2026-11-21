@@ -424,6 +424,66 @@ for _group, _spans in [
         _entry["age_marker_association_status"] = (
             "text_layer_sequence_associated_image_check_pending" if _entry["age_markers"]
             else "age_not_listed_in_text_layer")
+GROUP_INDEX.extend([
+    _source_group("二三六〇", "一三六〇", "11254-11265", {},
+                  "probable_ocr_correction_pending_image_check"),
+    _source_group("二三八〇", "一三八〇", "11267-11277", {},
+                  "probable_ocr_correction_pending_image_check"),
+    _source_group("一四〇〇", "一四〇〇", "11317-11354", {
+        4:["六十三","六十四","四十三","四十四"],
+        5:["四十五","四十六"],
+        6:["三十三","三十四","五十三","五十四"],
+        7:["三十四","三十五"],
+        9:["三十二","三十三"],
+        10:["三十五","三十六"],
+    }),
+    _source_group("一四〇", "一四一〇", "11356-11389", {
+        5:["三十三"], 6:["三十四","五十三","五十四"],
+        7:["三十四"], 8:["四十七","四十八"],
+        9:["三十二","三十三"], 10:["三十五","三十六"],
+    }, "probable_ocr_correction_pending_image_check"),
+])
+for _group, _spans in [
+    (GROUP_INDEX[24], ["11256","11257","11258","11259","11260","11261","11262","11263","11264","11265"]),
+    (GROUP_INDEX[25], ["11268","11269","11270","11271","11272","11273","11274","11275","11276","11277"]),
+    (GROUP_INDEX[26], ["11318-11318","11320-11321","11323-11324","11325-11329","11331-11333",
+                       "11335-11339","11341-11343","11345-11346","11348-11350","11352-11354"]),
+    (GROUP_INDEX[27], ["11357-11357","11359-11360","11362-11363","11365-11366","11368-11369",
+                       "11371-11374","11376-11377","11379-11381","11383-11385","11387-11389"]),
+]:
+    for _entry, _span in zip(_group["entries"], _spans):
+        _entry["pdf_text_lines"] = _span
+        _entry["content_present"] = True
+        _entry["number_field_present"] = False
+        if _entry["age_markers"]:
+            _entry["age_marker_association_status"] = "text_layer_sequence_associated_image_check_pending"
+        else:
+            _entry["age_marker_association_status"] = "age_not_listed_in_text_layer"
+
+UNASSIGNED_BLOCKS.append({
+    "block_id": "child_collection_unheaded_block_after_1380_candidate",
+    "pdf_text_lines": "11279-11315",
+    "entry_count": 10,
+    "status": "group_marker_missing_do_not_assign",
+    "note": "子集页眉后出现十项分行记录，至一四〇〇标题前未见独立组号。",
+    "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                for n, line in enumerate(
+                    ["11281-11283","11285-11286","11288-11289","11291-11292","11294-11298",
+                     "11300-11301","11303-11304","11306-11307","11309-11312","11314-11315"], 1)]
+})
+
+GROUP_ANOMALIES.extend([
+    {"raw_group_marker":"二三六〇","normalized_group_marker_candidate":"一三六〇",
+     "pdf_text_lines":"11254","status":"probable_ocr_correction_pending_image_check"},
+    {"raw_group_marker":"二三八〇","normalized_group_marker_candidate":"一三八〇",
+     "pdf_text_lines":"11267","status":"probable_ocr_correction_pending_image_check"},
+    {"expected_group_marker":"一三七〇","status":"not_located_between_1360_and_1380_candidates",
+     "pdf_text_lines":"11254-11277"},
+    {"expected_group_marker":"一三九〇","status":"not_located_between_1380_and_1400_candidates",
+     "pdf_text_lines":"11267-11317"},
+    {"raw_group_marker":"一四〇","normalized_group_marker_candidate":"一四一〇",
+     "pdf_text_lines":"11356","status":"probable_truncated_group_marker_pending_image_check"},
+])
 UNASSIGNED_BLOCKS.append({
     "block_id": "child_collection_unheaded_block_after_1320",
     "pdf_text_lines": "11202-11213",
