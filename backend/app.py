@@ -750,7 +750,7 @@ def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
             interpretation = "重点观察沟通、吸引力、情绪需求、恋爱推进与伴侣协商；相位是主题提示，不代表必然发生联系、复合、分手或结婚。"
         else:
             interpretation = "重点观察收入安排、工作节奏、合作资金、借贷与风险控制；相位不代表必然进账、亏损或投资涨跌。"
-        detail = "\\n\\n".join(lines[:12]) if lines else "该时段没有筛选到与本专题关键本命点形成紧密主要相位的行运接触。这不等于没有相关事件，仍需结合现实选择与完整星盘。"
+        detail = "\n\n".join(lines[:12]) if lines else "该时段没有筛选到与本专题关键本命点形成紧密主要相位的行运接触。这不等于没有相关事件，仍需结合现实选择与完整星盘。"
         return {
             "title": label,
             "content": f"统计区间：{begin} 至 {finish}（出生地时区：{birth_timezone}）。{detail}{interpretation}"
