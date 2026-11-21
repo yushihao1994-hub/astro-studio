@@ -27,6 +27,15 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertTrue(r["available_foundations"]["body_life_palaces"])
         self.assertEqual(r["four_pillars"]["year"]["name"],"甲戌")
         self.assertEqual(next(x for x in r["workflow"] if x["key"]=="classic_tables")["status"],"partial")
+    def test_kunji_editorial_metadata_is_available_but_cipher_stays_blocked(self):
+        r=build_tieshan_foundation({},self.pillars)
+        kunji=r["available_foundations"]["kunji_reference"]
+        self.assertEqual(kunji["status"],"partial_metadata_not_full_cipher")
+        self.assertEqual(len(kunji["published_examples"]),7)
+        status={x["key"]:x["status"] for x in r["workflow"]}
+        self.assertEqual(status["cipher_lookup"],"blocked")
+        self.assertFalse(r["can_generate_final_iron_plate_number"])
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
