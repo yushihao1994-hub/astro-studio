@@ -898,9 +898,21 @@ def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
         "做财务决定时，最容易忽略的往往不是收入，而是隐藏成本和回款风险。每个项目都要算清进货或制作成本、获客费用、物流、售后、库存占用和回款周期。营业额不等于利润，账面利润也不等于手里有现金。",
         "更稳妥的财富行动顺序是：先弄清当前现金和必须承担的责任；再选一个投入可控的方向；先做小规模真实成交；连续验证净利润和回款后再扩大；最后逐步建立应急储备。任何分析都不能保证发财年份或具体收入，真正的进展要看实际现金流和净资产变化。"
     ]
-    for index, item in enumerate(relationship):
-        if index < len(relationship_plain):
-            item["plain_content"] = relationship_plain[index]
+    # Build customer-facing relationship sections explicitly so titles and copy
+    # cannot drift when optional technical pattern sections are added.
+    relationship_titles = [
+        "容易被什么样的人吸引",
+        "恋爱中需要怎样的相处节奏",
+        "表达好感、推进关系和处理争执",
+        "长期伴侣与婚姻：什么样的关系更能走得久",
+        "亲密、信任与金钱边界",
+        "需要警惕的感情盲点",
+        "择偶时怎样判断是否适合结婚"
+    ]
+    relationship = [
+        {"title": title, "content": copy, "plain_content": copy}
+        for title, copy in zip(relationship_titles, relationship_plain)
+    ]
     for index, item in enumerate(finance):
         if index < len(finance_plain):
             item["plain_content"] = finance_plain[index]
