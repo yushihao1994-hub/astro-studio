@@ -238,7 +238,7 @@ def generate_full_report(evidence):
 
 
 
-def analyze_tieshan_profile(pillars, birth, gender=""):
+def analyze_tieshan_profile(pillars, birth, gender="", derived=None):
     """Generate a clearly-labeled traditional-culture reading from calculated pillars."""
     api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
     if not api_key:
@@ -270,13 +270,14 @@ def analyze_tieshan_profile(pillars, birth, gender=""):
                   "branch": pillars[key].get("branch")}
             for key in ("year", "month", "day", "hour")
         },
+        "derived_bazi_data": derived or {},
         "birth_context": {
             "gender": gender,
             "local_datetime": birth.get("local_datetime"),
             "timezone": birth.get("timezone"),
             "place_resolved": birth.get("place_resolved")
         },
-        "task": "请做谨慎的传统干支文化基础解读。不要假称铁板神数定数已经完成。"
+        "task": "请做谨慎的传统干支文化基础解读。优先引用输入中的日主、五行简单计数、十神、藏干和地支关系数据，并解释数据如何支持判断。五行简单计数不等于旺衰，禁止仅凭数量断旺弱。不要假称铁板神数定数已经完成。"
     }
     try:
         response = requests.post(
