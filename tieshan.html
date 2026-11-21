@@ -57,8 +57,28 @@ function renderPillars(data){
   const cards=labels.map(([key,label])=>{const p=data.pillars[key];return '<div style="border:1px solid #34718a;background:linear-gradient(145deg,#132d43,#101c30);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:#91a8bd">'+label+'</div><div style="font-size:30px;font-weight:800;letter-spacing:5px;color:#73eaff;margin:5px 0">'+p.name+'</div><div style="font-size:10px;color:#c5d5e4">'+p.stem+'（天干）· '+p.branch+'（地支）</div></div>';}).join('');
   const warnings=(data.warnings||[]).map(x=>'<li style="margin:4px 0">'+escapeHtml(x)+'</li>').join('');
   const method=(data.method||[]).map(x=>'<li style="margin:4px 0">'+escapeHtml(x)+'</li>').join('');
-  return '<div style="font-size:12px;color:#73eaff;margin-bottom:10px">四柱基础计算结果 · '+escapeHtml(data.birth.timezone)+' · '+escapeHtml(data.solar_term_boundary.month_boundary)+'交节后</div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">'+cards+'</div><div style="margin-top:13px;border-top:1px solid #29475e;padding-top:11px;font-size:11px;color:#b8c9d9"><b style="color:#e8ca8d">计算规则</b><ul>'+method+'</ul><b style="color:#e8ca8d">校验提醒</b><ul>'+warnings+'</ul></div><div style="font-size:10px;color:#8299ad;margin-top:10px">计算引擎：'+escapeHtml(data.engine)+'。四柱结果是基础历法数据，不代表已经完成铁板神数定数。</div>';
+  return '<div style="font-size:12px;color:#73eaff;margin-bottom:10px">四柱基础计算结果 · '+escapeHtml(data.birth.timezone)+' · '+escapeHtml(data.solar_term_boundary.month_boundary)+'交节后</div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">'+cards+'</div><div style="margin-top:13px;border-top:1px solid #29475e;padding-top:11px;font-size:11px;color:#b8c9d9"><b style="color:#e8ca8d">计算规则</b><ul>'+method+'</ul><b style="color:#e8ca8d">校验提醒</b><ul>'+warnings+'</ul></div><div style="font-size:10px;color:#8299ad;margin-top:10px">计算引擎：'+escapeHtml(data.engine)+'。四柱结果是基础历法数据，不代表已经完成铁板神数定数。</div><div style="margin-top:16px"><button class="primary" type="button" id="aiAnalyzeBtn">DeepSeek AI 深度解读</button><div id="aiAnalysisOutput" style="margin-top:12px"></div></div>';
 }
+let lastPillarData=null;
+async function runTieshanAI(){
+  const box=document.getElementById('aiAnalysisOutput');
+  const btn=document.getElementById('aiAnalyzeBtn');
+  if(!lastPillarData){box.innerHTML='<p style="color:#ffd18a">请先完成四柱计算。</p>';return;}
+  btn.disabled=true;btn.textContent='AI 正在分析，请稍候…';
+  box.innerHTML='<p style="color:#73eaff">正在调用 DeepSeek，分析内容将依据已计算的四柱生成……</p>';
+  try{
+    await wakeApi();
+    const response=await fetch(API+'/api/tieshan/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pillars:lastPillarData.pillars,birth:lastPillarData.birth,gender:document.querySelector('input[name="gender"]:checked')?.value||''}),signal:AbortSignal.timeout(150000)});
+    const data=await response.json();
+    if(!response.ok||!data.ok)throw new Error(data.error||'AI 分析失败，请稍后重试。');
+    const report=data.analysis||{};
+    const sections=(report.sections||[]).map((s,i)=>'<section style="border:1px solid #29475e;border-radius:10px;padding:13px;margin-top:10px;background:#0c1929"><b style="color:#73eaff">'+(i+1)+'. '+escapeHtml(s.title)+'</b><p style="color:#e6f1fa;margin:8px 0"><b>结论：</b>'+escapeHtml(s.conclusion)+'</p><p style="color:#b8c9d9;margin:8px 0"><b>分析依据：</b>'+escapeHtml(s.reasoning)+'</p><p style="color:#e8ca8d;margin:8px 0"><b>现实建议：</b>'+escapeHtml(s.advice)+'</p></section>').join('');
+    const limits=(report.limitations||[]).map(x=>'<li>'+escapeHtml(x)+'</li>').join('');
+    box.innerHTML='<div style="border:1px solid #34718a;border-radius:10px;padding:14px;background:#102538"><b style="color:#73eaff">DeepSeek AI 分析报告</b><p>'+escapeHtml(report.summary||'')+'</p><div style="font-size:10px;color:#e8ca8d">本报告为四柱基础文化解读，不是已完成考刻、定数或古籍条文检索的完整铁板神数结果。</div>'+sections+'<div style="margin-top:12px;color:#91a8bd;font-size:11px"><b>解读边界</b><ul>'+limits+'</ul></div></div>';
+  }catch(err){box.innerHTML='<p style="color:#ffb4a8">AI 分析未完成：'+escapeHtml(err.message||'网络连接异常')+'</p>';}
+  finally{btn.disabled=false;btn.textContent='重新生成 AI 深度解读';}
+}
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='aiAnalyzeBtn')runTieshanAI();});
 function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 form.addEventListener('submit',async e=>{
   e.preventDefault();if(!form.reportValidity())return;
@@ -78,7 +98,7 @@ form.addEventListener('submit',async e=>{
     const response=await fetch(API+'/api/tieshan/pillars',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({birth_date:data.date,birth_time:data.time,calendar:data.calendar,gender:data.gender,place:data.place,accuracy:data.accuracy}),signal:AbortSignal.timeout(150000)});
     const resultData=await response.json();
     if(!response.ok||!resultData.ok)throw new Error(resultData.error||'四柱计算失败，请核对出生资料。');
-    output.innerHTML=renderPillars(resultData);
+    lastPillarData=resultData;output.innerHTML=renderPillars(resultData);
   }catch(err){output.innerHTML='<p style="color:#ffb4a8">计算未完成：'+escapeHtml(err.message||'网络连接异常')+'</p><p style="font-size:11px;color:#91a8bd">出生资料已保存在当前设备，可以稍后重试。</p>';}
 });
 document.getElementById('clear').addEventListener('click',()=>{form.reset();document.getElementById('time').disabled=false;document.getElementById('timeUnknown').value='known';try{localStorage.removeItem(KEY);}catch(_){}result.classList.remove('show');});
