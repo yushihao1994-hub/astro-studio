@@ -273,7 +273,7 @@ GROUP_INDEX.extend([
 
 # Table-form 子集 blocks use the printed column heading "序号". Keep that
 # source column verbatim and do not reinterpret it as age or cipher number.
-def _table_layout_group(marker, line_range, raw_index_values, row_lines):
+def _table_layout_group(marker, line_range, raw_index_values, row_lines, layout_note="PDF文本层采用表格列标题“年份／序号／诗句”；序号栏原文独立保存，不擅自解释为岁数、对应数或密码条号。"):
     entries = []
     for sequence, (raw_value, line_ref) in enumerate(zip(raw_index_values, row_lines), 1):
         entries.append({
@@ -295,7 +295,7 @@ def _table_layout_group(marker, line_range, raw_index_values, row_lines):
         "pdf_text_lines": line_range,
         "entry_count": len(entries),
         "layout_status": "table_rows_year_sequence_clause",
-        "layout_note": "PDF文本层采用表格列标题“年份／序号／诗句”；序号栏原文独立保存，不擅自解释为岁数、对应数或密码条号。",
+        "layout_note": layout_note,
         "entries": entries,
     }
 
@@ -368,6 +368,31 @@ for _group, _spans in [
             "text_layer_sequence_associated_image_check_pending"
             if _entry["age_markers"] else "age_not_listed_in_text_layer"
         )
+GROUP_INDEX.extend([
+    _table_layout_group("一三二〇", "11186-11198",
+        [None, None, None, None, None, None, None, None, "四十四／四十五", "三十七／三十八"],
+        ["11189","11190","11191","11192","11193","11194","11195","11196","11197","11198"],
+        "PDF表头为“序号／干支/岁数／内容”；第二列原文值保留为来源字段，不解释成密码数。"),
+    _source_group("一三三〇", "一三三〇", "11214-11225", {
+        2:["三十五"], 3:["三十二"], 8:["三十七"], 10:["四十七"],
+    }),
+])
+
+for _entry, _span in zip(GROUP_INDEX[20]["entries"],
+    ["11189","11190","11191","11192","11193","11194","11195","11196","11197","11198"]):
+    _entry["pdf_text_lines"] = _span
+    _entry["number_field_present"] = None
+    _entry["content_present"] = True
+    _entry["age_marker_association_status"] = "source_column_semantics_unverified"
+for _entry, _span in zip(GROUP_INDEX[21]["entries"],
+    ["11216-11216","11217-11217","11218-11218","11219-11219","11220-11220",
+     "11221-11221","11222-11222","11223-11223","11224-11224","11225-11225"]):
+    _entry["pdf_text_lines"] = _span
+    _entry["number_field_present"] = False
+    _entry["content_present"] = True
+    _entry["age_marker_association_status"] = (
+        "text_layer_sequence_associated_image_check_pending" if _entry["age_markers"]
+        else "age_not_listed_in_text_layer")
 UNASSIGNED_BLOCKS = [{
     "block_id": "child_collection_unheaded_block_before_1270",
     "pdf_text_lines": "11028-11067",
