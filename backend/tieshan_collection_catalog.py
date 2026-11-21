@@ -406,6 +406,35 @@ UNASSIGNED_BLOCKS = [{
                      "11063-11064", "11066-11067"], 1)]
 }]
 
+UNASSIGNED_BLOCKS.append({
+    "block_id": "child_collection_unheaded_block_after_1320",
+    "pdf_text_lines": "11202-11213",
+    "entry_count": 10,
+    "status": "group_marker_missing_do_not_assign",
+    "note": "该块位于一三二〇表格之后、一三三〇组标题之前，文本层只有子集页眉，没有独立组号。",
+    "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                for n, line in enumerate(
+                    ["11204","11205","11206","11207","11208","11209","11210","11211","11212","11213"], 1)]
+})
+
+CANDIDATE_GROUPS = [{
+    "raw_group_marker": "一二〇〇",
+    "normalized_group_marker_candidate": "一三〇〇",
+    "pdf_text_lines": "11157-11170",
+    "status": "probable_ocr_correction_pending_image_check",
+    "entries": [
+        {"entry_sequence": 1, "raw_age_column_text": "六十一", "pdf_text_lines": "11161"},
+        {"entry_sequence": 2, "raw_age_column_text": "三十七", "pdf_text_lines": "11162"},
+        {"entry_sequence": 3, "raw_age_column_text": "四十五", "pdf_text_lines": "11163"},
+        {"entry_sequence": 4, "raw_age_column_text": "三十三", "pdf_text_lines": "11164"},
+        {"entry_sequence": 5, "raw_age_column_text": "六十九", "pdf_text_lines": "11165"},
+        {"entry_sequence": 6, "raw_age_column_text": "四十九", "pdf_text_lines": "11166"},
+        {"entry_sequence": 7, "raw_age_column_text": "五十", "pdf_text_lines": "11167"},
+        {"entry_sequence": 8, "raw_age_column_text": None, "pdf_text_lines": "11168"},
+        {"entry_sequence": 9, "raw_age_column_text": "六十七", "pdf_text_lines": "11169"},
+        {"entry_sequence": 10, "raw_age_column_text": None, "pdf_text_lines": "11170"},
+    ],
+}]
 GROUP_ANOMALIES = [
     {
         "raw_group_marker": "一二九〇",
@@ -450,6 +479,7 @@ def get_group_index():
         "group_gaps": [dict(x) for x in GROUP_GAPS],
         "unassigned_blocks": [dict(x, entries=[dict(e) for e in x["entries"]]) for x in UNASSIGNED_BLOCKS],
         "group_anomalies": [dict(x) for x in GROUP_ANOMALIES],
+        "candidate_groups": [dict(x, entries=[dict(e) for e in x["entries"]]) for x in CANDIDATE_GROUPS],
         "status": "mixed_text_layer_index_and_layout_pending",
         "entry_count": sum(len(group["entries"]) for group in GROUP_INDEX),
         "groups": [
