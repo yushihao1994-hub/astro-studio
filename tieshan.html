@@ -217,6 +217,9 @@ function showStep(n){
     const stemNums=(x.stem_heluo_clauses||[]).map(v=>v.number+"（"+v.source_clause+"）").join("；")||"—"; const branchNums=(x.branch_heluo_clauses||[]).map(v=>v.number+"（"+v.source_clause+"）").join("；")||"—"; return "<tr><td>"+label+"</td><td>"+escapeHtml(x.stem_trigram||"—")+"</td><td>"+escapeHtml(x.day_master_branch_trigram||"—")+"</td><td>"+escapeHtml(stemNums)+"</td><td>"+escapeHtml(branchNums)+"</td><td>"+((x.branch_number_class||[]).join(" / ")||"—")+"</td></tr>";
   }).join("");
   box.innerHTML="<b>数理与条文规则状态</b><p>已接入可查到的《康节说易全书·铁板神数》（学林出版社2003年版）部分明确对照表，作为异本参考，不冒充清刻足本。</p><p><b>当前可核对：天干配卦、洛书数卦定局、日主配卦、河洛配数、地支取数类。</b></p><p>洛书数卦定局与日主配卦是两套不同规则，已分开保存；己在河洛配数原文中出现九数与四数两处，暂保留原文歧义，不强行选数。</p><table style='width:100%;border-collapse:collapse;font-size:12px;margin:10px 0'><thead><tr><th>柱位</th><th>天干配卦</th><th>日主配卦</th><th>天干河洛数</th><th>地支河洛数</th><th>地支取数类</th></tr></thead><tbody>"+refRows+"</tbody></table><p>版本标识："+escapeHtml(refs.edition||"未返回")+"</p><p>仍未实现：传统考刻定盘、真太阳时与均时差修正、完整六亲数演算、卦值日月推数、秘钞密码表与条文编号匹配。</p><p style='color:#e8ca8d'>注意：同一地支可能对应一组数，当前只展示原书列出的数类，不擅自选定单一数字；此模块不能单独推出人生定数。</p>";
+  const addRule=refs.eight_trigram_addition||{};
+  const addRows=(addRule.clauses||[]).map(item=>"<tr><td>"+escapeHtml(item.title)+"</td><td>"+escapeHtml(item.source_lines)+"</td><td>"+escapeHtml(item.source_meaning)+"</td><td>待例题验证</td></tr>").join("");
+  box.innerHTML += "<hr><b>八卦加则例 · 原文解说拆解</b><p>来源："+escapeHtml(addRule.source||"未返回")+"。当前只完成原文结构化登记，尚未把解释性文字冒充成可执行公式。</p><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr><th>口诀</th><th>原文位置</th><th>点校本解说</th><th>算法状态</th></tr></thead><tbody>"+addRows+"</tbody></table></div><p style='color:#e8ca8d'>"+(addRule.not_yet_implemented||[]).map(escapeHtml).join("；")+"</p>";
   if(keHtml) box.innerHTML += keHtml;
   if(palaceHtml) box.innerHTML += palaceHtml;
   const engine=d.iron_plate_engine||{};
