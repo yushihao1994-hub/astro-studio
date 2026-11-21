@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, request
-from deepseek_client import analyze_with_deepseek, generate_full_report, DeepSeekNotConfigured, DeepSeekError
+from deepseek_client import analyze_with_deepseek, generate_full_report, analyze_tieshan_profile, DeepSeekNotConfigured, DeepSeekError
 from flask_cors import CORS
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
@@ -1465,6 +1465,29 @@ def tieshan_pillars():
     except Exception as exc:
         app.logger.exception("Iron Plate pillar calculation failed")
         return jsonify({"ok": False, "error": "四柱计算发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+@app.post("/api/tieshan/analyze")
+def tieshan_analyze():
+    """AI interpretation of already-calculated pillars; not a claimed Iron Plate numbering method."""
+    payload = request.get_json(silent=True) or {}
+    try:
+        result = analyze_tieshan_profile(
+            payload.get("pillars"),
+            payload.get("birth") or {},
+            str(payload.get("gender") or "")
+        )
+        return jsonify({"ok": True, "analysis_type": "四柱基础文化解读", "analysis": result})
+    except DeepSeekNotConfigured as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 503
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
+    except DeepSeekError as exc:
+        app.logger.warning("Iron Plate AI analysis unavailable: %s", str(exc))
+        return jsonify({"ok": False, "error": "AI 深度分析暂时不可用，请稍后重试。"}), 502
+    except Exception as exc:
+        app.logger.exception("Iron Plate AI analysis failed")
+        return jsonify({"ok": False, "error": "AI 分析发生内部错误（" + type(exc).__name__ + "）。"}), 500
 
 
 @app.get("/api/health")
