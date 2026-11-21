@@ -1000,16 +1000,48 @@ def get_group_index():
     }
 
 
+# 2003点校本目录页所列的分集起始印刷页。仅记录起始页，不推断结束页。
+COLLECTION_METADATA = {
+    "子": {"printed_page_start": 138, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": 75, "indexed_entries": 747},
+    "丑": {"printed_page_start": 172, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "寅": {"printed_page_start": 206, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "卯": {"printed_page_start": 240, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "巳": {"printed_page_start": 308, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "午": {"printed_page_start": 342, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "未": {"printed_page_start": 376, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "申": {"printed_page_start": 410, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "酉": {"printed_page_start": 444, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "戌": {"printed_page_start": 478, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+}
+
+def get_collection_progress():
+    return {
+        "edition": EDITION,
+        "source_note": "分集起始印刷页来自2003点校本目录；仅登记起始页，不推断结束页或正文条数。",
+        "collections": [{"collection": branch, **dict(values)} for branch, values in COLLECTION_METADATA.items()],
+        "limitations": [
+            "目录页码定位不代表正文已经转录。",
+            "子集索引是PDF文本层结构记录，仍待扫描图像核验。",
+            "丑集至亥集未完成正文结构转录，不生成空白条目或密码数。"
+        ]
+    }
+
+
 def get_collection_sample(branch="子"):
     if branch != "子":
+        details = dict(COLLECTION_METADATA.get(branch, {}))
         return {
             "edition": EDITION,
             "collection": branch,
             "status": "not_transcribed",
+            "printed_page_start": details.get("printed_page_start"),
+            "toc_status": details.get("toc_status", "not_located"),
             "entry_count": 0,
             "entries": [],
             "field_guide": dict(FIELD_GUIDE),
-            "limitations": ["该分集尚未完成逐条转录。"],
+            "limitations": ["该分集尚未完成逐条转录。", "目录起始页不代表正文已核对。"],
         }
     return {
         "edition": EDITION,
