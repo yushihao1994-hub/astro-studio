@@ -146,6 +146,25 @@ GROUP_INDEX.extend([
         10: "三十三／三十四"
     }),
     {
+        "group_marker": "一一五〇",
+        "pdf_text_lines": "10811-10858",
+        "entry_count": 10,
+        "layout_status": "sequential_number_age_lines_then_clause",
+        "layout_note": "与一一四〇组相同，组内序号后列岁数（可缺省或多值），再接正文；岁数不是独立对应数栏。",
+        "entries": [
+            {"entry_sequence": 1, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10813-10814", "age_markers": [], "age_marker_text": None, "age_marker_association_status": "age_not_listed_in_text_layer"},
+            {"entry_sequence": 2, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10816-10819", "age_markers": ["三十五", "三十六"], "age_marker_text": "三十五／三十六", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+            {"entry_sequence": 3, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10821-10825", "age_markers": ["五十七", "五十八", "五十九"], "age_marker_text": "五十七／五十八／五十九", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+            {"entry_sequence": 4, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10827-10830", "age_markers": ["四十一", "四十二"], "age_marker_text": "四十一／四十二", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+            {"entry_sequence": 5, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10832-10833", "age_markers": [], "age_marker_text": None, "age_marker_association_status": "age_not_listed_in_text_layer"},
+            {"entry_sequence": 6, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10835-10836", "age_markers": [], "age_marker_text": None, "age_marker_association_status": "age_not_listed_in_text_layer"},
+            {"entry_sequence": 7, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10838-10841", "age_markers": ["三十五", "三十六"], "age_marker_text": "三十五／三十六", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+            {"entry_sequence": 8, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10843-10846", "age_markers": ["三十二", "三十三"], "age_marker_text": "三十二／三十三", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+            {"entry_sequence": 9, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10848-10851", "age_markers": ["三十三", "三十四"], "age_marker_text": "三十三／三十四", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+            {"entry_sequence": 10, "raw_number_text": None, "number_field_present": False, "content_present": True, "pdf_text_lines": "10853-10858", "age_markers": ["三十三", "三十四", "三十五", "三十六"], "age_marker_text": "三十三／三十四／三十五／三十六", "age_marker_association_status": "text_layer_sequence_associated_image_check_pending"},
+        ],
+    },
+    {
         "group_marker": "一一四〇",
         "pdf_text_lines": "10764-10809",
         "entry_count": 10,
@@ -191,7 +210,7 @@ def get_group_index():
             "空值表示原文该条没有独立数字栏，不允许按相邻条目补齐。",
             "一一一〇至一一三〇组的岁数只作为待核候选，不代表已确认归属。",
             "对应数栏未知时保留null，不得解释为原书没有对应数。",
-            "一一四〇组采用独立的序号—岁数—正文分行版式，岁数字段不等于对应数栏。",
+            "一一四〇、一一五〇组采用序号—岁数—正文分行版式，岁数字段不等于对应数栏。",
             "本索引不构成铁板密码条号，不用于自动考刻或断命。"
         ]
     }
