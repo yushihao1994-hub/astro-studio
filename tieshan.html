@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080e1c">
+<title>铁板神数 · 命理推演系统</title>
+<style>
+:root{color-scheme:dark;--bg:#080e1c;--panel:#101b2d;--panel2:#13243a;--line:#244b67;--cyan:#63e8ff;--violet:#a99aff;--gold:#e8ca8d;--txt:#edf7ff;--muted:#91a8bd}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--txt);background:radial-gradient(ellipse at 85% 0,#183957 0,transparent 36%),radial-gradient(ellipse at 0 40%,#211b45 0,transparent 32%),var(--bg);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:980px;margin:auto;padding:22px 16px 56px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;display:grid;place-items:center;border:1px solid #3d829b;border-radius:13px;color:var(--cyan);font-size:25px;background:#10283b;box-shadow:0 0 24px #38d9ff20}h1{font-size:19px;letter-spacing:2px;margin:0}.sub{font-size:10px;color:var(--muted);letter-spacing:1.5px}.tag{font-size:10px;color:var(--cyan);border:1px solid #286078;padding:5px 9px;border-radius:6px;white-space:nowrap}
+.hero{padding:28px 24px;border:1px solid #28546a;border-radius:18px;background:linear-gradient(125deg,#12263b,#121a2e 65%,#211b3a);position:relative;overflow:hidden;box-shadow:0 16px 40px #0004}.eyebrow{font:11px ui-monospace,monospace;color:var(--cyan);letter-spacing:2px}.hero h2{font-size:clamp(25px,5vw,38px);line-height:1.25;margin:10px 0}.hero h2 span{color:var(--gold)}.hero p{max-width:680px;color:#b3c5d7;font-size:13px;margin:0}.hero:after{content:"☯";position:absolute;right:25px;top:5px;font-size:130px;color:#b4eaff0b}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}.card{min-width:0;border:1px solid var(--line);border-radius:14px;background:linear-gradient(145deg,#111f32,#0d1728);padding:19px;box-shadow:0 10px 28px #0002}.card.full{grid-column:1/-1}.card h3{font-size:15px;margin:0 0 4px}.hint{font-size:11px;color:var(--muted);margin:0 0 16px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field.full{grid-column:1/-1}label{display:block;color:#c8d9e8;font-size:12px;margin-bottom:6px}input,select{width:100%;height:44px;border:1px solid #31516b;border-radius:8px;background:#0a1423;color:var(--txt);padding:0 11px;font:inherit;outline:none}input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #63e8ff16}.choice{display:flex;gap:8px}.choice label{flex:1;margin:0}.choice input{position:absolute;opacity:0;pointer-events:none}.choice span{display:block;text-align:center;border:1px solid #31516b;border-radius:8px;padding:10px;color:#b8c9d9}.choice input:checked+span{border-color:var(--cyan);color:var(--cyan);background:#123047}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}button{border:0;border-radius:8px;padding:12px 17px;font:inherit;font-weight:700;cursor:pointer}.primary{color:#07121d;background:linear-gradient(100deg,#65eaff,#a3f0ff);box-shadow:0 6px 22px #35d9ff25}.secondary{color:#d7e6f4;background:#17283d;border:1px solid #35516b}.notice{margin-top:14px;border:1px solid #67563a;background:#282416;border-radius:9px;padding:11px 12px;color:#dfc99b;font-size:11px;line-height:1.8}
+.result{display:none;margin-top:16px}.result.show{display:block}.status{padding:16px;border:1px solid #3a6680;border-radius:11px;background:#102538;color:#d9f5ff;font-size:13px}.status strong{display:block;color:var(--cyan);margin-bottom:5px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:13px}.step{border:1px solid #29475e;border-radius:9px;padding:12px;background:#0c1929}.step b{display:block;color:var(--gold);font-size:12px}.step span{font-size:10px;color:var(--muted)}
+footer{text-align:center;color:#6e879e;font-size:10px;margin-top:25px}
+@media(max-width:620px){.wrap{padding:16px 12px 40px}.grid{grid-template-columns:1fr}.card.full{grid-column:auto}.hero{padding:23px 18px}.hero:after{right:7px;top:28px;font-size:85px;opacity:.6}.fields{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr}.tag{font-size:9px}}
+@media(max-width:380px){.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="top"><div class="brand"><div class="logo">☯</div><div><h1>铁板神数</h1><div class="sub">TIE BAN SHEN SHU · DESTINY ARCHIVE</div></div></div><span class="tag">独立研究版 · 01</span></header>
+<section class="hero"><div class="eyebrow">TRADITIONAL DESTINY CALCULATION</div><h2>以出生资料为起点，<br><span>逐步推演命数条文。</span></h2><p>建立个人命盘档案，后续将依次完成历法换算、四柱校验、数理推演与条文检索。不同传承规则会明确标注，不把推测伪装成古籍原文。</p></section>
+<section class="grid">
+<div class="card full"><h3>建立出生档案</h3><p class="hint">请尽量填写准确的出生时间与地点；不确定的资料可以先留空或选择未知。</p>
+<form id="birthForm"><div class="fields">
+<div class="field"><label for="name">称呼（选填）</label><input id="name" name="name" maxlength="30" placeholder="例如：某某"></div>
+<div class="field"><label>性别</label><div class="choice"><label><input type="radio" name="gender" value="男" checked><span>男</span></label><label><input type="radio" name="gender" value="女"><span>女</span></label></div></div>
+<div class="field"><label for="calendar">出生日期类型</label><select id="calendar" name="calendar"><option value="solar">公历</option><option value="lunar">农历</option></select></div>
+<div class="field"><label for="date">出生日期</label><input id="date" name="date" type="date" required></div>
+<div class="field"><label for="time">出生时间</label><input id="time" name="time" type="time"><select id="timeUnknown" aria-label="出生时间是否未知" style="margin-top:7px"><option value="known">时间准确或大致准确</option><option value="unknown">出生时间不详</option></select></div>
+<div class="field"><label for="place">出生地点</label><input id="place" name="place" maxlength="100" placeholder="省、市、县/区、乡镇"></div>
+<div class="field full"><label>时间准确程度</label><select id="accuracy" name="accuracy"><option value="准确">准确（误差约15分钟内）</option><option value="大致">大致记得（误差约1小时）</option><option value="时辰">只知道时辰</option><option value="未知">完全不清楚</option></select></div>
+</div><div class="actions"><button class="primary" type="submit">建立命盘档案</button><button class="secondary" type="button" id="clear">清空资料</button></div></form>
+<div class="notice">说明：铁板神数存在不同传承与推演版本，部分关键算法和条文版本并无统一公开标准。本工具会区分可核验的历法/四柱数据、所采用的规则版本与传统条文解释，不会在算法尚未验证时直接给出虚构定数。</div>
+</div>
+<div class="card full result" id="result"><div class="status"><strong>出生档案已建立</strong><span id="summary"></span><br>下一阶段将接入历法换算与四柱校验，再进行铁板神数数理推演。当前尚未生成定数和条文，避免给出未经验证的结果。</div>
+<div class="steps"><div class="step"><b>01 · 历法校验</b><span>公历/农历、节气、时区与出生地</span></div><div class="step"><b>02 · 四柱排定</b><span>年柱、月柱、日柱、时柱交叉校验</span></div><div class="step"><b>03 · 数理与条文</b><span>版本化规则、条文来源与解释</span></div></div></div>
+</section>
+<footer>传统术数文化研究与个人探索工具 · 不构成现实事件的确定预测</footer>
+</main>
+<script>
+const form=document.getElementById('birthForm'), result=document.getElementById('result');
+const KEY='tieshanshenshu_profile_v1';
+document.getElementById('timeUnknown').addEventListener('change',e=>{document.getElementById('time').disabled=e.target.value==='unknown';if(e.target.value==='unknown')document.getElementById('time').value='';});
+form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const data=Object.fromEntries(new FormData(form).entries());data.timeUnknown=document.getElementById('timeUnknown').value;data.accuracy=document.getElementById('accuracy').value;try{localStorage.setItem(KEY,JSON.stringify(data));}catch(_){}const dateType=data.calendar==='lunar'?'农历':'公历';document.getElementById('summary').textContent=(data.name?data.name+'，':'')+data.gender+'，'+dateType+' '+data.date+'，出生时间：'+(data.timeUnknown==='unknown'?'未知':(data.time||'未填写'))+'，出生地：'+(data.place||'未填写')+'。';result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});});
+document.getElementById('clear').addEventListener('click',()=>{form.reset();document.getElementById('time').disabled=false;document.getElementById('timeUnknown').value='known';try{localStorage.removeItem(KEY);}catch(_){}result.classList.remove('show');});
+try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){for(const [k,v] of Object.entries(saved)){const el=form.elements.namedItem(k);if(el&&el.type!=='radio')el.value=v;else if(el&&el.length){const opt=[...el].find(x=>x.value===v);if(opt)opt.checked=true;}}document.getElementById('timeUnknown').value=saved.timeUnknown||'known';document.getElementById('time').disabled=saved.timeUnknown==='unknown';}}catch(_){}
+</script>
+</body></html>
