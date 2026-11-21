@@ -20,13 +20,13 @@ def _extract_json_object(content):
         for item in content:
             if isinstance(item, dict) and isinstance(item.get("text"), str):
                 parts.append(item["text"])
-        content = "\\n".join(parts)
+        content = "\n".join(parts)
     if not isinstance(content, str) or not content.strip():
         raise DeepSeekError("DeepSeek 返回了空内容。")
 
     text = content.strip()
-    text = re.sub(r"^\\s*```(?:json)?\\s*", "", text, flags=re.IGNORECASE)
-    text = re.sub(r"\\s*```\\s*$", "", text)
+    text = re.sub(r"^\s*```(?:json)?\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s*```\s*$", "", text)
     # Some reasoning-capable responses include a think block before the final answer.
     text = re.sub(r"<think>.*?</think>", "", text, flags=re.IGNORECASE | re.DOTALL).strip()
 
@@ -72,7 +72,8 @@ def analyze_with_deepseek(topic, evidence):
         "不得自行计算星体位置、宫位、相位或行运，不得补造缺失数据。"
         "占星属于文化与自我探索框架，不是科学验证的命运预测。"
         "若证据不足或相互矛盾，必须明确说明不确定，不得用确定语气预测事件。"
-        "输出必须是合法 JSON 对象，字段为 summary、sections、limitations。"
+        "输出必须是合法 json 对象，且只能输出 JSON，不得添加 Markdown 代码围栏或解释文字。"
+        "必须严格使用以下结构：{\"summary\":\"总体结论\",\"sections\":[{\"title\":\"主题\",\"conclusion\":\"结论\",\"reasoning\":\"依据与解释\",\"evidence_ids\":[\"输入中真实存在的证据id\"],\"advice\":\"建议\"}],\"limitations\":[]}。"
         "sections 是数组，每项包含 title、conclusion、reasoning、evidence_ids、advice。"
         "evidence_ids 只能使用输入证据中真实存在的 id；每项至少引用一个直接相关的证据。"
         "用自然、具体、易懂的简体中文，避免空话、重复句和堆砌占星术语。"
@@ -92,13 +93,14 @@ def analyze_with_deepseek(topic, evidence):
             },
             json={
                 "model": model,
+                "thinking": {"type": "disabled"},
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)}
                 ],
                 "response_format": {"type": "json_object"},
                 "temperature": 0.4,
-                "max_tokens": 3000,
+                "max_tokens": 6000,
                 "stream": False
             },
             timeout=(10, 90)
@@ -109,10 +111,22 @@ def analyze_with_deepseek(topic, evidence):
         choices = body.get("choices") or []
         if not choices or not isinstance(choices[0], dict):
             raise DeepSeekError("DeepSeek 响应缺少 choices。")
-        message = choices[0].get("message") or {}
+        choice = choices[0]
+        finish_reason = choice.get("finish_reason")
+        message = choice.get("message") or {}
         content = message.get("content")
         if content is None and isinstance(message.get("reasoning_content"), str):
             content = message["reasoning_content"]
+        if not isinstance(content, str) or not content.strip():
+            content_length = len(content) if isinstance(content, str) else 0
+            raise DeepSeekError(
+                "DeepSeek JSON 输出为空（finish_reason=" + str(finish_reason) +
+                "，content_length=" + str(content_length) + "）。"
+            )
+        if finish_reason == "length":
+            raise DeepSeekError("DeepSeek 输出达到长度上限，JSON 可能被截断。")
+        if finish_reason in ("content_filter", "insufficient_system_resource", "aborted"):
+            raise DeepSeekError("DeepSeek 生成中断（finish_reason=" + str(finish_reason) + "）。")
         result = _extract_json_object(content)
         if not isinstance(result.get("sections"), list):
             raise DeepSeekError("DeepSeek 返回的数据结构不符合要求。")
