@@ -72,6 +72,8 @@
           <div class="module-panel" id="panel-aspects">请先计算本命星盘，生成你的主要相位报告。</div>
           <button class="feature module-toggle" type="button" data-module="love-money" aria-expanded="false"><div class="ico">☽</div><div><b>婚姻感情与财运分析</b><span>恋爱需求、婚姻关系、赚钱方式、财富积累与风险管理</span></div><span class="feature-arrow">⌄</span></button>
           <div class="module-panel" id="panel-love-money">请先计算本命星盘，生成你的婚姻感情与财运专项报告。</div>
+          <button class="feature module-toggle" type="button" data-module="patterns" aria-expanded="false"><div class="ico">◇</div><div><b>专业星盘格局</b><span>大三角、T三角、大十字、风筝与上帝手指</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-patterns">请先计算本命星盘，识别主要星盘格局。</div>
         </div>
         <div class="status"><strong>计算服务</strong>后端已连接。提交出生资料后，将调用真实星历计算接口；地名会发送给 OpenStreetMap Nominatim 解析坐标。</div>
       </aside>
@@ -175,6 +177,19 @@
         document.getElementById('panel-aspects').innerHTML =
           '<h4>主要相位（最多显示40项）</h4>' + table(['星体','相位','容许度','趋近/分离'], chart.aspects.slice(0,40).map(a =>
             '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' + esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'));
+        const patterns = chart.patterns || [];
+        document.getElementById('panel-patterns').innerHTML = patterns.length
+          ? '<h4>识别到的主要星盘格局</h4>' + patterns.map((p,i) =>
+              '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
+              '<h4 style="margin:0 0 8px;color:#e6c78b">' + (i+1) + '. ' + esc(p.name) + '</h4>' +
+              '<p><b>涉及星体：</b>' + p.placements.map(x => esc(x.name)+'（'+esc(x.sign)+'·第'+esc(x.house||'未知')+'宫）').join('、') + '</p>' +
+              '<p><b>结构依据：</b>' + p.evidence.map(esc).join('；') + '</p>' +
+              '<p><b>结构含义：</b>' + esc(p.meaning) + '</p>' +
+              '<p><b>潜在优势：</b>' + esc(p.strengths) + '</p>' +
+              '<p><b>需要留意：</b>' + esc(p.challenges) + '</p>' +
+              '<p><b>实践建议：</b>' + esc(p.advice) + '</p></article>'
+            ).join('')
+          : '<h4>未识别到当前规则覆盖的主要格局</h4><p>这不代表星盘缺少特点，只表示当前采用的主要相位与容许度规则下，没有形成已收录的完整格局。</p>';
         const monthly = chart.monthly_transits || {};
         const monthlyRelationship = monthly.relationship ? {
           title: '最近一个月与未来一个月 · 感情行运专题',
