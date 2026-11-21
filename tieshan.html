@@ -263,7 +263,7 @@ form.addEventListener('submit',async e=>{
     const response=await fetch(API+'/api/tieshan/pillars',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({birth_year:Number(data.birth_year),birth_month:Number(data.birth_month),birth_day:Number(data.birth_day),birth_time:data.time,calendar:data.calendar,gender:data.gender,place:data.place,accuracy:data.accuracy}),signal:AbortSignal.timeout(150000)});
     const resultData=await response.json();
     if(!response.ok||!resultData.ok)throw new Error(resultData.error||'四柱计算失败，请核对出生资料。');
-    lastPillarData=resultData;output.innerHTML=renderPillars(resultData);showStep(1);
+    lastPillarData=resultData;output.innerHTML=renderPillars(resultData);showStep(1);window.dispatchEvent(new CustomEvent('tieshan:calculated',{detail:resultData}));
   }catch(err){output.innerHTML='<p style="color:#ffb4a8">计算未完成：'+escapeHtml(err.message||'网络连接异常')+'</p><p style="font-size:11px;color:#91a8bd">出生资料已保存在当前设备，可以稍后重试。</p>';}
 });
 document.getElementById('clear').addEventListener('click',()=>{form.reset();document.getElementById('time').disabled=false;document.getElementById('timeUnknown').value='known';provinceSelect.value='';setRegionOptions(citySelect,[],'选择市/州');setRegionOptions(districtSelect,[],'选择县/区');setRegionOptions(townSelect,[],'选择乡/镇/街道');setRegionOptions(villageSelect,[],'选择村委会/社区');naturalVillageInput.value='';refreshPlace();yearSelect.value='1994';refreshDateParts();try{localStorage.removeItem(KEY);}catch(_){}result.classList.remove('show');});
@@ -353,7 +353,7 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
   if(oldSteps&&oldDetail){stepHost.appendChild(oldSteps.cloneNode(true));stepHost.appendChild(oldDetail.cloneNode(true));}
  }
  const originalSubmit=form.addEventListener;
- form.addEventListener('submit',()=>{setTimeout(()=>{if(lastPillarData){buildPages(lastPillarData);switchPage('chart');}},1200);});
+ window.addEventListener('tieshan:calculated',e=>{if(e.detail){buildPages(e.detail);switchPage('chart');}});
  window.addEventListener('storage',()=>{});
 })();
 </script>
