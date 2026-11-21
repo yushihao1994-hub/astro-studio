@@ -144,7 +144,7 @@ def calculate_tieshan_pillars(payload, latitude, longitude, place_label, timezon
         "stem": STEMS[hour_stem], "branch": BRANCHES[hour_branch_index],
         "name": STEMS[hour_stem] + BRANCHES[hour_branch_index],
         "branch_period": "23:00–00:59" if hour_branch_index == 0 else
-            f"{(hour_branch_index * 2 - 1):02d}:00–{(hour_branch_index * 2 + 1):02d}:59",
+            f"{(hour_branch_index * 2 - 1):02d}:00–{(hour_branch_index * 2):02d}:59",
     }
 
     if hour == 23:
