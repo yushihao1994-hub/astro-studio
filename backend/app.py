@@ -183,7 +183,14 @@ def detect_chart_patterns(positions, aspects):
                     pairs=[(q[x],q[y]) for x in range(4) for y in range(x+1,4)]
                     opp=[(a,b) for a,b in pairs if get(a,b,"冲相")]
                     sq=[(a,b) for a,b in pairs if get(a,b,"四分相")]
-                    if len(opp)==2 and len(sq)==4:
+                    # A valid grand cross has two disjoint opposition axes and
+                    # four square edges; every point belongs to one opposition
+                    # and exactly two square edges.
+                    opp_degree = {n: sum(n in pair for pair in opp) for n in q}
+                    sq_degree = {n: sum(n in pair for pair in sq) for n in q}
+                    if (len(opp)==2 and len(sq)==4
+                            and all(v == 1 for v in opp_degree.values())
+                            and all(v == 2 for v in sq_degree.values())):
                         ev=[f"{a}—{b} 冲相（{get(a,b,'冲相')['orb']}°）" for a,b in opp]
                         ev += [f"{a}—{b} 四分相（{get(a,b,'四分相')['orb']}°）" for a,b in sq]
                         add("大十字",q,ev,
@@ -201,8 +208,10 @@ def detect_chart_patterns(positions, aspects):
                 if c in (a,b): continue
                 d1=angular_distance(by_name[a]["longitude"],by_name[c]["longitude"])
                 d2=angular_distance(by_name[b]["longitude"],by_name[c]["longitude"])
-                if abs(d1-150)<=3 and abs(d2-150)<=3:
-                    ev=[f"{a}—{b} 六分相（{get(a,b,'六分相')['orb']}°）",
+                sextile = get(a,b,"六分相")
+                if (abs(d1-150)<=3 and abs(d2-150)<=3
+                        and sextile and sextile.get("orb", 99) <= 3):
+                    ev=[f"{a}—{b} 六分相（{sextile['orb']}°）",
                         f"{a}—{c} 梅花相（{round(abs(d1-150),3)}°）",
                         f"{b}—{c} 梅花相（{round(abs(d2-150),3)}°）"]
                     add("上帝手指（Yod）",[a,b,c],ev,
@@ -755,7 +764,28 @@ def calculate_chart(payload):
     local_naive = datetime.strptime(
         payload["birth_date"] + " " + payload["birth_time"], "%Y-%m-%d %H:%M"
     )
-    local_dt = local_naive.replace(tzinfo=tz)
+    # Detect daylight-saving gaps and repeated local clock times. A nonexistent
+    # local time cannot be converted reliably; an ambiguous time defaults to
+    # the first occurrence but is explicitly reported to the user.
+    valid_folds = []
+    for fold in (0, 1):
+        candidate = local_naive.replace(tzinfo=tz, fold=fold)
+        roundtrip = candidate.astimezone(timezone.utc).astimezone(tz).replace(tzinfo=None)
+        if roundtrip == local_naive:
+            valid_folds.append(candidate)
+    if not valid_folds:
+        raise ValueError("该出生地日期的当地时间处于夏令时跳时区间，钟表时间不存在，请核对出生记录。")
+    dst_warning = []
+    distinct_offsets = {candidate.utcoffset() for candidate in valid_folds}
+    if len(distinct_offsets) > 1:
+        requested_fold = payload.get("fold")
+        if requested_fold in (0, 1, "0", "1"):
+            local_dt = local_naive.replace(tzinfo=tz, fold=int(requested_fold))
+        else:
+            local_dt = local_naive.replace(tzinfo=tz, fold=0)
+            dst_warning.append("出生时间处于夏令时重复时段，系统暂按第一次出现的当地时间计算；请核对当时钟表记录。")
+    else:
+        local_dt = valid_folds[0]
     utc_dt = local_dt.astimezone(timezone.utc)
 
     if payload.get("latitude") is not None and payload.get("longitude") is not None:
@@ -770,7 +800,7 @@ def calculate_chart(payload):
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):
         raise ValueError("经纬度超出有效范围。")
     detected_tz = TimezoneFinder().timezone_at(lat=lat, lng=lon)
-    timezone_warning = []
+    timezone_warning = list(dst_warning)
     if detected_tz and detected_tz != tz_name:
         timezone_warning.append(f"所选时区 {tz_name} 与坐标推算时区 {detected_tz} 不一致，请核对出生地当地时间。")
 
@@ -853,11 +883,12 @@ def calculate_chart(payload):
                     signed = (a_lon - b_lon + 180) % 360 - 180
                     derivative = relative_speed * (1 if signed >= 0 else -1)
                     applying = (separation - exact) * derivative < 0
+                    phase = "精确" if deviation < 0.001 else ("趋近" if applying else "分离")
                     aspects.append({
                         "planet_a": a_name, "planet_b": b_name,
                         "aspect": aspect_name, "angle": exact,
                         "orb": round(deviation, 3),
-                        "phase": "趋近" if applying else "分离"
+                        "phase": phase
                     })
     aspects.sort(key=lambda x: x["orb"])
 
