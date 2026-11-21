@@ -317,18 +317,18 @@ GROUP_INDEX.extend([
 
 
 # Preserve two OCR-specific anomalies without silently normalizing their raw forms.
-GROUP_INDEX[-6]["source_header_ocr"] = {
+GROUP_INDEX[9]["source_header_ocr"] = {
     "raw_text": "康节报具全书",
     "normalized_candidate": "康节说易全书",
     "status": "probable_ocr_error_pending_image_check",
     "pdf_text_lines": "10906",
 }
-GROUP_INDEX[-1]["age_marker_ambiguities"] = [{
+GROUP_INDEX[14]["age_marker_ambiguities"] = [{
     "entry_sequence": 5,
     "raw_token": "三十作",
     "status": "unresolved_ocr_token_pending_image_check",
 }]
-GROUP_INDEX[-1]["entries"][4]["age_marker_text"] = "二十七／三十／三十作／九十"
+GROUP_INDEX[14]["entries"][4]["age_marker_text"] = "二十七／三十／三十作／九十"
 GROUP_INDEX[-1]["entries"][4]["age_markers"] = ["二十七", "三十", "九十"]
 GROUP_INDEX[-1]["entries"][4]["age_marker_association_status"] = "contains_ocr_ambiguous_age_token_pending_image_check"
 
