@@ -153,6 +153,11 @@ COLLECTIONS = [
     {"branch":"戌","source_label":"戌集","order":11,"printed_page_start":478,"printed_page_end":511,"range_status":"bounded_by_next_toc_entry"},
     {"branch":"亥","source_label":"亥集","order":12,"printed_page_start":512,"printed_page_end":None,"range_status":"open_end_not_verified"},
 ]
+ADDITIONAL_SECTIONS = [
+    {"title":"玄集","pdf_text_lines":"34677-34678；34914-34915；34999-35000","status":"detected_in_pdf_tail_not_mapped_to_toc","note":"正文PDF后段可见该标题；目录未在十二地支集列表中单列，暂不归入亥集或任何地支集。"},
+    {"title":"支集","pdf_text_lines":"34842-34843","status":"detected_in_pdf_tail_not_mapped_to_toc","note":"正文PDF后段可见该标题；需核对其与前后章节、版本结构的关系。"},
+]
+ 
 LIMITATIONS = [
     "本索引只整理2003年点校本导读中的分类名称与主题标签，不是清刻本原始分类全貌。",
     "分类释义是现代点校本导读的编者说明，不等同每条条文原文，也不代表算法已验证。",
@@ -170,5 +175,6 @@ def get_kunji_glossary():
         "entry_count": len(ENTRIES),
         "entries": [dict(item) for item in ENTRIES],
         "twelve_branch_collections": [dict(item) for item in COLLECTIONS],
+        "additional_sections": [dict(item) for item in ADDITIONAL_SECTIONS],
         "limitations": list(LIMITATIONS),
     }
