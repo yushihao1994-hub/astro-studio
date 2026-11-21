@@ -30,6 +30,23 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["entry_count"], 0)
         self.assertEqual(data["entries"], [])
 
+    def test_age_markers_are_separate_lists_not_clause_numbers(self):
+        data = get_collection_sample("子")
+        self.assertTrue(all(isinstance(x["age_markers"], list) for x in data["entries"]))
+        self.assertTrue(all(x["age_marker_text"] is None for x in data["entries"]))
+        self.assertEqual(data["schema_version"], "0.2.0")
+
+    def test_layout_patterns_keep_text_layer_evidence_and_unverified_status(self):
+        data = get_collection_sample("子")
+        patterns = data["layout_patterns"]
+        ids = [x["pattern_id"] for x in patterns]
+        self.assertIn("repeated_collection_headers", ids)
+        self.assertIn("optional_corresponding_number", ids)
+        self.assertIn("age_markers_are_independent", ids)
+        self.assertTrue(all("image_check_pending" in x["status"] or
+                            "page_image_verification" in x["status"]
+                            for x in patterns))
+
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
