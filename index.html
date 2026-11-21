@@ -110,7 +110,7 @@
           <p class="note">档案名称仅用于本页显示并保存在当前设备。点击计算时，出生日期、时间、时区和出生地点会发送到计算服务器；出生地点还会发送给 OpenStreetMap Nominatim 解析坐标。请仅提交你愿意用于计算的信息。</p>
         </form>
       </div>
-      <aside class="card">
+      <aside class="card" id="report-section">
         <h3>专业分析模块</h3>
         <p class="hint">真实星盘数据驱动的专项深度报告</p>
         <div class="features">
@@ -226,7 +226,8 @@
         });
         const body = await response.json();
         if (!response.ok || !body.ok) throw new Error(body.error || '计算失败，请检查出生资料后重试。');
-        const chart = body.chart;\n        fillOverview(chart, data);
+        const chart = body.chart;
+        fillOverview(chart, data);
         const planetRows = chart.planets.map(p =>
           '<tr><td>' + esc(p.name) + '</td><td>' + positionText(p) + '</td><td>' +
           (p.house ? p.house + '宫' : '—') + '</td><td>' + (p.retrograde ? '逆行' : '顺行') + '</td></tr>'
