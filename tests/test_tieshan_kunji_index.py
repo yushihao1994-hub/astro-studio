@@ -22,6 +22,17 @@ class KunjiGlossaryIndexTests(unittest.TestCase):
         you = next(x for x in rows if x["branch"] == "酉")
         self.assertIn("西集", you["source_variant"])
 
+    def test_extra_pdf_headings_are_not_forced_into_twelve_branch_collections(self):
+        data = get_kunji_glossary()
+        titles = [x["title"] for x in data["additional_sections"]]
+        self.assertIn("玄集", titles)
+        self.assertIn("支集", titles)
+        self.assertTrue(all(
+            x["status"] == "detected_in_pdf_tail_not_mapped_to_toc"
+            for x in data["additional_sections"]
+        ))
+        self.assertIsNone(data["twelve_branch_collections"][-1]["printed_page_end"])
+
     def test_repeated_labels_keep_distinct_source_locations(self):
         rows = get_kunji_glossary()["entries"]
         repeated = [x for x in rows if x["term"] == "比"]
