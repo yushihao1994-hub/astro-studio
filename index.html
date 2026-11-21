@@ -185,7 +185,7 @@
     function renderReportSections(sections, prefix) {
       if (!Array.isArray(sections) || !sections.length) return '<p>该专题暂时没有可展示的详细内容。</p>';
       return sections.map((item, index) => {
-        return '<details class="report-item" id="' + prefix + '-' + index + '">' +
+        return '<details class="report-item" id="' + prefix + '-' + index + '"' + (index === 0 ? ' open' : '') + '>' +
           '<summary><span class="report-index">' + String(index + 1).padStart(2, '0') + '</span><span class="report-title">' +
           esc(cleanSectionTitle(item.title)) + '</span><span class="report-chevron">⌄</span></summary>' +
           '<div class="report-content"><p>' + esc(item.plain_content || item.content || '') + '</p>' +
