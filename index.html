@@ -370,16 +370,23 @@
         const allSections = Array.isArray(analysis.sections) ? analysis.sections : [];
         const sampleHtml = first
           ? '<details class="report-item" open><summary><span class="report-index">01</span><span class="report-title">' + esc(first.title || '你的个性化发现') + '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
-            '<p><b>核心发现：</b>' + esc(first.conclusion || '') + '</p><p><b>为什么会这样：</b>' + esc(first.reasoning || '') + '</p><p><b>你可以怎么做：</b>' + esc(first.advice || '') + '</p></div></details>'
+            '<p><b>本次免费发现：</b>' + esc(first.conclusion || '') + '</p>' +
+            '<div class="sample-limit"><b>还有一个值得继续弄清的问题</b><span>这个特点在你的真实生活中会怎样表现？它会怎样影响关系、选择或发展方向？免费体验先给出线索，完整专题再结合具体星盘结构逐层解释。</span></div></div></details>'
           : '<p>本次暂时没有生成可展示的样例，请稍后再试。</p>';
+        const topicValue = {
+          personality: '看清优势如何发挥、哪些内在矛盾容易拖慢行动，以及适合自己的成长路径',
+          relationship: '看清真实情感需求、容易重复的相处模式，以及长期关系中需要磨合的地方',
+          finance: '看清适合自己的收入与积累方式、容易忽略的财务盲点，以及资源如何转化为成果',
+          trends: '分清过去30天的主题回顾与未来30天的重点提醒，了解感情和财务分别值得留意什么'
+        };
         const lockedTitles = allSections.slice(1).map((item, index) =>
-          '<div class="locked-topic"><span class="locked-number">' + String(index + 2).padStart(2, '0') + '</span><div><b>' + esc(item.title || '深度专题') + '</b><small>完整报告将结合相关星盘证据展开分析</small></div><span class="lock-mark">锁定</span></div>'
+          '<div class="locked-topic"><span class="locked-number">' + String(index + 2).padStart(2, '0') + '</span><div><b>' + esc(item.title || '深度专题') + '</b><small>' + esc(topicValue[topic] || '结合具体星盘位置、宫位与相位，解释现实表现和可执行建议') + '</small></div><span class="lock-mark">深度解读</span></div>'
         ).join('');
         const previewCount = Math.max(allSections.length - 1, 0);
         output.innerHTML = '<section class="report-group"><h3>你的免费深度体验</h3><p class="report-intro">' + esc(analysis.summary || '') + '</p>' +
           sampleHtml +
-          (previewCount ? '<div class="locked-preview"><div class="locked-preview-head"><b>你的专属报告还包含 ' + previewCount + ' 个深度专题</b><span>完整版预览</span></div>' + lockedTitles + '</div>' : '') +
-          '<div class="sample-limit"><b>免费部分已经展示你的核心发现</b><span>解锁后可继续查看每个专题的具体表现、星盘依据之间的联系，以及针对现实选择的行动建议。</span></div>' +
+          (previewCount ? '<div class="locked-preview"><div class="locked-preview-head"><b>完整报告还有 ' + previewCount + ' 个专属专题</b><span>按你的星盘生成</span></div>' + lockedTitles + '</div>' : '') +
+          '<div class="sample-limit"><b>完整报告不只是更多文字</b><span>每个专题都会说明：星盘依据是什么、这些因素如何共同作用、现实中可能怎样体现，以及你可以采取什么具体行动。不会把星盘倾向写成必然命运。</span></div>' +
           '<button type="button" class="primary ai-analysis-button paywall-open" data-product="' + topic + '">查看我的完整报告与价格</button></section>';
       } catch (error) {
         output.textContent = error.name === 'AbortError'
@@ -397,10 +404,10 @@
       if (openButton) {
         const names = {personality:'性格与人生方向',relationship:'感情与婚姻',finance:'财富与财运',trends:'未来30天趋势'};
         const descriptions = {
-          personality:'深入了解你的核心性格、优势盲区、内在矛盾与人生方向。',
-          relationship:'深入了解你的恋爱模式、伴侣需求、关系挑战与长期相处建议。',
-          finance:'深入了解你的收入模式、财富优势、积累阻力与风险倾向。',
-          trends:'查看未来30天的重点主题，并分别了解感情与财务方面的提醒。'
+          personality:'不只告诉你“是什么性格”，还会拆解优势如何发挥、行动为何容易卡住，以及怎样选择更适合自己的发展环境。',
+          relationship:'不替你预测结婚或分手，而是分析情感需求、容易重复的相处模式、冲突来源与长期关系中的磨合重点。',
+          finance:'不承诺发财或具体收入，而是分析赚钱与资源配置倾向、财富积累的助力和阻力，以及需要留意的风险习惯。',
+          trends:'把过去30天回顾与未来30天提醒分开呈现，并分别解释感情和财务主题对应的行运依据与可行安排。'
         };
         const topic = openButton.dataset.product;
         document.getElementById('paywallTitle').textContent = '解锁' + (names[topic] || '完整个人') + '报告';
