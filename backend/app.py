@@ -718,141 +718,113 @@ def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
     }
 
 def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
-    """Compare daily Moshier transits with natal relationship/finance factors."""
+    """Create plain-language past/future 30-day summaries from daily transit contacts."""
     from datetime import timedelta
-
     tz = ZoneInfo(birth_timezone)
     now_local = datetime.now(tz)
-    start_local = (now_local - timedelta(days=30)).replace(hour=0, minute=0, second=0, microsecond=0)
-    end_local = (now_local + timedelta(days=30)).replace(hour=23, minute=59, second=0, microsecond=0)
-
+    today = now_local.date()
+    past_start, future_end = today - timedelta(days=30), today + timedelta(days=30)
     natal = {p["name"]: p["longitude"] for p in natal_positions}
     cusp = {h["house"]: h["longitude"] for h in houses}
-    relationship_targets = {
-        "本命金星": natal.get("金星"), "本命火星": natal.get("火星"),
+    relationship_targets = {"本命金星": natal.get("金星"), "本命火星": natal.get("火星"),
         "本命月亮": natal.get("月亮"), "第五宫宫头": cusp.get(5),
-        "第七宫宫头": cusp.get(7), "第八宫宫头": cusp.get(8)
-    }
-    finance_targets = {
-        "本命木星": natal.get("木星"), "本命土星": natal.get("土星"),
-        "第二宫宫头": cusp.get(2), "第八宫宫头": cusp.get(8),
-        "第十宫宫头": cusp.get(10)
-    }
-    transit_bodies = [
-        ("水星", swe.MERCURY), ("金星", swe.VENUS), ("火星", swe.MARS),
-        ("木星", swe.JUPITER), ("土星", swe.SATURN),
-        ("天王星", swe.URANUS), ("海王星", swe.NEPTUNE), ("冥王星", swe.PLUTO)
-    ]
-    aspect_defs = [(0, "合相"), (60, "六分相"), (90, "四分相"),
-                   (120, "三分相"), (180, "冲相")]
+        "第七宫宫头": cusp.get(7), "第八宫宫头": cusp.get(8)}
+    finance_targets = {"本命木星": natal.get("木星"), "本命土星": natal.get("土星"),
+        "第二宫宫头": cusp.get(2), "第八宫宫头": cusp.get(8), "第十宫宫头": cusp.get(10)}
+    bodies = [("水星", swe.MERCURY), ("金星", swe.VENUS), ("火星", swe.MARS),
+        ("木星", swe.JUPITER), ("土星", swe.SATURN), ("天王星", swe.URANUS),
+        ("海王星", swe.NEPTUNE), ("冥王星", swe.PLUTO)]
+    aspect_defs = [(0, "合相"), (60, "六分相"), (90, "四分相"), (120, "三分相"), (180, "冲相")]
     buckets = {"relationship": [], "finance": []}
-    day = start_local.date()
-    final_day = end_local.date()
-    while day <= final_day:
-        local_midnight = datetime(day.year, day.month, day.day, 12, 0, tzinfo=tz)
-        utc = local_midnight.astimezone(timezone.utc)
-        jd = swe.julday(utc.year, utc.month, utc.day,
-                        utc.hour + utc.minute / 60, swe.GREG_CAL)
-        for transit_name, body in transit_bodies:
+    day = past_start
+    while day <= future_end:
+        local_noon = datetime(day.year, day.month, day.day, 12, 0, tzinfo=tz)
+        utc = local_noon.astimezone(timezone.utc)
+        jd = swe.julday(utc.year, utc.month, utc.day, utc.hour + utc.minute / 60, swe.GREG_CAL)
+        for planet, body in bodies:
             values, _ = swe.calc_ut(jd, body, swe.FLG_MOSEPH | swe.FLG_SPEED)
-            transit_lon = values[0] % 360
+            lon = values[0] % 360
             for category, targets in (("relationship", relationship_targets), ("finance", finance_targets)):
-                for target_name, target_lon in targets.items():
-                    if target_lon is None:
-                        continue
-                    separation = angular_distance(transit_lon, target_lon)
-                    for exact, aspect_name in aspect_defs:
+                for target, target_lon in targets.items():
+                    if target_lon is None: continue
+                    separation = angular_distance(lon, target_lon)
+                    for exact, aspect in aspect_defs:
                         orb = abs(separation - exact)
-                        limit = 1.5 if transit_name in ("木星", "土星", "天王星", "海王星", "冥王星") else 1.0
+                        limit = 1.5 if planet in ("木星", "土星", "天王星", "海王星", "冥王星") else 1.0
                         if orb <= limit:
-                            buckets[category].append({
-                                "date": day.isoformat(), "transit": transit_name,
-                                "target": target_name, "aspect": aspect_name,
-                                "orb": round(orb, 2)
-                            })
+                            buckets[category].append({"date": day.isoformat(), "transit": planet,
+                                "target": target, "aspect": aspect, "orb": round(orb, 2)})
         day += timedelta(days=1)
 
-    def summarize(items, begin, finish):
-        selected = [e for e in items if begin <= e["date"] <= finish]
+    target_plain = {
+        "本命金星": "你表达喜欢、建立亲近感和判断关系价值的方式",
+        "本命火星": "你主动沟通、推进关系和处理分歧的方式",
+        "本命月亮": "你的情绪、安全感和日常相处需求",
+        "第五宫宫头": "恋爱、约会、兴趣和表达好感",
+        "第七宫宫头": "长期伴侣、承诺、合作与相互协商",
+        "第八宫宫头": "亲密信任、共同开支和金钱边界",
+        "本命木星": "你对机会、增长和扩大收入的判断",
+        "本命土星": "工作责任、长期规划和现实限制",
+        "第二宫宫头": "个人收入、日常现金流和储蓄",
+        "第十宫宫头": "事业方向、工作责任和长期目标"}
+    transit_plain = {
+        "水星": "沟通、消息、合同和计划安排", "金星": "人际互动、关系感受、消费与价值判断",
+        "火星": "行动力、竞争、推进速度和容易起冲突的地方", "木星": "学习、拓展、机会判断和增长预期",
+        "土星": "责任、规则、压力以及需要耐心处理的事", "天王星": "临时变化、调整计划和争取自主空间",
+        "海王星": "理想与期待，也提醒核实信息、避免想当然", "冥王星": "深层调整、控制边界和重要资源的重新安排"}
+    aspect_plain = {
+        "合相": "相关主题容易变得突出，注意别因一时感受而过度反应",
+        "六分相": "存在可主动把握的协调空间，通常需要自己行动才能转化",
+        "四分相": "可能感到不顺或有压力，适合检查计划、预算和边界",
+        "三分相": "推进起来可能相对顺手，但仍要留意细节",
+        "冲相": "可能出现两种需求拉扯，重点是协调，不要走极端"}
+    def date_cn(d):
+        return f"{d.month}月{d.day}日"
+    def summarize(items, begin, finish, domain, future):
+        selected = [e for e in items if begin.isoformat() <= e["date"] <= finish.isoformat()]
         grouped = {}
-        for e in selected:
-            key = (e["transit"], e["target"], e["aspect"])
-            grouped.setdefault(key, []).append(e)
-        lines = []
-        ranked = sorted(grouped.items(), key=lambda pair: min(x["orb"] for x in pair[1]))
+        for e in selected: grouped.setdefault((e["transit"], e["target"], e["aspect"]), []).append(e)
+        ranked = sorted(grouped.items(), key=lambda pair: min(x["orb"] for x in pair[1]))[:5]
+        if not ranked:
+            return ("这30天没有筛选到特别突出的重点提示。这不代表一定没有好事或坏事，"
+                "只是按当前筛选标准，没有需要单独标出的紧密星象。请照常安排生活，重要决定以现实信息为准。")
+        paragraphs = ["以下日期是值得留意或回顾的时间段，不代表事情一定发生。"]
         for (planet, target, aspect), hits in ranked:
             hits.sort(key=lambda x: x["date"])
-            best = min(hits, key=lambda x: x["orb"])
-            transit_meanings = {
-                "水星": "沟通、信息、判断与短期安排",
-                "金星": "关系互动、吸引力、价值判断与金钱偏好",
-                "火星": "行动、推进、竞争、冲突与精力分配",
-                "木星": "扩张、机会、学习与乐观预期",
-                "土星": "责任、规则、延迟、压力与长期建设",
-                "天王星": "变化、独立需求、突发调整与打破惯例",
-                "海王星": "理想、想象、同情心，也提醒留意模糊与误判",
-                "冥王星": "深层调整、权力边界、控制感与资源重组"
-            }
-            target_meanings = {
-                "本命金星": "个人的爱与被爱方式、价值感和关系偏好",
-                "本命火星": "主动性、欲望表达、行动节奏和冲突处理",
-                "本命月亮": "情绪需求、习惯反应和安全感",
-                "第五宫宫头": "恋爱体验、约会、兴趣和创造性表达",
-                "第七宫宫头": "长期伴侣、承诺、合作和协商",
-                "第八宫宫头": "亲密信任、共享资金、债务和风险边界",
-                "本命木星": "增长预期、机会判断和扩张倾向",
-                "本命土星": "责任、限制、长期规划和承压方式",
-                "第二宫宫头": "个人收入、现金流、储蓄和资源管理",
-                "第十宫宫头": "事业方向、职业责任、公众角色和长期目标"
-            }
-            aspect_effects = {
-                "合相": "主题容易集中并被放大，需留意过度投入或反应过强",
-                "六分相": "存在可主动把握的协调空间，通常需要实际行动才能转化",
-                "四分相": "容易出现摩擦或现实压力，适合主动调整计划与边界",
-                "三分相": "较容易顺势推进，但仍需避免因舒适而忽略细节",
-                "冲相": "两端需求可能拉扯，重点在于平衡而非走向极端"
-            }
-            lines.append(
-                f'{planet}对{target}形成{aspect}，活跃日期约为{hits[0]["date"]}至{hits[-1]["date"]}，'
-                f'最接近时容许度约{best["orb"]}°。'
-                f'解读：{transit_meanings.get(planet, "阶段性主题变化")}，'
-                f'触及{target_meanings.get(target, "本命相关生活主题")}；'
-                f'{aspect_effects.get(aspect, "建议结合现实情况观察")}。'
-                f'这表示该主题在这段时间更值得留意，不代表事件必然发生。'
-            )
-        return lines
-
-    past_end = now_local.date().isoformat()
-    future_start = now_local.date().isoformat()
-    past_start = start_local.date().isoformat()
-    future_end = end_local.date().isoformat()
-    rel_past = summarize(buckets["relationship"], past_start, past_end)
-    rel_future = summarize(buckets["relationship"], future_start, future_end)
-    fin_past = summarize(buckets["finance"], past_start, past_end)
-    fin_future = summarize(buckets["finance"], future_start, future_end)
-
-    def format_period(label, begin, finish, lines, domain):
-        if domain == "感情":
-            interpretation = "重点观察沟通、吸引力、情绪需求、恋爱推进与伴侣协商；相位是主题提示，不代表必然发生联系、复合、分手或结婚。"
-        else:
-            interpretation = "重点观察收入安排、工作节奏、合作资金、借贷与风险控制；相位不代表必然进账、亏损或投资涨跌。"
-        detail = "\n\n".join(lines[:12]) if lines else "该时段没有筛选到与本专题关键本命点形成紧密主要相位的行运接触。这不等于没有相关事件，仍需结合现实选择与完整星盘。"
-        return {
-            "title": label,
-            "content": f"统计区间：{begin} 至 {finish}（出生地时区：{birth_timezone}）。{detail}{interpretation}"
-        }
-
+            dates = sorted({datetime.strptime(x["date"], "%Y-%m-%d").date() for x in hits})
+            windows, first, previous = [], dates[0], dates[0]
+            for current in dates[1:]:
+                if current == previous + timedelta(days=1): previous = current
+                else:
+                    windows.append((first, previous)); first = previous = current
+            windows.append((first, previous))
+            window = "、".join(date_cn(a) if a == z else f"{date_cn(a)}至{date_cn(z)}" for a,z in windows[:2])
+            if domain == "感情":
+                action = ("建议把话说清楚，观察对方是否言行一致；涉及承诺时先沟通彼此期待，不要急着下结论。"
+                    if future else "可以回想这段时间是否出现沟通增多、情绪起伏或关系边界需要协商的情况；没有对应经历也不必硬套。")
+            else:
+                action = ("建议检查报价、成本、回款和合同细节，不要只凭乐观预期借钱、囤货或扩大投入。"
+                    if future else "可以回顾订单、支出、回款和工作安排，看看是否有计划调整或风险核查的需要。")
+            paragraphs.append(
+                f"【{window}｜{planet}带来的提醒】\n"
+                f"这段时间较值得留意的是：{target_plain.get(target, '相关生活事项')}。"
+                f"它与{transit_plain.get(planet, '阶段性变化')}有关；{aspect_plain.get(aspect, '')}。"
+                f"{action}")
+        return "\n\n".join(paragraphs) + "\n\n说明：日期是逐日计算得到的近似活跃窗口，不是准确事件日期。占星内容仅供自我观察，不能确认某件事一定发生。"
+    def make_period(title, begin, finish, items, domain, future):
+        return {"title": title, "plain_content": summarize(items, begin, finish, domain, future),
+            "content": f"计算区间：{begin.isoformat()} 至 {finish.isoformat()}（出生地时区：{birth_timezone}）。按当地每日中午的行运行星位置，筛选与本命感情或财务关键点形成较紧密主要相位的日期。日期为近似活跃窗口，不是精确过境时刻。",
+            "period_start": begin.isoformat(), "period_end": finish.isoformat(),
+            "period_type": "future" if future else "past"}
     return {
         "relationship": [
-            format_period("过去30天感情行运回顾", past_start, past_end, rel_past, "感情"),
-            format_period("未来30天感情行运趋势", future_start, future_end, rel_future, "感情")
-        ],
+            make_period("过去30天｜感情回顾", past_start, today, buckets["relationship"], "感情", False),
+            make_period("未来30天｜感情提醒", today + timedelta(days=1), future_end, buckets["relationship"], "感情", True)],
         "finance": [
-            format_period("过去30天财运行运回顾", past_start, past_end, fin_past, "财运"),
-            format_period("未来30天财运行运趋势", future_start, future_end, fin_future, "财运")
-        ],
+            make_period("过去30天｜财务回顾", past_start, today, buckets["finance"], "财运", False),
+            make_period("未来30天｜财务提醒", today + timedelta(days=1), future_end, buckets["finance"], "财运", True)],
         "as_of": now_local.isoformat(timespec="minutes"),
-        "method": "月度部分使用 Moshier 行运行星位置，按出生地当地日期逐日扫描；仅列出与本命关键点容许度较紧的主要相位。日期为活跃窗口估算，不是事件保证。"
+        "method": "使用 Moshier 行运行星位置，按出生地当地日期逐日扫描；只筛选与本命关键点容许度较紧的主要相位。占星内容属于自我观察参考，不是科学验证的事件预测。"
     }
 
 
