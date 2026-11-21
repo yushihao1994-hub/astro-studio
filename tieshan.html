@@ -219,6 +219,10 @@ function showStep(n){
   box.innerHTML="<b>数理与条文规则状态</b><p>已接入可查到的《康节说易全书·铁板神数》（学林出版社2003年版）部分明确对照表，作为异本参考，不冒充清刻足本。</p><p><b>当前可核对：天干配卦、洛书数卦定局、日主配卦、河洛配数、地支取数类。</b></p><p>洛书数卦定局与日主配卦是两套不同规则，已分开保存；己在河洛配数原文中出现九数与四数两处，暂保留原文歧义，不强行选数。</p><table style='width:100%;border-collapse:collapse;font-size:12px;margin:10px 0'><thead><tr><th>柱位</th><th>天干配卦</th><th>日主配卦</th><th>天干河洛数</th><th>地支河洛数</th><th>地支取数类</th></tr></thead><tbody>"+refRows+"</tbody></table><p>版本标识："+escapeHtml(refs.edition||"未返回")+"</p><p>仍未实现：传统考刻定盘、真太阳时与均时差修正、完整六亲数演算、卦值日月推数、秘钞密码表与条文编号匹配。</p><p style='color:#e8ca8d'>注意：同一地支可能对应一组数，当前只展示原书列出的数类，不擅自选定单一数字；此模块不能单独推出人生定数。</p>";
   if(keHtml) box.innerHTML += keHtml;
   if(palaceHtml) box.innerHTML += palaceHtml;
+  const engine=d.iron_plate_engine||{};
+  const statusText={verified:"已核对",partial:"部分接入",blocked:"待补齐"};
+  const flow=(engine.workflow||[]).map(item=>"<tr><td>"+escapeHtml(item.name)+"</td><td>"+escapeHtml(statusText[item.status]||item.status)+"</td><td>"+escapeHtml(item.description)+"</td></tr>").join("");
+  box.innerHTML += "<hr><b>铁板神数核心推演流程 · "+escapeHtml(engine.engine_version||"未返回")+"</b><p>当前状态：基础引擎已建立，尚未达到完整定数条件。</p><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr><th>推演环节</th><th>状态</th><th>依据与说明</th></tr></thead><tbody>"+flow+"</tbody></table></div><p><b>版本依据：</b>"+escapeHtml(engine.primary_reference||"待核验")+"</p><p style='color:#e8ca8d'>"+(engine.stop_reasons||[]).map(escapeHtml).join("<br>")+"</p>";
  }
  box.classList.add("show");
 }
