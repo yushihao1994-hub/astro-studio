@@ -258,6 +258,112 @@ def generate_life_analysis(positions, angles, houses, aspects):
         "method": "宫主星采用传统守护星体系；文字由本命盘实际落座、宫位与主要相位规则生成。"
     }
 
+
+def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
+    """Compare daily Moshier transits with natal relationship/finance factors."""
+    from datetime import timedelta
+
+    tz = ZoneInfo(birth_timezone)
+    now_local = datetime.now(tz)
+    start_local = (now_local - timedelta(days=30)).replace(hour=0, minute=0, second=0, microsecond=0)
+    end_local = (now_local + timedelta(days=30)).replace(hour=23, minute=59, second=0, microsecond=0)
+
+    natal = {p["name"]: p["longitude"] for p in natal_positions}
+    cusp = {h["house"]: h["longitude"] for h in houses}
+    relationship_targets = {
+        "本命金星": natal.get("金星"), "本命火星": natal.get("火星"),
+        "本命月亮": natal.get("月亮"), "第五宫宫头": cusp.get(5),
+        "第七宫宫头": cusp.get(7), "第八宫宫头": cusp.get(8)
+    }
+    finance_targets = {
+        "本命木星": natal.get("木星"), "本命土星": natal.get("土星"),
+        "第二宫宫头": cusp.get(2), "第八宫宫头": cusp.get(8),
+        "第十宫宫头": cusp.get(10)
+    }
+    transit_bodies = [
+        ("水星", swe.MERCURY), ("金星", swe.VENUS), ("火星", swe.MARS),
+        ("木星", swe.JUPITER), ("土星", swe.SATURN),
+        ("天王星", swe.URANUS), ("海王星", swe.NEPTUNE), ("冥王星", swe.PLUTO)
+    ]
+    aspect_defs = [(0, "合相"), (60, "六分相"), (90, "四分相"),
+                   (120, "三分相"), (180, "冲相")]
+    buckets = {"relationship": [], "finance": []}
+    day = start_local.date()
+    final_day = end_local.date()
+    while day <= final_day:
+        local_midnight = datetime(day.year, day.month, day.day, 12, 0, tzinfo=tz)
+        utc = local_midnight.astimezone(timezone.utc)
+        jd = swe.julday(utc.year, utc.month, utc.day,
+                        utc.hour + utc.minute / 60, swe.GREG_CAL)
+        for transit_name, body in transit_bodies:
+            values, _ = swe.calc_ut(jd, body, swe.FLG_MOSEPH | swe.FLG_SPEED)
+            transit_lon = values[0] % 360
+            for category, targets in (("relationship", relationship_targets), ("finance", finance_targets)):
+                for target_name, target_lon in targets.items():
+                    if target_lon is None:
+                        continue
+                    separation = angular_distance(transit_lon, target_lon)
+                    for exact, aspect_name in aspect_defs:
+                        orb = abs(separation - exact)
+                        limit = 1.5 if transit_name in ("木星", "土星", "天王星", "海王星", "冥王星") else 1.0
+                        if orb <= limit:
+                            buckets[category].append({
+                                "date": day.isoformat(), "transit": transit_name,
+                                "target": target_name, "aspect": aspect_name,
+                                "orb": round(orb, 2)
+                            })
+        day += timedelta(days=1)
+
+    def summarize(items, begin, finish):
+        selected = [e for e in items if begin <= e["date"] <= finish]
+        grouped = {}
+        for e in selected:
+            key = (e["transit"], e["target"], e["aspect"])
+            grouped.setdefault(key, []).append(e)
+        lines = []
+        for (planet, target, aspect), hits in grouped.items():
+            hits.sort(key=lambda x: x["date"])
+            best = min(hits, key=lambda x: x["orb"])
+            lines.append(
+                f'{planet}对{target}形成{aspect}，活跃日期约为{hits[0]["date"]}至{hits[-1]["date"]}，'
+                f'最接近时容许度约{best["orb"]}°。'
+            )
+        return lines
+
+    past_end = now_local.date().isoformat()
+    future_start = now_local.date().isoformat()
+    past_start = start_local.date().isoformat()
+    future_end = end_local.date().isoformat()
+    rel_past = summarize(buckets["relationship"], past_start, past_end)
+    rel_future = summarize(buckets["relationship"], future_start, future_end)
+    fin_past = summarize(buckets["finance"], past_start, past_end)
+    fin_future = summarize(buckets["finance"], future_start, future_end)
+
+    def format_period(label, begin, finish, lines, domain):
+        if domain == "感情":
+            interpretation = "重点观察沟通、吸引力、情绪需求、恋爱推进与伴侣协商；相位是主题提示，不代表必然发生联系、复合、分手或结婚。"
+        else:
+            interpretation = "重点观察收入安排、工作节奏、合作资金、借贷与风险控制；相位不代表必然进账、亏损或投资涨跌。"
+        detail = "；".join(lines[:12]) if lines else "该时段没有筛选到与本专题关键本命点形成紧密主要相位的行运接触。这不等于没有相关事件，仍需结合现实选择与完整星盘。"
+        return {
+            "title": label,
+            "content": f"统计区间：{begin} 至 {finish}（出生地时区：{birth_timezone}）。{detail}{interpretation}"
+        }
+
+    return {
+        "relationship": [
+            format_period("过去30天感情行运回顾", past_start, past_end, rel_past, "感情"),
+            format_period("未来30天感情行运趋势", future_start, future_end, rel_future, "感情")
+        ],
+        "finance": [
+            format_period("过去30天财运行运回顾", past_start, past_end, fin_past, "财运"),
+            format_period("未来30天财运行运趋势", future_start, future_end, fin_future, "财运")
+        ],
+        "as_of": now_local.isoformat(timespec="minutes"),
+        "method": "月度部分使用 Moshier 行运行星位置，按出生地当地日期逐日扫描；仅列出与本命关键点容许度较紧的主要相位。日期为活跃窗口估算，不是事件保证。"
+    }
+
+
 def calculate_chart(payload):
     required = ["birth_date", "birth_time", "timezone"]
     missing = [key for key in required if not payload.get(key)]
@@ -400,6 +506,7 @@ def calculate_chart(payload):
         "houses": houses,
         "aspects": aspects,
         "analysis": generate_life_analysis(positions, angles, houses, aspects),
+        "monthly_transits": generate_monthly_transit_analysis(positions, houses, tz_name),
         "warnings": timezone_warning + [
             "当前使用 Moshier 星历算法，不是 Swiss Ephemeris 星历数据文件；结果应标注数据来源。",
             "使用地名查询时，出生地点文本会发送给 OpenStreetMap Nominatim 地理编码服务；如不希望发送地名，可改为直接提交经纬度。",
