@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 import swisseph as swe
 from tieshan import calculate_tieshan_pillars
+from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
@@ -1498,6 +1499,10 @@ def tieshan_pillars():
         calculation_payload["birth_date"] = birth_date_text
         calculation_payload["calendar"] = "solar"
         result = calculate_tieshan_pillars(calculation_payload, lat, lon, place_label, timezone_name)
+        result["eight_ke"] = derive_eight_ke(
+            str(payload.get("birth_time") or ""),
+            (result.get("pillars", {}).get("hour") or {}).get("branch"),
+        )
         result["birth"]["input_calendar"] = calendar_kind
         result["birth"]["input_date"] = {
             "year": birth_year,
