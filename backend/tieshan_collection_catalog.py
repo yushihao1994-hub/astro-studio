@@ -7,12 +7,12 @@ corpus, not a cipher table, and not suitable for automatic fortune matching.
 EDITION = "康节说易全书·铁板神数，学林出版社，2003年12月，陈明点校"
 COLLECTION = "子集"
 SOURCE_PDF = "https://vr-d.com/pdf-file/周易/康节说易全书铁板神数(宋)邵雍).pdf"
-STATUS = "sample_transcription_ocr_not_image_verified"
+STATUS = "sample_transcription_ocr_not_image_verified"\nCATALOG_SCHEMA_VERSION = "0.2.0"
 
 # The source displays the group marker 一〇八〇 followed by entries 一至十.
 # Keep the marker as a printed group label, not a Gregorian year or a clause ID.
 ENTRIES = [
-    {"collection":"子","group_marker":"一〇八〇","entry_sequence":1,"raw_number_text":"卅四","content":"婚姻早临，天喜当头。","pdf_text_lines":"10670-10670","printed_page":None,"ocr_status":"text_layer_only"},
+    {"collection":"子","group_marker":"一〇八〇","entry_sequence":1,"raw_number_text":"卅四","content":"婚姻早临，天喜当头。","pdf_text_lines":"10670-10670","printed_page":None,"ocr_status":"text_layer_only","age_markers":[],"age_marker_text":None},
     {"collection":"子","group_marker":"一〇八〇","entry_sequence":2,"raw_number_text":"卅三","content":"先培根本，枝叶畅茂乃成。","pdf_text_lines":"10671-10671","printed_page":None,"ocr_status":"text_layer_only"},
     {"collection":"子","group_marker":"一〇八〇","entry_sequence":3,"raw_number_text":None,"content":"其人品自宏，深衿怀安乐。","pdf_text_lines":"10672-10672","printed_page":None,"ocr_status":"text_layer_only"},
     {"collection":"子","group_marker":"一〇八〇","entry_sequence":4,"raw_number_text":None,"content":"风监通神人共仰，伏遇提携与起家。","pdf_text_lines":"10673-10673","printed_page":None,"ocr_status":"text_layer_only"},
