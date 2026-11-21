@@ -49,13 +49,13 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_group_index_contains_fifteen_groups_and_one_hundred_fifty_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 15)
-        self.assertEqual(data["entry_count"], 150)
+        self.assertEqual(data["group_count"], 18)
+        self.assertEqual(data["entry_count"], 179)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15)
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 17 + [9])
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -189,6 +189,23 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertIn('三十作', data['groups'][14]['entries'][4]['age_marker_text'])
         self.assertEqual(data['group_gaps'][0]['expected_group_marker'], '一二一〇')
         self.assertIn('do not fabricate', data['group_gaps'][0]['action'])
+
+
+    def test_1240_to_1260_keep_table_source_column_uninterpreted(self):
+        data = get_group_index()
+        groups = data["groups"][15:18]
+        self.assertEqual([g["layout_status"] for g in groups],
+                         ["table_rows_year_sequence_clause"] * 3)
+        self.assertEqual([len(g["entries"]) for g in groups], [9, 10, 10])
+        self.assertEqual(groups[0]["entries"][0]["source_index_text"], "四十七／四十八")
+        self.assertIsNone(groups[0]["entries"][0]["raw_number_text"])
+        self.assertEqual(groups[1]["entries"][6]["source_index_text"],
+                         "三十四／十三／五十三／十三")
+        self.assertEqual(groups[2]["entries"][6]["source_index_text"],
+                         "六十九／六十／三十三／三十三／五十三／五十四")
+        self.assertTrue(all(e["age_markers"] == [] for g in groups for e in g["entries"]))
+        self.assertTrue(all(e["number_field_present"] is None
+                            for g in groups for e in g["entries"]))
 
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
