@@ -271,6 +271,22 @@ GROUP_INDEX.extend([
     }),
 ])
 
+# Preserve two OCR-specific anomalies without silently normalizing their raw forms.
+GROUP_INDEX[-6]["source_header_ocr"] = {
+    "raw_text": "康节报具全书",
+    "normalized_candidate": "康节说易全书",
+    "status": "probable_ocr_error_pending_image_check",
+    "pdf_text_lines": "10906",
+}
+GROUP_INDEX[-1]["age_marker_ambiguities"] = [{
+    "entry_sequence": 5,
+    "raw_token": "三十作",
+    "status": "unresolved_ocr_token_pending_image_check",
+}]
+GROUP_INDEX[-1]["entries"][4]["age_marker_text"] = "二十七／三十／三十作／九十"
+GROUP_INDEX[-1]["entries"][4]["age_markers"] = ["二十七", "三十", "九十"]
+GROUP_INDEX[-1]["entries"][4]["age_marker_association_status"] = "contains_ocr_ambiguous_age_token_pending_image_check"
+
 GROUP_GAPS = [{
     "expected_group_marker": "一二一〇",
     "status": "not_located_between_1200_and_1220_in_available_pdf_text_layer",
@@ -296,6 +312,8 @@ def get_group_index():
              "raw_group_marker": group.get("raw_group_marker", group["group_marker"]),
              "normalized_group_marker_candidate": group.get("normalized_group_marker_candidate", group["group_marker"]),
              "normalization_status": group.get("normalization_status", "verified_text_layer_group_marker"),
+             "source_header_ocr": dict(group["source_header_ocr"]) if group.get("source_header_ocr") else None,
+             "age_marker_ambiguities": [dict(x) for x in group.get("age_marker_ambiguities", [])],
              "age_marker_candidates": [dict(x) for x in group.get("age_marker_candidates", [])],
              "entries": [dict(entry) for entry in group["entries"]]}
             for group in GROUP_INDEX
