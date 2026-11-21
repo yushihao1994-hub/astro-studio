@@ -183,7 +183,9 @@
         return '<details class="report-item" id="' + prefix + '-' + index + '">' +
           '<summary><span class="report-index">' + String(index + 1).padStart(2, '0') + '</span><span class="report-title">' +
           esc(cleanSectionTitle(item.title)) + '</span><span class="report-chevron">⌄</span></summary>' +
-          '<div class="report-content"><p>' + esc(item.content || '') + '</p>' + evidence + '</div></details>';
+          '<div class="report-content"><p>' + esc(item.plain_content || item.content || '') + '</p>' +
+          (item.plain_content && item.content ? '<details class="evidence-details"><summary>展开更多分析细节</summary><p>' + esc(item.content) + '</p></details>' : '') +
+          evidence + '</div></details>';
       }).join('');
     }
     function renderAnalysisBlock(block, prefix) {
