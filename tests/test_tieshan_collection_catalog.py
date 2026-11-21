@@ -49,13 +49,13 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_group_index_contains_forty_seven_groups_and_four_hundred_sixty_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 54)
-        self.assertEqual(data["entry_count"], 537)
+        self.assertEqual(data["group_count"], 75)
+        self.assertEqual(data["entry_count"], 747)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇", "一四八〇", "一四九〇", "一五〇〇", "一五一〇", "一五三〇", "一五四〇", "一五五〇", "一五六〇", "一六〇〇", "一六二〇", "一六三〇", "一六四〇", "一六五〇", "一六六〇", "一六七〇", "一七〇〇", "一七二〇", "一七三〇", "一七五〇", "一七六〇", "一七七〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇", "一四八〇", "一四九〇", "一五〇〇", "一五一〇", "一五三〇", "一五四〇", "一五五〇", "一五六〇", "一六〇〇", "一六二〇", "一六三〇", "一六四〇", "一六五〇", "一六六〇", "一六七〇", "一七〇〇", "一七二〇", "一七三〇", "一七五〇", "一七六〇", "一七七〇", "一七八〇","一七九〇","一八〇〇","一八一〇","一八二〇","一八四〇","一八五〇","一八六〇","一八七〇","一八八〇","一八九〇","一九〇〇","一九一〇","一九三〇","一九四〇","一九五〇","一九六〇","一九七〇","一九八〇","一九九〇","二〇一〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 31 + [10,10,9,9,10,10,10])
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 31 + [10,10,9,9,10,10,10] + [10] * 21)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -439,3 +439,15 @@ if __name__ == "__main__":
         self.assertIn(("一九〇","一六九〇"), candidates)
         self.assertIn(("一七〇〇","一七一〇"), candidates)
         self.assertIn("child_collection_unheaded_block_after_duplicate_1700",{x["block_id"] for x in data["unassigned_blocks"]})
+
+    def test_late_child_collection_groups_keep_missing_markers_and_unheaded_section(self):
+        data = get_group_index()
+        by = {g["group_marker"]: g for g in data["groups"]}
+        self.assertEqual(by["一八一〇"]["pdf_text_lines"], "12216-12264")
+        self.assertEqual(by["一八九〇"]["age_marker_candidates"][0]["raw_text"], "九十岁")
+        self.assertEqual(by["一九六〇"]["entries"][0]["raw_number_text"], "二十三")
+        self.assertEqual(by["二〇一〇"]["entry_count"], 10)
+        gaps = {x["expected_group_marker"] for x in data["group_gaps"]}
+        self.assertTrue({"一八三〇","一九二〇","二〇〇〇","二〇二〇"}.issubset(gaps))
+        blocks = {x["block_id"] for x in data["unassigned_blocks"]}
+        self.assertIn("child_collection_unheaded_block_niu_yang_after_1990", blocks)
