@@ -316,7 +316,8 @@
           intro: '结合出生地时区的过去30天回顾与未来30天趋势；这是主题提示，不代表事件必然发生。',
           sections: ((chart.monthly_transits && chart.monthly_transits.relationship) || []).map(item => ({
             title: item.title,
-            content: item.content
+            content: item.content,
+            plain_content: item.plain_content
           }))
         };
         const monthlyFinance = {
@@ -324,7 +325,8 @@
           intro: '结合出生地时区的过去30天回顾与未来30天趋势；这是主题提示，不代表收入或投资结果。',
           sections: ((chart.monthly_transits && chart.monthly_transits.finance) || []).map(item => ({
             title: item.title,
-            content: item.content
+            content: item.content,
+            plain_content: item.plain_content
           }))
         };
         fillOverview(chart, data);
