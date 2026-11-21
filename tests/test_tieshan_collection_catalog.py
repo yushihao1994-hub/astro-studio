@@ -451,3 +451,13 @@ if __name__ == "__main__":
         self.assertTrue({"一八三〇","一九二〇","二〇〇〇","二〇二〇"}.issubset(gaps))
         blocks = {x["block_id"] for x in data["unassigned_blocks"]}
         self.assertIn("child_collection_unheaded_block_niu_yang_after_1990", blocks)
+
+
+    def test_all_twelve_collection_starts_are_registered_without_claiming_transcription(self):
+        from backend.tieshan_collection_catalog import get_collection_progress
+        data = get_collection_progress()
+        self.assertEqual([x["collection"] for x in data["collections"]], list("子丑寅卯辰巳午未申酉戌亥"))
+        self.assertEqual([x["printed_page_start"] for x in data["collections"]], [138,172,206,240,274,308,342,376,410,444,478,512])
+        self.assertTrue(all(x["toc_status"] == "located_in_contents" for x in data["collections"]))
+        self.assertEqual(data["collections"][0]["indexed_groups"], 75)
+        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][1:]))
