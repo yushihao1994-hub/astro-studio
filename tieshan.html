@@ -27,15 +27,15 @@ footer{text-align:center;color:#6e879e;font-size:10px;margin-top:25px}
 <form id="birthForm"><div class="fields">
 <div class="field"><label for="name">称呼（选填）</label><input id="name" name="name" maxlength="30" placeholder="例如：某某"></div>
 <div class="field"><label>性别</label><div class="choice"><label><input type="radio" name="gender" value="男" checked><span>男</span></label><label><input type="radio" name="gender" value="女"><span>女</span></label></div></div>
-<div class="field"><label for="calendar">出生日期类型</label><select id="calendar" name="calendar"><option value="solar">公历</option><option value="lunar">农历</option></select></div>
+<div class="field"><label for="calendar">出生日期类型</label><select id="calendar" name="calendar"><option value="solar">公历</option><option value="lunar" disabled>农历（转换模块开发中）</option></select></div>
 <div class="field"><label for="date">出生日期</label><input id="date" name="date" type="date" required></div>
 <div class="field"><label for="time">出生时间</label><input id="time" name="time" type="time"><select id="timeUnknown" aria-label="出生时间是否未知" style="margin-top:7px"><option value="known">时间准确或大致准确</option><option value="unknown">出生时间不详</option></select></div>
-<div class="field"><label for="place">出生地点</label><input id="place" name="place" maxlength="100" placeholder="省、市、县/区、乡镇"></div>
+<div class="field"><label for="place">出生地点</label><input id="place" name="place" maxlength="100" required placeholder="省、市、县/区、乡镇"></div>
 <div class="field full"><label>时间准确程度</label><select id="accuracy" name="accuracy"><option value="准确">准确（误差约15分钟内）</option><option value="大致">大致记得（误差约1小时）</option><option value="时辰">只知道时辰</option><option value="未知">完全不清楚</option></select></div>
-</div><div class="actions"><button class="primary" type="submit">建立命盘档案</button><button class="secondary" type="button" id="clear">清空资料</button></div></form>
+</div><div class="actions"><button class="primary" type="submit">计算四柱并建立档案</button><button class="secondary" type="button" id="clear">清空资料</button></div></form>
 <div class="notice">说明：铁板神数存在不同传承与推演版本，部分关键算法和条文版本并无统一公开标准。本工具会区分可核验的历法/四柱数据、所采用的规则版本与传统条文解释，不会在算法尚未验证时直接给出虚构定数。</div>
 </div>
-<div class="card full result" id="result"><div class="status"><strong>出生档案已建立</strong><span id="summary"></span><br>下一阶段将接入历法换算与四柱校验，再进行铁板神数数理推演。当前尚未生成定数和条文，避免给出未经验证的结果。</div>
+<div class="card full result" id="result"><div class="status"><strong>出生档案已建立</strong><span id="summary"></span><div id="pillarOutput" style="margin-top:14px"></div></div>
 <div class="steps"><div class="step"><b>01 · 历法校验</b><span>公历/农历、节气、时区与出生地</span></div><div class="step"><b>02 · 四柱排定</b><span>年柱、月柱、日柱、时柱交叉校验</span></div><div class="step"><b>03 · 数理与条文</b><span>版本化规则、条文来源与解释</span></div></div></div>
 </section>
 <footer>传统术数文化研究与个人探索工具 · 不构成现实事件的确定预测</footer>
@@ -44,7 +44,43 @@ footer{text-align:center;color:#6e879e;font-size:10px;margin-top:25px}
 const form=document.getElementById('birthForm'), result=document.getElementById('result');
 const KEY='tieshanshenshu_profile_v1';
 document.getElementById('timeUnknown').addEventListener('change',e=>{document.getElementById('time').disabled=e.target.value==='unknown';if(e.target.value==='unknown')document.getElementById('time').value='';});
-form.addEventListener('submit',e=>{e.preventDefault();if(!form.reportValidity())return;const data=Object.fromEntries(new FormData(form).entries());data.timeUnknown=document.getElementById('timeUnknown').value;data.accuracy=document.getElementById('accuracy').value;try{localStorage.setItem(KEY,JSON.stringify(data));}catch(_){}const dateType=data.calendar==='lunar'?'农历':'公历';document.getElementById('summary').textContent=(data.name?data.name+'，':'')+data.gender+'，'+dateType+' '+data.date+'，出生时间：'+(data.timeUnknown==='unknown'?'未知':(data.time||'未填写'))+'，出生地：'+(data.place||'未填写')+'。';result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});});
+const API='https://astro-studio-api.onrender.com';
+async function wakeApi(){
+  for(let i=0;i<9;i++){
+    try{const r=await fetch(API+'/api/health?wake='+Date.now(),{cache:'no-store',signal:AbortSignal.timeout(9000)});if(r.ok)return true;}catch(_){}
+    await new Promise(resolve=>setTimeout(resolve,3500));
+  }
+  throw new Error('计算服务暂时无法唤醒，请稍后再试。');
+}
+function renderPillars(data){
+  const labels=[['year','年柱'],['month','月柱'],['day','日柱'],['hour','时柱']];
+  const cards=labels.map(([key,label])=>{const p=data.pillars[key];return '<div style="border:1px solid #34718a;background:linear-gradient(145deg,#132d43,#101c30);border-radius:10px;padding:14px;text-align:center"><div style="font-size:11px;color:#91a8bd">'+label+'</div><div style="font-size:30px;font-weight:800;letter-spacing:5px;color:#73eaff;margin:5px 0">'+p.name+'</div><div style="font-size:10px;color:#c5d5e4">'+p.stem+'（天干）· '+p.branch+'（地支）</div></div>';}).join('');
+  const warnings=(data.warnings||[]).map(x=>'<li style="margin:4px 0">'+escapeHtml(x)+'</li>').join('');
+  const method=(data.method||[]).map(x=>'<li style="margin:4px 0">'+escapeHtml(x)+'</li>').join('');
+  return '<div style="font-size:12px;color:#73eaff;margin-bottom:10px">四柱基础计算结果 · '+escapeHtml(data.birth.timezone)+' · '+escapeHtml(data.solar_term_boundary.month_boundary)+'交节后</div><div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">'+cards+'</div><div style="margin-top:13px;border-top:1px solid #29475e;padding-top:11px;font-size:11px;color:#b8c9d9"><b style="color:#e8ca8d">计算规则</b><ul>'+method+'</ul><b style="color:#e8ca8d">校验提醒</b><ul>'+warnings+'</ul></div><div style="font-size:10px;color:#8299ad;margin-top:10px">计算引擎：'+escapeHtml(data.engine)+'。四柱结果是基础历法数据，不代表已经完成铁板神数定数。</div>';
+}
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
+form.addEventListener('submit',async e=>{
+  e.preventDefault();if(!form.reportValidity())return;
+  const data=Object.fromEntries(new FormData(form).entries());
+  data.timeUnknown=document.getElementById('timeUnknown').value;
+  data.accuracy=document.getElementById('accuracy').value;
+  try{localStorage.setItem(KEY,JSON.stringify(data));}catch(_){}
+  const output=document.getElementById('pillarOutput');
+  const dateType=data.calendar==='lunar'?'农历':'公历';
+  document.getElementById('summary').textContent=(data.name?data.name+'，':'')+data.gender+'，'+dateType+' '+data.date+'，出生时间：'+(data.timeUnknown==='unknown'?'未知':(data.time||'未填写'))+'，出生地：'+(data.place||'未填写')+'。';
+  result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
+  if(data.calendar!=='solar'){output.innerHTML='<p style="color:#ffd18a">当前只支持公历，请先切换出生日期类型。</p>';return;}
+  if(data.timeUnknown==='unknown'||!data.time){output.innerHTML='<p style="color:#ffd18a">四柱排盘需要出生时间。请补充大致时间；如果只知道时辰，可选择该时辰中较可靠的时间并注明误差。</p>';return;}
+  output.innerHTML='<p style="color:#73eaff">正在唤醒计算服务并校验节气，请稍候……</p>';
+  try{
+    await wakeApi();
+    const response=await fetch(API+'/api/tieshan/pillars',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({birth_date:data.date,birth_time:data.time,calendar:data.calendar,gender:data.gender,place:data.place,accuracy:data.accuracy}),signal:AbortSignal.timeout(150000)});
+    const resultData=await response.json();
+    if(!response.ok||!resultData.ok)throw new Error(resultData.error||'四柱计算失败，请核对出生资料。');
+    output.innerHTML=renderPillars(resultData);
+  }catch(err){output.innerHTML='<p style="color:#ffb4a8">计算未完成：'+escapeHtml(err.message||'网络连接异常')+'</p><p style="font-size:11px;color:#91a8bd">出生资料已保存在当前设备，可以稍后重试。</p>';}
+});
 document.getElementById('clear').addEventListener('click',()=>{form.reset();document.getElementById('time').disabled=false;document.getElementById('timeUnknown').value='known';try{localStorage.removeItem(KEY);}catch(_){}result.classList.remove('show');});
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){for(const [k,v] of Object.entries(saved)){const el=form.elements.namedItem(k);if(el&&el.type!=='radio')el.value=v;else if(el&&el.length){const opt=[...el].find(x=>x.value===v);if(opt)opt.checked=true;}}document.getElementById('timeUnknown').value=saved.timeUnknown||'known';document.getElementById('time').disabled=saved.timeUnknown==='unknown';}}catch(_){}
 </script>
