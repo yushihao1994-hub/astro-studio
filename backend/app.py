@@ -230,6 +230,132 @@ def detect_chart_patterns(positions, aspects):
     return results
 
 
+def generate_natal_profile(positions, angles, houses, aspects):
+    """Create a chart-evidence-led natal overview; avoid single-placement determinism."""
+    by_name = {p["name"]: p for p in positions}
+    cusp_by_house = {h["house"]: h for h in houses}
+
+    def p(name):
+        return by_name.get(name, {})
+
+    def place(name):
+        item = p(name)
+        if not item:
+            return f"{name}位置资料缺失"
+        retro = "，逆行" if item.get("retrograde") else ""
+        house = item.get("house")
+        house_text = f"第{house}宫" if house else "宫位未知"
+        return f'{name}：{item.get("sign", "星座未知")}{item.get("degree", 0)}°{item.get("minute", 0)}′，{house_text}{retro}'
+
+    def house_ruler(no):
+        cusp = cusp_by_house.get(no, {})
+        sign = cusp.get("sign", "未知")
+        ruler = SIGN_RULERS.get(sign)
+        rp = p(ruler) if ruler else {}
+        return sign, ruler, rp
+
+    def related_aspects(names, limit=5):
+        chosen = [a for a in aspects if a.get("planet_a") in names and a.get("planet_b") in names]
+        return sorted(chosen, key=lambda a: a.get("orb", 99))[:limit]
+
+    def aspect_evidence(names, limit=5):
+        chosen = related_aspects(names, limit)
+        return [
+            f'{a.get("planet_a")}—{a.get("planet_b")} {a.get("aspect")}，容许度 {a.get("orb")}°，{a.get("phase")}'
+            for a in chosen
+        ]
+
+    sun, moon = p("太阳"), p("月亮")
+    asc = angles.get("上升点", {})
+    mercury, venus, mars = p("水星"), p("金星"), p("火星")
+    jupiter, saturn = p("木星"), p("土星")
+    second_sign, second_ruler, second_pos = house_ruler(2)
+    sixth_sign, sixth_ruler, sixth_pos = house_ruler(6)
+    tenth_sign, tenth_ruler, tenth_pos = house_ruler(10)
+    mc = angles.get("天顶", {})
+
+    identity_evidence = [place("太阳"), place("月亮")]
+    if asc:
+        identity_evidence.append(f'上升点：{asc.get("sign", "未知")}{asc.get("degree", 0)}°{asc.get("minute", 0)}′')
+    identity_evidence += aspect_evidence(["太阳", "月亮"], 4)
+
+    sections = [
+        {
+            "title": "一、核心人格结构：意志、情绪与外在表达",
+            "content": (
+                f'太阳落在{sun.get("sign", "未知")}第{sun.get("house", "未知")}宫，'
+                f'可作为自我认同、主动意志与长期发展方向的观察线索；'
+                f'月亮落在{moon.get("sign", "未知")}第{moon.get("house", "未知")}宫，'
+                f'更接近情绪反应、习惯和安全感需求。'
+                f'上升点位于{asc.get("sign", "未知")}，描述初始应对方式与面对新环境时的表达风格。'
+                f'三者需要合并理解：太阳不等于全部性格，月亮不等于全部情绪，上升也不是固定面具。'
+                f'当三者表现出不同需求时，可能体验为内在目标、情绪习惯和外在行动之间需要协调。'
+                f'建议结合真实生活场景观察：你主动追求什么、压力下如何反应，以及别人初识你时感受到什么。'
+            ),
+            "evidence": identity_evidence
+        },
+        {
+            "title": "二、思维与沟通：理解、表达和决策习惯",
+            "content": (
+                f'水星落在{mercury.get("sign", "未知")}第{mercury.get("house", "未知")}宫，'
+                f'提示信息处理和表达可能更关注{SIGN_STYLE.get(mercury.get("sign"), "该星座所代表的思维风格")}；'
+                f'其宫位将学习、沟通和判断的注意力带入{PLANET_HOUSE_MEANING.get(mercury.get("house"), "对应生活领域")}。'
+                f'这不是智力高低的评判，而是理解自己如何收集信息、组织观点和做决定。'
+                f'重要决定可以采用“先列事实、再列假设、最后验证”的方式，避免在信息不足时把直觉当成事实。'
+            ),
+            "evidence": [place("水星")] + aspect_evidence(["水星", "太阳", "月亮", "土星"], 5)
+        },
+        {
+            "title": "三、关系表达与行动驱力：喜欢、追求和冲突处理",
+            "content": (
+                f'金星位于{venus.get("sign", "未知")}第{venus.get("house", "未知")}宫，'
+                f'可观察你重视的关系价值、审美和愉悦来源；火星位于{mars.get("sign", "未知")}第{mars.get("house", "未知")}宫，'
+                f'更侧重行动、欲望表达和面对阻力时的反应。'
+                f'两者并非简单代表“喜欢什么类型”或“会不会主动”，还需要结合月亮需求、第五宫恋爱体验和第七宫长期关系结构。'
+                f'在现实关系中，清晰表达意愿、尊重边界、观察对方持续行为，比用单一配置给关系贴标签更可靠。'
+            ),
+            "evidence": [place("金星"), place("火星")] + aspect_evidence(["金星", "火星", "月亮"], 6)
+        },
+        {
+            "title": "四、事业与资源：能力如何落到现实生活",
+            "content": (
+                f'第二宫宫头为{second_sign}，传统宫主星{second_ruler or "未知"}落在'
+                f'{second_pos.get("sign", "未知")}第{second_pos.get("house", "未知")}宫；'
+                f'第六宫宫头为{sixth_sign}，宫主星{sixth_ruler or "未知"}落在'
+                f'{sixth_pos.get("sign", "未知")}第{sixth_pos.get("house", "未知")}宫；'
+                f'第十宫宫头为{tenth_sign}，宫主星{tenth_ruler or "未知"}落在'
+                f'{tenth_pos.get("sign", "未知")}第{tenth_pos.get("house", "未知")}宫，'
+                f'天顶位于{mc.get("sign", "未知")}。'
+                f'把收入、日常工作和职业方向放在一起看，可以形成更完整的现实问题：'
+                f'你能提供什么价值、如何稳定交付、市场是否愿意付费，以及长期职业定位能否形成持续现金流。'
+                f'星盘不能替代行业调研和财务核算，职业选择仍应通过小规模实践验证。'
+            ),
+            "evidence": [
+                f'第二宫：{second_sign}宫头；宫主星{second_ruler}落{second_pos.get("sign", "未知")}第{second_pos.get("house", "未知")}宫',
+                f'第六宫：{sixth_sign}宫头；宫主星{sixth_ruler}落{sixth_pos.get("sign", "未知")}第{sixth_pos.get("house", "未知")}宫',
+                f'第十宫：{tenth_sign}宫头；宫主星{tenth_ruler}落{tenth_pos.get("sign", "未知")}第{tenth_pos.get("house", "未知")}宫',
+                f'天顶：{mc.get("sign", "未知")}{mc.get("degree", 0)}°{mc.get("minute", 0)}′'
+            ] + aspect_evidence(["木星", "土星", "太阳", "火星"], 5)
+        },
+        {
+            "title": "五、成长与长期课题：扩张、边界和持续建设",
+            "content": (
+                f'木星落在{jupiter.get("sign", "未知")}第{jupiter.get("house", "未知")}宫，'
+                f'可作为学习、扩张和寻找机会的主题；土星落在{saturn.get("sign", "未知")}第{saturn.get("house", "未知")}宫，'
+                f'可作为责任、限制、耐心和长期建设的主题。'
+                f'二者需要结合相位、宫主星和现实环境判断，不能简单说木星一定带来好运、土星一定带来困难。'
+                f'更稳健的用法是：识别自己容易乐观扩张的领域，同时建立预算、节奏、检查点和可持续的执行规则。'
+            ),
+            "evidence": [place("木星"), place("土星")] + aspect_evidence(["木星", "土星"], 4)
+        }
+    ]
+    return {
+        "title": "本命盘综合人格与人生主题",
+        "intro": "先呈现核心人格，再连接思维、关系、事业资源与长期成长。每一节列出实际星盘依据；解释是占星传统中的象征性阅读，不是科学诊断或确定性预测。",
+        "sections": sections
+    }
+
+
 def generate_life_analysis(positions, angles, houses, aspects):
     """Generate detailed, chart-grounded relationship and finance interpretations."""
     by_name = {p["name"]: p for p in positions}
@@ -757,6 +883,7 @@ def calculate_chart(payload):
         "aspects": aspects,
         "patterns": detect_chart_patterns(positions, aspects),
         "analysis": generate_life_analysis(positions, angles, houses, aspects),
+        "natal_profile": generate_natal_profile(positions, angles, houses, aspects),
         "monthly_transits": generate_monthly_transit_analysis(positions, houses, tz_name),
         "warnings": timezone_warning + [
             "当前使用 Moshier 星历算法，不是 Swiss Ephemeris 星历数据文件；结果应标注数据来源。",
