@@ -1473,10 +1473,16 @@ def tieshan_pillars():
         # astronomical Four Pillars calculation. Keep the original calendar data.
         calculation_payload = dict(payload)
         calendar_kind = str(payload.get("calendar") or "solar").lower()
+        try:
+            birth_year = int(payload.get("birth_year"))
+            birth_month = int(payload.get("birth_month"))
+            birth_day = int(payload.get("birth_day"))
+        except (TypeError, ValueError) as exc:
+            raise ValueError("请完整选择出生年、月、日。") from exc
         if calendar_kind == "lunar":
-            lunar_year = int(payload.get("birth_year"))
-            lunar_month_value = int(payload.get("birth_month"))
-            lunar_day = int(payload.get("birth_day"))
+            lunar_year = birth_year
+            lunar_month_value = birth_month
+            lunar_day = birth_day
             solar_date = lunar_to_solar(lunar_year, lunar_month_value, lunar_day)
             birth_date_text = solar_date.isoformat()
             lunar_info = {
@@ -1485,7 +1491,7 @@ def tieshan_pillars():
                 "is_leap": lunar_month_value < 0,
             }
         elif calendar_kind == "solar":
-            birth_date_text = date(int(payload.get("birth_year")), int(payload.get("birth_month")), int(payload.get("birth_day"))).isoformat()
+            birth_date_text = date(birth_year, birth_month, birth_day).isoformat()
             lunar_info = solar_to_lunar(birth_date_text)
         else:
             raise ValueError("出生日期类型只能选择公历或农历。")
@@ -1494,9 +1500,9 @@ def tieshan_pillars():
         result = calculate_tieshan_pillars(calculation_payload, lat, lon, place_label, timezone_name)
         result["birth"]["input_calendar"] = calendar_kind
         result["birth"]["input_date"] = {
-            "year": int(payload.get("birth_year")),
-            "month": int(payload.get("birth_month")),
-            "day": int(payload.get("birth_day")),
+            "year": birth_year,
+            "month": birth_month,
+            "day": birth_day,
             "is_leap": bool(lunar_info.get("is_leap")) if calendar_kind == "lunar" else False,
         }
         result["birth"]["converted_solar_date"] = birth_date_text
