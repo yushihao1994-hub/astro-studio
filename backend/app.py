@@ -10,6 +10,7 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 import swisseph as swe
 from tieshan import calculate_tieshan_pillars
+from tieshan_classic import derive_classic_reference
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -1459,6 +1460,9 @@ def tieshan_pillars():
         if not timezone_name:
             raise ValueError("无法根据出生地点确定历史时区，请补充 IANA 时区名称。")
         result = calculate_tieshan_pillars(payload, lat, lon, place_label, timezone_name)
+        # Expose only explicitly documented lookup mappings from the accessible
+        # 2003 compilation; this is not a complete Iron Plate number calculation.
+        result["classic_reference"] = derive_classic_reference(result.get("pillars") or {})
         return jsonify(result)
     except ValueError as exc:
         return jsonify({"ok": False, "error": str(exc)}), 400
