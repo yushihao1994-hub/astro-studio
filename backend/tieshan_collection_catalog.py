@@ -332,6 +332,65 @@ GROUP_INDEX[14]["entries"][4]["age_marker_text"] = "二十七／三十／三十�
 GROUP_INDEX[14]["entries"][4]["age_markers"] = ["二十七", "三十", "九十"]
 GROUP_INDEX[14]["entries"][4]["age_marker_association_status"] = "contains_ocr_ambiguous_age_token_pending_image_check"
 
+
+# Explicitly indexed groups whose marker and sequential layout are clear.
+GROUP_INDEX.extend([
+    _source_group("一二七〇", "一二七〇", "11069-11109", {
+        1:["三十六", "三十七", "三十九"],
+        2:["三十"],
+        4:["五十七", "三十八"],
+        7:["三十二"],
+        8:["六十五"],
+        10:["五十三", "五十四"],
+    }),
+    _source_group("一二八〇", "一二八〇", "11111-11151", {
+        2:["四十"],
+        4:["五十六"],
+        6:["五十五", "五十六", "三十二", "三十三", "三十三", "三十三", "三十四"],
+        9:["四十五", "四十六"],
+    }),
+])
+
+UNASSIGNED_BLOCKS = [{
+    "block_id": "child_collection_unheaded_block_before_1270",
+    "pdf_text_lines": "11028-11067",
+    "entry_count": 10,
+    "status": "group_marker_missing_do_not_assign",
+    "note": "该块位于一二六〇表格之后、一二七〇组标题之前；当前文本层未显示独立组号。",
+    "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                for n, line in enumerate(
+                    ["11030-11033", "11035-11037", "11039-11041", "11043-11046",
+                     "11048-11049", "11051-11052", "11054-11056", "11058-11061",
+                     "11063-11064", "11066-11067"], 1)]
+}]
+
+GROUP_ANOMALIES = [
+    {
+        "raw_group_marker": "一二九〇",
+        "pdf_text_lines": "11153-11153",
+        "status": "group_marker_seen_content_not_located_before_next_header",
+        "normalized_group_marker_candidate": "一二九〇",
+    },
+    {
+        "raw_header_text": "康节说身全书",
+        "pdf_text_lines": "11155",
+        "normalized_header_candidate": "康节说易全书",
+        "status": "probable_ocr_error_pending_image_check",
+    },
+    {
+        "raw_group_marker": "一二〇〇",
+        "pdf_text_lines": "11157-11170",
+        "normalized_group_marker_candidate": "一三〇〇",
+        "status": "probable_ocr_correction_pending_image_check",
+        "note": "位于一二九〇之后、一三二〇之前；按序列推测为一三〇〇，必须保留原始识别。",
+    },
+    {
+        "expected_group_marker": "一三一〇",
+        "status": "not_located_between_probable_1300_and_1320",
+        "pdf_text_lines": "11157-11186",
+    },
+]
+
 GROUP_GAPS = [{
     "expected_group_marker": "一二一〇",
     "status": "not_located_between_1200_and_1220_in_available_pdf_text_layer",
@@ -347,6 +406,8 @@ def get_group_index():
         "status": "text_layer_indexed_image_verification_pending",
         "group_count": len(GROUP_INDEX),
         "group_gaps": [dict(x) for x in GROUP_GAPS],
+        "unassigned_blocks": [dict(x, entries=[dict(e) for e in x["entries"]]) for x in UNASSIGNED_BLOCKS],
+        "group_anomalies": [dict(x) for x in GROUP_ANOMALIES],
         "status": "mixed_text_layer_index_and_layout_pending",
         "entry_count": sum(len(group["entries"]) for group in GROUP_INDEX),
         "groups": [
