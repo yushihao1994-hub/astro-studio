@@ -206,12 +206,86 @@ GROUP_INDEX.extend([
 ])
 
 
+# Later 子集 groups: preserve raw OCR labels and keep normalization candidates
+# separate from the printed transcription until page-image verification.
+def _source_group(raw_marker, normalized_marker, line_range, age_hints,
+                  normalization_status="verified_text_layer_group_marker"):
+    entries = []
+    for sequence in range(1, 11):
+        hint = age_hints.get(sequence)
+        entries.append({
+            "entry_sequence": sequence,
+            "raw_number_text": None,
+            "number_field_present": False if hint is not None else None,
+            "content_present": True if hint is not None else None,
+            "pdf_text_lines": None,
+            "age_markers": hint or [],
+            "age_marker_text": "／".join(hint) if hint else None,
+            "age_marker_association_status": (
+                "text_layer_sequence_associated_image_check_pending"
+                if hint else "not_assessed"
+            ),
+        })
+    return {
+        "group_marker": normalized_marker or raw_marker,
+        "raw_group_marker": raw_marker,
+        "normalized_group_marker_candidate": normalized_marker,
+        "normalization_status": normalization_status,
+        "pdf_text_lines": line_range,
+        "entry_count": 10,
+        "layout_status": "sequential_number_age_lines_then_clause",
+        "entries": entries,
+    }
+
+
+GROUP_INDEX.extend([
+    _source_group("一一七〇", "一一七〇", "10904-10917", {
+        1:["五十二"], 2:["五十七"], 3:["五十八"], 4:["三十九"],
+        5:["二十六"], 6:["三十一"], 7:["五十三"], 8:["五十二"],
+        10:["五十三"]
+    }),
+    _source_group("一九〇", "一一八〇", "10919-10929", {
+        1:["三十八"], 2:["五十九"], 3:["六十"], 4:["五十七"],
+        5:["三十三"], 6:["四十二"], 7:["四十三"], 8:["六十三"],
+        9:["十七"], 10:["五十六"]
+    }, "probable_ocr_correction_pending_image_check"),
+    _source_group("一九一", "一一九〇", "10931-10942", {
+        1:["三十九"], 2:["十二"], 3:["六十九"], 4:["七十"],
+        5:["九十"], 6:["三十一"], 7:["二十二"], 8:["二十五"],
+        9:["十四"]
+    }, "probable_ocr_correction_pending_image_check"),
+    _source_group("一二〇〇", "一二〇〇", "10944-10956", {
+        1:["七十九","八十"], 2:["三十一"], 3:["四十八"],
+        5:["二十五"], 6:["七十七","七十八"], 10:["二十三","三十四"]
+    }),
+    _source_group("一二二〇", "一二二〇", "10958-10968", {
+        1:["二十九","三十"], 4:["六十七","六十八","六十九"],
+        5:["二十八","三十八","四十八","五十八"],
+        7:["五十"], 10:["二十"]
+    }),
+    _source_group("一二三〇", "一二三〇", "10970-10980", {
+        2:["二十一"], 3:["二十九","五十","六十"],
+        5:["二十七","三十","三十","九十"],
+        6:["二十二","三十"], 7:["二十九"],
+        10:["五十五","五十六"]
+    }),
+])
+
+GROUP_GAPS = [{
+    "expected_group_marker": "一二一〇",
+    "status": "not_located_between_1200_and_1220_in_available_pdf_text_layer",
+    "evidence": "PDF text layer jumps from 一二〇〇 (10944-10956) to 一二二〇 (10958)",
+    "action": "retain as an unverified gap; do not fabricate ten entries",
+}]
+
+
 def get_group_index():
     return {
         "edition": EDITION,
         "collection": "子集",
         "status": "text_layer_indexed_image_verification_pending",
         "group_count": len(GROUP_INDEX),
+        "group_gaps": [dict(x) for x in GROUP_GAPS],
         "status": "mixed_text_layer_index_and_layout_pending",
         "entry_count": sum(len(group["entries"]) for group in GROUP_INDEX),
         "groups": [
@@ -219,6 +293,9 @@ def get_group_index():
              "pdf_text_lines": group["pdf_text_lines"],
              "entry_count": len(group["entries"]),
              "layout_status": group.get("layout_status", "text_layer_indexed_image_verification_pending"),
+             "raw_group_marker": group.get("raw_group_marker", group["group_marker"]),
+             "normalized_group_marker_candidate": group.get("normalized_group_marker_candidate", group["group_marker"]),
+             "normalization_status": group.get("normalization_status", "verified_text_layer_group_marker"),
              "age_marker_candidates": [dict(x) for x in group.get("age_marker_candidates", [])],
              "entries": [dict(entry) for entry in group["entries"]]}
             for group in GROUP_INDEX
