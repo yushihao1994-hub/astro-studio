@@ -29,6 +29,19 @@ PUBLISHED_CIPHER_EXAMPLES = [
     {"code": "丙庚月戌", "number": "2403", "meaning": "纳民虚实交示例"},
 ]
 
+# A source-attested exact code-to-number example. This is an exception fixture,
+# not a general branch-character conversion rule.
+SOURCE_ATTESTED_EXCEPTIONS = [
+    {
+        "code": "丙庚月戌",
+        "number": "2403",
+        "source": "坤集浅释，PDF文本行276",
+        "status": "exact_example_attested_rule_unresolved",
+        "note": "原文明确给出代码与条号，但前文通用代号表未解释戌如何贡献末位3；不得据此推导戌的通用编码。",
+        "variant_note": "部分现代二手讲解写作丙庚月戊，作为异文记录，不覆盖点校本原文。",
+    }
+]
+
 # The explanation says the initial code is a first刻; if it does not fit,
 # the operator advances by刻/分 increments. It does not define a complete,
 # independently reproducible selection procedure.
@@ -59,6 +72,7 @@ def get_kunji_reference():
         "placeholder_to_cipher_digit": dict(PLACEHOLDER_TO_CIPHER_DIGIT),
         "published_examples": [dict(row) for row in PUBLISHED_CIPHER_EXAMPLES],
         "published_example_audits": [audit_published_example(row) for row in PUBLISHED_CIPHER_EXAMPLES],
+        "source_attested_exceptions": [dict(row) for row in SOURCE_ATTESTED_EXCEPTIONS],
         "advancement_note": dict(ADVANCEMENT_NOTE),
         "limitations": list(LIMITATIONS),
     }
