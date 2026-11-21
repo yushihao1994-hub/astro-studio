@@ -77,6 +77,42 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["groups"][1]["entries"][0]["pdf_text_lines"], "10682")
         self.assertEqual(data["groups"][2]["entries"][9]["pdf_text_lines"], "10704")
 
+    def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
+        data = get_group_index()
+        self.assertEqual(data["group_count"], 6)
+        self.assertEqual(data["entry_count"], 60)
+        expected = {
+            "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
+            "一一二〇": {3: "四十九／五十七／五十五／五十八",
+                        5: "三十三／三十四／三十七／三十八",
+                        8: "四十五／四十六／四十九／五十"},
+            "一一三〇": {1: "十五／十六／四十三／四十四",
+                        5: "十三／十四／三十七／三十八",
+                        6: "六十三／六十四", 8: "六十九／七十",
+                        10: "三十三／三十四"},
+        }
+        for group in data["groups"][3:]:
+            self.assertEqual(group["layout_status"], "text_layer_located_layout_unverified")
+            candidates = {x["entry_sequence_hint"]: x["raw_text"]
+                          for x in group["age_marker_candidates"]}
+            self.assertEqual(candidates, expected[group["group_marker"]])
+            for entry in group["entries"]:
+                self.assertIsNone(entry["number_field_present"])
+                self.assertIsNone(entry["content_present"])
+                if entry["age_marker_text"]:
+                    self.assertEqual(entry["age_marker_association_status"],
+                                     "needs_layout_verification")
+                    self.assertEqual(entry["age_markers"], [])
+
+    def test_new_group_line_ranges_are_group_level_only(self):
+        data = get_group_index()
+        self.assertEqual(
+            [g["pdf_text_lines"] for g in data["groups"][3:]],
+            ["10707-10719", "10721-10741", "10743-10762"]
+        )
+        self.assertTrue(all(e["pdf_text_lines"] is None
+                            for g in data["groups"][3:] for e in g["entries"]))
+
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
