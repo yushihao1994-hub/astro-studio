@@ -118,7 +118,7 @@ def calculate_chart(payload):
 
     # South Node is exactly opposite the calculated True North Node.
     south = sign_position((longitudes["北交点"] + 180) % 360)
-    south.update({"name": "南交点", "retrograde": True, "longitude_speed_per_day": round(speeds["北交点"], 6)})
+    south.update({"name": "南交点", "retrograde": speeds["北交点"] < 0, "longitude_speed_per_day": round(speeds["北交点"], 6)})
     positions.append(south)
     longitudes["南交点"] = south["longitude"]
 
@@ -201,6 +201,7 @@ def calculate_chart(payload):
         "aspects": aspects,
         "warnings": timezone_warning + [
             "当前使用 Moshier 星历算法，不是 Swiss Ephemeris 星历数据文件；结果应标注数据来源。",
+            "使用地名查询时，出生地点文本会发送给 OpenStreetMap Nominatim 地理编码服务；如不希望发送地名，可改为直接提交经纬度。",
             "出生地点若由地名自动解析，坐标可能是城镇中心或地名匹配点，不一定是实际出生地点。",
             "占星解释属于文化与自我探索内容，不构成科学预测。"
         ]
