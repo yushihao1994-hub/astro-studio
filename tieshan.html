@@ -225,8 +225,14 @@ function showStep(n){
   const engine=d.iron_plate_engine||{};
   const kunji=((engine.available_foundations||{}).kunji_reference)||{};
   if(kunji.status){
-    const cipherRows=(kunji.published_examples||[]).map(x=>"<tr><td>"+escapeHtml(x.code)+"</td><td>"+escapeHtml(x.number)+"</td><td>"+escapeHtml(x.meaning)+"</td></tr>").join("");
-    box.innerHTML += "<hr><b>坤集密码资料 · 点校本编者说明</b><p>状态："+escapeHtml(kunji.status)+"。此处仅展示2003年点校本导读所列代号与示例，不是清刻秘钞密码表，也不自动推算条文。</p><p>天干代号：甲1、乙6、丙2、丁7、戊3、己8、庚4、辛9、壬5、癸0；月、支在该说明中标作0。</p><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr><th>原文代码</th><th>书中示例数</th><th>示例用途</th></tr></thead><tbody>"+cipherRows+"</tbody></table></div><p style='color:#e8ca8d'>"+(kunji.limitations||[]).map(escapeHtml).join("；")+"</p>";
+    const audits=kunji.published_example_audits||[];
+    const auditByCode=Object.fromEntries(audits.map(x=>[x.code,x]));
+    const cipherRows=(kunji.published_examples||[]).map(x=>{
+      const a=auditByCode[x.code]||{};
+      const status=a.full_match?"可按已公布代号复现":"存在未解释字符："+((a.unresolved_symbols||[]).join("、")||"待核");
+      return "<tr><td>"+escapeHtml(x.code)+"</td><td>"+escapeHtml(x.number)+"</td><td>"+escapeHtml(a.known_symbol_digits||"—")+"</td><td>"+escapeHtml(status)+"</td><td>"+escapeHtml(x.meaning)+"</td></tr>";
+    }).join("");
+    box.innerHTML += "<hr><b>坤集密码资料 · 点校本编者说明</b><p>状态："+escapeHtml(kunji.status)+"。此处仅展示2003年点校本导读所列代号与示例，不是清刻秘钞密码表，也不自动推算条文。</p><p>天干代号：甲1、乙6、丙2、丁7、戊3、己8、庚4、辛9、壬5、癸0；月、支在该说明中标作0。</p><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr><th>原文代码</th><th>书中示例数</th><th>已知字符换算</th><th>核验结果</th><th>示例用途</th></tr></thead><tbody>"+cipherRows+"</tbody></table></div><p style='color:#e8ca8d'>"+(kunji.limitations||[]).map(escapeHtml).join("；")+"</p>";
   }
   const statusText={verified:"已核对",partial:"部分接入",blocked:"待补齐"};
   const flow=(engine.workflow||[]).map(item=>"<tr><td>"+escapeHtml(item.name)+"</td><td>"+escapeHtml(statusText[item.status]||item.status)+"</td><td>"+escapeHtml(item.description)+"</td></tr>").join("");
