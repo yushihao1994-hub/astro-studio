@@ -163,6 +163,7 @@
     const toast = document.getElementById('toast');
     const result = document.getElementById('result');
     const calcBtn = document.getElementById('calcBtn');
+    let currentChartData = null;
     const key = 'astro-studio-profile-draft-v1';
 
     function showError(message) {
@@ -220,6 +221,56 @@
         }
       });
     });
+
+    function attachAiAnalysisButton(panelId, topic) {
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'ai-analysis-wrap';
+      wrap.innerHTML = '<p class="note">可按需生成 AI 深度解读。点击后只发送星盘结构数据，不发送姓名、出生日期、出生时间或出生地点；调用 DeepSeek 可能产生 API 费用。</p>' +
+        '<button type="button" class="secondary ai-analysis-button" data-ai-topic="' + topic + '">生成 AI 深度解读</button>' +
+        '<div class="ai-analysis-output" aria-live="polite"></div>';
+      panel.appendChild(wrap);
+    }
+
+    document.addEventListener('click', async (event) => {
+      const button = event.target.closest('[data-ai-topic]');
+      if (!button) return;
+      if (!currentChartData) {
+        showError('请先生成本命盘，再使用 AI 深度解读。');
+        return;
+      }
+      const topic = button.dataset.aiTopic;
+      const output = button.parentElement.querySelector('.ai-analysis-output');
+      button.disabled = true;
+      button.textContent = 'AI 正在分析，请稍候…';
+      output.textContent = '';
+      try {
+        const response = await fetch(API_BASE + '/api/ai/analyze', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({topic, chart: currentChartData})
+        });
+        const body = await response.json();
+        if (!response.ok || !body.ok) throw new Error(body.error || 'AI 深度分析暂时不可用。');
+        const analysis = body.analysis;
+        output.innerHTML = '<section class="report-group"><h3>AI 深度解读</h3><p class="report-intro">' + esc(analysis.summary || '') + '</p>' +
+          (analysis.sections || []).map((item, index) =>
+            '<details class="report-item"' + (index === 0 ? ' open' : '') + '><summary><span class="report-index">' +
+            String(index + 1).padStart(2, '0') + '</span><span class="report-title">' + esc(item.title || '深入分析') +
+            '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
+            '<p><b>结论：</b>' + esc(item.conclusion || '') + '</p><p><b>为什么这样分析：</b>' + esc(item.reasoning || '') +
+            '</p><p><b>现实建议：</b>' + esc(item.advice || '') + '</p></div></details>'
+          ).join('') + (analysis.limitations ? '<p class="note">' + esc(analysis.limitations) + '</p>' : '') +
+          '<p class="note">本解读依据所提供的星盘结构生成，属于占星文化与自我探索参考，不是科学预测。</p></section>';
+      } catch (error) {
+        output.textContent = error.message || 'AI 深度分析暂时不可用。原有基础报告不受影响。';
+      } finally {
+        button.disabled = false;
+        button.textContent = '重新生成 AI 深度解读';
+      }
+    });
+
     function renderWheel(chart) {
       const c=160, outer=137, zodiacInner=115, houseOuter=112, houseInner=72, aspectRadius=66, planetRadius=91;
       const polar=(lon,rad)=>{const a=(lon-90)*Math.PI/180;return [c+Math.cos(a)*rad,c+Math.sin(a)*rad];};
