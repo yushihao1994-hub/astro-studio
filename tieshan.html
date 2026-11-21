@@ -223,6 +223,11 @@ function showStep(n){
   if(keHtml) box.innerHTML += keHtml;
   if(palaceHtml) box.innerHTML += palaceHtml;
   const engine=d.iron_plate_engine||{};
+  const kunji=((engine.available_foundations||{}).kunji_reference)||{};
+  if(kunji.status){
+    const cipherRows=(kunji.published_examples||[]).map(x=>"<tr><td>"+escapeHtml(x.code)+"</td><td>"+escapeHtml(x.number)+"</td><td>"+escapeHtml(x.meaning)+"</td></tr>").join("");
+    box.innerHTML += "<hr><b>坤集密码资料 · 点校本编者说明</b><p>状态："+escapeHtml(kunji.status)+"。此处仅展示2003年点校本导读所列代号与示例，不是清刻秘钞密码表，也不自动推算条文。</p><p>天干代号：甲1、乙6、丙2、丁7、戊3、己8、庚4、辛9、壬5、癸0；月、支在该说明中标作0。</p><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr><th>原文代码</th><th>书中示例数</th><th>示例用途</th></tr></thead><tbody>"+cipherRows+"</tbody></table></div><p style='color:#e8ca8d'>"+(kunji.limitations||[]).map(escapeHtml).join("；")+"</p>";
+  }
   const statusText={verified:"已核对",partial:"部分接入",blocked:"待补齐"};
   const flow=(engine.workflow||[]).map(item=>"<tr><td>"+escapeHtml(item.name)+"</td><td>"+escapeHtml(statusText[item.status]||item.status)+"</td><td>"+escapeHtml(item.description)+"</td></tr>").join("");
   box.innerHTML += "<hr><b>铁板神数核心推演流程 · "+escapeHtml(engine.engine_version||"未返回")+"</b><p>当前状态：基础引擎已建立，尚未达到完整定数条件。</p><div style='overflow-x:auto'><table style='width:100%;border-collapse:collapse;font-size:12px'><thead><tr><th>推演环节</th><th>状态</th><th>依据与说明</th></tr></thead><tbody>"+flow+"</tbody></table></div><p><b>版本依据：</b>"+escapeHtml(engine.primary_reference||"待核验")+"</p><p style='color:#e8ca8d'>"+(engine.stop_reasons||[]).map(escapeHtml).join("<br>")+"</p>";
