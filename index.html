@@ -62,6 +62,23 @@
     .feature{padding:15px;background:linear-gradient(110deg,#202337,#191d2d);border-color:#343a51}
     .feature b{font-size:14px}.feature .ico{font-size:22px;width:30px}
     .module-panel{line-height:1.8}.module-panel article{line-height:1.8}
+    .report-group{margin-top:22px;padding-top:16px;border-top:1px solid #383d55}
+    .report-group>h3{color:var(--gold);margin:0 0 6px;font-size:17px}
+    .report-intro{color:var(--muted);font-size:12px;line-height:1.75;margin:5px 0 13px}
+    .report-item{margin:9px 0;border:1px solid #343a51;border-radius:13px;background:linear-gradient(110deg,#202337,#191d2d);overflow:hidden}
+    .report-item>summary{list-style:none;display:flex;align-items:center;gap:11px;padding:14px;cursor:pointer;min-height:54px}
+    .report-item>summary::-webkit-details-marker{display:none}
+    .report-index{flex:0 0 30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#302943;color:var(--gold);font-size:11px;font-weight:700}
+    .report-title{font-size:14px;font-weight:650;flex:1;color:#f0edf8}
+    .report-chevron{color:var(--gold);transition:transform .2s}
+    .report-item[open]>summary .report-chevron{transform:rotate(180deg)}
+    .report-content{padding:0 14px 15px;border-top:1px solid #30364a}
+    .report-content>p{margin:13px 0 0;color:#e0deeb;white-space:pre-line;line-height:1.95;font-size:13px}
+    .evidence-details{margin-top:14px;padding:10px 11px;border-radius:9px;background:#111521;border:1px solid #30364a;color:#b8b4c7;font-size:11px}
+    .evidence-details summary{cursor:pointer;color:#d9c18d;font-weight:600}
+    .evidence-details ul{padding-left:18px;line-height:1.8}
+    .evidence-details li{margin:4px 0}
+
     button{transition:transform .15s,filter .15s}.primary{box-shadow:0 7px 22px #d8bd8628}.primary:active{transform:scale(.98)}
     .status{line-height:1.8}
     @media(max-width:760px){.hero{padding:26px 20px}.overview{padding:18px}.overview-grid{grid-template-columns:1fr;gap:8px}.wheel-wrap{min-height:240px}.key-points{grid-template-columns:1fr 1fr 1fr;gap:7px}.key-point{padding:10px 8px;display:block}.key-point>span{margin-bottom:7px}.key-point b{font-size:13px}.key-point small{font-size:10px}.key-point em{font-size:9px;line-height:1.4}.overview-foot{font-size:9px}}
@@ -153,16 +170,35 @@
       return esc(p.sign) + ' ' + p.degree + '°' + String(p.minute).padStart(2,'0') + '′' + String(p.second).padStart(2,'0') + '″';
     }
 
-    function renderAnalysisBlock(block) {
+    function cleanSectionTitle(value) {
+      return String(value || '').replace(/^[一二三四五六七八九十0-9]+[、.．）)]\\s*/, '');
+    }
+    function renderReportSections(sections, prefix) {
+      if (!Array.isArray(sections) || !sections.length) return '<p>该专题暂时没有可展示的详细内容。</p>';
+      return sections.map((item, index) => {
+        const evidence = Array.isArray(item.evidence) && item.evidence.length
+          ? '<details class="evidence-details"><summary>查看分析依据</summary><ul>' +
+            item.evidence.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></details>'
+          : '';
+        return '<details class="report-item" id="' + prefix + '-' + index + '">' +
+          '<summary><span class="report-index">' + String(index + 1).padStart(2, '0') + '</span><span class="report-title">' +
+          esc(cleanSectionTitle(item.title)) + '</span><span class="report-chevron">⌄</span></summary>' +
+          '<div class="report-content"><p>' + esc(item.content || '') + '</p>' + evidence + '</div></details>';
+      }).join('');
+    }
+    function renderAnalysisBlock(block, prefix) {
       if (!block || !Array.isArray(block.sections)) return '';
-      return '<section style="margin-top:22px;padding-top:16px;border-top:1px solid #383d55">' +
-        '<h3 style="color:#e6c78b;margin:0 0 6px">' + esc(block.title) + '</h3>' +
-        '<p style="color:#a7a8bb;font-size:12px">' + esc(block.intro || '') + '</p>' +
-        block.sections.map((item, index) =>
-          '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
-          '<h4 style="margin:0 0 7px;color:#d8c8ff">' + (index + 1) + '. ' + esc(item.title) + '</h4>' +
-          '<p style="margin:0;white-space:pre-line;line-height:1.95">' + esc(item.content) + '</p></article>'
-        ).join('') + '</section>';
+      return '<section class="report-group">' +
+        (block.title ? '<h3>' + esc(block.title) + '</h3>' : '') +
+        (block.intro ? '<p class="report-intro">' + esc(block.intro) + '</p>' : '') +
+        renderReportSections(block.sections, prefix || 'report') + '</section>';
+    }
+    function renderNatalProfile(block) {
+      if (!block || !Array.isArray(block.sections)) return '';
+      return '<section class="report-group">' +
+        '<h3>' + esc(block.title || '个人特质与人生方向') + '</h3>' +
+        (block.intro ? '<p class="report-intro">' + esc(block.intro) + '</p>' : '') +
+        renderReportSections(block.sections, 'personality') + '</section>';
     }
     document.querySelectorAll('.module-toggle').forEach(button => {
       button.addEventListener('click', () => {
@@ -313,11 +349,11 @@
           renderNatalProfile(chart.natal_profile) ||
           '<p>个人画像报告暂未返回，请稍后重试。</p>';
         document.getElementById('panel-relationship').innerHTML =
-          renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
-          renderAnalysisBlock(monthlyRelationship);
+          renderAnalysisBlock(chart.analysis && chart.analysis.relationship, 'relationship') +
+          renderAnalysisBlock(monthlyRelationship, 'relationship-monthly');
         document.getElementById('panel-finance').innerHTML =
-          renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
-          renderAnalysisBlock(monthlyFinance);
+          renderAnalysisBlock(chart.analysis && chart.analysis.finance, 'finance') +
+          renderAnalysisBlock(monthlyFinance, 'finance-monthly');
 
         result.innerHTML =
           '<strong>本命星盘计算完成：' + esc(data.profileName) + '</strong>' +
