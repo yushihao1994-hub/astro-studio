@@ -92,7 +92,26 @@
     .status{line-height:1.8}
     @media(max-width:760px){.hero{padding:26px 20px}.overview{padding:18px}.overview-grid{grid-template-columns:1fr;gap:8px}.wheel-wrap{min-height:240px}.key-points{grid-template-columns:1fr 1fr 1fr;gap:7px}.key-point{padding:10px 8px;display:block}.key-point>span{margin-bottom:7px}.key-point b{font-size:13px}.key-point small{font-size:10px}.key-point em{font-size:9px;line-height:1.4}.overview-foot{font-size:9px}}
     @media(max-width:420px){.key-points{grid-template-columns:1fr}.key-point{display:flex;padding:10px}.key-point>span{margin:0}.hero-meta span{font-size:10px}.overview-head h3{font-size:18px}}
-\n  </style>
+\n    .free-sample-head{display:flex;align-items:center;gap:9px;margin:18px 0 5px;color:#f3e6c9;font-size:13px}
+    .sample-tag{display:inline-flex;padding:4px 8px;border-radius:99px;background:#244338;color:#a9e3c4;font-size:10px}
+    .ai-analysis-wrap{margin-top:18px;padding-top:15px;border-top:1px solid #393e55}
+    .ai-analysis-button{width:100%;margin:8px 0 12px}
+    .premium-teaser{margin-top:16px;padding:17px;border:1px solid #6b5b3b;border-radius:15px;background:linear-gradient(135deg,#282337,#1b1d2a 70%,#242131)}
+    .premium-top{display:flex;justify-content:space-between;color:#e8cb96;font-size:12px;font-weight:700}
+    .premium-status{border:1px solid #6b5b3b;border-radius:99px;padding:3px 8px;font-size:10px;color:#d8c8a7}
+    .premium-teaser h4{font-size:17px;color:#f4e8ce;margin:12px 0 7px}
+    .premium-teaser p,.premium-teaser li{font-size:12px;line-height:1.8;color:#c8c3d5}
+    .premium-teaser ul{padding-left:18px;margin:10px 0 14px}
+    .premium-teaser button{width:100%}
+    .sample-limit{margin-top:14px;padding:12px;border:1px dashed #746344;border-radius:10px;background:#e6c78b0a}
+    .sample-limit b{display:block;font-size:12px;color:#e8cb96}.sample-limit span{font-size:11px;line-height:1.7;color:#b9b4c7}
+    .paywall-modal{display:none;position:fixed;inset:0;z-index:1000;background:#05060bd9;padding:18px;align-items:center;justify-content:center}
+    .paywall-modal.show{display:flex}.paywall-dialog{width:min(100%,460px);max-height:90vh;overflow:auto;border:1px solid #6b5b3b;border-radius:20px;padding:22px;background:linear-gradient(145deg,#252137,#151824)}
+    .paywall-dialog h3{font-size:21px;color:#f1dfb8;margin:7px 0}.paywall-dialog p{font-size:13px;line-height:1.8;color:#c5c1d1}
+    .price-options{display:grid;gap:10px;margin:16px 0}.price-option{padding:13px;border:1px solid #51465f;border-radius:12px;background:#ffffff06}
+    .price-option b{font-size:15px;color:#f1dfb8}.price-option strong{float:right;color:#e8cb96;font-size:18px}.price-option small{display:block;color:#aaa7b9;font-size:11px;margin-top:4px}
+    .paywall-notice{padding:11px;border-radius:10px;background:#322b20;color:#e7d2a5;font-size:11px;line-height:1.7}.paywall-actions{display:flex;gap:9px;margin-top:16px}.paywall-actions button{flex:1}
+  </style>
 </head>
 <body>
   <main class="wrap">
@@ -102,8 +121,8 @@
     </header>
     <section class="grid" id="birth-section">
       <div class="card">
-        <h3>填写出生资料</h3>
-        <p class="hint">只需要填写这三项，系统会自动生成你的个人分析。</p>
+        <h3>开启你的专属星盘报告</h3>
+        <p class="hint">免费生成个人星盘画像，先看核心发现；完整专题报告可进一步解锁。</p>
         <form id="birthForm">
           <div class="fields">
             <div class="field full"><label for="profileName">怎么称呼你（选填）</label><input id="profileName" name="profileName" maxlength="40" placeholder="例如：小余（不填也可以）"></div>
@@ -111,14 +130,14 @@
             <div class="field"><label for="birthTime">出生时间（当地时间）</label><input id="birthTime" name="birthTime" type="time" required></div>
             <div class="field full"><label for="birthPlace">出生地点</label><input id="birthPlace" name="birthPlace" maxlength="100" placeholder="例如：中国河南省周口市郸城县白马镇" required></div>
           </div>
-          <div class="actions"><button class="primary" type="submit" id="calcBtn">生成我的个人报告</button><button class="secondary" type="button" id="clearBtn">重新填写</button></div>
+          <div class="actions"><button class="primary" type="submit" id="calcBtn">免费生成我的星盘报告</button><button class="secondary" type="button" id="clearBtn">重新填写</button></div>
           <div class="toast" id="toast" role="alert"></div><section id="result" class="status" style="display:none" aria-live="polite"></section>
           <p class="note">出生日期、时间和地点仅用于计算个人报告。出生地点会交由地图地名服务匹配坐标。出生时间越准确，部分分析越有参考价值。</p>
         </form>
       </div>
       <aside class="card" id="report-section">
-        <h3>你的个人分析报告</h3>
-        <p class="hint">选择你最关心的主题，查看专属于你的详细解读</p>
+        <h3>你的专属星盘报告</h3>
+        <p class="hint">先免费查看基础分析，再体验一段 AI 深度解读；完整报告将提供更深入的个性化内容。</p>
         <div class="features">
           <button class="feature module-toggle" type="button" data-module="personality" aria-expanded="false"><div class="ico">✦</div><div><b>我的性格与人生方向</b><span>核心特质、思维方式、优势、盲点与成长方向</span></div><span class="feature-arrow">⌄</span></button>
           <div class="module-panel" id="panel-personality">请先填写出生资料并计算，生成你的个人分析。</div>
@@ -225,11 +244,23 @@
     function attachAiAnalysisButton(panelId, topic) {
       const panel = document.getElementById(panelId);
       if (!panel) return;
+      const labels = {personality:'性格与人生方向',relationship:'感情与婚姻',finance:'财富与财运',trends:'未来30天趋势'};
+      const descriptions = {
+        personality:'核心优势、内在矛盾、适合发挥能力的环境与成长建议',
+        relationship:'容易被哪类人吸引、关系中的真实需求、长期相处难点与伴侣特征',
+        finance:'收入模式、赚钱优势、财富积累阻力与风险倾向',
+        trends:'未来一个月的重点主题，以及感情和财务的行动提醒'
+      };
       const wrap = document.createElement('div');
       wrap.className = 'ai-analysis-wrap';
-      wrap.innerHTML = '<p class="note">可按需生成 AI 深度解读。点击后只发送星盘结构数据，不发送姓名、出生日期、出生时间或出生地点；调用 DeepSeek 可能产生 API 费用。</p>' +
-        '<button type="button" class="secondary ai-analysis-button" data-ai-topic="' + topic + '">生成 AI 深度解读</button>' +
-        '<div class="ai-analysis-output" aria-live="polite"></div>';
+      wrap.innerHTML = '<div class="free-sample-head"><span class="sample-tag">免费体验</span><b>先看看 AI 如何解读你的真实星盘</b></div>' +
+        '<p class="note">免费体验展示一段根据本命盘数据生成的解读。完整报告会进一步分析原因、不同因素之间的联系，以及适合你的实际行动建议。</p>' +
+        '<button type="button" class="primary ai-analysis-button" data-ai-topic="' + topic + '">免费体验一段深度解读</button>' +
+        '<div class="ai-analysis-output" aria-live="polite"></div>' +
+        '<div class="premium-teaser"><div class="premium-top"><span>✦ 完整版报告</span><span class="premium-status">即将开放</span></div>' +
+        '<h4>解锁你的' + labels[topic] + '完整分析</h4><p>' + descriptions[topic] + '</p>' +
+        '<ul><li>结合真实星盘结构，不套用统一模板</li><li>解释分析依据，让你知道结论从哪里来</li><li>给出具体、可执行的现实建议</li></ul>' +
+        '<button type="button" class="secondary paywall-open" data-product="' + topic + '">查看完整报告与价格</button></div>';
       panel.appendChild(wrap);
     }
 
