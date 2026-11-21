@@ -15,7 +15,7 @@ from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
 from tieshan_engine import build_tieshan_foundation
 from tieshan_kunji_index import get_kunji_glossary
-from tieshan_collection_catalog import get_collection_sample
+from tieshan_collection_catalog import get_collection_sample, get_group_index
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
 app = Flask(__name__)
@@ -1445,6 +1445,17 @@ def ai_full_report():
     except Exception as exc:
         app.logger.exception("Full report failed")
         return jsonify({"ok": False, "error": "完整报告发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+@app.get("/api/tieshan/collections/<branch>/groups")
+def tieshan_collection_groups(branch):
+    """Return metadata-only group index for a collection."""
+    if branch != "子":
+        return jsonify({"ok": True, "index": {
+            "collection": branch, "status": "not_indexed",
+            "group_count": 0, "entry_count": 0, "groups": []
+        }})
+    return jsonify({"ok": True, "index": get_group_index()})
 
 
 @app.get("/api/tieshan/collections/<branch>/entries")
