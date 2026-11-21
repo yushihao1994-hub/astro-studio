@@ -35,3 +35,22 @@
 3. 星盘计算结果结构化输出
 4. 报告引擎、账户体系与私密档案
 5. HTTPS 部署、移动端测试与许可审查
+
+## 后端计算 API（开发阶段）
+
+新增 `backend/app.py`：提供 `GET /api/health` 与 `POST /api/chart`。接口计算太阳至冥王星、真北交点/南交点、Placidus 十二宫、四轴和主要相位，并返回趋近/分离标记。出生地可用地名解析，也可直接传入经纬度；输入时间按 IANA 时区转换 UTC，并对坐标推算时区进行提示。
+
+**重要精度与许可说明：** 当前代码明确使用 pyswisseph 的 Moshier 分析星历模式（`FLG_MOSEPH`），不是 Swiss Ephemeris 星历数据文件，也不应标称为完整 Swiss Ephemeris 文件精度。后续若切换 Swiss Ephemeris 文件，必须先完成数据文件来源、AGPL/商业许可和部署方式审查。
+
+### API 示例
+
+```json
+{
+  "birth_date": "1994-05-26",
+  "birth_time": "10:20",
+  "timezone": "Asia/Shanghai",
+  "place": "河南省周口市郸城县白马镇"
+}
+```
+
+部署描述文件为仓库根目录的 `render.yaml`。目前只是部署配置和后端源码已提交，**尚未创建 Render 服务，也尚未获得可用的线上 API 地址**。不要在前端填写虚构的 API 地址。
