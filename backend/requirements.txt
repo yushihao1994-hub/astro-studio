@@ -5,3 +5,4 @@ timezonefinder==6.5.9
 geopy==2.4.1
 gunicorn==23.0.0
 requests==2.32.4
+lunar-python==1.4.8
