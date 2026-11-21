@@ -53,6 +53,73 @@ LIMITATIONS = [
     "样本内容不得用于自动考刻、定数或生成个人命运结论。",
 ]
 
+
+# Source-checked group index. Clause prose is not duplicated here; each row
+# points to the PDF text layer for review. The numeric column is kept distinct
+# from numbers that happen to occur inside the clause prose.
+GROUP_INDEX = [
+    {"group_marker":"一〇八〇","pdf_text_lines":"10664-10679","entries":[
+        {"entry_sequence":1,"raw_number_text":"卅四","number_field_present":True,"content_present":True,"pdf_text_lines":"10670"},
+        {"entry_sequence":2,"raw_number_text":"卅三","number_field_present":True,"content_present":True,"pdf_text_lines":"10671"},
+        {"entry_sequence":3,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10672"},
+        {"entry_sequence":4,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10673"},
+        {"entry_sequence":5,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10674"},
+        {"entry_sequence":6,"raw_number_text":"四十四","number_field_present":True,"content_present":True,"pdf_text_lines":"10675"},
+        {"entry_sequence":7,"raw_number_text":"卅三","number_field_present":True,"content_present":True,"pdf_text_lines":"10676"},
+        {"entry_sequence":8,"raw_number_text":"卅五","number_field_present":True,"content_present":True,"pdf_text_lines":"10677"},
+        {"entry_sequence":9,"raw_number_text":"四十六","number_field_present":True,"content_present":True,"pdf_text_lines":"10678"},
+        {"entry_sequence":10,"raw_number_text":"四十九","number_field_present":True,"content_present":True,"pdf_text_lines":"10679"},
+    ]},
+    {"group_marker":"一〇九〇","pdf_text_lines":"10681-10691","entries":[
+        {"entry_sequence":1,"raw_number_text":"四十三","number_field_present":True,"content_present":True,"pdf_text_lines":"10682"},
+        {"entry_sequence":2,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10683"},
+        {"entry_sequence":3,"raw_number_text":"七十五","number_field_present":True,"content_present":True,"pdf_text_lines":"10684"},
+        {"entry_sequence":4,"raw_number_text":"六十四","number_field_present":True,"content_present":True,"pdf_text_lines":"10685"},
+        {"entry_sequence":5,"raw_number_text":"五十九","number_field_present":True,"content_present":True,"pdf_text_lines":"10686"},
+        {"entry_sequence":6,"raw_number_text":"六十一","number_field_present":True,"content_present":True,"pdf_text_lines":"10687"},
+        {"entry_sequence":7,"raw_number_text":"七十三","number_field_present":True,"content_present":True,"pdf_text_lines":"10688"},
+        {"entry_sequence":8,"raw_number_text":"七十七","number_field_present":True,"content_present":True,"pdf_text_lines":"10689"},
+        {"entry_sequence":9,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10690"},
+        {"entry_sequence":10,"raw_number_text":"五十九","number_field_present":True,"content_present":True,"pdf_text_lines":"10691"},
+    ]},
+    {"group_marker":"一一〇〇","pdf_text_lines":"10693-10704","entries":[
+        {"entry_sequence":1,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10695"},
+        {"entry_sequence":2,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10696"},
+        {"entry_sequence":3,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10697"},
+        {"entry_sequence":4,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10698"},
+        {"entry_sequence":5,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10699"},
+        {"entry_sequence":6,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10700"},
+        {"entry_sequence":7,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10701"},
+        {"entry_sequence":8,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10702"},
+        {"entry_sequence":9,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10703","note":"条文句子内部含数字写法；不等同独立对应数栏"},
+        {"entry_sequence":10,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"10704"},
+    ]},
+]
+
+def get_group_index():
+    return {
+        "edition": EDITION,
+        "collection": "子集",
+        "status": "text_layer_indexed_image_verification_pending",
+        "group_count": len(GROUP_INDEX),
+        "entry_count": sum(len(group["entries"]) for group in GROUP_INDEX),
+        "groups": [
+            {"group_marker": group["group_marker"],
+             "pdf_text_lines": group["pdf_text_lines"],
+             "entry_count": len(group["entries"]),
+             "entries": [dict(entry) for entry in group["entries"]]}
+            for group in GROUP_INDEX
+        ],
+        "limitations": [
+            "仅为PDF文本层字段索引，未逐字对照扫描图像。",
+            "不复制完整条文正文；请按PDF行号核对。",
+            "raw_number_text只记录独立数字栏，条文句内数字不转入该字段。",
+            "空值表示原文该条没有独立数字栏，不允许按相邻条目补齐。",
+            "本索引不构成铁板密码条号，不用于自动考刻或断命。"
+        ]
+    }
+
+
 def get_collection_sample(branch="子"):
     if branch != "子":
         return {
