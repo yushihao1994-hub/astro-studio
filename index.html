@@ -311,7 +311,7 @@
         output.textContent = error.message || 'AI 深度分析暂时不可用。原有基础报告不受影响。';
       } finally {
         button.disabled = false;
-        button.textContent = '重新生成 AI 深度解读';
+        button.textContent = '重新生成免费体验';
       }
     });
 
@@ -504,7 +504,7 @@ const monthlyRelationship = {
          attachAiAnalysisButton('panel-finance', 'finance');
          attachAiAnalysisButton('panel-monthly', 'trends');
 document.getElementById('report-section').classList.add('ready');
-        result.innerHTML = '<strong>你的个人报告已经生成</strong><p>选择下面的主题卡片，查看详细分析。你可以先看感情、财运，也可以查看性格与近期趋势。</p><details class="evidence-details"><summary>计算与使用说明</summary><p>系统根据出生日期、当地时间和出生地点计算星盘，再按对应主题组织分析。占星内容用于自我探索与观察，不是对现实事件的确定性保证。</p><ul>' + chart.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul></details>';
+        result.innerHTML = '<strong>你的个人报告已经生成</strong><p>选择一个主题先查看免费基础分析，再体验一段 AI 个性化解读；完整深度报告可查看解锁方案。</p><details class="evidence-details"><summary>计算与使用说明</summary><p>系统根据出生日期、当地时间和出生地点计算星盘，再按对应主题组织分析。占星内容用于自我探索与观察，不是对现实事件的确定性保证。</p><ul>' + chart.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul></details>';
         result.style.display = 'block';
         document.getElementById('report-section').scrollIntoView({behavior:'smooth',block:'start'});
       } catch (error) {
