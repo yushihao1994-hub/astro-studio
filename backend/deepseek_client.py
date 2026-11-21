@@ -260,7 +260,7 @@ def analyze_tieshan_profile(pillars, birth, gender=""):
         "只输出合法 JSON，结构为：{\"summary\":\"整体说明\","
         "\"sections\":[{\"title\":\"主题\",\"conclusion\":\"结论\","
         "\"reasoning\":\"依据与解释\",\"advice\":\"现实建议\"}],"
-        "\"limitations\":[\"限制说明\"]}。
+        "\"limitations\":[\"限制说明\"]}。"
         "sections 必须恰好5项，分别讨论整体结构、性格与行事倾向、关系相处、事业与资源、现实行动建议。"
         "每项必须有实质内容，不能换词重复。"
     )
