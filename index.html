@@ -34,7 +34,7 @@
   <main class="wrap">
     <header class="top">
       <div class="brand"><div class="logo">✧</div><div><h1>星盘研究室</h1><div class="sub">ASTROLOGY RESEARCH STUDIO</div></div></div>
-      <span class="tag">专业版 · 第一阶段</span>
+      <span class="tag">专业版 · 感情与财运报告</span>
     </header>
     <section class="hero">
       <div class="eyebrow">YOUR COSMIC BLUEPRINT</div>
@@ -62,12 +62,12 @@
       </div>
       <aside class="card">
         <h3>专业分析模块</h3>
-        <p class="hint">按真实计算链路逐步开放</p>
+        <p class="hint">真实星盘数据驱动的专项深度报告</p>
         <div class="features">
           <div class="feature"><div class="ico">☉</div><div><b>十大行星与交点</b><span>黄经、星座、精确度数与逆行状态</span></div></div>
           <div class="feature"><div class="ico">⌖</div><div><b>四轴与十二宫</b><span>上升点、天顶、宫头与宫位落点</span></div></div>
           <div class="feature"><div class="ico">✧</div><div><b>主要相位</b><span>合相、冲相、三分、四分、六分及容许度</span></div></div>
-          <div class="feature"><div class="ico">☽</div><div><b>主题解读报告</b><span>性格、情感、关系、事业与财富倾向</span></div></div>
+          <div class="feature"><div class="ico">☽</div><div><b>婚姻感情与财运分析</b><span>金星、火星、月亮、五宫、七宫、二宫、八宫、十宫与主要相位</span></div></div>
         </div>
         <div class="status"><strong>计算服务</strong>后端已连接。提交出生资料后，将调用真实星历计算接口；地名会发送给 OpenStreetMap Nominatim 解析坐标。</div>
       </aside>
@@ -93,6 +93,18 @@
     }
     function positionText(p) {
       return esc(p.sign) + ' ' + p.degree + '°' + String(p.minute).padStart(2,'0') + '′' + String(p.second).padStart(2,'0') + '″';
+    }
+
+    function renderAnalysisBlock(block) {
+      if (!block || !Array.isArray(block.sections)) return '';
+      return '<section style="margin-top:22px;padding-top:16px;border-top:1px solid #383d55">' +
+        '<h3 style="color:#e6c78b;margin:0 0 6px">' + esc(block.title) + '</h3>' +
+        '<p style="color:#a7a8bb;font-size:12px">' + esc(block.intro || '') + '</p>' +
+        block.sections.map((item, index) =>
+          '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
+          '<h4 style="margin:0 0 7px;color:#d8c8ff">' + (index + 1) + '. ' + esc(item.title) + '</h4>' +
+          '<p style="margin:0;white-space:normal;line-height:1.85">' + esc(item.content) + '</p></article>'
+        ).join('') + '</section>';
     }
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -137,6 +149,9 @@
           '<h4>十大行星与交点</h4><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th>星体</th><th>位置</th><th>宫位</th><th>状态</th></tr></thead><tbody>' + planetRows + '</tbody></table></div>' +
           '<h4>四轴</h4><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tbody>' + angleRows + '</tbody></table></div>' +
           '<h4>主要相位（最多显示40项）</h4><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tbody>' + aspectRows + '</tbody></table></div>' +
+          renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
+          renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
+          '<p style="color:#a7a8bb;font-size:11px">' + esc(chart.analysis && chart.analysis.method || '') + '</p>' +
           '<h4>计算说明</h4><ul>' + chart.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul>';
         result.style.display = 'block';
         result.scrollIntoView({behavior:'smooth',block:'start'});
