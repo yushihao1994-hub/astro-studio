@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_twenty_groups_and_one_hundred_ninety_nine_entries(self):
+    def test_group_index_contains_twenty_two_groups_and_two_hundred_nineteen_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 20)
-        self.assertEqual(data["entry_count"], 199)
+        self.assertEqual(data["group_count"], 22)
+        self.assertEqual(data["entry_count"], 219)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9, 10, 10, 10, 10])
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9, 10, 10, 10, 10, 10, 10])
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -237,6 +237,28 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                          "probable_ocr_correction_pending_image_check")
         self.assertEqual(anomalies[3]["expected_group_marker"], "一三一〇")
 
+    def test_1320_and_1330_preserve_different_table_and_sequential_layouts(self):
+        data = get_group_index()
+        g1320, g1330 = data["groups"][20:22]
+        self.assertEqual(g1320["layout_status"], "table_rows_year_sequence_clause")
+        self.assertEqual(g1320["layout_note"], "PDF表头为“序号／干支/岁数／内容”；第二列原文值保留为来源字段，不解释成密码数。")
+        self.assertEqual(g1320["entries"][8]["source_index_text"], "四十四／四十五")
+        self.assertEqual(g1320["entries"][9]["source_index_text"], "三十七／三十八")
+        self.assertEqual(g1330["layout_status"], "sequential_number_age_lines_then_clause")
+        self.assertEqual(g1330["entries"][1]["age_markers"], ["三十五"])
+        self.assertEqual(g1330["entries"][7]["age_markers"], ["三十七"])
+        self.assertEqual(g1330["entries"][9]["age_markers"], ["四十七"])
+        self.assertTrue(all(e["number_field_present"] is False and e["content_present"] is True for e in g1330["entries"]))
+
+    def test_probable_1300_and_second_unheaded_block_remain_separate(self):
+        data = get_group_index()
+        candidate = data["candidate_groups"][0]
+        self.assertEqual(candidate["raw_group_marker"], "一二〇〇")
+        self.assertEqual(candidate["normalized_group_marker_candidate"], "一三〇〇")
+        self.assertEqual(candidate["entries"][0]["raw_age_column_text"], "六十一")
+        self.assertIsNone(candidate["entries"][7]["raw_age_column_text"])
+        self.assertEqual(data["unassigned_blocks"][1]["pdf_text_lines"], "11202-11213")
+        self.assertEqual(data["unassigned_blocks"][1]["entry_count"], 10)
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
