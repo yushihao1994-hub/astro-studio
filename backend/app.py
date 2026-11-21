@@ -115,15 +115,12 @@ PLANET_HOUSE_MEANING = {
 
 
 def generate_life_analysis(positions, angles, houses, aspects):
-    """Generate transparent, rule-based astrology themes from calculated chart factors."""
+    """Generate detailed, chart-grounded relationship and finance interpretations."""
     by_name = {p["name"]: p for p in positions}
     cusp_by_house = {h["house"]: h for h in houses}
 
     def planet(name):
         return by_name.get(name, {})
-
-    def house_of(name):
-        return planet(name).get("house")
 
     def ruler_of(house_no):
         cusp = cusp_by_house.get(house_no, {})
@@ -131,124 +128,220 @@ def generate_life_analysis(positions, angles, houses, aspects):
         ruler = SIGN_RULERS.get(sign)
         return sign, ruler, planet(ruler) if ruler else {}
 
-    def aspects_for(name):
-        return [a for a in aspects if a["planet_a"] == name or a["planet_b"] == name]
+    def aspect_list(names, limit=8):
+        selected = [
+            a for a in aspects
+            if a["planet_a"] in names and a["planet_b"] in names
+        ]
+        return sorted(selected, key=lambda a: a["orb"])[:limit]
 
-    def aspect_text(names, limit=4):
-        selected = [a for a in aspects if a["planet_a"] in names and a["planet_b"] in names]
-        selected = sorted(selected, key=lambda a: a["orb"])[:limit]
+    def aspect_text(names, limit=8):
+        selected = aspect_list(names, limit)
         if not selected:
-            return "相关主要相位不突出，解读更侧重星体落座与宫位。"
+            return "这些关键星体之间没有落入本报告采用范围的主要相位，因此本段主要依据星座、宫位和宫主星判断。"
+        meanings = {
+            "合相": "两种心理动力容易集中在同一议题上，表现可能更强烈，也需要有意识地分辨各自需求",
+            "六分相": "两种动力之间存在可主动运用的配合空间，通常需要通过选择、练习或沟通来发挥",
+            "四分相": "两种动力容易产生摩擦，可能带来压力，也可能推动当事人调整旧习惯",
+            "三分相": "两种动力较容易自然配合，但过于熟悉的模式也可能让人缺少主动调整",
+            "冲相": "两种动力容易在不同方向之间拉扯，需要在两端需求之间建立平衡"
+        }
         return "；".join(
-            f'{a["planet_a"]}与{a["planet_b"]}{a["aspect"]}（容许度{a["orb"]}°，{a["phase"]}）'
+            f'{a["planet_a"]}与{a["planet_b"]}{a["aspect"]}（容许度{a["orb"]}°，{a["phase"]}）：'
+            f'{meanings.get(a["aspect"], "提示两项主题之间存在互动")} '
             for a in selected
         ) + "。"
 
+    def placement(name):
+        p = planet(name)
+        if not p:
+            return f"{name}位置资料缺失"
+        state = "逆行" if p.get("retrograde") else "顺行"
+        return f'{name}位于{p.get("sign", "未知")}第{p.get("house", "未知")}宫，{state}'
+
+    def house_focus(house_no):
+        h = cusp_by_house.get(house_no, {})
+        sign = h.get("sign", "未知")
+        ruler = SIGN_RULERS.get(sign, "未知")
+        rp = planet(ruler)
+        return (
+            f"第{house_no}宫宫头落在{sign}，传统宫主星为{ruler}；"
+            f"宫主星落在{rp.get('sign', '未知')}第{rp.get('house', '未知')}宫。"
+            f"这意味着第{house_no}宫的议题，往往会通过"
+            f"“{PLANET_HOUSE_MEANING.get(rp.get('house'), '宫主星所在生活领域')}”"
+            f"这一生活场景被体验或推动。"
+        )
+
     venus, mars, moon = planet("金星"), planet("火星"), planet("月亮")
-    fifth_sign, fifth_ruler, fifth_ruler_pos = ruler_of(5)
-    seventh_sign, seventh_ruler, seventh_ruler_pos = ruler_of(7)
-    eighth_sign, eighth_ruler, eighth_ruler_pos = ruler_of(8)
-    second_sign, second_ruler, second_ruler_pos = ruler_of(2)
-    tenth_sign, tenth_ruler, tenth_ruler_pos = ruler_of(10)
+    fifth_sign, fifth_ruler, fifth_pos = ruler_of(5)
+    seventh_sign, seventh_ruler, seventh_pos = ruler_of(7)
+    eighth_sign, eighth_ruler, eighth_pos = ruler_of(8)
+    second_sign, second_ruler, second_pos = ruler_of(2)
+    tenth_sign, tenth_ruler, tenth_pos = ruler_of(10)
     jupiter, saturn = planet("木星"), planet("土星")
+    mc = angles.get("天顶", {})
 
     relationship = [
         {
-            "title": "情感需求与恋爱表达",
+            "title": "一、你的情感需求：喜欢怎样的人，怎样才有安全感",
             "content": (
-                f'金星落在{venus.get("sign", "未知")}，位于第{venus.get("house", "未知")}宫，'
-                f'对应的情感表达风格是：{SIGN_STYLE.get(venus.get("sign"), "需要结合完整星盘判断")}。'
-                f'月亮落在{moon.get("sign", "未知")}、第{moon.get("house", "未知")}宫，'
-                f'反映内在安全感更容易从{SIGN_STYLE.get(moon.get("sign"), "情绪理解与稳定回应")}中获得。'
-                f'金星所在宫位涉及{PLANET_HOUSE_MEANING.get(venus.get("house"), "个人生活主题")}；'
-                f'这说明关系体验容易与该生活领域相互牵动。'
+                f"{placement('金星')}。金星描述被吸引的类型、表达好感的方式，以及你在关系中重视的价值。"
+                f"落在{venus.get('sign', '未知')}时，情感表达倾向于{SIGN_STYLE.get(venus.get('sign'), '需要结合其他配置判断')}。"
+                f"它所在的第{venus.get('house', '未知')}宫对应{PLANET_HOUSE_MEANING.get(venus.get('house'), '相关生活领域')}，"
+                f"所以你容易在这一领域寻找欣赏、愉悦或关系连接。"
+                f"\n\n{placement('月亮')}。月亮更接近本能反应、私下情绪和安全感需求。"
+                f"月亮落在{moon.get('sign', '未知')}，情绪上更需要{SIGN_STYLE.get(moon.get('sign'), '稳定而清晰的回应')}；"
+                f"第{moon.get('house', '未知')}宫说明这种需求也会受到"
+                f"{PLANET_HOUSE_MEANING.get(moon.get('house'), '相关生活领域')}的影响。"
+                f"\n\n综合来看，金星代表“你容易被什么打动”，月亮代表“什么相处方式能让你安心”。"
+                f"两者不一定完全相同：短期吸引力不能代替长期情绪适配。观察对方是否言行一致、能否回应真实需求，比只看外在条件更重要。"
             )
         },
         {
-            "title": "吸引力、主动方式与恋爱节奏",
+            "title": "二、恋爱启动与相处节奏：主动方式、吸引力和磨合点",
             "content": (
-                f'火星落在{mars.get("sign", "未知")}、第{mars.get("house", "未知")}宫，'
-                f'行动方式偏向{SIGN_STYLE.get(mars.get("sign"), "需要结合全盘判断")}。'
-                f'第五宫宫头为{fifth_sign or "未知"}，传统宫主星为{fifth_ruler or "未知"}，'
-                f'该宫主星落在{fifth_ruler_pos.get("sign", "未知")}、第{fifth_ruler_pos.get("house", "未知")}宫。'
-                f'恋爱机会、兴趣活动与表达好感的方式，适合结合这颗宫主星所在宫位观察。'
+                f"{placement('火星')}。火星描述行动、欲望表达、冲突反应和推进关系的节奏。"
+                f"火星落在{mars.get('sign', '未知')}，行动风格偏向{SIGN_STYLE.get(mars.get('sign'), '需要结合全盘判断')}；"
+                f"第{mars.get('house', '未知')}宫强调"
+                f"{PLANET_HOUSE_MEANING.get(mars.get('house'), '相关生活领域')}，说明你可能更容易在该类情境中投入行动或表现主动。"
+                f"\n\n第五宫宫头为{fifth_sign or '未知'}，宫主星{fifth_ruler or '未知'}落在"
+                f"{fifth_pos.get('sign', '未知')}第{fifth_pos.get('house', '未知')}宫。"
+                f"第五宫关注恋爱初期、约会、兴趣和表达热情；宫主星所在宫位提示恋爱体验可能与"
+                f"{PLANET_HOUSE_MEANING.get(fifth_pos.get('house'), '该宫生活主题')}发生联系。"
+                f"\n\n实际建议：不要只靠猜测对方态度来推进关系。用稳定、适度的表达确认彼此意愿；"
+                f"当主动节奏不同，先讨论联系频率、见面安排和个人空间，而不是把节奏差异直接理解成不在乎。"
             )
         },
         {
-            "title": "长期伴侣与婚姻关系",
+            "title": "三、长期伴侣与婚姻：承诺模式及关系中的核心课题",
             "content": (
-                f'第七宫宫头为{seventh_sign or "未知"}，传统宫主星为{seventh_ruler or "未知"}，'
-                f'宫主星落在{seventh_ruler_pos.get("sign", "未知")}、第{seventh_ruler_pos.get("house", "未知")}宫。'
-                f'第七宫主题是承诺、平等协商、长期伴侣与一对一合作；'
-                f'宫主星所在的{PLANET_HOUSE_MEANING.get(seventh_ruler_pos.get("house"), "相关生活领域")}，'
-                f'是理解长期关系如何融入人生的重要线索。'
+                f"{house_focus(7)}第七宫是长期伴侣、婚姻、平等协商和一对一承诺的重要观察点。"
+                f"宫头星座{seventh_sign or '未知'}提供关系互动的基本风格线索，"
+                f"宫主星{seventh_ruler or '未知'}落在{seventh_pos.get('sign', '未知')}第{seventh_pos.get('house', '未知')}宫，"
+                f"说明长期关系容易与{PLANET_HOUSE_MEANING.get(seventh_pos.get('house'), '该宫生活主题')}相互牵动。"
+                f"\n\n这不是对配偶外貌、职业或结婚时间的确定判断，而是提示你在选择长期伴侣时，"
+                f"需要认真评估关系能否融入现实生活：双方的生活目标是否兼容，遇到分歧能否协商，"
+                f"是否愿意共同承担家庭、时间和经济责任。"
+                f"\n\n判断关系是否适合长期发展，优先看尊重、诚信、责任感、冲突后的修复能力，以及双方是否都愿意持续投入。"
             )
         },
         {
-            "title": "亲密关系中的优势与挑战",
+            "title": "四、亲密关系的优势与挑战：情绪、爱意和行动如何互动",
             "content": (
-                f'金星、火星、月亮相关相位：{aspect_text(["金星", "火星", "月亮"], 6)}'
-                f'相位描述的是不同心理需求之间较顺畅或较需要磨合的部分，不等于关系必然幸福或失败。'
-                f'第八宫宫头为{eighth_sign or "未知"}，其传统宫主星{eighth_ruler or "未知"}'
-                f'落在第{eighth_ruler_pos.get("house", "未知")}宫，也可用于观察信任、亲密边界和共享资源议题。'
+                f"金星、火星、月亮之间的主要相位：{aspect_text(['金星', '火星', '月亮'], 8)}"
+                f"\n\n这些相位描述的是情感表达、情绪需求和行动方式之间的互动，不是对感情结果的判决。"
+                f"较顺畅的配置可以成为沟通与亲密的资源；较紧张的配置则提醒你，"
+                f"在情绪上头时先区分“我感到什么”“我需要什么”和“我希望对方做什么”，避免把感受直接变成指责。"
+                f"\n\n{house_focus(8)}第八宫还涉及信任、隐私、亲密边界、共同财务和风险共担。"
+                f"进入稳定关系后，金钱往来、债务、家庭责任和个人隐私应提前讲清楚，避免用牺牲边界换取安全感。"
             )
         },
         {
-            "title": "关系经营建议",
+            "title": "五、容易重复的关系模式与需要留意的盲点",
             "content": (
-                "把情绪需求说清楚，不用猜测代替沟通；在承诺、金钱、家庭责任和个人空间上提前协商。"
-                "观察现实中的尊重、稳定、诚实与冲突修复能力，比单一星座或相位更能判断关系质量。"
+                f"观察重点是金星的关系价值、月亮的安全感需求、火星的冲突反应，以及第七宫宫主星的落点。"
+                f"当你很在意一段关系时，可能更容易放大对方的某个优点，或把一时的热情当成长期承诺。"
+                f"如果关系中出现反复失联、冷处理、承诺落空、单方面付出或金钱边界模糊，"
+                f"应以实际行为作为判断依据，不要用星盘解释或合理化持续伤害。"
+                f"\n\n较成熟的做法是：给关系观察时间，确认对方是否持续兑现承诺；"
+                f"遇到矛盾时看双方是否愿意修复，而不只看争吵当下谁对谁错。"
+            )
+        },
+        {
+            "title": "六、感情行动建议与综合结论",
+            "content": (
+                f"你的关系分析应同时看金星（月亮的情感需要）、火星（行动节奏）、第五宫（恋爱体验）、"
+                f"第七宫（长期承诺）和第八宫（信任与共享资源），不能只凭一个星座下结论。"
+                f"\n\n建议把择偶标准分成三层：第一层是底线，包括诚实、尊重、不暴力、不操控；"
+                f"第二层是适配，包括生活节奏、沟通方式、家庭观念和经济观念；"
+                f"第三层才是吸引力、兴趣与浪漫体验。"
+                f"\n\n星盘无法保证复合、结婚、分手或某个人一定出现，也不能替代你对现实关系的观察。"
+                f"本报告最有用的部分，是帮助你识别需求、看见容易忽略的模式，并把选择权落实到现实行动中。"
             )
         }
     ]
 
     finance = [
         {
-            "title": "个人赚钱方式与收入结构",
+            "title": "一、个人财富结构：收入、安全感与金钱观",
             "content": (
-                f'第二宫宫头为{second_sign or "未知"}，传统宫主星为{second_ruler or "未知"}，'
-                f'宫主星落在{second_ruler_pos.get("sign", "未知")}、第{second_ruler_pos.get("house", "未知")}宫。'
-                f'第二宫重点对应个人劳动收入、可支配资源、技能定价与储蓄习惯；'
-                f'宫主星所在的{PLANET_HOUSE_MEANING.get(second_ruler_pos.get("house"), "相关生活领域")}，'
-                f'可作为探索收入渠道与变现能力的占星线索。'
+                f"{house_focus(2)}第二宫主要观察个人劳动收入、可支配资源、技能定价、消费倾向和储蓄习惯。"
+                f"宫头星座为{second_sign or '未知'}，其传统宫主星{second_ruler or '未知'}落在"
+                f"{second_pos.get('sign', '未知')}第{second_pos.get('house', '未知')}宫。"
+                f"\n\n宫主星所在宫位为收入模式提供了一个探索方向："
+                f"第{second_pos.get('house', '未知')}宫对应{PLANET_HOUSE_MEANING.get(second_pos.get('house'), '相关生活领域')}，"
+                f"可以思考你是否能把该领域的知识、经验、人脉或服务转化为稳定价值。"
+                f"\n\n这不是说财富会自动从该领域到来。真正能否变现，还取决于市场需求、产品质量、执行能力、成本结构和持续获客能力。"
             )
         },
         {
-            "title": "扩张机会与长期积累",
+            "title": "二、适合发展的赚钱路径：能力如何转化为现金流",
             "content": (
-                f'木星落在{jupiter.get("sign", "未知")}、第{jupiter.get("house", "未知")}宫，'
-                f'其所在宫位涉及{PLANET_HOUSE_MEANING.get(jupiter.get("house"), "个人成长领域")}；'
-                f'土星落在{saturn.get("sign", "未知")}、第{saturn.get("house", "未知")}宫，'
-                f'提示需要通过该领域的纪律、经验和长期投入建立稳定性。'
-                f'木星与土星相位：{aspect_text(["木星", "土星"], 3)}'
+                f"第二宫宫主星是{second_ruler or '未知'}，落在{second_pos.get('sign', '未知')}第{second_pos.get('house', '未知')}宫；"
+                f"第十宫宫主星是{tenth_ruler or '未知'}，落在{tenth_pos.get('sign', '未知')}第{tenth_pos.get('house', '未知')}宫。"
+                f"\n\n把个人收入宫与事业宫放在一起看，重点不是简单判断“适合做什么职业”，"
+                f"而是寻找可重复的价值链：你能解决什么问题、谁愿意为此付费、交付成本是多少、客户是否会复购或转介绍。"
+                f"如果收入依赖单次机会或高波动项目，应逐步增加可复用技能、稳定客户来源和标准化交付。"
+                f"\n\n建议用小规模试单验证需求，再扩大投入；每个项目都记录获客成本、毛利、回款周期和售后成本。"
             )
         },
         {
-            "title": "事业与财富的连接",
+            "title": "三、事业发展与社会定位：长期方向和收入转化",
             "content": (
-                f'第十宫宫头为{tenth_sign or "未知"}，传统宫主星为{tenth_ruler or "未知"}，'
-                f'宫主星落在{tenth_ruler_pos.get("sign", "未知")}、第{tenth_ruler_pos.get("house", "未知")}宫。'
-                f'天顶位于{angles.get("天顶", {}).get("sign", "未知")}。'
-                f'第十宫与天顶用于观察职业方向、公众角色和长期发展；'
-                f'将其与第二宫个人收入主题对照，能看出事业投入如何可能转化为收入。'
+                f"第十宫宫头为{tenth_sign or '未知'}，传统宫主星{tenth_ruler or '未知'}落在"
+                f"{tenth_pos.get('sign', '未知')}第{tenth_pos.get('house', '未知')}宫；"
+                f"天顶（MC）位于{mc.get('sign', '未知')}。第十宫与天顶侧重职业方向、社会角色、声誉和长期目标。"
+                f"\n\n宫主星所在的{PLANET_HOUSE_MEANING.get(tenth_pos.get('house'), '相关生活领域')}，"
+                f"可以作为你建立专业标签或职业影响力的切入点。"
+                f"要让事业真正转化为财富，需要把专业能力变成可报价、可交付、可复购的产品或服务，"
+                f"并建立稳定的获客和回款流程。"
+                f"\n\n职位、名声或忙碌程度本身不等于财富；要持续检查净利润、现金流和时间投入是否匹配。"
             )
         },
         {
-            "title": "合作资金、债务与风险边界",
+            "title": "四、扩张能力与长期积累：机会、纪律和时间",
             "content": (
-                f'第八宫宫头为{eighth_sign or "未知"}，宫主星{eighth_ruler or "未知"}'
-                f'落在{eighth_ruler_pos.get("sign", "未知")}、第{eighth_ruler_pos.get("house", "未知")}宫。'
-                f'第八宫涉及借贷、税务、保险、投资共担、伴侣或合作方资金。'
-                f'相关星体相位：{aspect_text(["木星", "土星", "冥王星"], 5)}'
-                f'现实中应特别重视合同、现金流、负债成本、风险分散与应急储备。'
+                f"{placement('木星')}。木星象征扩张、信念、学习和机会感，其所在宫位涉及"
+                f"{PLANET_HOUSE_MEANING.get(jupiter.get('house'), '个人成长领域')}。"
+                f"它可以提示你在哪些领域更愿意尝试、扩大视野或寻找增长机会，但也要留意过度乐观和高估回报。"
+                f"\n\n{placement('土星')}。土星强调责任、边界、延迟满足和长期建设；"
+                f"其所在宫位对应{PLANET_HOUSE_MEANING.get(saturn.get('house'), '需要长期经营的领域')}，"
+                f"提醒你通过规则、流程、经验和持续投入建立可靠性。"
+                f"\n\n木星与土星的主要相位：{aspect_text(['木星', '土星'], 4)}"
+                f"。更稳妥的策略是先验证小规模模型，再逐步扩大；让预算、能力和风险承受度跟得上增长速度。"
             )
         },
         {
-            "title": "财富管理与行动建议",
+            "title": "五、债务、合作资金与风险边界",
             "content": (
-                "把收入能力、现金流和资产积累分开管理；先建立稳定可重复的收入来源，再考虑扩大规模。"
-                "避免因乐观预期而过度借贷、重仓或替他人承担不清晰的财务责任。"
-                "星盘不能预测具体收入金额、发财年份或投资涨跌，重大财务决策应依据真实数据和专业意见。"
+                f"{house_focus(8)}第八宫对应借贷、税务、保险、投资共担、伴侣或合作方资金，以及财务责任边界。"
+                f"第八宫宫主星{eighth_ruler or '未知'}落在{eighth_pos.get('sign', '未知')}第{eighth_pos.get('house', '未知')}宫。"
+                f"\n\n木星、土星、冥王星相关相位：{aspect_text(['木星', '土星', '冥王星'], 6)}"
+                f"\n\n现实层面的重点是：任何借款先算总成本、利息、还款来源和最坏情形；"
+                f"合作前写清出资比例、收益分配、退出机制和责任承担；不要替他人签署不理解的担保或借款文件。"
+                f"在现金流尚不稳定时，优先控制固定支出和高息负债，不以借新还旧或高杠杆押注未来收入。"
+            )
+        },
+        {
+            "title": "六、财富积累的主要短板与纠偏方法",
+            "content": (
+                f"本命盘中的第二宫提示个人收入与资源管理，第八宫提示外部资金和共同风险，"
+                f"第十宫提示职业路径；木星与土星则分别提供扩张和约束的观察角度。"
+                f"\n\n最值得检查的不是所谓“有没有财运”，而是收入是否稳定、利润是否真实、回款是否及时、"
+                f"负债是否可控，以及是否有应急资金。若营业额增加但毛利下降、库存积压或账期拉长，"
+                f"规模扩大反而可能加重现金压力。"
+                f"\n\n建议每周记录收入、必要支出、债务余额、到期日和可用现金；先建立基本安全垫，再考虑高风险投资或扩张。"
+            )
+        },
+        {
+            "title": "七、财运综合结论与执行顺序",
+            "content": (
+                "占星中的财富主题不能直接换算成具体收入金额、发财年份、中奖概率或投资涨跌。"
+                "本报告提供的是自我观察框架，不是财务预测。"
+                "\n\n可执行的优先顺序是：第一，盘点现金、债务、利率和还款日期；第二，确定一项能低成本验证的收入来源；"
+                "第三，连续记录真实毛利、获客成本、回款周期和复购率；第四，确认模型稳定后再增加投入；"
+                "第五，建立应急储备并避免替他人承担不清晰的财务责任。"
+                "\n\n衡量财富进展时，优先看净资产和自由现金流，而不只看营业额、订单数或账面估值。"
             )
         }
     ]
@@ -256,17 +349,16 @@ def generate_life_analysis(positions, angles, houses, aspects):
     return {
         "relationship": {
             "title": "婚姻与感情深度分析",
-            "intro": "本报告综合金星、火星、月亮、第五宫、第七宫、第八宫及相关相位。它描述关系倾向，不代表婚姻结果或必然事件。",
+            "intro": "本报告结合金星、月亮、火星、第五宫、第七宫、第八宫及实际主要相位。每段结论均应回看对应星盘依据；它描述倾向与自我观察主题，不代表必然事件。",
             "sections": relationship
         },
         "finance": {
             "title": "财运与财富结构深度分析",
-            "intro": "本报告综合第二宫、第八宫、第十宫、木星、土星及相关相位。它用于整理赚钱与风险管理主题，不是收益承诺或投资建议。",
+            "intro": "本报告结合第二宫、第八宫、第十宫、木星、土星及主要相位，重点分析收入结构、事业转化、积累纪律与风险边界，不承诺收益或预测具体财富结果。",
             "sections": finance
         },
-        "method": "宫主星采用传统守护星体系；文字由本命盘实际落座、宫位与主要相位规则生成。"
+        "method": "解释由本命盘实际星座、宫位、宫主星和主要相位按规则生成；传统宫主星采用传统守护体系。占星属于文化与自我探索工具，不是经科学验证的事件预测。"
     }
-
 
 def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
     """Compare daily Moshier transits with natal relationship/finance factors."""
