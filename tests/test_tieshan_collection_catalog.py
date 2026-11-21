@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_twenty_four_groups_and_two_hundred_thirty_nine_entries(self):
+    def test_group_index_contains_twenty_eight_groups_and_two_hundred_seventy_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 24)
-        self.assertEqual(data["entry_count"], 239)
+        self.assertEqual(data["group_count"], 28)
+        self.assertEqual(data["entry_count"], 279)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 8)
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 12)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -270,6 +270,40 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all(e["age_markers"] == [] for e in g1350["entries"]))
         self.assertTrue(all(e["number_field_present"] is False and e["content_present"] is True
                             for g in (g1340, g1350) for e in g["entries"]))
+    def test_1360_and_1380_keep_raw_ocr_labels_and_candidates(self):
+        data = get_group_index()
+        g1360, g1380 = data["groups"][24:26]
+        self.assertEqual(g1360["raw_group_marker"], "二三六〇")
+        self.assertEqual(g1360["group_marker"], "一三六〇")
+        self.assertEqual(g1360["normalization_status"], "probable_ocr_correction_pending_image_check")
+        self.assertEqual(g1360["pdf_text_lines"], "11254-11265")
+        self.assertEqual(g1380["raw_group_marker"], "二三八〇")
+        self.assertEqual(g1380["group_marker"], "一三八〇")
+        self.assertEqual(g1380["pdf_text_lines"], "11267-11277")
+        self.assertTrue(all(e["content_present"] is True for g in (g1360,g1380) for e in g["entries"]))
+        self.assertTrue(all(e["age_markers"] == [] for g in (g1360,g1380) for e in g["entries"]))
+
+    def test_1400_and_probable_1410_preserve_age_markers(self):
+        data = get_group_index()
+        g1400, g1410 = data["groups"][26:28]
+        self.assertEqual(g1400["pdf_text_lines"], "11317-11354")
+        self.assertEqual(g1400["entries"][3]["age_markers"], ["六十三","六十四","四十三","四十四"])
+        self.assertEqual(g1400["entries"][5]["age_markers"], ["三十三","三十四","五十三","五十四"])
+        self.assertEqual(g1410["raw_group_marker"], "一四〇")
+        self.assertEqual(g1410["group_marker"], "一四一〇")
+        self.assertEqual(g1410["entries"][7]["age_markers"], ["四十七","四十八"])
+        self.assertTrue(all(e["number_field_present"] is False and e["content_present"] is True
+                            for g in (g1400,g1410) for e in g["entries"]))
+
+    def test_unheaded_block_after_1380_is_not_assigned_to_neighboring_group(self):
+        data = get_group_index()
+        block = next(x for x in data["unassigned_blocks"]
+                     if x["block_id"] == "child_collection_unheaded_block_after_1380_candidate")
+        self.assertEqual(block["entry_count"], 10)
+        self.assertEqual(block["pdf_text_lines"], "11279-11315")
+        anomalies = data["group_anomalies"]
+        self.assertTrue(any(x.get("expected_group_marker") == "一三七〇" for x in anomalies))
+        self.assertTrue(any(x.get("expected_group_marker") == "一三九〇" for x in anomalies))
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
