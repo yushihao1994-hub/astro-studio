@@ -58,6 +58,7 @@ def get_kunji_reference():
         "stem_to_cipher_digit": dict(STEM_TO_CIPHER_DIGIT),
         "placeholder_to_cipher_digit": dict(PLACEHOLDER_TO_CIPHER_DIGIT),
         "published_examples": [dict(row) for row in PUBLISHED_CIPHER_EXAMPLES],
+        "published_example_audits": [audit_published_example(row) for row in PUBLISHED_CIPHER_EXAMPLES],
         "advancement_note": dict(ADVANCEMENT_NOTE),
         "limitations": list(LIMITATIONS),
     }
