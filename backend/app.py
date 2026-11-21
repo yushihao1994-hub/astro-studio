@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
@@ -129,16 +130,34 @@ def detect_chart_patterns(positions, aspects):
         return amap.get((frozenset((a, b)), kind))
 
     results, seen, trines = [], set(), []
-    def add(kind, members, evidence, meaning, strengths, challenges, advice):
+    def add(kind, members, evidence, meaning, strengths, challenges, advice, roles=None):
         key = (kind, tuple(sorted(members)))
         if key in seen:
             return
         seen.add(key)
+        orb_values = []
+        for item in evidence:
+            match = re.search(r"（([0-9.]+)°）", item)
+            if match:
+                orb_values.append(float(match.group(1)))
+        max_orb = max(orb_values) if orb_values else None
+        if max_orb is None:
+            quality, quality_note = "未评定", "缺少完整容许度数据。"
+        elif max_orb <= 3:
+            quality, quality_note = "紧密", "结构中最宽的相位容许度不超过3°。"
+        elif max_orb <= 5:
+            quality, quality_note = "中等", "结构中最宽的相位容许度在3°至5°之间。"
+        else:
+            quality, quality_note = "宽容许度", "至少一条相位超过5°，解读时应降低整体权重。"
         results.append({
             "name": kind,
             "planets": members,
             "placements": [{"name": n, "sign": by_name[n]["sign"],
                             "house": by_name[n].get("house")} for n in members],
+            "roles": roles or {n: "参与星体" for n in members},
+            "orb_quality": quality,
+            "max_orb": round(max_orb, 3) if max_orb is not None else None,
+            "orb_note": quality_note,
             "evidence": evidence, "meaning": meaning, "strengths": strengths,
             "challenges": challenges, "advice": advice
         })
@@ -218,7 +237,8 @@ def detect_chart_patterns(positions, aspects):
                         "两个星体的协作关系指向一个需要持续调整的焦点。",
                         "可能善于在变化中寻找新方法，对调整信号较敏感。",
                         "容易反复修正方向，或觉得某个领域总需要协调。",
-                        "把调整转化为阶段目标，避免把所有困难都解释成命定课题。")
+                        "把调整转化为阶段目标，避免把所有困难都解释成命定课题。",
+                        {a: "底边端点", b: "底边端点", c: "顶点／焦点"})
 
     # Kites: grand trine plus an opposition apex sextile to the other two vertices.
     for tri in trines:
@@ -673,7 +693,8 @@ def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
             key = (e["transit"], e["target"], e["aspect"])
             grouped.setdefault(key, []).append(e)
         lines = []
-        for (planet, target, aspect), hits in grouped.items():
+        ranked = sorted(grouped.items(), key=lambda pair: min(x["orb"] for x in pair[1]))
+        for (planet, target, aspect), hits in ranked:
             hits.sort(key=lambda x: x["date"])
             best = min(hits, key=lambda x: x["orb"])
             transit_meanings = {
@@ -729,7 +750,7 @@ def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
             interpretation = "重点观察沟通、吸引力、情绪需求、恋爱推进与伴侣协商；相位是主题提示，不代表必然发生联系、复合、分手或结婚。"
         else:
             interpretation = "重点观察收入安排、工作节奏、合作资金、借贷与风险控制；相位不代表必然进账、亏损或投资涨跌。"
-        detail = "；".join(lines[:12]) if lines else "该时段没有筛选到与本专题关键本命点形成紧密主要相位的行运接触。这不等于没有相关事件，仍需结合现实选择与完整星盘。"
+        detail = "\\n\\n".join(lines[:12]) if lines else "该时段没有筛选到与本专题关键本命点形成紧密主要相位的行运接触。这不等于没有相关事件，仍需结合现实选择与完整星盘。"
         return {
             "title": label,
             "content": f"统计区间：{begin} 至 {finish}（出生地时区：{birth_timezone}）。{detail}{interpretation}"
