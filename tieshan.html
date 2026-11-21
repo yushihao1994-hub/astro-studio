@@ -426,7 +426,8 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     const gapHtml=(idx.group_gaps||[]).map(gap=>'<p class="hint">缺组待核：'+escapeHtml(gap.expected_group_marker)+'。'+escapeHtml(gap.status)+'；不补造条目。</p>').join('');
     const anomalyHtml=(idx.group_anomalies||[]).map(a=>'<p class="hint">异文待核：'+escapeHtml(a.raw_group_marker||a.raw_header_text||a.expected_group_marker||'')+' → '+escapeHtml(a.normalized_group_marker_candidate||a.normalized_header_candidate||'')+'；'+escapeHtml(a.status)+'</p>').join('');
     const orphanHtml=(idx.unassigned_blocks||[]).map(b=>'<details style="margin:8px 0"><summary>未归组文本块 · '+escapeHtml(b.entry_count)+'条 · '+escapeHtml(b.status)+'</summary><p class="hint">'+escapeHtml(b.note)+' PDF行号：'+escapeHtml(b.pdf_text_lines)+'</p></details>').join('');
-    stepHost.innerHTML+='<div class="section-title">子集分组索引（已定位）</div><p>当前索引 '+escapeHtml(idx.group_count)+' 组、'+escapeHtml(idx.entry_count)+' 条。此表只记录结构字段，不复制完整条文。</p>'+groupHtml+gapHtml+anomalyHtml+orphanHtml+'<p class="hint">一一〇〇组条文句内数字不归入独立数字栏。一一一〇至一一三〇组的岁数仅作未分配候选；一一四〇至一一六〇组按“序号—岁数—正文”分行。一一八〇、一一九〇及一三〇〇组号保留OCR原始识别和候选校正；未归组文本块不强行并入相邻组。所有记录仍待扫描图像校验。</p>';
+    const candidateHtml=(idx.candidate_groups||[]).map(g=>'<p class="hint">疑似组号：原始识别 '+escapeHtml(g.raw_group_marker)+'，候选 '+escapeHtml(g.normalized_group_marker_candidate)+'；'+escapeHtml(g.status)+'，PDF行号 '+escapeHtml(g.pdf_text_lines)+'。不计入正式分组。</p>').join('');
+    stepHost.innerHTML+='<div class="section-title">子集分组索引（已定位）</div><p>当前索引 '+escapeHtml(idx.group_count)+' 组、'+escapeHtml(idx.entry_count)+' 条。此表只记录结构字段，不复制完整条文。</p>'+groupHtml+gapHtml+anomalyHtml+orphanHtml+candidateHtml+'<p class="hint">一一〇〇组条文句内数字不归入独立数字栏。一一一〇至一一三〇组的岁数仅作未分配候选；一一四〇至一一六〇组按“序号—岁数—正文”分行。一一八〇、一一九〇及一三〇〇组号保留OCR原始识别和候选校正；未归组文本块不强行并入相邻组。所有记录仍待扫描图像校验。</p>';
    }).catch(()=>{});
   }).catch(()=>{stepHost.innerHTML+='<p class="hint">坤集分类索引接口暂时不可用，基础排盘不受影响。</p>';});
  }
