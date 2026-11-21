@@ -294,7 +294,7 @@ def build_pattern_report_section(patterns, relevant_planets, title):
             f'实践方向：{pattern.get("advice", "")}'
         )
         evidence.extend(pattern.get("evidence", []))
-    return {"title": title, "content": "\\n\\n".join(lines), "evidence": evidence}
+    return {"title": title, "content": "\n\n".join(lines), "evidence": evidence}
 
 
 def generate_natal_profile(positions, angles, houses, aspects, patterns=None):
