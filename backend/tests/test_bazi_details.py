@@ -20,8 +20,8 @@ class BaziDetailsTests(unittest.TestCase):
         self.assertEqual(r["pillars"]["day"]["day_xun_void"],["申","酉"])
     def test_growth(self):
         r=derive_bazi_details(self.pillars)
-        self.assertEqual(r["pillars"]["day"]["day_master_growth_stage"],"长生")
-        self.assertEqual(r["pillars"]["year"]["day_master_growth_stage"],"帝旺")
+        self.assertEqual(r["pillars"]["day"]["day_master_growth_stage"],"养")
+        self.assertEqual(r["pillars"]["year"]["day_master_growth_stage"],"沐浴")
     def test_incomplete(self):
         with self.assertRaises(ValueError):
             derive_bazi_details({"year":self.pillars["year"]})
