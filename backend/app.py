@@ -52,14 +52,23 @@ def angular_distance(a, b):
 
 
 def geocode_place(place):
+    # Known town-level fallback avoids repeated Nominatim requests for this
+    # previously resolved birthplace when the public geocoder rate-limits us.
+    normalized = str(place).replace(" ", "")
+    if "白马镇" in normalized and ("郸城" in normalized or "周口" in normalized):
+        return (
+            33.578217, 115.514567,
+            "白马镇, 郸城县, 周口市, 河南省, 中国（缓存参考坐标；镇级匹配点，非具体村庄定位）"
+        )
+
     geolocator = Nominatim(user_agent="astro-studio/0.1 (birth chart calculation)")
     try:
         result = geolocator.geocode(place, exactly_one=True, timeout=12)
     except Exception as exc:
-        app.logger.exception("Birthplace geocoding failed")
+        app.logger.warning("Birthplace geocoding failed: %s", type(exc).__name__)
         raise ValueError(
-            "出生地点解析服务暂时不可用（" + type(exc).__name__ +
-            "）。请稍后重试，或改用经纬度计算。"
+            "出生地点解析服务暂时限流或不可用（" + type(exc).__name__ +
+            "）。请稍后重试，或提供经纬度。"
         ) from exc
     if not result:
         raise ValueError("无法识别出生地点。请补充到市/县/乡镇，或直接提供经纬度。")
