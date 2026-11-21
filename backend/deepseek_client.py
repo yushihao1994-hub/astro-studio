@@ -152,3 +152,86 @@ def analyze_with_deepseek(topic, evidence):
         raise DeepSeekError("DeepSeek 网络请求失败。") from exc
     except (ValueError, KeyError, TypeError, IndexError) as exc:
         raise DeepSeekError("DeepSeek 响应结构无法解析。") from exc
+
+
+def generate_full_report(evidence):
+    """Generate a distinct, evidence-audited full natal report."""
+    api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+    if not api_key:
+        raise DeepSeekNotConfigured("DeepSeek API 尚未配置，请在 Render 环境变量中设置 DEEPSEEK_API_KEY。")
+    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-flash")
+    system_prompt = (
+        "你是一位严谨的西方本命星盘研究报告撰写者。你只能解释用户提供的结构化证据，"
+        "不得自行计算星体位置、宫位、相位或行运，不得补造缺失数据。"
+        "占星是文化与自我探索框架，不是科学验证的命运预测。"
+        "请生成一份真正完整、彼此有区分的个人报告，不得把单项报告简单扩写或重复。"
+        "只输出合法 JSON，不得输出 Markdown 围栏。结构必须为："
+        "{\"summary\":\"综合画像\",\"sections\":["
+        "{\"id\":\"identity\",\"title\":\"你的整体人格画像\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"},"
+        "{\"id\":\"strengths\",\"title\":\"优势、天赋与容易忽略的盲点\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"},"
+        "{\"id\":\"mindset\",\"title\":\"思维方式、行动动力与成长卡点\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"},"
+        "{\"id\":\"relationship\",\"title\":\"情感需求与长期关系模式\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"},"
+        "{\"id\":\"career\",\"title\":\"事业方向、工作方式与发展环境\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"},"
+        "{\"id\":\"finance\",\"title\":\"财富观念、收入资源与风险盲点\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"},"
+        "{\"id\":\"timing\",\"title\":\"当前阶段与未来30天观察重点\",\"conclusion\":\"\",\"reasoning\":\"\",\"evidence_ids\":[\"真实证据id\"],\"advice\":\"\"}],"
+        "\"action_plan\":[\"具体行动\"],\"limitations\":[\"必要限制说明\"]}。"
+        "sections 必须恰好7项，顺序和 id 按模板。每项必须包含非空 conclusion、reasoning、advice，"
+        "并至少引用一个直接相关的真实 evidence_ids。不得编造证据编号。"
+        "每节至少解释两层：星盘结构如何形成线索，以及它在日常生活中可能怎样体现；"
+        "说明另一面或适用边界，避免单一星体决定论。七节不得换词重复。"
+        "事业与财富必须区分职业环境、收入资源、共同财务/风险等不同主题；"
+        "感情分析需求和互动模式，不预测结婚、分手、复合或伴侣身份。"
+        "近期趋势只能使用输入中的真实行运证据；如果缺失或不足，明确说明无法作可靠的30天判断，"
+        "不得用本命盘伪装成行运预测。"
+        "action_plan 给出3至5条按优先级排列、普通人可以执行的具体行动，不得要求用户相信命运。"
+        "用自然、细致、易懂的简体中文，不要虚构用户的年龄、职业、收入、经历或关系状态。"
+    )
+    user_payload = {
+        "report_type": "完整人生星盘报告",
+        "required_depth": "完整付费产品级报告。每节约180至260个汉字，提供个人化解释，避免空话和重复。",
+        "evidence": evidence
+    }
+    try:
+        response = requests.post(
+            base_url + "/chat/completions",
+            headers={"Authorization": "Bearer " + api_key, "Content-Type": "application/json"},
+            json={
+                "model": model,
+                "thinking": {"type": "disabled"},
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)}
+                ],
+                "response_format": {"type": "json_object"},
+                "temperature": 0.35,
+                "max_tokens": 9000,
+                "stream": False
+            },
+            timeout=(10, 150)
+        )
+        if response.status_code >= 400:
+            raise DeepSeekError("DeepSeek HTTP " + str(response.status_code))
+        body = response.json()
+        choices = body.get("choices") or []
+        if not choices or not isinstance(choices[0], dict):
+            raise DeepSeekError("DeepSeek 响应缺少 choices。")
+        choice = choices[0]
+        message = choice.get("message") or {}
+        content = message.get("content")
+        if not isinstance(content, str) or not content.strip():
+            raise DeepSeekError("DeepSeek 完整报告返回内容为空。")
+        if choice.get("finish_reason") == "length":
+            raise DeepSeekError("完整报告达到输出长度上限，请重试。")
+        result = _extract_json_object(content)
+        if not isinstance(result.get("summary"), str) or not isinstance(result.get("sections"), list):
+            raise DeepSeekError("完整报告结构不符合要求。")
+        return result
+    except DeepSeekError:
+        raise
+    except requests.Timeout as exc:
+        raise DeepSeekError("DeepSeek 完整报告请求超时。") from exc
+    except requests.RequestException as exc:
+        raise DeepSeekError("DeepSeek 完整报告网络请求失败。") from exc
+    except (ValueError, KeyError, TypeError, IndexError) as exc:
+        raise DeepSeekError("DeepSeek 完整报告响应结构无法解析。") from exc
