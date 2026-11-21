@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 import requests
 
@@ -10,6 +11,40 @@ class DeepSeekNotConfigured(Exception):
 
 class DeepSeekError(Exception):
     pass
+
+
+def _extract_json_object(content):
+    """Accept plain JSON, fenced JSON, or explanatory text surrounding one JSON object."""
+    if isinstance(content, list):
+        parts = []
+        for item in content:
+            if isinstance(item, dict) and isinstance(item.get("text"), str):
+                parts.append(item["text"])
+        content = "\\n".join(parts)
+    if not isinstance(content, str) or not content.strip():
+        raise DeepSeekError("DeepSeek 返回了空内容。")
+
+    text = content.strip()
+    text = re.sub(r"^\\s*```(?:json)?\\s*", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\\s*```\\s*$", "", text)
+    # Some reasoning-capable responses include a think block before the final answer.
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.IGNORECASE | re.DOTALL).strip()
+
+    try:
+        value = json.loads(text)
+    except json.JSONDecodeError:
+        decoder = json.JSONDecoder()
+        start = text.find("{")
+        if start < 0:
+            raise DeepSeekError("DeepSeek 返回内容中没有 JSON 对象。")
+        try:
+            value, _ = decoder.raw_decode(text[start:])
+        except json.JSONDecodeError as exc:
+            raise DeepSeekError("DeepSeek 返回的 JSON 格式不完整。") from exc
+
+    if not isinstance(value, dict):
+        raise DeepSeekError("DeepSeek 返回的内容不是 JSON 对象。")
+    return value
 
 
 def analyze_with_deepseek(topic, evidence):
@@ -71,9 +106,15 @@ def analyze_with_deepseek(topic, evidence):
         if response.status_code >= 400:
             raise DeepSeekError("DeepSeek HTTP " + str(response.status_code))
         body = response.json()
-        content = body["choices"][0]["message"]["content"]
-        result = json.loads(content)
-        if not isinstance(result, dict) or not isinstance(result.get("sections"), list):
+        choices = body.get("choices") or []
+        if not choices or not isinstance(choices[0], dict):
+            raise DeepSeekError("DeepSeek 响应缺少 choices。")
+        message = choices[0].get("message") or {}
+        content = message.get("content")
+        if content is None and isinstance(message.get("reasoning_content"), str):
+            content = message["reasoning_content"]
+        result = _extract_json_object(content)
+        if not isinstance(result.get("sections"), list):
             raise DeepSeekError("DeepSeek 返回的数据结构不符合要求。")
         if not isinstance(result.get("summary"), str):
             raise DeepSeekError("DeepSeek 返回内容缺少摘要。")
@@ -85,4 +126,4 @@ def analyze_with_deepseek(topic, evidence):
     except requests.RequestException as exc:
         raise DeepSeekError("DeepSeek 网络请求失败。") from exc
     except (ValueError, KeyError, TypeError, IndexError) as exc:
-        raise DeepSeekError("DeepSeek 返回内容无法解析。") from exc
+        raise DeepSeekError("DeepSeek 响应结构无法解析。") from exc
