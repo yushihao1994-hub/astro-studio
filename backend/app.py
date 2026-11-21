@@ -1,6 +1,6 @@
 import os
 import re
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, request
@@ -11,6 +11,7 @@ from timezonefinder import TimezoneFinder
 import swisseph as swe
 from tieshan import calculate_tieshan_pillars
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
+from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -1441,6 +1442,15 @@ def ai_full_report():
         return jsonify({"ok": False, "error": "完整报告发生内部错误（" + type(exc).__name__ + "）。"}), 500
 
 
+@app.get("/api/tieshan/calendar/months")
+def tieshan_calendar_months():
+    try:
+        year = int(request.args.get("year", ""))
+        return jsonify({"ok": True, "year": year, "months": lunar_month_options(year)})
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
+
+
 @app.post("/api/tieshan/pillars")
 def tieshan_pillars():
     """Calculate transparent Four Pillars data for the standalone Iron Plate app."""
@@ -1459,18 +1469,51 @@ def tieshan_pillars():
         timezone_name = str(payload.get("timezone") or detected_tz or "").strip()
         if not timezone_name:
             raise ValueError("无法根据出生地点确定历史时区，请补充 IANA 时区名称。")
-        result = calculate_tieshan_pillars(payload, lat, lon, place_label, timezone_name)
+        # Convert the selected calendar date to a Gregorian civil date before
+        # astronomical Four Pillars calculation. Keep the original calendar data.
+        calculation_payload = dict(payload)
+        calendar_kind = str(payload.get("calendar") or "solar").lower()
+        if calendar_kind == "lunar":
+            lunar_year = int(payload.get("birth_year"))
+            lunar_month_value = int(payload.get("birth_month"))
+            lunar_day = int(payload.get("birth_day"))
+            solar_date = lunar_to_solar(lunar_year, lunar_month_value, lunar_day)
+            birth_date_text = solar_date.isoformat()
+            lunar_info = {
+                "year": lunar_year, "month": abs(lunar_month_value),
+                "month_value": lunar_month_value, "day": lunar_day,
+                "is_leap": lunar_month_value < 0,
+            }
+        elif calendar_kind == "solar":
+            birth_date_text = date(int(payload.get("birth_year")), int(payload.get("birth_month")), int(payload.get("birth_day"))).isoformat()
+            lunar_info = solar_to_lunar(birth_date_text)
+        else:
+            raise ValueError("出生日期类型只能选择公历或农历。")
+        calculation_payload["birth_date"] = birth_date_text
+        calculation_payload["calendar"] = "solar"
+        result = calculate_tieshan_pillars(calculation_payload, lat, lon, place_label, timezone_name)
+        result["birth"]["input_calendar"] = calendar_kind
+        result["birth"]["input_date"] = {
+            "year": int(payload.get("birth_year")),
+            "month": int(payload.get("birth_month")),
+            "day": int(payload.get("birth_day")),
+            "is_leap": bool(lunar_info.get("is_leap")) if calendar_kind == "lunar" else False,
+        }
+        result["birth"]["converted_solar_date"] = birth_date_text
+        result["birth"]["converted_lunar_date"] = {
+            "year": int(lunar_info["year"]), "month": int(lunar_info["month"]),
+            "day": int(lunar_info["day"]), "is_leap": bool(lunar_info["is_leap"]),
+        }
         # Expose only explicitly documented lookup mappings from the accessible
         # 2003 compilation; this is not a complete Iron Plate number calculation.
         result["classic_reference"] = derive_classic_reference(result.get("pillars") or {})
         # Optional classical palace lookup requires an explicitly supplied lunar month;
         # the solar-term month pillar is not a substitute for a lunar month.
-        if payload.get("lunar_month") not in (None, ""):
-            lunar_month = int(payload["lunar_month"])
-            hour_branch = (result.get("pillars", {}).get("hour") or {}).get("branch")
-            result["body_life_palaces"] = derive_body_life_palaces(
-                lunar_month, hour_branch, bool(payload.get("leap_month", False))
-            )
+        lunar_month = int(lunar_info["month"])
+        hour_branch = (result.get("pillars", {}).get("hour") or {}).get("branch")
+        result["body_life_palaces"] = derive_body_life_palaces(
+            lunar_month, hour_branch, bool(lunar_info["is_leap"])
+        )
         return jsonify(result)
     except ValueError as exc:
         return jsonify({"ok": False, "error": str(exc)}), 400
