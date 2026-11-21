@@ -397,8 +397,11 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     const pageRange=item.printed_page_end?item.printed_page_start+'—'+item.printed_page_end+'页':item.printed_page_start+'页起（末页待核）';
     return '<span style="display:inline-block;padding:6px 9px;margin:3px;border:1px solid #e8e3d8;border-radius:4px;background:#faf9f6">'+escapeHtml(item.branch)+'集 <small style="color:#999">'+escapeHtml(pageRange)+'</small></span>';
    }).join('');
+   const additionalHtml=(g.additional_sections||[]).map(item=>
+    '<div style="padding:8px 10px;margin:5px 0;border:1px dashed #b9a98c;border-radius:4px"><b>'+escapeHtml(item.title)+'</b> <small style="color:#999">PDF文本行 '+escapeHtml(item.pdf_text_lines)+'</small><div class="hint">'+escapeHtml(item.note)+'</div></div>').join('');
    stepHost.innerHTML+='<div class="section-title">坤集分类索引（研究版）</div><p>已整理 '+escapeHtml(g.entry_count)+' 个分类名称，按主题归组；展开即可查看原文位置。这里只是目录索引，不代表已经取得对应密码或条文。</p>'+groupHtml+
     '<div class="section-title">十二地支条文分集</div><div>'+branchHtml+'</div><p class="hint">前十一集末页按目录中下一集起始页减一暂定；亥集末页尚未核实。导读文本行272作“西集”，目录行676作“酉集”，保留异文。</p>'+
+    '<div class="section-title">目录外/待归类标题</div>'+additionalHtml+
     '<div class="empty-state">'+(g.limitations||[]).map(escapeHtml).join('<br>')+'</div>';
   }).catch(()=>{stepHost.innerHTML+='<p class="hint">坤集分类索引接口暂时不可用，基础排盘不受影响。</p>';});
  }
