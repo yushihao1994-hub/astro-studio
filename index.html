@@ -118,6 +118,54 @@
     .locked-number{flex:0 0 28px;height:28px;display:grid;place-items:center;border-radius:8px;background:#302943;color:#e6c78b;font-size:10px}
     .locked-topic>div{min-width:0;flex:1}.locked-topic b{display:block;color:#e9e5f2;font-size:12px}.locked-topic small{display:block;color:#9699ad;font-size:10px;margin-top:3px}
     .lock-mark{font-size:10px;color:#d7c39b;border:1px solid #5c503d;border-radius:99px;padding:3px 7px}
+   
+    /* Full report: editorial hierarchy, mobile-first reading */
+    #fullReportOutput.report-group{display:none;margin:30px auto 0!important;padding:0!important;border:0!important;max-width:860px;width:100%;color:#f3f1fb}
+    #fullReportOutput.report-group[style*="display: block"]{display:block!important}
+    .full-report-header{padding:26px 24px 23px;border:1px solid #51466b;border-radius:20px;background:linear-gradient(125deg,#252039,#171b2a 72%,#17232d);box-shadow:0 16px 42px #0003}
+    .full-report-header h2{font-size:clamp(23px,5vw,31px);line-height:1.35;margin:9px 0 7px;color:#f7f2e8;letter-spacing:.3px}
+    .full-report-header>p{margin:0;color:#c0bfd0;font-size:13px;line-height:1.85}
+    .report-count{display:inline-flex;gap:8px;align-items:center;margin-top:16px;padding:6px 11px;border:1px solid #625778;border-radius:99px;color:#e6d4ad;font-size:11px}
+    .report-summary{margin:15px 0 27px;padding:19px 20px;border:1px solid #514b65;border-radius:16px;background:#191b2a}
+    .report-label{display:block;color:#e7c98e;font-size:11px;font-weight:700;letter-spacing:.7px}
+    .report-summary>p{margin:9px 0 0;color:#f0edf6;font-size:14px;line-height:2;white-space:pre-line}
+    .report-section-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:0 2px 12px}
+    .report-section-heading h3,.report-action-plan h3{margin:4px 0 0;color:#f4e9d2;font-size:20px}
+    .report-section-heading>span{color:#999caf;font-size:10px;padding-bottom:4px}
+    .report-sections{display:grid;gap:10px}
+    .report-item{margin:0;border:1px solid #34394f;border-radius:15px;background:linear-gradient(115deg,#1d2030,#171b29);overflow:hidden;transition:border-color .2s}
+    .report-item[open]{border-color:#76658f;background:#1d2030}
+    .report-item>summary{min-height:66px;padding:13px 15px;gap:12px}
+    .report-index{flex-basis:34px;height:34px;border-radius:11px;background:#302943;color:#e9d09b;font-size:12px}
+    .report-title{font-size:14px;line-height:1.45}
+    .report-title small{display:block;margin-top:3px;color:#9296aa;font-size:10px;font-weight:400}
+    .report-chevron{font-size:18px;color:#d8c18e}
+    .report-content{padding:3px 16px 17px;border-top:1px solid #34394b}
+    .report-block{padding:14px 0 2px}
+    .report-block+.report-block{margin-top:9px;border-top:1px solid #303548}
+    .report-block>p{margin:7px 0 0;color:#d7d7e3;font-size:13px;line-height:2.05;white-space:pre-line;overflow-wrap:anywhere}
+    .report-conclusion{padding:13px 13px 14px;margin-top:12px;border:1px solid #5c523f;border-radius:11px;background:#e6c78b0b}
+    .report-conclusion>p{color:#f1e6d0}
+    .report-advice{padding:13px;margin-top:13px!important;border:1px solid #3c5a51!important;border-radius:11px;background:#8ac5a20a}
+    .report-advice .report-label{color:#a9d9bd}
+    .report-action-plan{margin-top:25px;padding:21px 19px;border:1px solid #65563e;border-radius:17px;background:linear-gradient(135deg,#282337,#1b202b)}
+    .report-action-plan h3{font-size:19px}
+    .action-intro{margin:6px 0 15px;color:#b9b6c6;font-size:12px;line-height:1.8}
+    .report-action-plan ol{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+    .report-action-plan li{display:flex;align-items:flex-start;gap:11px;padding:12px;border:1px solid #494354;border-radius:11px;background:#ffffff05;color:#e4e1ec;font-size:13px;line-height:1.85}
+    .plan-number{flex:0 0 27px;height:27px;display:grid;place-items:center;border-radius:8px;background:#3b3345;color:#e8cb96;font-size:10px;font-weight:700}
+    .report-disclaimer{margin:15px 4px 0;color:#85899d;font-size:10px;line-height:1.8;text-align:center}
+    @media(max-width:520px){
+      #fullReportOutput.report-group{margin-top:22px!important}
+      .full-report-header{padding:22px 18px;border-radius:16px}
+      .report-summary{padding:16px;margin-bottom:23px}
+      .report-section-heading h3{font-size:18px}
+      .report-item>summary{padding:12px;min-height:62px}
+      .report-content{padding:2px 13px 14px}
+      .report-block>p{font-size:13px;line-height:2}
+      .report-action-plan{padding:18px 14px}
+    }
+
   </style>
 </head>
 <body>
@@ -446,19 +494,26 @@
           if (!response.ok || !body.ok) throw new Error(body.error || '完整报告生成失败。');
           const report = body.report;
           const sections = (report.sections || []).map((item, index) =>
-            '<details class="report-item" ' + (index === 0 ? 'open' : '') + '><summary><span class="report-index">' +
+            '<details class="report-item"><summary><span class="report-index">' +
             String(index + 1).padStart(2, '0') + '</span><span class="report-title">' + esc(item.title) +
-            '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
-            '<p><b>核心结论：</b>' + esc(item.conclusion) + '</p><p><b>星盘依据与现实解释：</b>' +
-            esc(item.reasoning) + '</p><p><b>可以尝试：</b>' + esc(item.advice) + '</p></div></details>'
+            '<small>点击展开专题解读</small></span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
+            '<section class="report-block report-conclusion"><span class="report-label">核心结论</span><p>' + esc(item.conclusion) + '</p></section>' +
+            '<section class="report-block"><span class="report-label">星盘依据与现实解释</span><p>' +
+            esc(item.reasoning) + '</p></section><section class="report-block report-advice"><span class="report-label">可以尝试的行动</span><p>' +
+            esc(item.advice) + '</p></section></div></details>'
           ).join('');
           const plan = (report.action_plan || []).map((item, index) =>
-            '<li><b>' + (index + 1) + '.</b> ' + esc(item) + '</li>'
+            '<li><span class="plan-number">' + String(index + 1).padStart(2, '0') + '</span><span>' + esc(item) + '</span></li>'
           ).join('');
-          output.innerHTML = '<h3>你的完整人生星盘报告</h3><p class="report-intro">' +
-            esc(report.summary || '') + '</p>' + sections +
-            '<div class="sample-limit"><b>你的个人行动方案</b><ul>' + plan + '</ul></div>' +
-            '<p class="report-intro">本报告依据本次计算的星盘数据生成，供自我观察与探索，不构成对现实事件的确定预测。</p>';
+          output.innerHTML = '<header class="full-report-header"><div class="eyebrow">YOUR PERSONAL ASTROLOGY REPORT</div>' +
+            '<h2>你的完整人生星盘报告</h2><p>从真实本命盘出发，逐步读懂自己的特质、关系、事业与成长方向。</p>' +
+            '<div class="report-count">七大人生主题 <span>·</span> 专属星盘解读</div></header>' +
+            '<section class="report-summary"><div class="report-label">先看整体结论</div><p>' +
+            esc(report.summary || '') + '</p></section>' +
+            '<div class="report-section-heading"><div><span class="eyebrow">YOUR LIFE THEMES</span><h3>七大主题解读</h3></div><span>点击主题查看详情</span></div>' +
+            '<div class="report-sections">' + sections + '</div>' +
+            '<section class="report-action-plan"><div class="eyebrow">YOUR NEXT STEPS</div><h3>给你的个人行动方案</h3><p class="action-intro">不必一次改变所有事情，从下面几件小事开始。</p><ol>' + plan + '</ol></section>' +
+            '<p class="report-disclaimer">本报告依据本次计算的星盘数据生成，供自我观察与探索，不构成对现实事件的确定预测。</p>';
           output.style.display = 'block';
           document.getElementById('paywallModal').classList.remove('show');
           output.scrollIntoView({behavior:'smooth', block:'start'});
