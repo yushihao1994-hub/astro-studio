@@ -760,6 +760,25 @@ def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
             phase = "正在趋近精确" if a.get("phase") == "趋近" else ("已经越过精确点" if a.get("phase") == "分离" else "处于精确位置")
             lines.append(f'{a["planet_a"]}与{a["planet_b"]}{a["aspect"]}，容许度{a["orb"]}°（{phase}）：这主要反映{focus}；{nature}。')
         return " ".join(lines)
+    # Customer-facing copy uses everyday language only; technical calculations stay server-side.
+    life_area = {
+        1: "个人表达和自我定位", 2: "收入、储蓄和个人价值", 3: "沟通、学习和信息往来",
+        4: "家庭、居住和内心安全感", 5: "恋爱、兴趣和创造表达",
+        6: "日常工作、技能和习惯", 7: "长期伴侣、婚姻和合作",
+        8: "共同财务、信任和责任边界", 9: "学习进修、远行和视野",
+        10: "事业发展、社会角色和长期目标",
+        11: "朋友、人脉、团队和长期愿景", 12: "休息、独处和幕后事务"
+    }
+    def human_style(item):
+        return sign_detail_of(item).replace("；需要留意", "；同时要留意")
+    def human_area(item):
+        return life_area.get(item.get("house"), "现实生活中的相关领域")
+    def human_profile(name, topic):
+        item = planet(name)
+        if not item:
+            return f"{topic}方面的具体资料不足，建议结合现实经历判断。"
+        return f"你在{topic}方面，比较明显的特点是：{human_style(item)}。这类特点容易在{human_area(item)}中表现出来。"
+
     venus_house = venus.get("house", "未知")
     moon_house = moon.get("house", "未知")
     mars_house = mars.get("house", "未知")
@@ -862,25 +881,6 @@ def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
             f"星盘不能给出发财年份、具体收入金额或投资涨跌，财富进展应以净资产、自由现金流和实际经营数据衡量。"
         )
     ]
-    # Customer-facing copy uses everyday language only; technical calculations stay server-side.
-    life_area = {
-        1: "个人表达和自我定位", 2: "收入、储蓄和个人价值", 3: "沟通、学习和信息往来",
-        4: "家庭、居住和内心安全感", 5: "恋爱、兴趣和创造表达",
-        6: "日常工作、技能和习惯", 7: "长期伴侣、婚姻和合作",
-        8: "共同财务、信任和责任边界", 9: "学习进修、远行和视野",
-        10: "事业发展、社会角色和长期目标",
-        11: "朋友、人脉、团队和长期愿景", 12: "休息、独处和幕后事务"
-    }
-    def human_style(item):
-        return sign_detail_of(item).replace("；需要留意", "；同时要留意")
-    def human_area(item):
-        return life_area.get(item.get("house"), "现实生活中的相关领域")
-    def human_profile(name, topic):
-        item = planet(name)
-        if not item:
-            return f"{topic}方面的具体资料不足，建议结合现实经历判断。"
-        return f"你在{topic}方面，比较明显的特点是：{human_style(item)}。这类特点容易在{human_area(item)}中表现出来。"
-
     relationship_plain = [
         f"你在感情里看重的，不只是有人陪伴，而是相处时能不能感到被重视、被接纳。{human_profile('金星', '表达喜欢和选择伴侣')} {human_profile('月亮', '情绪需求和安全感')} 所以，真正适合你的关系，需要同时有吸引力和稳定回应；只有一时热情、却长期忽冷忽热，很难让你安心。",
         f"{human_profile('火星', '主动表达和处理分歧')} 开始一段关系时，建议你不要只靠猜测对方的态度。可以直接但不过度地表达好感，观察对方是否愿意持续联系、安排见面并兑现说过的话。如果两个人的节奏不同，先谈清楚联系频率和个人空间，不要急着把差异理解成不在乎。",
