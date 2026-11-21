@@ -271,6 +271,51 @@ GROUP_INDEX.extend([
     }),
 ])
 
+# Table-form 子集 blocks use the printed column heading "序号". Keep that
+# source column verbatim and do not reinterpret it as age or cipher number.
+def _table_layout_group(marker, line_range, raw_index_values, row_lines):
+    entries = []
+    for sequence, (raw_value, line_ref) in enumerate(zip(raw_index_values, row_lines), 1):
+        entries.append({
+            "entry_sequence": sequence,
+            "source_index_text": raw_value,
+            "raw_number_text": None,
+            "number_field_present": None,
+            "content_present": True,
+            "pdf_text_lines": line_ref,
+            "age_markers": [],
+            "age_marker_text": None,
+            "age_marker_association_status": "source_column_semantics_unverified",
+        })
+    return {
+        "group_marker": marker,
+        "raw_group_marker": marker,
+        "normalized_group_marker_candidate": marker,
+        "normalization_status": "verified_text_layer_group_marker",
+        "pdf_text_lines": line_range,
+        "entry_count": len(entries),
+        "layout_status": "table_rows_year_sequence_clause",
+        "layout_note": "PDF文本层采用表格列标题“年份／序号／诗句”；序号栏原文独立保存，不擅自解释为岁数、对应数或密码条号。",
+        "entries": entries,
+    }
+
+
+GROUP_INDEX.extend([
+    _table_layout_group("一二四〇", "10986-10998",
+        ["四十七／四十八", "三十五／三十六", None, None, None, "五十一", None,
+         "三十五／三十七／四十五／四十七／四十八", None],
+        ["10989", "10990", "10991", "10992", "10993", "10994", "10995", "10996", "10997"]),
+    _table_layout_group("一二五〇", "10999-11012",
+        ["三十三／三十四", None, "三十三／三十四", None, "八十五／八十六", None,
+         "三十四／十三／五十三／十三", None, "二十一", None],
+        ["11002", "11003", "11004", "11005", "11006", "11007", "11008", "11009", "11010", "11011"]),
+    _table_layout_group("一二六〇", "11013-11026",
+        ["三十七", None, None, None, "四十七／四十八／五十二／五十五", None,
+         "六十九／六十／三十三／三十三／五十三／五十四", None, None, None],
+        ["11016", "11017", "11018", "11019", "11020", "11021", "11022", "11023", "11024", "11025"]),
+])
+
+
 # Preserve two OCR-specific anomalies without silently normalizing their raw forms.
 GROUP_INDEX[-6]["source_header_ocr"] = {
     "raw_text": "康节报具全书",
@@ -315,7 +360,8 @@ def get_group_index():
              "source_header_ocr": dict(group["source_header_ocr"]) if group.get("source_header_ocr") else None,
              "age_marker_ambiguities": [dict(x) for x in group.get("age_marker_ambiguities", [])],
              "age_marker_candidates": [dict(x) for x in group.get("age_marker_candidates", [])],
-             "entries": [dict(entry) for entry in group["entries"]]}
+             "entries": [dict(entry) for entry in group["entries"]],
+             "layout_note": group.get("layout_note") }
             for group in GROUP_INDEX
         ],
         "limitations": [
