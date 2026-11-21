@@ -259,7 +259,45 @@ def detect_chart_patterns(positions, aspects):
     return results
 
 
-def generate_natal_profile(positions, angles, houses, aspects):
+def build_pattern_report_section(patterns, relevant_planets, title):
+    """Translate detected configurations into a cautious, domain-specific report section."""
+    relevant = []
+    for pattern in patterns or []:
+        overlap = [name for name in pattern.get("planets", []) if name in relevant_planets]
+        if overlap:
+            relevant.append(pattern)
+    if not relevant:
+        return None
+
+    lines, evidence = [], []
+    for pattern in relevant:
+        quality = pattern.get("orb_quality", "未评定")
+        max_orb = pattern.get("max_orb")
+        orb_text = f'，最大容许度{max_orb}°' if max_orb is not None else ""
+        weight_note = {
+            "紧密": "结构较紧密，可作为本专题的重要补充线索，但仍需结合具体相位与现实经验。",
+            "中等": "结构力度居中，适合作为辅助线索，不宜单独决定结论。",
+            "宽容许度": "结构中存在较宽相位，整体权重应降低，只作背景参考。",
+            "未评定": "结构容许度尚未完整评定，暂不提高其解释权重。"
+        }.get(quality, "应结合相位容许度谨慎解读。")
+        roles = pattern.get("roles", {})
+        role_text = "、".join(
+            f'{name}（{roles.get(name, "参与星体")}）'
+            for name in pattern.get("planets", [])
+        )
+        lines.append(
+            f'{pattern.get("name", "星盘格局")}：涉及{role_text}。'
+            f'结构质量为{quality}{orb_text}。{weight_note}'
+            f'结构含义：{pattern.get("meaning", "")}'
+            f'优势线索：{pattern.get("strengths", "")}'
+            f'需要留意：{pattern.get("challenges", "")}'
+            f'实践方向：{pattern.get("advice", "")}'
+        )
+        evidence.extend(pattern.get("evidence", []))
+    return {"title": title, "content": "\\n\\n".join(lines), "evidence": evidence}
+
+
+def generate_natal_profile(positions, angles, houses, aspects, patterns=None):
     """Create a chart-evidence-led natal overview; avoid single-placement determinism."""
     by_name = {p["name"]: p for p in positions}
     cusp_by_house = {h["house"]: h for h in houses}
@@ -378,6 +416,14 @@ def generate_natal_profile(positions, angles, houses, aspects):
             "evidence": [place("木星"), place("土星")] + aspect_evidence(["木星", "土星"], 4)
         }
     ]
+    pattern_section = build_pattern_report_section(
+        patterns,
+        {"太阳", "月亮", "水星", "金星", "火星", "木星", "土星", "天王星", "海王星", "冥王星"},
+        "六、重要格局整合：潜在优势、张力与调整方式"
+    )
+    if pattern_section:
+        sections.append(pattern_section)
+
     return {
         "title": "本命盘综合人格与人生主题",
         "intro": "先呈现核心人格，再连接思维、关系、事业资源与长期成长。每一节列出实际星盘依据；解释是占星传统中的象征性阅读，不是科学诊断或确定性预测。",
@@ -385,7 +431,7 @@ def generate_natal_profile(positions, angles, houses, aspects):
     }
 
 
-def generate_life_analysis(positions, angles, houses, aspects):
+def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
     """Generate detailed, chart-grounded relationship and finance interpretations."""
     by_name = {p["name"]: p for p in positions}
     cusp_by_house = {h["house"]: h for h in houses}
@@ -616,6 +662,20 @@ def generate_life_analysis(positions, angles, houses, aspects):
             )
         }
     ]
+
+    relationship_pattern_section = build_pattern_report_section(
+        patterns, {"金星", "火星", "月亮", "水星", "土星", "天王星", "冥王星"},
+        "七、格局对关系模式的补充观察"
+    )
+    if relationship_pattern_section:
+        relationship.append(relationship_pattern_section)
+
+    finance_pattern_section = build_pattern_report_section(
+        patterns, {"水星", "木星", "土星", "天王星", "海王星", "冥王星", "火星"},
+        "八、格局对事业与财富管理的补充观察"
+    )
+    if finance_pattern_section:
+        finance.append(finance_pattern_section)
 
     return {
         "relationship": {
@@ -913,6 +973,8 @@ def calculate_chart(payload):
                     })
     aspects.sort(key=lambda x: x["orb"])
 
+    patterns = detect_chart_patterns(positions, aspects)
+
     return {
         "calculation": {
             "engine": "pyswisseph / Moshier ephemeris",
@@ -933,9 +995,9 @@ def calculate_chart(payload):
         "angles": angles,
         "houses": houses,
         "aspects": aspects,
-        "patterns": detect_chart_patterns(positions, aspects),
-        "analysis": generate_life_analysis(positions, angles, houses, aspects),
-        "natal_profile": generate_natal_profile(positions, angles, houses, aspects),
+        "patterns": patterns,
+        "analysis": generate_life_analysis(positions, angles, houses, aspects, patterns),
+        "natal_profile": generate_natal_profile(positions, angles, houses, aspects, patterns),
         "monthly_transits": generate_monthly_transit_analysis(positions, houses, tz_name),
         "warnings": timezone_warning + [
             "当前使用 Moshier 星历算法，不是 Swiss Ephemeris 星历数据文件；结果应标注数据来源。",
