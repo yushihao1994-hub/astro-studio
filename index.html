@@ -181,6 +181,7 @@
       <div class="overview-foot"><span id="chart-meta">尚未生成计算结果</span><span>计算结果以服务器返回数据为准</span></div>
     </section>
 
+    <div id="fullReportOutput" class="report-group" style="display:none;margin-top:24px"></div>
     <div class="paywall-modal" id="paywallModal" role="dialog" aria-modal="true" aria-labelledby="paywallTitle">
     <div class="paywall-dialog">
       <div class="eyebrow">PERSONAL ASTROLOGY REPORT</div>
@@ -192,7 +193,7 @@
         <div class="price-option"><b>未来30天专题</b><strong>¥6.9</strong><small>近期主题变化与行动提醒</small></div>
       </div>
       <div class="paywall-notice">价格为首轮产品测试建议价。在线支付和自动解锁尚未开通，本页面不会收取费用。</div>
-      <div class="paywall-actions"><button type="button" class="secondary" id="closePaywall">先继续体验</button><button type="button" class="primary" id="paywallNotify">我想购买</button></div>
+      <div class="paywall-actions"><button type="button" class="secondary" id="closePaywall">先继续体验</button><button type="button" class="primary" id="paywallNotify">我想购买</button></div><button type="button" class="secondary" id="fullReportTest" style="width:100%;margin-top:10px">生成完整报告（内测，不收费）</button>
       <p id="paywallFeedback" class="note" aria-live="polite"></p>
     </div>
   </div>
@@ -416,6 +417,59 @@
         modal.classList.add('show');
       }
       if (event.target.id === 'closePaywall' || event.target === modal) modal.classList.remove('show');
+      if (event.target.id === 'fullReportTest') {
+        const testButton = event.target;
+        const output = document.getElementById('fullReportOutput');
+        if (!currentChartData) {
+          document.getElementById('paywallFeedback').textContent = '请先生成你的本命星盘，再生成完整报告。';
+          return;
+        }
+        testButton.disabled = true;
+        testButton.textContent = '正在生成完整报告，请稍候…';
+        document.getElementById('paywallFeedback').textContent = '正在结合全部真实星盘依据生成七大专题，通常需要一段时间。';
+        try {
+          await wakeApiServer(output);
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 180000);
+          let response;
+          try {
+            response = await fetch(API_BASE + '/api/ai/full-report', {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({chart: currentChartData}),
+              signal: controller.signal
+            });
+          } finally { clearTimeout(timer); }
+          const raw = await response.text();
+          let body;
+          try { body = JSON.parse(raw); } catch (_) { throw new Error('服务器返回数据无法识别，请稍后重试。'); }
+          if (!response.ok || !body.ok) throw new Error(body.error || '完整报告生成失败。');
+          const report = body.report;
+          const sections = (report.sections || []).map((item, index) =>
+            '<details class="report-item" ' + (index === 0 ? 'open' : '') + '><summary><span class="report-index">' +
+            String(index + 1).padStart(2, '0') + '</span><span class="report-title">' + esc(item.title) +
+            '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
+            '<p><b>核心结论：</b>' + esc(item.conclusion) + '</p><p><b>星盘依据与现实解释：</b>' +
+            esc(item.reasoning) + '</p><p><b>可以尝试：</b>' + esc(item.advice) + '</p></div></details>'
+          ).join('');
+          const plan = (report.action_plan || []).map((item, index) =>
+            '<li><b>' + (index + 1) + '.</b> ' + esc(item) + '</li>'
+          ).join('');
+          output.innerHTML = '<h3>你的完整人生星盘报告</h3><p class="report-intro">' +
+            esc(report.summary || '') + '</p>' + sections +
+            '<div class="sample-limit"><b>你的个人行动方案</b><ul>' + plan + '</ul></div>' +
+            '<p class="report-intro">本报告依据本次计算的星盘数据生成，供自我观察与探索，不构成对现实事件的确定预测。</p>';
+          output.style.display = 'block';
+          document.getElementById('paywallModal').classList.remove('show');
+          output.scrollIntoView({behavior:'smooth', block:'start'});
+        } catch (error) {
+          document.getElementById('paywallFeedback').textContent =
+            error.name === 'AbortError' ? '完整报告生成超时，请稍后重试。' : (error.message || '完整报告暂时不可用。');
+        } finally {
+          testButton.disabled = false;
+          testButton.textContent = '重新生成完整报告（内测，不收费）';
+        }
+      }
       if (event.target.id === 'paywallNotify') {
         document.getElementById('paywallFeedback').textContent = '购买功能正在开发中，当前不会扣费。';
       }
