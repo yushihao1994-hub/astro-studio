@@ -460,6 +460,40 @@ for _group, _spans in [
         else:
             _entry["age_marker_association_status"] = "age_not_listed_in_text_layer"
 
+GROUP_INDEX.extend([
+    _table_layout_group("一四二〇", "11393-11414",
+        ["三十九","四十五","五十六","四十七","四十八","六十五","六十六","六十三","六十四","四十二"],
+        ["11394;11405","11395;11406","11396;11407","11397;11408","11398;11409",
+         "11399;11410","11400;11411","11401;11412","11402;11413","11403;11414"],
+        "文本层先列十项岁数，再列十项正文；当前按序号顺序暂配，逐项对应仍待页面图像核验。"),
+    _source_group("一四三〇", "一四三〇", "11416-11443", {
+        1:["二十八"], 4:["十","四十七","七十八","七十七"],
+        5:["六十三","六十四"], 6:["三十七","十八"],
+        7:["三十五","五十四"], 8:["二十八"], 10:["五十二"],
+    }),
+    _source_group("一四四〇", "一四四〇", "11445-11474", {
+        1:["八十九","九十"], 3:["二十九","四十"],
+        4:["七十","四十九"], 5:["七十九","四十二"], 6:["十二"],
+        8:["五十七","五十八"], 9:["五十四","五十五"], 10:["三十五","三十六"],
+    }),
+    _source_group("一四五〇", "一四五〇", "11489-11500", {}),
+    _source_group("一四六〇", "一四六〇", "11501-11511", {}),
+])
+for _group, _spans in [
+    (GROUP_INDEX[29], ["11418","11419-11420","11421-11424","11425-11426","11427-11428",
+                       "11429-11430","11431","11432","11433","11434-11443"]),
+    (GROUP_INDEX[30], ["11447-11448","11449","11450-11451","11452-11453","11454-11455",
+                       "11456","11457","11458-11459","11460-11461","11462-11463"]),
+    (GROUP_INDEX[31], ["11491","11492","11493","11494","11495","11496","11497","11498","11499","11500"]),
+    (GROUP_INDEX[32], ["11502","11503","11504","11505","11506","11507","11508","11509","11510","11511"]),
+]:
+    for _entry, _span in zip(_group["entries"], _spans):
+        _entry["pdf_text_lines"] = _span
+        _entry["number_field_present"] = False
+        _entry["content_present"] = True
+        _entry["age_marker_association_status"] = (
+            "text_layer_sequence_associated_image_check_pending" if _entry["age_markers"]
+            else "age_not_listed_in_text_layer")
 UNASSIGNED_BLOCKS.append({
     "block_id": "child_collection_unheaded_block_after_1380_candidate",
     "pdf_text_lines": "11279-11315",
@@ -528,6 +562,16 @@ GROUP_ANOMALIES = [
     },
 ]
 
+UNASSIGNED_BLOCKS.append({
+    "block_id": "child_collection_unheaded_block_after_1440",
+    "pdf_text_lines": "11476-11488",
+    "entry_count": 10,
+    "status": "group_marker_missing_do_not_assign",
+    "note": "子集页眉后出现十项分行记录，至一四五〇标题前没有独立组号。",
+    "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                for n, line in enumerate(
+                    ["11477","11478-11479","11480-11481","11482","11483","11484","11485","11486","11487","11488"], 1)]
+})
 GROUP_ANOMALIES.extend([
     {"raw_group_marker":"二三六〇","normalized_group_marker_candidate":"一三六〇",
      "pdf_text_lines":"11254","status":"probable_ocr_correction_pending_image_check"},
