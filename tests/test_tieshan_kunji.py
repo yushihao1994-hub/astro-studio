@@ -24,6 +24,8 @@ class KunjiReferenceTests(unittest.TestCase):
         self.assertEqual(examples["辛丁乙丁"], "9767")
         self.assertEqual(examples["丙庚月戌"], "2403")
         self.assertEqual(reference["status"], "partial_metadata_not_full_cipher")
+        self.assertEqual(len(reference["published_example_audits"]), 7)
+        self.assertEqual(reference["published_example_audits"][-1]["unresolved_symbols"], ["戌"])
 
     def test_example_audit_marks_unexplained_branch_digit(self):
         from backend.tieshan_kunji import PUBLISHED_CIPHER_EXAMPLES, audit_published_example
