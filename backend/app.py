@@ -88,6 +88,10 @@ def calculate_chart(payload):
 
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):
         raise ValueError("经纬度超出有效范围。")
+    detected_tz = TimezoneFinder().timezone_at(lat=lat, lng=lon)
+    timezone_warning = []
+    if detected_tz and detected_tz != tz_name:
+        timezone_warning.append(f"所选时区 {tz_name} 与坐标推算时区 {detected_tz} 不一致，请核对出生地当地时间。")
 
     # Convert UTC to Julian day. Moshier is explicitly selected so the API
     # never claims to be using Swiss Ephemeris data files when none are installed.
@@ -195,7 +199,7 @@ def calculate_chart(payload):
         "angles": angles,
         "houses": houses,
         "aspects": aspects,
-        "warnings": [
+        "warnings": timezone_warning + [
             "当前使用 Moshier 星历算法，不是 Swiss Ephemeris 星历数据文件；结果应标注数据来源。",
             "出生地点若由地名自动解析，坐标可能是城镇中心或地名匹配点，不一定是实际出生地点。",
             "占星解释属于文化与自我探索内容，不构成科学预测。"
