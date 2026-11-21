@@ -207,6 +207,17 @@
     let currentChartData = null;
     const key = 'astro-studio-profile-draft-v1';
 
+    // 自动保存出生资料，避免页面刷新或分析失败后丢失用户输入。
+    function saveProfileDraft() {
+      try {
+        localStorage.setItem(key, JSON.stringify(Object.fromEntries(new FormData(form).entries())));
+      } catch (_) {
+        // 即使浏览器禁用本地存储，也不影响当前页面继续计算。
+      }
+    }
+    form.addEventListener('input', saveProfileDraft);
+    form.addEventListener('change', saveProfileDraft);
+
     function showError(message) {
       toast.style.display = 'block';
       toast.style.background = '#332626';
@@ -318,7 +329,6 @@
     }
 
     document.addEventListener('click', async (event) => {
-      const button = event.target.closest('[data-ai-topic]');    document.addEventListener('click', async (event) => {
       const button = event.target.closest('[data-ai-topic]');
       if (!button) return;
       if (!currentChartData) {
@@ -488,7 +498,7 @@
       calcBtn.disabled = true;
       calcBtn.textContent = '正在计算，请稍候…';
       try {
-        localStorage.setItem(key, JSON.stringify(data));
+        saveProfileDraft();
         const response = await fetch(API_BASE + '/api/chart', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
@@ -582,6 +592,7 @@ document.getElementById('report-section').classList.add('ready');
     });
     document.getElementById('clearBtn').addEventListener('click', () => {
       form.reset();
+      try { localStorage.removeItem(key); } catch (_) {}
       toast.style.display = 'none';
       result.style.display = 'none';
     });
