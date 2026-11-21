@@ -85,12 +85,51 @@ input,select{min-height:46px;font-size:16px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{scroll-behavior:auto!important;transition:none!important}}
 
+
+/* Full multi-page chart workspace */
+.workspace-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:#ddd6c8;margin:12px 12px 0;border:1px solid #ddd6c8;border-radius:5px;overflow:hidden}
+.workspace-nav button{border:0;border-radius:0;background:#fff;color:#665b48;padding:11px 4px;min-height:54px;font-size:12px}
+.workspace-nav button.active{background:#25221c;color:#e4cc98;box-shadow:inset 0 -3px #b99a5e}
+.workspace-nav button span{display:block;font-size:9px;color:inherit;opacity:.72;margin-top:2px}
+.workspace-panel{display:none;margin:10px 12px 0}
+.workspace-panel.active{display:block}
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.info-tile{border:1px solid #e9e4d9;background:#fff;padding:11px;border-radius:4px;min-width:0}
+.info-tile small{display:block;color:#999;font-size:10px}.info-tile strong{display:block;color:#292929;font-size:14px;overflow-wrap:anywhere;margin-top:3px}
+.section-title{font-size:14px;font-weight:700;color:#342f25;margin:15px 0 8px;padding-left:8px;border-left:3px solid #b99a5e}
+.chart-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #e8e3d8;border-radius:4px;background:#fff}
+.chart-table{border-collapse:collapse;width:100%;min-width:570px;text-align:center;font-size:12px}
+.chart-table th{background:#f5f2eb;color:#7e6c4c;font-weight:600}
+.chart-table th,.chart-table td{padding:9px 7px;border-bottom:1px solid #eeeae2;border-right:1px solid #f0ede7}
+.chart-table tr:last-child td{border-bottom:0}
+.chart-table td:first-child{background:#faf9f6;color:#777;font-weight:600}
+.pill-tag{display:inline-block;padding:2px 6px;margin:2px;border-radius:3px;background:#f5f1e8;color:#856d42;font-size:10px}
+.empty-state{border:1px dashed #ddd4c3;background:#fbfaf7;padding:17px;text-align:center;color:#8b8170;border-radius:4px;font-size:12px;line-height:1.8}
+.panel-card{background:#fff;border:1px solid #e8e3d8;border-radius:5px;padding:14px;margin-bottom:9px}
+.panel-card h3{margin:0 0 8px;font-size:14px;color:#342f25}
+.panel-card p{margin:5px 0;color:#666;font-size:12px;line-height:1.8}
+@media(max-width:620px){.workspace-nav{margin:9px 8px 0;grid-template-columns:repeat(5,minmax(0,1fr))}.workspace-nav button{font-size:10px;padding:8px 1px;min-height:55px}.workspace-nav button span{font-size:8px}.workspace-panel{margin:9px 8px 0}.info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.info-tile{padding:9px}.info-tile strong{font-size:13px}}
+@media(max-width:360px){.workspace-nav button{font-size:9px}.workspace-nav button span{font-size:7px}}
+
 </style>
 </head>
 <body>
 <main class="wrap">
 <header class="top"><div class="brand"><div class="logo">☯</div><div><h1>铁板神数</h1><div class="sub">TIE BAN SHEN SHU · DESTINY ARCHIVE</div></div></div><span class="tag">独立研究版 · 01</span></header>
 <section class="hero"><div class="eyebrow">TRADITIONAL DESTINY CALCULATION</div><h2>以出生资料为起点，<br><span>逐步推演命数条文。</span></h2><p>建立个人命盘档案，后续将依次完成历法换算、四柱校验、数理推演与条文检索。不同传承规则会明确标注，不把推测伪装成古籍原文。</p></section>
+
+<nav class="workspace-nav" id="workspaceNav" aria-label="命盘功能导航">
+<button type="button" class="active" data-page="archive">出生档案<span>资料录入</span></button>
+<button type="button" data-page="profile">基本信息<span>命主资料</span></button>
+<button type="button" data-page="chart">基本命盘<span>四柱排盘</span></button>
+<button type="button" data-page="detail">专业细盘<span>扩展项目</span></button>
+<button type="button" data-page="tieshan">铁板推演<span>数理条文</span></button>
+</nav>
+<section class="workspace-panel" id="profilePanel"></section>
+<section class="workspace-panel" id="chartPanel"></section>
+<section class="workspace-panel" id="detailPanel"></section>
+<section class="workspace-panel" id="tieshanPanel"></section>
+
 <section class="grid">
 <div class="card full"><h3>建立出生档案</h3><p class="hint">请尽量填写准确的出生时间与地点；不确定的资料可以先留空或选择未知。</p>
 <form id="birthForm"><div class="fields">
@@ -229,5 +268,93 @@ form.addEventListener('submit',async e=>{
 });
 document.getElementById('clear').addEventListener('click',()=>{form.reset();document.getElementById('time').disabled=false;document.getElementById('timeUnknown').value='known';provinceSelect.value='';setRegionOptions(citySelect,[],'选择市/州');setRegionOptions(districtSelect,[],'选择县/区');setRegionOptions(townSelect,[],'选择乡/镇/街道');setRegionOptions(villageSelect,[],'选择村委会/社区');naturalVillageInput.value='';refreshPlace();yearSelect.value='1994';refreshDateParts();try{localStorage.removeItem(KEY);}catch(_){}result.classList.remove('show');});
 (async()=>{try{await loadRegionData();const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){for(const [k,v] of Object.entries(saved)){if(['province','city','district','town','village','natural_village','place','birth_year','birth_month','birth_day'].includes(k))continue;const el=form.elements.namedItem(k);if(el&&el.type!=='radio')el.value=v;else if(el&&el.length){const opt=[...el].find(x=>x.value===v);if(opt)opt.checked=true;}}await restoreAddress(saved);document.getElementById('timeUnknown').value=saved.timeUnknown||'known';document.getElementById('time').disabled=saved.timeUnknown==='unknown';if(saved.birth_year){yearSelect.value=saved.birth_year;refreshDateParts(saved.birth_month,saved.birth_day);}else if(saved.date){const parts=saved.date.split('-');if(parts.length===3){yearSelect.value=parts[0];refreshDateParts(parts[1],parts[2]);}}else{yearSelect.value='1994';refreshDateParts();}}else{yearSelect.value='1994';refreshDateParts();}}catch(e){document.getElementById('addressHint').textContent='行政区划资料加载失败，请刷新页面重试。';yearSelect.value='1994';refreshDateParts();}})();
+</script>
+<script>
+/* Tabbed chart workspace: calculated fields only; unsupported traditions remain clearly marked. */
+(function(){
+ const nav=document.getElementById('workspaceNav');
+ if(!nav)return;
+ const pages=['archive','profile','chart','detail','tieshan'];
+ function switchPage(page){
+  pages.forEach(p=>{
+   const panel=document.getElementById(p==='archive'?'':p+'Panel');
+   if(panel)panel.classList.toggle('active',p===page);
+  });
+  document.querySelector('.grid').style.display=page==='archive'?'grid':'none';
+  nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  if(page!=='archive'&&!lastPillarData){
+   const target=document.getElementById(page+'Panel');
+   target.innerHTML='<div class="empty-state">请先进入「出生档案」填写资料并完成计算。<br>已有档案会保存在当前设备。</div>';
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+ }
+ nav.addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(b)switchPage(b.dataset.page);});
+ function tile(label,value){return '<div class="info-tile"><small>'+escapeHtml(label)+'</small><strong>'+escapeHtml(value||'—')+'</strong></div>';}
+ function card(title,body){return '<div class="panel-card"><h3>'+title+'</h3>'+body+'</div>';}
+ function buildPages(d){
+  const b=d.birth||{},p=d.pillars||{},z=d.derived||{},details=z.pillar_details||{};
+  const solar=b.converted_solar_date||((b.local_datetime||'').slice(0,10));
+  const input=b.input_date||{};
+  const inputDate=[input.year,input.month,input.day].filter(x=>x!==undefined).join('-');
+  document.getElementById('profilePanel').innerHTML=
+   '<div class="card"><h3>命主基本信息</h3><p class="hint">出生档案与历法校验结果</p><div class="info-grid">'+
+   tile('输入历法',b.input_calendar==='lunar'?'农历':'公历')+
+   tile('输入日期',inputDate||solar)+tile('换算公历',solar)+
+   tile('出生当地时间',b.local_datetime)+tile('时区',b.timezone)+
+   tile('出生地点',b.place_resolved)+tile('经度',b.longitude===undefined?'—':String(b.longitude))+
+   tile('纬度',b.latitude===undefined?'—':String(b.latitude))+
+   tile('月柱交节',d.solar_term_boundary&&d.solar_term_boundary.month_boundary)+
+   tile('计算引擎',d.engine)+'</div></div>'+
+   card('资料校验说明','<p>年柱按立春交节判断，月柱按十二节的太阳黄经交界判断。日柱当前采用当地民用日期零点换日；时柱按当地钟表时间划分。</p><p>当前未校正真太阳时。出生地点若为乡镇级缓存坐标，不代表已精确定位到具体村庄。</p>');
+  const cols=['年柱','月柱','日柱','时柱'];
+  const keys=['year','month','day','hour'];
+  const row=(name,fn)=>'<tr><td>'+name+'</td>'+keys.map(k=>'<td>'+escapeHtml(fn(k))+'</td>').join('')+'</tr>';
+  const htmlRows=[
+   row('天干',k=>p[k]&&p[k].stem),
+   row('地支',k=>p[k]&&p[k].branch),
+   row('干支',k=>p[k]&&p[k].name),
+   row('天干十神',k=>details[k]&&details[k].stem_ten_god),
+   row('地支藏干',k=>details[k]&&(details[k].hidden_stems||[]).join('、')),
+   row('藏干十神',k=>details[k]&&(details[k].hidden_ten_gods||[]).join('、')),
+   row('地支时段',k=>k==='hour'?(p.hour.branch_period||'—'):'—')
+  ].join('');
+  const elementCounts=z.five_element_counts||{};
+  document.getElementById('chartPanel').innerHTML=
+   '<div class="card"><h3>四柱命盘</h3><p class="hint">按年、月、日、时排列；左右滑动可查看完整字段</p><div class="chart-table-wrap"><table class="chart-table"><thead><tr><th>项目</th>'+cols.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+htmlRows+'</tbody></table></div>'+
+   '<div class="section-title">日主与五行</div><div class="info-grid">'+tile('日主',((z.day_master||{}).stem||'')+' · '+((z.day_master||{}).element||''))+
+   tile('阴阳',((z.day_master||{}).polarity||''))+
+   ['木','火','土','金','水'].map(e=>tile(e+'（天干+藏干计数）',String(elementCounts[e]??0))).join('')+'</div>'+
+   '<div class="section-title">地支关系</div>'+((z.branch_relations||[]).length?'<div>'+z.branch_relations.map(x=>'<span class="pill-tag">'+escapeHtml((x.branches||[]).join('—'))+' '+escapeHtml(x.relation)+'</span>').join('')+'</div>':'<div class="empty-state">当前四柱未识别到已列出的六合、六冲、六害或同支关系。</div>')+
+   '<p class="hint" style="margin-top:12px">'+escapeHtml(z.calculation_note||'五行计数仅为简单计数，不等同旺衰权重。')+'</p></div>';
+  const bodyLife=d.body_life_palaces||null, eightKe=d.eight_ke||null;
+  document.getElementById('detailPanel').innerHTML=
+   card('专业细盘 · 已计算项目',
+    '<div class="info-grid">'+tile('胎元','尚未接入')+tile('命宫',bodyLife?bodyLife.life_palace:'待补农历月份/规则校验')+
+    tile('身宫',bodyLife?bodyLife.body_palace:'待补农历月份/规则校验')+
+    tile('八刻分段',eightKe?eightKe.ke_label:'待核验')+
+    tile('出生时辰',p.hour&&p.hour.branch)+tile('时辰范围',p.hour&&p.hour.branch_period)+'</div>')+
+   card('大运与流年',
+    '<div class="empty-state">大运起运岁数、顺逆排运、交运时间及流年表尚未完成规则校验。<br>此处暂不生成虚构的大运、流年数据。<br>后续将按可核验的传统规则独立实现，并允许切换流派。</div>')+
+   card('神煞、纳音与其他项目',
+    '<div class="empty-state">纳音、空亡、十二长生、神煞等项目尚未全部接入。<br>项目会逐项注明算法依据和版本，不用 AI 补造计算结果。</div>');
+  document.getElementById('tieshanPanel').innerHTML=
+   card('铁板神数 · 规则资料库',
+    '<p>当前接入的是《康节说易全书·铁板神数》2003年现代点校本的部分可核验对照规则，属于异本研究资料，不等同清刻足本。</p>'+
+    '<p>已实现：天干配卦、洛书数卦定局、日主配卦、河洛配数、地支取数类，以及部分身命宫定位。</p>'+
+    '<p>尚未实现：完整考刻定盘、秘钞密码表、六亲数、完整卦序推演及原文条文编号匹配。</p>')+
+   card('本命盘对应规则',
+    '<div class="chart-table-wrap"><table class="chart-table"><thead><tr><th>柱位</th><th>天干</th><th>地支</th><th>天干十神</th></tr></thead><tbody>'+
+    keys.map(k=>'<tr><td>'+({year:'年柱',month:'月柱',day:'日柱',hour:'时柱'}[k])+'</td><td>'+escapeHtml(p[k]&&p[k].stem)+'</td><td>'+escapeHtml(p[k]&&p[k].branch)+'</td><td>'+escapeHtml(details[k]&&details[k].stem_ten_god)+'</td></tr>').join('')+
+    '</tbody></table></div>')+
+   card('数理与条文', '<div id="tieshanStepHost"></div>');
+  const stepHost=document.getElementById('tieshanStepHost');
+  const oldSteps=document.querySelector('.steps');
+  const oldDetail=document.getElementById('stepDetail');
+  if(oldSteps&&oldDetail){stepHost.appendChild(oldSteps.cloneNode(true));stepHost.appendChild(oldDetail.cloneNode(true));}
+ }
+ const originalSubmit=form.addEventListener;
+ form.addEventListener('submit',()=>{setTimeout(()=>{if(lastPillarData){buildPages(lastPillarData);switchPage('chart');}},1200);});
+ window.addEventListener('storage',()=>{});
+})();
 </script>
 </body></html>
