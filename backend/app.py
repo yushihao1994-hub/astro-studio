@@ -677,6 +677,32 @@ def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
     if finance_pattern_section:
         finance.append(finance_pattern_section)
 
+    # Plain-language layer: show the life question and practical takeaway first.
+    relationship_plain = [
+        f"你在关系里需要的，不只是有人陪伴，更需要情绪上被认真对待。你的感情表达线索来自金星在{venus.get('sign', '未知')}，安全感线索来自月亮在{moon.get('sign', '未知')}。两者提示你要分清：一时心动，和长期相处是否安心，是两件不同的事。\n\n现实中可以观察：对方是否稳定回应、说到做到，是否愿意听你表达真实感受。",
+        f"你推进关系的节奏，带有{mars.get('sign', '未知')}的行动特点。恋爱初期不要只靠猜测判断对方心意；把联系频率、见面意愿和彼此期待说清楚。对方是否愿意持续投入，比某一次热情更有参考价值。",
+        f"长期关系最重要的不是某个理想条件，而是两个人能不能一起过现实生活。你的长期关系主题与{seventh_sign or '未知'}有关，关系议题也容易牵动{PLANET_HOUSE_MEANING.get(seventh_pos.get('house'), '日常生活')}。选择伴侣时，重点看责任感、诚信、沟通和处理分歧的能力。",
+        "你需要同时照顾感受、表达和行动。发生矛盾时，先说清楚自己感受到什么、真正需要什么，再提出具体请求；不要用冷战、试探或反复猜测代替沟通。涉及借钱、共同支出和隐私，也要提前讲明边界。",
+        "当你很在意一个人时，容易把希望放在对方身上。请把判断标准放回现实：是否持续尊重你、是否兑现承诺、是否愿意共同解决问题。反复失联、欺骗、控制或单方面索取，不应被解释成所谓命中注定。",
+        "给自己的实际做法：先列出不能妥协的底线，再列出生活习惯和价值观上的适配条件，最后才考虑外在吸引力。关系是否值得继续，要看双方长期行动，而不是只看星盘或一时情绪。"
+    ]
+    for index, item in enumerate(relationship):
+        if index < len(relationship_plain):
+            item["plain_content"] = relationship_plain[index]
+
+    finance_plain = [
+        f"你的财富主题提示，可以从个人技能、经验和资源如何变成收入来观察。第二宫宫头是{second_sign or '未知'}，其守护星{second_ruler or '未知'}落在第{second_pos.get('house', '未知')}宫（{PLANET_HOUSE_MEANING.get(second_pos.get('house'), '对应生活领域')}）。这只是值得尝试的方向，不代表这个领域一定能赚钱。真正要验证的是：有没有客户愿意付钱，扣除成本后是否还有利润。",
+        f"你的赚钱方向不宜只停留在“适合什么行业”，而要找到一项能解决具体问题的服务或产品。事业主题与{tenth_sign or '未知'}有关，事业守护星落在第{tenth_pos.get('house', '未知')}宫。先做小规模试单，记录每单收入、成本、获客费用、售后和回款时间；连续验证有效，再考虑扩大。",
+        f"职业发展可以围绕可积累的能力和可信赖的交付建立。你的事业主题与{tenth_sign or '未知'}有关。与其同时尝试很多方向，不如先选一个客户需求明确、启动成本可控的方向，做出案例和稳定交付流程。",
+        "机会和扩张需要纪律配合。不要因为一段时间订单增加，就马上借钱囤货或扩大固定开支。先验证利润、回款和复购，再决定是否扩大；增长速度必须跟现金流和承受风险的能力匹配。",
+        "涉及借款、合伙、投资和共同资金时，先把金额、利息、期限、责任和退出方式写清楚。不要替别人承担自己无法承受的担保，也不要用新的高成本借款掩盖旧的现金流问题。",
+        "真正需要持续检查的是：钱是否收回来、每单是否赚钱、库存是否积压、债务是否按期偿还。每周记录现金余额、收入、必要支出、债务到期日和真实利润，比只看营业额更有用。",
+        "建议按这个顺序行动：先盘点现金和债务；再选一个低成本收入方向；用小单验证客户需求和净利润；稳定后再扩大；最后建立应急储备。星盘不能给出发财年份或收入金额，现实数据才是判断经营是否有效的依据。"
+    ]
+    for index, item in enumerate(finance):
+        if index < len(finance_plain):
+            item["plain_content"] = finance_plain[index]
+
     return {
         "relationship": {
             "title": "婚姻与感情深度分析",
