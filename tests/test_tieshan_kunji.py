@@ -25,6 +25,15 @@ class KunjiReferenceTests(unittest.TestCase):
         self.assertEqual(examples["丙庚月戌"], "2403")
         self.assertEqual(reference["status"], "partial_metadata_not_full_cipher")
 
+    def test_example_audit_marks_unexplained_branch_digit(self):
+        from backend.tieshan_kunji import PUBLISHED_CIPHER_EXAMPLES, audit_published_example
+        rows = [audit_published_example(x) for x in PUBLISHED_CIPHER_EXAMPLES]
+        self.assertTrue(all(x["full_match"] for x in rows[:-1]))
+        self.assertEqual(rows[-1]["known_symbol_digits"], "240")
+        self.assertEqual(rows[-1]["unresolved_symbols"], ["戌"])
+        self.assertEqual(rows[-1]["published_number"], "2403")
+        self.assertEqual(rows[-1]["status"], "partial_match_requires_source_rule")
+
     def test_no_full_cipher_or_auto_advancement_claim(self):
         reference = get_kunji_reference()
         self.assertTrue(reference["advancement_note"]["not_implemented"])
