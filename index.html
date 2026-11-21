@@ -32,7 +32,7 @@
     /* Professional dashboard refresh */
     body{background:radial-gradient(ellipse at 12% -8%,#34284d 0,transparent 34%),radial-gradient(ellipse at 100% 24%,#1b3040 0,transparent 30%),#090b13}
     .wrap{max-width:1120px;padding-top:22px}
-    .top{margin-bottom:18px}.logo{width:48px;height:48px;box-shadow:0 0 28px #b69af522}
+    .top{margin-bottom:12px}.logo{width:48px;height:48px;box-shadow:0 0 28px #b69af522}
     .hero{position:relative;overflow:hidden;padding:34px 30px;border-radius:24px;background:linear-gradient(115deg,#211c35 0%,#171a2a 58%,#14202a 100%);border-color:#51466b;box-shadow:0 18px 48px #0005}
     .hero:after{content:"✧";position:absolute;right:7%;top:-35px;font-size:190px;line-height:1;color:#e6c78b0b;pointer-events:none}
     .hero h2{font-size:clamp(30px,6vw,46px);letter-spacing:1px}.hero h2 em{font-style:normal;color:#e8cb96}
@@ -57,7 +57,7 @@
     .key-point>span{width:38px;height:38px;border-radius:12px;background:#302943;color:#e8cb96;display:grid;place-items:center;font-size:20px}
     .key-point small,.key-point em{display:block;color:var(--muted);font-size:11px;font-style:normal}.key-point b{display:block;font-size:17px;margin:1px 0;color:#f3e6c9}
     .overview-foot{border-top:1px solid #2d3347;margin-top:14px;padding-top:11px;display:flex;justify-content:space-between;gap:10px;color:#888da3;font-size:10px;flex-wrap:wrap}
-    #birth-section{scroll-margin-top:14px}#report-section{scroll-margin-top:14px}
+    #birth-section{scroll-margin-top:14px;margin-bottom:20px}#report-section{scroll-margin-top:14px}
     .card{box-shadow:0 10px 30px #0002}.card h3{font-size:18px}
     .feature{padding:15px;background:linear-gradient(110deg,#202337,#191d2d);border-color:#343a51}
     .feature b{font-size:14px}.feature .ico{font-size:22px;width:30px}
@@ -91,27 +91,6 @@
       <div class="brand"><div class="logo">✧</div><div><h1>星盘研究室</h1><div class="sub">ASTROLOGY RESEARCH STUDIO</div></div></div>
       <span class="tag">旗舰研究版 · V2</span>
     </header>
-    <section class="hero">
-      <div class="eyebrow">ASTROLOGY RESEARCH STUDIO · PROFESSIONAL</div>
-      <h2>输入出生资料，<br><em>读懂你关心的人生主题。</em></h2>
-      <p>完成出生资料后，直接查看感情、婚姻、财富、事业与个人特质。每个主题都提供深入、易懂的个性化分析；专业星盘数据在后台负责支撑结论。</p>
-      <div class="hero-meta"><span>✦ 一键生成个人分析</span><span>♡ 感情与婚姻</span><span>◇ 财富与事业</span></div>
-    </section>
-    <nav class="quick-nav" aria-label="页面导航">
-      <a href="#birth-section">出生档案</a><a href="#chart-overview">本命盘总览</a><a href="#report-section">专业报告</a>
-    </nav>
-    <section class="overview card" id="chart-overview">
-      <div class="overview-head"><div><div class="eyebrow">YOUR NATAL CHART</div><h3>本命星盘总览</h3><p class="hint">完成计算后，这里将呈现你的真实星盘结构</p></div><span class="live-label">等待计算</span></div>
-      <div class="overview-grid">
-        <div class="wheel-wrap" id="chart-wheel"><div class="wheel-placeholder"><div class="wheel-orbit">✧</div><b>等待生成星盘</b><span>填写出生资料并开始计算</span></div></div>
-        <div class="key-points" id="key-points">
-          <div class="key-point"><span>☉</span><div><small>太阳星座</small><b>待计算</b><em>核心自我与生命方向</em></div></div>
-          <div class="key-point"><span>☽</span><div><small>月亮星座</small><b>待计算</b><em>情绪需求与安全感</em></div></div>
-          <div class="key-point"><span>↗</span><div><small>上升星座</small><b>待计算</b><em>外在表达与人生入口</em></div></div>
-        </div>
-      </div>
-      <div class="overview-foot"><span id="chart-meta">尚未生成计算结果</span><span>计算结果以服务器返回数据为准</span></div>
-    </section>
     <section class="grid" id="birth-section">
       <div class="card">
         <h3>创建出生档案</h3>
@@ -147,6 +126,28 @@
         <div class="status"><strong>分析说明</strong>前台优先展示人生主题结论，专业星盘数据作为分析依据保留在可选栏目中。</div>
       </aside>
     </section>
+    <section class="hero">
+      <div class="eyebrow">ASTROLOGY RESEARCH STUDIO · PROFESSIONAL</div>
+      <h2>输入出生资料，<br><em>读懂你关心的人生主题。</em></h2>
+      <p>完成出生资料后，直接查看感情、婚姻、财富、事业与个人特质。每个主题都提供深入、易懂的个性化分析；专业星盘数据在后台负责支撑结论。</p>
+      <div class="hero-meta"><span>✦ 一键生成个人分析</span><span>♡ 感情与婚姻</span><span>◇ 财富与事业</span></div>
+    </section>
+    <nav class="quick-nav" aria-label="页面导航">
+      <a href="#birth-section">出生档案</a><a href="#chart-overview">本命盘总览</a><a href="#report-section">专业报告</a>
+    </nav>
+    <section class="overview card" id="chart-overview">
+      <div class="overview-head"><div><div class="eyebrow">YOUR NATAL CHART</div><h3>本命星盘总览</h3><p class="hint">完成计算后，这里将呈现你的真实星盘结构</p></div><span class="live-label">等待计算</span></div>
+      <div class="overview-grid">
+        <div class="wheel-wrap" id="chart-wheel"><div class="wheel-placeholder"><div class="wheel-orbit">✧</div><b>等待生成星盘</b><span>填写出生资料并开始计算</span></div></div>
+        <div class="key-points" id="key-points">
+          <div class="key-point"><span>☉</span><div><small>太阳星座</small><b>待计算</b><em>核心自我与生命方向</em></div></div>
+          <div class="key-point"><span>☽</span><div><small>月亮星座</small><b>待计算</b><em>情绪需求与安全感</em></div></div>
+          <div class="key-point"><span>↗</span><div><small>上升星座</small><b>待计算</b><em>外在表达与人生入口</em></div></div>
+        </div>
+      </div>
+      <div class="overview-foot"><span id="chart-meta">尚未生成计算结果</span><span>计算结果以服务器返回数据为准</span></div>
+    </section>
+
     <footer class="bottom">星盘研究室 · 研究与自我探索工具 · 占星内容不构成科学预测或专业决策建议</footer>
   </main>
   <script>
