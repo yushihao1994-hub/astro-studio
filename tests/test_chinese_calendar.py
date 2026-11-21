@@ -8,6 +8,9 @@ class ChineseCalendarTests(unittest.TestCase):
     def test_lunar_to_solar_known_date(self):
         self.assertEqual(lunar_to_solar(1986, 4, 21), date(1986, 5, 29))
 
+    def test_leap_month_converts_to_gregorian_date(self):
+        self.assertEqual(lunar_to_solar(2025, -6, 1), date(2025, 7, 25))
+
     def test_solar_to_lunar_round_trip(self):
         result = solar_to_lunar("1986-05-29")
         self.assertEqual((result["year"], result["month"], result["day"]), (1986, 4, 21))
