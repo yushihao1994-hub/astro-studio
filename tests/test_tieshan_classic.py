@@ -7,6 +7,7 @@ from backend.tieshan_classic import (
     LUOSHU_NUMBER_TO_TRIGRAM,
     STEM_TO_TRIGRAM,
     derive_classic_reference,
+    derive_body_life_palaces,
 )
 
 
@@ -35,6 +36,22 @@ class ClassicReferenceTests(unittest.TestCase):
         self.assertEqual(BRANCH_NUMBER_CLASSES["子"], (1, 6))
         self.assertEqual(BRANCH_NUMBER_CLASSES["卯"], (3, 8))
         self.assertEqual(BRANCH_NUMBER_CLASSES["未"], (5,))
+
+    def test_body_life_palace_direction_and_source(self):
+        result = derive_body_life_palaces(1, "子")
+        self.assertEqual(result["month_palace"], "寅")
+        self.assertEqual(result["life_palace"], "寅")
+        self.assertEqual(result["body_palace"], "寅")
+        result = derive_body_life_palaces(1, "丑")
+        self.assertEqual(result["life_palace"], "丑")
+        self.assertEqual(result["body_palace"], "卯")
+        self.assertIn("闰月", " ".join(result["limitations"]))
+
+    def test_body_life_palace_validates_inputs(self):
+        with self.assertRaises(ValueError):
+            derive_body_life_palaces(0, "子")
+        with self.assertRaises(ValueError):
+            derive_body_life_palaces(3, "未知")
 
     def test_derived_data_labels_version_and_limits(self):
         pillars = {
