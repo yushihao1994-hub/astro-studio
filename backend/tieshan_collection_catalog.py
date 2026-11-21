@@ -329,8 +329,8 @@ GROUP_INDEX[14]["age_marker_ambiguities"] = [{
     "status": "unresolved_ocr_token_pending_image_check",
 }]
 GROUP_INDEX[14]["entries"][4]["age_marker_text"] = "二十七／三十／三十作／九十"
-GROUP_INDEX[-1]["entries"][4]["age_markers"] = ["二十七", "三十", "九十"]
-GROUP_INDEX[-1]["entries"][4]["age_marker_association_status"] = "contains_ocr_ambiguous_age_token_pending_image_check"
+GROUP_INDEX[14]["entries"][4]["age_markers"] = ["二十七", "三十", "九十"]
+GROUP_INDEX[14]["entries"][4]["age_marker_association_status"] = "contains_ocr_ambiguous_age_token_pending_image_check"
 
 GROUP_GAPS = [{
     "expected_group_marker": "一二一〇",
