@@ -1,5 +1,9 @@
 name: Build nationwide village address data
 on:
+  push:
+    paths:
+      - 'scripts/build_china_villages.py'
+      - '.github/workflows/build-village-data.yml'
   workflow_dispatch:
   schedule:
     - cron: "30 2 1 */3 *"
