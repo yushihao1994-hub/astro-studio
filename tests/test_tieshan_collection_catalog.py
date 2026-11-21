@@ -47,13 +47,13 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_eighteen_groups_and_one_hundred_seventy_nine_entries(self):
+    def test_group_index_contains_twenty_groups_and_one_hundred_ninety_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 18)
-        self.assertEqual(data["entry_count"], 179)
+        self.assertEqual(data["group_count"], 20)
+        self.assertEqual(data["entry_count"], 199)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇"]
         )
         self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9, 10, 10])
 
@@ -206,6 +206,36 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all(e["age_markers"] == [] for g in groups for e in g["entries"]))
         self.assertTrue(all(e["number_field_present"] is None
                             for g in groups for e in g["entries"]))
+
+
+    def test_1270_and_1280_age_markers_are_kept_in_source_order(self):
+        data = get_group_index()
+        g1270, g1280 = data["groups"][18:20]
+        self.assertEqual(g1270["pdf_text_lines"], "11069-11109")
+        self.assertEqual(g1270["entries"][0]["age_markers"],
+                         ["三十六", "三十七", "三十九"])
+        self.assertEqual(g1270["entries"][3]["age_markers"], ["五十七", "三十八"])
+        self.assertEqual(g1270["entries"][9]["age_markers"], ["五十三", "五十四"])
+        self.assertEqual(g1280["pdf_text_lines"], "11111-11151")
+        self.assertEqual(g1280["entries"][5]["age_markers"],
+                         ["五十五", "五十六", "三十二", "三十三", "三十三", "三十三", "三十四"])
+        self.assertEqual(g1280["entries"][8]["age_markers"], ["四十五", "四十六"])
+        self.assertTrue(all(e["raw_number_text"] is None
+                            for g in (g1270, g1280) for e in g["entries"]))
+
+    def test_unheaded_block_and_1290_to_1310_anomalies_are_not_fabricated(self):
+        data = get_group_index()
+        self.assertEqual(data["unassigned_blocks"][0]["pdf_text_lines"], "11028-11067")
+        self.assertEqual(data["unassigned_blocks"][0]["entry_count"], 10)
+        self.assertEqual(data["unassigned_blocks"][0]["status"],
+                         "group_marker_missing_do_not_assign")
+        anomalies = data["group_anomalies"]
+        self.assertEqual(anomalies[0]["raw_group_marker"], "一二九〇")
+        self.assertEqual(anomalies[2]["raw_group_marker"], "一二〇〇")
+        self.assertEqual(anomalies[2]["normalized_group_marker_candidate"], "一三〇〇")
+        self.assertEqual(anomalies[2]["status"],
+                         "probable_ocr_correction_pending_image_check")
+        self.assertEqual(anomalies[3]["expected_group_marker"], "一三一〇")
 
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
