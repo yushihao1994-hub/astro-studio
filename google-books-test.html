@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Google Books 试阅加载测试</title>
+<style>
+body{margin:0;padding:16px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#101827;color:#eef4ff}
+h2{font-size:20px;margin:0 0 8px}.muted{color:#aab8cc;font-size:14px;line-height:1.6}
+#status{padding:12px;border:1px solid #52657e;border-radius:10px;margin:14px 0;background:#17263a}
+#viewerCanvas{width:100%;height:72vh;min-height:460px;background:#fff;border-radius:10px;overflow:hidden}
+.controls{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+button{border:0;border-radius:8px;padding:11px 16px;background:#315b91;color:white;font-size:15px}
+</style>
+<script src="https://www.google.com/books/jsapi.js"></script>
+<script>
+let viewer;
+function setStatus(s){document.getElementById('status').textContent=s;}
+function initialize(){
+  if(!window.google||!google.books){setStatus('Google 阅读器 API 未能加载，请检查网络或稍后重试。');return;}
+  viewer=new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+  viewer.load('P3yHAgAAQBAJ',
+    function(){setStatus('未能加载嵌入式试阅。可能是该书不允许嵌入，或当前地区/账号没有试阅权限。请仍以 Google Play 原阅读器为准。');},
+    function(){setStatus('嵌入式阅读器已成功加载。请检查下方是否出现书页图片。');}
+  );
+}
+function next(){if(viewer)viewer.nextPage();}
+function prev(){if(viewer)viewer.previousPage();}
+function zoomIn(){if(viewer)viewer.zoomIn();}
+function zoomOut(){if(viewer)viewer.zoomOut();}
+google.books.load({language:'zh-CN'});
+google.books.setOnLoadCallback(initialize);
+</script>
+</head>
+<body>
+<h2>《铁板神数》Google Books 试阅测试</h2>
+<div class="muted">本页仅调用 Google 官方嵌入式阅读器，显示 Google 授权开放的试阅内容；不会下载或绕过访问限制。</div>
+<div id="status">正在初始化 Google 阅读器……</div>
+<div class="controls">
+<button onclick="prev()">上一页</button><button onclick="next()">下一页</button><button onclick="zoomIn()">放大</button><button onclick="zoomOut()">缩小</button>
+</div>
+<div id="viewerCanvas"></div>
+</body>
+</html>
