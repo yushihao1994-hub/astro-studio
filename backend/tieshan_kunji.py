@@ -61,3 +61,20 @@ def get_kunji_reference():
         "advancement_note": dict(ADVANCEMENT_NOTE),
         "limitations": list(LIMITATIONS),
     }
+
+
+def audit_published_example(example):
+    """Audit only explicitly documented symbols; never guess unknown characters."""
+    code = example.get("code", "")
+    published = str(example.get("number", ""))
+    mapping = {**STEM_TO_CIPHER_DIGIT, **PLACEHOLDER_TO_CIPHER_DIGIT}
+    known_digits = "".join(mapping[ch] for ch in code if ch in mapping)
+    unresolved = [ch for ch in code if ch not in mapping]
+    return {
+        "code": code,
+        "published_number": published,
+        "known_symbol_digits": known_digits,
+        "unresolved_symbols": unresolved,
+        "full_match": not unresolved and known_digits == published,
+        "status": "fully_reproduced" if not unresolved and known_digits == published else "partial_match_requires_source_rule",
+    }
