@@ -174,7 +174,22 @@
       <div class="overview-foot"><span id="chart-meta">尚未生成计算结果</span><span>计算结果以服务器返回数据为准</span></div>
     </section>
 
-    <footer class="bottom">星盘研究室 · 研究与自我探索工具 · 占星内容不构成科学预测或专业决策建议</footer>
+    <div class="paywall-modal" id="paywallModal" role="dialog" aria-modal="true" aria-labelledby="paywallTitle">
+    <div class="paywall-dialog">
+      <div class="eyebrow">PERSONAL ASTROLOGY REPORT</div>
+      <h3 id="paywallTitle">解锁完整个人报告</h3>
+      <p id="paywallDescription">完整报告将结合真实星盘结构，提供更深入的主题分析、依据解释和现实建议。</p>
+      <div class="price-options">
+        <div class="price-option"><b>单项深度报告</b><strong>¥9.9</strong><small>选择一个主题，查看完整专题分析</small></div>
+        <div class="price-option"><b>完整人生星盘报告</b><strong>¥29.9</strong><small>性格、感情、财富、事业与人生主题</small></div>
+        <div class="price-option"><b>未来30天专题</b><strong>¥6.9</strong><small>近期主题变化与行动提醒</small></div>
+      </div>
+      <div class="paywall-notice">价格为首轮产品测试建议价。在线支付和自动解锁尚未开通，本页面不会收取费用。</div>
+      <div class="paywall-actions"><button type="button" class="secondary" id="closePaywall">先继续体验</button><button type="button" class="primary" id="paywallNotify">我想购买</button></div>
+      <p id="paywallFeedback" class="note" aria-live="polite"></p>
+    </div>
+  </div>
+  <footer class="bottom">星盘研究室 · 研究与自我探索工具 · 占星内容不构成科学预测或专业决策建议</footer>
   </main>
   <script>
     const API_BASE = 'https://astro-studio-api.onrender.com';
@@ -285,20 +300,41 @@
         const body = await response.json();
         if (!response.ok || !body.ok) throw new Error(body.error || 'AI 深度分析暂时不可用。');
         const analysis = body.analysis;
-        output.innerHTML = '<section class="report-group"><h3>AI 深度解读</h3><p class="report-intro">' + esc(analysis.summary || '') + '</p>' +
-          (analysis.sections || []).map((item, index) =>
-            '<details class="report-item"' + (index === 0 ? ' open' : '') + '><summary><span class="report-index">' +
-            String(index + 1).padStart(2, '0') + '</span><span class="report-title">' + esc(item.title || '深入分析') +
-            '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
-            '<p><b>结论：</b>' + esc(item.conclusion || '') + '</p><p><b>为什么这样分析：</b>' + esc(item.reasoning || '') +
-            '</p><p><b>现实建议：</b>' + esc(item.advice || '') + '</p></div></details>'
-          ).join('') + (analysis.limitations ? '<p class="note">' + esc(analysis.limitations) + '</p>' : '') +
-          '<p class="note">本解读依据所提供的星盘结构生成，属于占星文化与自我探索参考，不是科学预测。</p></section>';
+        const first = (analysis.sections || [])[0];
+        const sampleHtml = first
+          ? '<details class="report-item" open><summary><span class="report-index">01</span><span class="report-title">' + esc(first.title || '你的个性化发现') + '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
+            '<p><b>核心发现：</b>' + esc(first.conclusion || '') + '</p><p><b>星盘依据：</b>' + esc(first.reasoning || '') + '</p><p><b>给你的建议：</b>' + esc(first.advice || '') + '</p></div></details>'
+          : '<p>本次暂时没有生成可展示的样例，请稍后再试。</p>';
+        output.innerHTML = '<section class="report-group"><h3>你的免费深度体验</h3><p class="report-intro">' + esc(analysis.summary || '') + '</p>' +
+          sampleHtml + '<div class="sample-limit"><b>你刚刚看到的是免费体验内容</b><span>完整报告还会继续分析其他关键主题、星盘证据之间的联系，以及更细致的个人建议。</span></div></section>';
       } catch (error) {
         output.textContent = error.message || 'AI 深度分析暂时不可用。原有基础报告不受影响。';
       } finally {
         button.disabled = false;
         button.textContent = '重新生成 AI 深度解读';
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      const openButton = event.target.closest('.paywall-open');
+      const modal = document.getElementById('paywallModal');
+      if (openButton) {
+        const names = {personality:'性格与人生方向',relationship:'感情与婚姻',finance:'财富与财运',trends:'未来30天趋势'};
+        const descriptions = {
+          personality:'深入了解你的核心性格、优势盲区、内在矛盾与人生方向。',
+          relationship:'深入了解你的恋爱模式、伴侣需求、关系挑战与长期相处建议。',
+          finance:'深入了解你的收入模式、财富优势、积累阻力与风险倾向。',
+          trends:'查看未来30天的重点主题，并分别了解感情与财务方面的提醒。'
+        };
+        const topic = openButton.dataset.product;
+        document.getElementById('paywallTitle').textContent = '解锁' + (names[topic] || '完整个人') + '报告';
+        document.getElementById('paywallDescription').textContent = descriptions[topic] || '完整报告将结合你的真实星盘结构生成。';
+        document.getElementById('paywallFeedback').textContent = '';
+        modal.classList.add('show');
+      }
+      if (event.target.id === 'closePaywall' || event.target === modal) modal.classList.remove('show');
+      if (event.target.id === 'paywallNotify') {
+        document.getElementById('paywallFeedback').textContent = '购买功能正在开发中，当前不会扣费。';
       }
     });
 
