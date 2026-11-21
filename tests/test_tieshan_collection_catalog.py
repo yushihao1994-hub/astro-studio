@@ -49,13 +49,13 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_group_index_contains_six_groups_and_sixty_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 7)
-        self.assertEqual(data["entry_count"], 70)
+        self.assertEqual(data["group_count"], 8)
+        self.assertEqual(data["entry_count"], 80)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 7)
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 8)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -124,6 +124,26 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             e["age_marker_association_status"] ==
                             "text_layer_sequence_associated_image_check_pending"
                             for e in group["entries"]))
+
+    def test_1150_reuses_sequence_age_clause_layout_with_optional_ages(self):
+        data = get_group_index()
+        group = data["groups"][7]
+        self.assertEqual(group["group_marker"], "一一五〇")
+        self.assertEqual(group["layout_status"],
+                         "sequential_number_age_lines_then_clause")
+        self.assertEqual(group["pdf_text_lines"], "10811-10858")
+        expected = [
+            [], ["三十五", "三十六"], ["五十七", "五十八", "五十九"],
+            ["四十一", "四十二"], [], [],
+            ["三十五", "三十六"], ["三十二", "三十三"],
+            ["三十三", "三十四"], ["三十三", "三十四", "三十五", "三十六"]
+        ]
+        self.assertEqual([e["age_markers"] for e in group["entries"]], expected)
+        self.assertTrue(all(e["number_field_present"] is False and
+                            e["content_present"] is True
+                            for e in group["entries"]))
+        self.assertEqual(group["entries"][0]["age_marker_association_status"],
+                         "age_not_listed_in_text_layer")
 
     def test_new_group_line_ranges_are_group_level_only(self):
         data = get_group_index()
