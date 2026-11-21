@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build province-scoped five-level administrative village data from 2023 NBS snapshot."""
+"""Build province-scoped five-level administrative village data from 2023 NBS snapshot.\nSource snapshot: https://github.com/YangH9/China_area (MIT)."""
 import csv, io, json, os, urllib.request
 from collections import defaultdict
 
