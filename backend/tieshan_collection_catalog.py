@@ -562,6 +562,84 @@ GROUP_ANOMALIES = [
     },
 ]
 
+GROUP_INDEX.extend([
+    _table_layout_group("一四八〇", "11518-11530",
+        ["十七","十八","十九","四十二","四十三","五十","五十一","五十二","五十三","五十四"],
+        ["11520","11521","11522","11523","11524","11525","11526","11527","11528","11529"]),
+    _table_layout_group("一四九〇", "11532-11544",
+        ["十七","十八","十九","四十一","五十五","五十六","五十九","六十","十九","四十九"],
+        ["11534","11535","11536","11537","11538","11539","11540","11541","11542","11543"]),
+    _table_layout_group("一五〇〇", "11546-11558",
+        ["二十一","二十二","二十五","四十二","四十三","四十六","四十八","四十五","四十六","四十八"],
+        ["11548","11549","11550","11551","11552","11553","11554","11555","11556","11557"]),
+    _source_group("一五一〇", "一五一〇", "11564-11575", {
+        1:["四十七"], 2:["四十八"], 3:["四十五"], 4:["四十六"],
+        6:["四十七"], 7:["四十五"], 8:["三十七"],
+        9:["三七十三","七十四"], 10:["六十六"],
+    }),
+    _source_group("一五三〇", "一五三〇", "11590-11601", {
+        2:["四十七"], 4:["五十三"], 6:["五十五"],
+        8:["五十一"], 9:["三十二","三十二","三十二"], 10:["九百"],
+    }),
+    _table_layout_group("一五四〇", "11626-11647",
+        ["三十三","七十八","三十九","五十","四十四","四十四","三十六","十一","四十三","二十"],
+        ["11627","11628","11629","11630","11631","11632","11633","11634","11635","11636"],
+        "文本层先列十项独立数值，再列十项正文，按序号暂配；页面图像核验前不认定其字段语义。"),
+    _source_group("一五五〇", "一五五〇", "11649-11670", {
+        1:["三十三"], 3:["七十九"], 4:["三十四"], 5:["三十五"],
+        7:["三十六"], 10:["二十"],
+    }),
+])
+for _group, _spans in [
+    (GROUP_INDEX[33], ["11565","11566","11567","11568","11569","11570","11571","11572","11573-11574","11575"]),
+    (GROUP_INDEX[34], ["11591","11592","11593","11594","11595","11596","11597","11598","11599-11600","11601"]),
+    (GROUP_INDEX[37], ["11650","11651","11652","11653","11654","11655","11656","11657","11658","11659"]),
+]:
+    for _entry, _span in zip(_group["entries"], _spans):
+        _entry["pdf_text_lines"] = _span
+        _entry["content_present"] = True
+        _entry["number_field_present"] = False
+        _entry["age_marker_association_status"] = (
+            "text_layer_sequence_associated_image_check_pending" if _entry["age_markers"]
+            else "age_not_listed_in_text_layer")
+
+UNASSIGNED_BLOCKS.append({
+    "block_id": "child_collection_unheaded_block_after_1530",
+    "pdf_text_lines": "11605-11625",
+    "entry_count": 10,
+    "status": "group_marker_missing_do_not_assign",
+    "note": "一五三〇组之后出现十项独立数值及十项正文，至一五四〇标题前未见独立组号；按序号对应关系仍待版面核验。",
+    "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                for n, line in enumerate(
+                    ["11605","11606","11607","11608","11609","11610","11611","11612","11613","11614"], 1)]
+})
+
+CANDIDATE_GROUPS.append({
+    "raw_group_marker": "二五二〇",
+    "normalized_group_marker_candidate": "一五二〇",
+    "pdf_text_lines": "11577-11588",
+    "status": "probable_ocr_correction_pending_image_check",
+    "entries": [
+        {"entry_sequence": 1, "raw_age_column_text": "三十一", "pdf_text_lines": "11579"},
+        {"entry_sequence": 2, "raw_age_column_text": "三十三", "pdf_text_lines": "11580"},
+        {"entry_sequence": 3, "raw_age_column_text": "六十四", "pdf_text_lines": "11581"},
+        {"entry_sequence": 4, "raw_age_column_text": "三十二", "pdf_text_lines": "11582"},
+        {"entry_sequence": 5, "raw_age_column_text": None, "pdf_text_lines": "11583"},
+        {"entry_sequence": 6, "raw_age_column_text": "六十三", "pdf_text_lines": "11584"},
+        {"entry_sequence": 7, "raw_age_column_text": None, "pdf_text_lines": "11585"},
+        {"entry_sequence": 8, "raw_age_column_text": None, "pdf_text_lines": "11586"},
+        {"entry_sequence": 9, "raw_age_column_text": None, "pdf_text_lines": "11587"},
+        {"entry_sequence": 10, "raw_age_column_text": "二十四", "pdf_text_lines": "11588"},
+    ],
+})
+
+GROUP_ANOMALIES.extend([
+    {"raw_group_marker":"一四七〇","pdf_text_lines":"11512-11516",
+     "status":"group_marker_seen_content_not_located_before_next_header",
+     "note":"标题后出现153页码，随后为一四八〇；未定位到一四七〇组十条正文。"},
+    {"raw_group_marker":"二五二〇","normalized_group_marker_candidate":"一五二〇",
+     "pdf_text_lines":"11577-11588","status":"probable_ocr_correction_pending_image_check"},
+])
 UNASSIGNED_BLOCKS.append({
     "block_id": "child_collection_unheaded_block_after_1440",
     "pdf_text_lines": "11476-11488",
