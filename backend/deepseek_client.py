@@ -235,3 +235,93 @@ def generate_full_report(evidence):
         raise DeepSeekError("DeepSeek 完整报告网络请求失败。") from exc
     except (ValueError, KeyError, TypeError, IndexError) as exc:
         raise DeepSeekError("DeepSeek 完整报告响应结构无法解析。") from exc
+
+
+
+def analyze_tieshan_profile(pillars, birth, gender=""):
+    """Generate a clearly-labeled traditional-culture reading from calculated pillars."""
+    api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+    if not api_key:
+        raise DeepSeekNotConfigured("DeepSeek API 尚未配置，请在 Render 环境变量中设置 DEEPSEEK_API_KEY。")
+    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-flash")
+    if not isinstance(pillars, dict) or not all(
+        isinstance(pillars.get(k), dict) and isinstance(pillars[k].get("name"), str)
+        for k in ("year", "month", "day", "hour")
+    ):
+        raise ValueError("缺少有效四柱数据，请先完成四柱计算。")
+    system_prompt = (
+        "你是一位谨慎的中国传统干支文化研究报告撰写者。"
+        "只能依据用户提供的四柱和出生资料进行基础干支文化层面的解释，不得自行改算四柱，"
+        "不得声称掌握或执行了未提供的铁板神数定数、考刻、条文编号或秘传口诀。"
+        "必须明确说明：当前输出是四柱基础文化解读，不是完整铁板神数定数，也不是古籍原文。"
+        "不得编造具体人生经历、六亲事件、婚期、寿命、疾病、财富数额或必然事件。"
+        "如果信息不足，明确说明限制。使用自然、具体、易懂的简体中文。"
+        "只输出合法 JSON，结构为：{\\"summary\\":\\"整体说明\\","
+        "\\"sections\\":[{\\"title\\":\\"主题\\",\\"conclusion\\":\\"结论\\","
+        "\\"reasoning\\":\\"依据与解释\\",\\"advice\\":\\"现实建议\\"}],"
+        "\\"limitations\\":[\\"限制说明\\"]}。"
+        "sections 必须恰好5项，分别讨论整体结构、性格与行事倾向、关系相处、事业与资源、现实行动建议。"
+        "每项必须有实质内容，不能换词重复。"
+    )
+    payload = {
+        "four_pillars": {
+            key: {"name": pillars[key].get("name"), "stem": pillars[key].get("stem"),
+                  "branch": pillars[key].get("branch")}
+            for key in ("year", "month", "day", "hour")
+        },
+        "birth_context": {
+            "gender": gender,
+            "local_datetime": birth.get("local_datetime"),
+            "timezone": birth.get("timezone"),
+            "place_resolved": birth.get("place_resolved")
+        },
+        "task": "请做谨慎的传统干支文化基础解读。不要假称铁板神数定数已经完成。"
+    }
+    try:
+        response = requests.post(
+            base_url + "/chat/completions",
+            headers={"Authorization": "Bearer " + api_key, "Content-Type": "application/json"},
+            json={
+                "model": model,
+                "thinking": {"type": "disabled"},
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": json.dumps(payload, ensure_ascii=False)}
+                ],
+                "response_format": {"type": "json_object"},
+                "temperature": 0.35,
+                "max_tokens": 5000,
+                "stream": False
+            },
+            timeout=(10, 120)
+        )
+        if response.status_code >= 400:
+            raise DeepSeekError("DeepSeek HTTP " + str(response.status_code))
+        body = response.json()
+        choices = body.get("choices") or []
+        if not choices:
+            raise DeepSeekError("DeepSeek 响应缺少 choices。")
+        choice = choices[0]
+        if choice.get("finish_reason") == "length":
+            raise DeepSeekError("AI 输出达到长度上限，请重试。")
+        message = choice.get("message") or {}
+        result = _extract_json_object(message.get("content"))
+        sections = result.get("sections")
+        if not isinstance(sections, list) or len(sections) != 5:
+            raise DeepSeekError("AI 返回的专题结构不完整。")
+        for section in sections:
+            if not isinstance(section, dict) or any(
+                not isinstance(section.get(k), str) or not section[k].strip()
+                for k in ("title", "conclusion", "reasoning", "advice")
+            ):
+                raise DeepSeekError("AI 返回的专题内容不完整。")
+        return result
+    except (DeepSeekError, DeepSeekNotConfigured, ValueError):
+        raise
+    except requests.Timeout as exc:
+        raise DeepSeekError("DeepSeek 请求超时。") from exc
+    except requests.RequestException as exc:
+        raise DeepSeekError("DeepSeek 网络请求失败。") from exc
+    except (KeyError, TypeError, IndexError) as exc:
+        raise DeepSeekError("DeepSeek 响应结构无法解析。") from exc
