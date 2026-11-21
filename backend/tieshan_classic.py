@@ -110,3 +110,38 @@ def derive_classic_reference(pillars):
             "本版为现代点校本，不是清刻虚白庐藏本及其秘钞密码表。",
         ],
     }
+
+
+BRANCHES_IN_ORDER = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+
+
+def derive_body_life_palaces(lunar_month, hour_branch, leap_month=False):
+    """安身命例：寅宫起正月，顺数至生月；由生月起子时，逆数安命、顺数安身.
+
+    lunar_month must be the user's explicitly verified lunar month (1..12).
+    leap_month is recorded, but automatic leap-month handling is intentionally
+    not guessed until the edition's exact convention is independently verified.
+    """
+    if isinstance(lunar_month, bool) or not isinstance(lunar_month, int) or not 1 <= lunar_month <= 12:
+        raise ValueError("农历出生月份必须是1至12的整数。")
+    if hour_branch not in BRANCHES_IN_ORDER:
+        raise ValueError("出生时支必须是子至亥中的一个。")
+    month_palace_index = (BRANCHES_IN_ORDER.index("寅") + lunar_month - 1) % 12
+    hour_index = BRANCHES_IN_ORDER.index(hour_branch)
+    life_index = (month_palace_index - hour_index) % 12
+    body_index = (month_palace_index + hour_index) % 12
+    return {
+        "lunar_month": lunar_month,
+        "leap_month": bool(leap_month),
+        "month_palace": BRANCHES_IN_ORDER[month_palace_index],
+        "hour_branch": hour_branch,
+        "life_palace": BRANCHES_IN_ORDER[life_index],
+        "body_palace": BRANCHES_IN_ORDER[body_index],
+        "rule": "寅宫起正月，顺数至生月；由生月起子时，逆数安命、顺数安身。",
+        "source": "康节说易全书·铁板神数，乾集安身命例，PDF文本行810-817",
+        "limitations": [
+            "本函数要求明确提供农历月份；不能用节气月柱月份替代。",
+            "闰月是否按多一月计及其具体落宫处理，尚未完成版本交叉核验；当前仅记录闰月标记，不自动加月。",
+            "安身命宫只是基础宫位定位，不等于铁板神数密码数或最终断语。",
+        ],
+    }
