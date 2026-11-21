@@ -9,6 +9,35 @@ Verified PDF lines/pages in searchable extraction: 717-808 (乾集).
 EDITION = "康节说易全书·铁板神数，学林出版社，2003，陈明点校"
 SOURCE_STATUS = "searchable_pdf_text_verified_for_listed_sections"
 
+EIGHT_TRIGRAM_ADDITION_EXPLANATION = {
+    "edition": EDITION,
+    "source": "乾集《八卦加则例》解说，PDF文本行684-715",
+    "status": "source_explained_not_executable",
+    "verse": [
+        "交从三十起，乾卦六为头。兑为后少女，只中一网收。",
+        "变知六百止，应世两同传。遇十须不用，玄玄妙法周。",
+        "当看多寡数，及止悉因由。",
+    ],
+    "clauses": [
+        {"key":"yao_from_thirty","title":"爻从三十起","source_lines":"699-700","source_meaning":"原书解为爻代表运与日主；元会运世数序中三十运为一会，年月日时数序中三十日为一月；每时又含三十分钟、三十卦值一时，以六亲之数演算三十卦。","algorithm_status":"conceptual_only"},
+        {"key":"qian_six_lines","title":"乾卦六爻为头","source_lines":"701","source_meaning":"乾为元、为年；年卦以世卦六爻变得。","algorithm_status":"conceptual_only"},
+        {"key":"dui_month","title":"兑为后少女","source_lines":"702","source_meaning":"兑为会、为月；月在日之后；以乾上交变阴成兑说明少女之象。","algorithm_status":"conceptual_only"},
+        {"key":"one_net","title":"只中一网收","source_lines":"704-708","source_meaning":"原书将此句接续解释为年、月之义，称一年总数从会、月中出。","algorithm_status":"conceptual_only"},
+        {"key":"six_hundred","title":"变知六百止","source_lines":"710","source_meaning":"原书以六十律数与六亲、十天干相乘，说明十乘六十为六百。","algorithm_status":"conceptual_only"},
+        {"key":"shi_ying","title":"应世两同倚","source_lines":"711","source_meaning":"原书解释会为世、月为应，并以十二月、六十律数和十说明六百与十二会数的关系。","algorithm_status":"conceptual_only"},
+        {"key":"discard_ten","title":"遇十须不用","source_lines":"712","source_meaning":"原书以先天八卦六十四卦、三百八十四爻说明十除不足，因此不用十。具体运算中如何执行，仍需完整例题验证。","algorithm_status":"conceptual_only"},
+        {"key":"hexagram_change","title":"玄玄妙法周","source_lines":"713","source_meaning":"原书称先天八卦图中各卦都可变为六十四卦，变化无止境。","algorithm_status":"conceptual_only"},
+        {"key":"count_range","title":"当看多寡数、及止悉因由","source_lines":"714-715","source_meaning":"原书要求查明数值的位数规模，并明确计算终止位置及其依据。","algorithm_status":"conceptual_only"},
+    ],
+    "not_yet_implemented": [
+        "世卦、应卦及年卦/月卦的具体取卦输入和变爻次序。",
+        "六亲如何映射十天干、六十律数，以及三十卦逐项运算的完整公式。",
+        "“遇十须不用”在每个中间步骤的精确舍取位置与例题校验。",
+        "从上述中间数如何形成可与坤集密码条文匹配的最终数序。",
+    ],
+    "warning": "本说明是对2003年点校本解说文字的结构化登记，不等于完整算法。没有逐项复算例题前，不执行数值运算。",
+}
+
 # 乾集「天干配卦例」: PDF lines 717-731.
 STEM_TO_TRIGRAM = {
     "甲": "乾", "壬": "乾",
@@ -101,6 +130,7 @@ def derive_classic_reference(pillars):
         "source_status": SOURCE_STATUS,
         "luoshu_number_to_trigram": LUOSHU_NUMBER_TO_TRIGRAM,
         "pillars": result,
+        "eight_trigram_addition": EIGHT_TRIGRAM_ADDITION_EXPLANATION,
         "limitations": [
             "地支配卦例是洛书数到卦的定局表；日主配卦例是另一张地支到卦的表，不能混为一张表。",
             "河洛配数例原文中己同时出现在九数句与四数句，程序保留两条原文，不擅自裁定。",
@@ -118,21 +148,23 @@ BRANCHES_IN_ORDER = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "�
 def derive_body_life_palaces(lunar_month, hour_branch, leap_month=False):
     """安身命例：寅宫起正月，顺数至生月；由生月起子时，逆数安命、顺数安身.
 
-    lunar_month must be the user's explicitly verified lunar month (1..12).
-    leap_month is recorded, but automatic leap-month handling is intentionally
-    not guessed until the edition's exact convention is independently verified.
+    lunar_month is the numbered lunar month (1..12). The cited edition explicitly
+    says a leap month is counted as one additional month, so it advances the
+    palace by one additional step.
     """
     if isinstance(lunar_month, bool) or not isinstance(lunar_month, int) or not 1 <= lunar_month <= 12:
         raise ValueError("农历出生月份必须是1至12的整数。")
     if hour_branch not in BRANCHES_IN_ORDER:
         raise ValueError("出生时支必须是子至亥中的一个。")
-    month_palace_index = (BRANCHES_IN_ORDER.index("寅") + lunar_month - 1) % 12
+    effective_lunar_month = lunar_month + (1 if leap_month else 0)
+    month_palace_index = (BRANCHES_IN_ORDER.index("寅") + effective_lunar_month - 1) % 12
     hour_index = BRANCHES_IN_ORDER.index(hour_branch)
     life_index = (month_palace_index - hour_index) % 12
     body_index = (month_palace_index + hour_index) % 12
     return {
         "lunar_month": lunar_month,
         "leap_month": bool(leap_month),
+        "effective_lunar_month_count": effective_lunar_month,
         "month_palace": BRANCHES_IN_ORDER[month_palace_index],
         "hour_branch": hour_branch,
         "life_palace": BRANCHES_IN_ORDER[life_index],
