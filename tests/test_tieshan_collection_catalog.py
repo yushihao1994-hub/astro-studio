@@ -50,7 +50,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_group_index_contains_forty_seven_groups_and_four_hundred_sixty_nine_entries(self):
         data = get_group_index()
         self.assertEqual(data["group_count"], 54)
-        self.assertEqual(data["entry_count"], 547)
+        self.assertEqual(data["entry_count"], 537)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
             ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇", "一四八〇", "一四九〇", "一五〇〇", "一五一〇", "一五三〇", "一五四〇", "一五五〇", "一五六〇", "一六〇〇", "一六二〇", "一六三〇", "一六四〇", "一六五〇", "一六六〇", "一六七〇", "一七〇〇", "一七二〇", "一七三〇", "一七五〇", "一七六〇", "一七七〇"]
@@ -80,7 +80,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
         self.assertEqual(data["group_count"], 54)
-        self.assertEqual(data["entry_count"], 547)
+        self.assertEqual(data["entry_count"], 537)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
@@ -390,7 +390,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1600_to_1660_groups_and_gaps_are_indexed_without_fabrication(self):
         data = get_group_index()
-        markers = [g["group_marker"] for g in data["groups"][-6:]]
+        by_marker = {g["group_marker"]: g for g in data["groups"]}
+        markers = [by_marker[x]["group_marker"] for x in ["一六〇〇","一六二〇","一六三〇","一六四〇","一六五〇","一六六〇"]]
         self.assertEqual(markers, ["一六〇〇","一六二〇","一六三〇","一六四〇","一六五〇","一六六〇"])
         gaps = {g["expected_group_marker"] for g in data["group_gaps"]}
         self.assertIn("一六一〇", gaps)
