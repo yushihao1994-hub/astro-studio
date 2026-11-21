@@ -28,7 +28,8 @@ RULE_REGISTRY = [
     {"id":"QIAN-BRANCH-NUMBER","name":"地支取数例","source":"乾集，PDF文本行788-808","status":"verified_table"},
     {"id":"QIAN-BODY-LIFE","name":"安身命例","source":"乾集，PDF文本行810-817；闰月口径待核","status":"partial"},
     {"id":"QIAN-EIGHT-KE","name":"每时八刻、每刻十五分","source":"乾集开篇说明；当前只实现钟表分段","status":"partial"},
-    {"id":"QIAN-EIGHT-TRIGRAM-ADD","name":"八卦加则例","source":"乾集，PDF文本行684-715；逐句解说行699-715","status":"documented_conceptual_only"},\n    {"id":"KUNJI-CIPHER-EDITORIAL","name":"坤集密码代号（点校本编者说明）","source":"坤集浅释，PDF文本行250-277；含十天干数字代号与少量示例","status":"partial_editorial_metadata_not_full_cipher"},
+    {"id":"QIAN-EIGHT-TRIGRAM-ADD","name":"八卦加则例","source":"乾集，PDF文本行684-715；逐句解说行699-715","status":"documented_conceptual_only"},
+    {"id":"KUNJI-CIPHER-EDITORIAL","name":"坤集密码代号（点校本编者说明）","source":"坤集浅释，PDF文本行250-277；含十天干数字代号与少量示例","status":"partial_editorial_metadata_not_full_cipher"},
 ]
 
 def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=None, classic_reference=None):
