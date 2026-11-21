@@ -995,8 +995,8 @@ def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
         for e in selected: grouped.setdefault((e["transit"], e["target"], e["aspect"]), []).append(e)
         ranked = sorted(grouped.items(), key=lambda pair: min(x["orb"] for x in pair[1]))[:5]
         if not ranked:
-            return ("这30天没有筛选到特别突出的重点提示。这不代表一定没有好事或坏事，"
-                "只是按当前筛选标准，没有需要单独标出的紧密星象。请照常安排生活，重要决定以现实信息为准。")
+            return ("这30天没有筛选到特别突出的阶段性提醒。这不代表一定没有好事或坏事，"
+                "只是目前没有需要特别标出的时间段。请照常安排生活，重要决定以现实信息为准。")
         paragraphs = ["以下日期是值得留意或回顾的时间段，不代表事情一定发生。"]
         for (planet, target, aspect), hits in ranked:
             hits.sort(key=lambda x: x["date"])
@@ -1015,11 +1015,11 @@ def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
                 action = ("建议检查报价、成本、回款和合同细节，不要只凭乐观预期借钱、囤货或扩大投入。"
                     if future else "可以回顾订单、支出、回款和工作安排，看看是否有计划调整或风险核查的需要。")
             paragraphs.append(
-                f"【{window}｜{planet}带来的提醒】\n"
+                f"【{window}｜这段时间的重点】\n"
                 f"这段时间较值得留意的是：{target_plain.get(target, '相关生活事项')}。"
-                f"它与{transit_plain.get(planet, '阶段性变化')}有关；{aspect_plain.get(aspect, '')}。"
+                f"{aspect_plain.get(aspect, '建议留意相关变化')}。"
                 f"{action}")
-        return "\n\n".join(paragraphs) + "\n\n说明：日期是逐日计算得到的近似活跃窗口，不是准确事件日期。占星内容仅供自我观察，不能确认某件事一定发生。"
+        return "\n\n".join(paragraphs) + "\n\n说明：这些日期是阶段性提醒，不代表某件事一定发生。请结合自己的真实经历和现实情况判断。"
     def make_period(title, begin, finish, items, domain, future):
         return {"title": title, "plain_content": summarize(items, begin, finish, domain, future),
             "content": f"计算区间：{begin.isoformat()} 至 {finish.isoformat()}（出生地时区：{birth_timezone}）。按当地每日中午的行运行星位置，筛选与本命感情或财务关键点形成较紧密主要相位的日期。日期为近似活跃窗口，不是精确过境时刻。",
