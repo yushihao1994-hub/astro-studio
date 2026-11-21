@@ -395,8 +395,9 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(markers, ["一六〇〇","一六二〇","一六三〇","一六四〇","一六五〇","一六六〇"])
         gaps = {g["expected_group_marker"] for g in data["group_gaps"]}
         self.assertIn("一六一〇", gaps)
-        self.assertEqual(len(data["groups"][-1]["entries"]), 10)
-        self.assertTrue(all(e["raw_number_text"] is None for e in data["groups"][-1]["entries"]))
+        last_1660 = by_marker["一六六〇"]
+        self.assertEqual(len(last_1660["entries"]), 10)
+        self.assertTrue(all(e["raw_number_text"] is None for e in last_1660["entries"]))
         self.assertIn("child_collection_unheaded_block_after_1650",
                       {b["block_id"] for b in data["unassigned_blocks"]})
         anomalies = {a.get("raw_group_marker") for a in data["group_anomalies"]}
