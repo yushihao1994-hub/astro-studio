@@ -68,7 +68,8 @@ function showStep(n){
  if(n===1){
   box.innerHTML="<b>出生历法与时间校验</b><p>当地时间："+escapeHtml(b.local_datetime)+"</p><p>UTC："+escapeHtml(b.utc_datetime)+"</p><p>时区："+escapeHtml(b.timezone)+"；出生地："+escapeHtml(b.place_resolved)+"</p><p>年柱以立春为界；本次月柱交界："+escapeHtml(d.solar_term_boundary.month_boundary)+"。</p><p>日柱暂按当地民用日期00:00换日，时柱按当地钟表时间；当前尚未校正真太阳时。</p>"+(d.warnings||[]).map(x=>"<p>"+escapeHtml(x)+"</p>").join("");
  }else if(n===2){
-  box.innerHTML="<b>四柱干支排定</b>"+[["年柱",p.year],["月柱",p.month],["日柱",p.day],["时柱",p.hour]].map(x=>"<p>"+x[0]+"："+escapeHtml(x[1].name)+"（天干"+escapeHtml(x[1].stem)+"，地支"+escapeHtml(x[1].branch)+"）</p>").join("")+"<p>日主以日柱天干为核心。五行、藏干、十神等扩展数据需完成独立规则计算和交叉校验后再纳入报告。</p>";
+  const z=d.derived||{},counts=z.five_element_counts||{},details=z.pillar_details||{};
+  box.innerHTML="<b>四柱干支排定</b>"+[["年柱",p.year],["月柱",p.month],["日柱",p.day],["时柱",p.hour]].map(x=>"<p>"+x[0]+"："+escapeHtml(x[1].name)+"（天干"+escapeHtml(x[1].stem)+"，地支"+escapeHtml(x[1].branch)+"）</p>").join("")+"<p><b>日主：</b>"+escapeHtml((z.day_master||{}).stem||"待计算")+" · "+escapeHtml((z.day_master||{}).element||"")+" · "+escapeHtml((z.day_master||{}).polarity||"")+"</p><p><b>五行计数：</b>"+["木","火","土","金","水"].map(e=>e+":"+(counts[e]??0)).join("　")+"</p>"+["year","month","day","hour"].map((k,i)=>"<p><b>"+["年","月","日","时"][i]+"柱十神：</b>"+escapeHtml((details[k]||{}).stem_ten_god||"")+(details[k]&&details[k].hidden_stems&&details[k].hidden_stems.length?"；藏干 "+details[k].hidden_stems.join("、")+"（"+details[k].hidden_ten_gods.join("、")+"）":"")+"</p>").join("")+"<p><b>地支关系：</b>"+((z.branch_relations||[]).map(x=>x.pillars.join("—")+" "+x.branches.join("")+" "+x.relation).join("；")||"未识别到已列出的六合、六冲、六害或同支关系")+"</p><p style='color:#e8ca8d'>"+escapeHtml(z.calculation_note||"")+"</p>";
  }else{
   box.innerHTML="<b>数理与条文规则状态</b><p>已实现：立春定年、十二节定月、干支纪日、十二时辰定时。</p><p>尚未实现：真太阳时校正、考刻定刻、铁板神数数序、条文编号匹配及有出处的版本化条文库。</p><p>当前 AI 内容属于四柱基础文化解读，不会冒充古籍原文或完整铁板神数定数。</p>";
  }
@@ -84,7 +85,7 @@ async function runTieshanAI(){
   box.innerHTML='<p style="color:#73eaff">正在调用 DeepSeek，分析内容将依据已计算的四柱生成……</p>';
   try{
     await wakeApi();
-    const response=await fetch(API+'/api/tieshan/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pillars:lastPillarData.pillars,birth:lastPillarData.birth,gender:document.querySelector('input[name="gender"]:checked')?.value||''}),signal:AbortSignal.timeout(150000)});
+    const response=await fetch(API+'/api/tieshan/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pillars:lastPillarData.pillars,birth:lastPillarData.birth,derived:lastPillarData.derived||{},gender:document.querySelector('input[name="gender"]:checked')?.value||''}),signal:AbortSignal.timeout(150000)});
     const data=await response.json();
     if(!response.ok||!data.ok)throw new Error(data.error||'AI 分析失败，请稍后重试。');
     const report=data.analysis||{};
