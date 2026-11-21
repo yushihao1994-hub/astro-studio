@@ -166,6 +166,94 @@
       .report-action-plan{padding:18px 14px}
     }
 
+
+    /* CYBER GRID REPORT UI — each life theme is an independent square module */
+    #fullReportOutput{--cyber:#55e7ff;--cyber2:#a78bfa;--cyberline:#28546a}
+    #fullReportOutput .full-report-header{
+      position:relative;border:1px solid #286078;border-radius:18px;
+      background:radial-gradient(ellipse at 88% 0%,#17465b 0,transparent 42%),linear-gradient(135deg,#101c31,#111827 58%,#17152d);
+      box-shadow:0 0 34px #16c8ef16,inset 0 0 28px #2ac8ed08
+    }
+    #fullReportOutput .full-report-header:after{
+      content:"✧  ASTRO / SYSTEM ONLINE";position:absolute;right:18px;top:16px;
+      color:#6ee7f9;font:10px/1.2 ui-monospace,monospace;letter-spacing:1.2px;opacity:.8
+    }
+    #fullReportOutput .eyebrow,#fullReportOutput .report-label{color:#65e6fa;letter-spacing:1.5px}
+    #fullReportOutput .report-count{border-color:#286078;background:#0d2635;color:#9cefff;border-radius:7px}
+    #fullReportOutput .report-summary{border:1px solid #28546a;border-radius:12px;background:linear-gradient(135deg,#101f31,#15182b);box-shadow:inset 0 0 24px #25c8ee08}
+    #fullReportOutput .report-section-heading{align-items:center;margin-top:26px}
+    #fullReportOutput .report-section-heading h3{color:#eafaff;letter-spacing:1px}
+    #fullReportOutput .report-section-heading>span{color:#66cddd}
+    #fullReportOutput .report-sections{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px
+    }
+    #fullReportOutput .report-item{
+      position:relative;aspect-ratio:1/1;min-width:0;margin:0;overflow:hidden;
+      border:1px solid #28546a;border-radius:13px;
+      background:linear-gradient(145deg,#14263b 0%,#111a2c 58%,#1b1834 100%);
+      box-shadow:inset 0 0 25px #35dafa08,0 8px 22px #0003;
+      transition:border-color .2s,box-shadow .2s,transform .2s
+    }
+    #fullReportOutput .report-item:before{
+      content:"";position:absolute;inset:0;pointer-events:none;opacity:.22;
+      background:linear-gradient(90deg,transparent 49.7%,#58d9f322 50%,transparent 50.3%),
+                 linear-gradient(0deg,transparent 49.7%,#58d9f322 50%,transparent 50.3%);
+      background-size:28px 28px
+    }
+    #fullReportOutput .report-item:after{
+      content:"";position:absolute;right:10px;top:10px;width:8px;height:8px;
+      border-top:1px solid #62e8ff;border-right:1px solid #62e8ff;opacity:.8
+    }
+    #fullReportOutput .report-item>summary{
+      position:relative;z-index:1;height:100%;min-height:0;padding:16px 13px;
+      display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:13px;
+      text-align:left
+    }
+    #fullReportOutput .report-index{
+      flex:0 0 39px;width:39px;height:39px;border-radius:10px;
+      border:1px solid #34748a;background:#0d2b3b;color:#74edff;
+      font:700 13px ui-monospace,monospace;box-shadow:0 0 18px #35dafa18
+    }
+    #fullReportOutput .report-title{flex:0 0 auto;width:100%;font-size:14px;line-height:1.55;color:#f0fbff}
+    #fullReportOutput .report-title small{margin-top:8px;color:#70b9c9;font-size:10px;letter-spacing:.5px}
+    #fullReportOutput .report-chevron{position:absolute;right:13px;bottom:13px;color:#68eaff;font-size:20px}
+    #fullReportOutput .report-item[open]{
+      grid-column:1/-1;aspect-ratio:auto;overflow:visible;
+      border-color:#54dff5;box-shadow:0 0 24px #21c8ef18,inset 0 0 24px #21c8ef08
+    }
+    #fullReportOutput .report-item[open]>summary{
+      height:auto;min-height:76px;display:flex;flex-direction:row;align-items:center;
+      justify-content:flex-start;padding:14px 16px;border-bottom:1px solid #28546a
+    }
+    #fullReportOutput .report-item[open] .report-index{flex-basis:36px;width:36px;height:36px}
+    #fullReportOutput .report-item[open] .report-title{flex:1}
+    #fullReportOutput .report-item[open] .report-chevron{position:static;margin-left:auto}
+    #fullReportOutput .report-content{position:relative;z-index:1;border:0;background:#101827;padding:5px 18px 18px}
+    #fullReportOutput .report-block+.report-block{border-color:#263e54}
+    #fullReportOutput .report-conclusion{border-color:#346579;background:#102a3a}
+    #fullReportOutput .report-advice{border-color:#286b62;background:#102b2b}
+    #fullReportOutput .report-action-plan{
+      border:1px solid #3b6380;border-radius:13px;
+      background:radial-gradient(ellipse at 100% 0%,#173b52 0,transparent 45%),#121c2d
+    }
+    #fullReportOutput .report-action-plan li{border-color:#2b4b61;background:#0e1b2a}
+    #fullReportOutput .plan-number{background:#12384a;color:#76edff;border:1px solid #286078}
+    #fullReportOutput .report-disclaimer{color:#7895a8}
+    @media(max-width:700px){
+      #fullReportOutput .report-sections{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+      #fullReportOutput .report-item{aspect-ratio:1/1}
+      #fullReportOutput .report-item>summary{padding:13px 11px;gap:11px}
+      #fullReportOutput .report-title{font-size:12px}
+      #fullReportOutput .report-title small{font-size:9px}
+      #fullReportOutput .report-index{width:35px;height:35px;flex-basis:35px}
+      #fullReportOutput .full-report-header:after{display:none}
+    }
+    @media(max-width:360px){
+      #fullReportOutput .report-sections{gap:7px}
+      #fullReportOutput .report-item>summary{padding:10px}
+      #fullReportOutput .report-title{font-size:11px}
+    }
+
   </style>
 </head>
 <body>
