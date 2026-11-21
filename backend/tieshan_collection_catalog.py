@@ -353,68 +353,6 @@ GROUP_INDEX.extend([
 
 # These two groups use sequence-age-clause layout; age is not a number column.
 
-# 一五六〇组：十条正文与十六项数值序列在文本层分离，暂不配对。
-GROUP_INDEX.append({
-    "group_marker": "一五六〇",
-    "pdf_text_lines": "11672-11714",
-    "entry_count": 10,
-    "layout_status": "layout_alignment_unresolved",
-    "layout_note": "文本层先列十个序号、随后连续列出十六个数值、再列十条正文；数值与正文的列/行配对无法仅凭文本层确定，故独立保存，不分配到具体条目。",
-    "unassigned_number_sequence": {
-        "raw_values": ["四十七","四十八","四十五","四十六","三十二","三十三","三十四","六十二","六十五","六十六","六十七","六十八","四十七","四十八","四十九","五十"],
-        "pdf_text_lines": "11687-11702",
-        "status": "sequence_located_entry_alignment_unresolved"
-    },
-    "entries": [
-        {"entry_sequence": n, "raw_number_text": None, "number_field_present": None,
-         "content_present": True, "pdf_text_lines": line,
-         "age_markers": [], "age_marker_association_status": "unassigned_pending_page_image"}
-        for n, line in enumerate(
-            ["11704","11705","11706","11707","11708","11709","11710","11711","11712","11713"], 1)
-    ],
-})
-
-UNASSIGNED_BLOCKS.extend([
-    {
-        "block_id": "child_collection_unheaded_block_after_1560",
-        "pdf_text_lines": "11715-11750",
-        "entry_count": 10,
-        "status": "group_marker_missing_do_not_assign",
-        "note": "十个序号、十五项数值及十条正文分段出现；无独立组号，数值与正文配对未明。",
-        "entries": [{"entry_sequence": n, "pdf_text_lines": line}
-                    for n, line in enumerate(
-                        ["11715-11716","11717-11718","11719-11720","11721-11722","11723-11724",
-                         "11725-11726","11727-11728","11729-11730","11731-11732","11733-11740"],1)]
-    },
-    {
-        "block_id": "child_collection_unheaded_block_after_first_1560_orphan",
-        "pdf_text_lines": "11752-11785",
-        "entry_count": 10,
-        "status": "group_marker_missing_do_not_assign",
-        "note": "十个序号、十二项数值及十条正文分段出现；无独立组号，数值与正文配对未明。",
-        "entries": [{"entry_sequence": n, "pdf_text_lines": line}
-                    for n, line in enumerate(
-                        ["11752-11753","11754-11755","11756-11757","11758-11759","11760-11761",
-                         "11762-11763","11764-11765","11766-11767","11768-11769","11770-11775"],1)]
-    }
-])
-
-CANDIDATE_GROUPS.extend([
-    {"raw_group_marker":"五七〇","normalized_group_marker_candidate":"一五七〇",
-     "pdf_text_lines":"11787","status":"probable_leading_digit_ocr_loss_pending_image_check","entries":[]},
-    {"raw_group_marker":"五八〇","normalized_group_marker_candidate":"一五八〇",
-     "pdf_text_lines":"11788","status":"probable_leading_digit_ocr_loss_pending_image_check","entries":[]},
-    {"raw_group_marker":"五九〇","normalized_group_marker_candidate":"一五九〇",
-     "pdf_text_lines":"11789","status":"probable_leading_digit_ocr_loss_pending_image_check","entries":[]}
-])
-GROUP_ANOMALIES.extend([
-    {"raw_group_marker":"五七〇","normalized_group_marker_candidate":"一五七〇","pdf_text_lines":"11787",
-     "status":"probable_leading_digit_ocr_loss_pending_image_check"},
-    {"raw_group_marker":"五八〇","normalized_group_marker_candidate":"一五八〇","pdf_text_lines":"11788",
-     "status":"probable_leading_digit_ocr_loss_pending_image_check"},
-    {"raw_group_marker":"五九〇","normalized_group_marker_candidate":"一五九〇","pdf_text_lines":"11789",
-     "status":"probable_leading_digit_ocr_loss_pending_image_check"}
-])
 
 for _group, _spans in [
     (GROUP_INDEX[18], ["11071-11075","11077-11079","11081-11082","11084-11087",
@@ -733,6 +671,70 @@ GROUP_GAPS = [{
     "evidence": "PDF text layer jumps from 一二〇〇 (10944-10956) to 一二二〇 (10958)",
     "action": "retain as an unverified gap; do not fabricate ten entries",
 }]
+
+
+# 一五六〇组：十条正文与十六项数值序列在文本层分离，暂不配对。
+GROUP_INDEX.append({
+    "group_marker": "一五六〇",
+    "pdf_text_lines": "11672-11714",
+    "entry_count": 10,
+    "layout_status": "layout_alignment_unresolved",
+    "layout_note": "文本层先列十个序号、随后连续列出十六个数值、再列十条正文；数值与正文的列/行配对无法仅凭文本层确定，故独立保存，不分配到具体条目。",
+    "unassigned_number_sequence": {
+        "raw_values": ["四十七","四十八","四十五","四十六","三十二","三十三","三十四","六十二","六十五","六十六","六十七","六十八","四十七","四十八","四十九","五十"],
+        "pdf_text_lines": "11687-11702",
+        "status": "sequence_located_entry_alignment_unresolved"
+    },
+    "entries": [
+        {"entry_sequence": n, "raw_number_text": None, "number_field_present": None,
+         "content_present": True, "pdf_text_lines": line,
+         "age_markers": [], "age_marker_association_status": "unassigned_pending_page_image"}
+        for n, line in enumerate(
+            ["11704","11705","11706","11707","11708","11709","11710","11711","11712","11713"], 1)
+    ],
+})
+
+UNASSIGNED_BLOCKS.extend([
+    {
+        "block_id": "child_collection_unheaded_block_after_1560",
+        "pdf_text_lines": "11715-11750",
+        "entry_count": 10,
+        "status": "group_marker_missing_do_not_assign",
+        "note": "十个序号、十五项数值及十条正文分段出现；无独立组号，数值与正文配对未明。",
+        "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                    for n, line in enumerate(
+                        ["11715-11716","11717-11718","11719-11720","11721-11722","11723-11724",
+                         "11725-11726","11727-11728","11729-11730","11731-11732","11733-11740"],1)]
+    },
+    {
+        "block_id": "child_collection_unheaded_block_after_first_1560_orphan",
+        "pdf_text_lines": "11752-11785",
+        "entry_count": 10,
+        "status": "group_marker_missing_do_not_assign",
+        "note": "十个序号、十二项数值及十条正文分段出现；无独立组号，数值与正文配对未明。",
+        "entries": [{"entry_sequence": n, "pdf_text_lines": line}
+                    for n, line in enumerate(
+                        ["11752-11753","11754-11755","11756-11757","11758-11759","11760-11761",
+                         "11762-11763","11764-11765","11766-11767","11768-11769","11770-11775"],1)]
+    }
+])
+
+CANDIDATE_GROUPS.extend([
+    {"raw_group_marker":"五七〇","normalized_group_marker_candidate":"一五七〇",
+     "pdf_text_lines":"11787","status":"probable_leading_digit_ocr_loss_pending_image_check","entries":[]},
+    {"raw_group_marker":"五八〇","normalized_group_marker_candidate":"一五八〇",
+     "pdf_text_lines":"11788","status":"probable_leading_digit_ocr_loss_pending_image_check","entries":[]},
+    {"raw_group_marker":"五九〇","normalized_group_marker_candidate":"一五九〇",
+     "pdf_text_lines":"11789","status":"probable_leading_digit_ocr_loss_pending_image_check","entries":[]}
+])
+GROUP_ANOMALIES.extend([
+    {"raw_group_marker":"五七〇","normalized_group_marker_candidate":"一五七〇","pdf_text_lines":"11787",
+     "status":"probable_leading_digit_ocr_loss_pending_image_check"},
+    {"raw_group_marker":"五八〇","normalized_group_marker_candidate":"一五八〇","pdf_text_lines":"11788",
+     "status":"probable_leading_digit_ocr_loss_pending_image_check"},
+    {"raw_group_marker":"五九〇","normalized_group_marker_candidate":"一五九〇","pdf_text_lines":"11789",
+     "status":"probable_leading_digit_ocr_loss_pending_image_check"}
+])
 
 
 def get_group_index():
