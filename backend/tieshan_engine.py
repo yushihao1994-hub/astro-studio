@@ -5,7 +5,9 @@ It deliberately does not invent a final number, six-relative numbers, or clauses
 SYSTEM_NAME = "铁板神数推演基础引擎"
 ENGINE_VERSION = "0.3.0-kunji-reference"
 PRIMARY_REFERENCE = "康节说易全书·铁板神数，学林出版社2003年陈明点校本（现代异本）"
-QING_REFERENCE_STATUS = "清刻虚白庐藏本及秘钞密码表全文尚未取得，不能标记为已验证"\nfrom backend.tieshan_kunji import get_kunji_reference\nKUNJI_REFERENCE = get_kunji_reference()
+QING_REFERENCE_STATUS = "清刻虚白庐藏本及秘钞密码表全文尚未取得，不能标记为已验证"
+from backend.tieshan_kunji import get_kunji_reference
+KUNJI_REFERENCE = get_kunji_reference()
 WORKFLOW = [
     {"key":"birth_record","name":"出生资料与历法归档","status":"verified","description":"保存原始历法输入、换算公历日期、农历日期、地点与时区。"},
     {"key":"four_pillars","name":"四柱基础定位","status":"verified","description":"四柱仅作为铁板起数的输入资料，不将普通八字解释当作铁板结论。"},
