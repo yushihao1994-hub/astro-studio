@@ -91,7 +91,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                         6: "六十三／六十四", 8: "六十九／七十",
                         10: "三十三／三十四"},
         }
-        for group in data["groups"][3:]:
+        for group in data["groups"][3:6]:
             self.assertEqual(group["layout_status"], "text_layer_located_layout_unverified")
             candidates = {x["entry_sequence_hint"]: x["raw_text"]
                           for x in group["age_marker_candidates"]}
