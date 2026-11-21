@@ -374,8 +374,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1560_group_keeps_sixteen_number_sequence_unassigned(self):
         data = get_group_index()
-        group = data["groups"][-1]
-        self.assertEqual(group["group_marker"], "一五六〇")
+        group = next(g for g in data["groups"] if g["group_marker"] == "一五六〇")
         self.assertEqual(group["layout_status"], "layout_alignment_unresolved")
         self.assertEqual(len(group["unassigned_number_sequence"]["raw_values"]), 16)
         self.assertEqual(group["unassigned_number_sequence"]["pdf_text_lines"], "11687-11702")
