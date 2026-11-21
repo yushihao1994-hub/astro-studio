@@ -326,6 +326,15 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
    ['木','火','土','金','水'].map(e=>tile(e+'（天干+藏干计数）',String(elementCounts[e]??0))).join('')+'</div>'+
    '<div class="section-title">地支关系</div>'+((z.branch_relations||[]).length?'<div>'+z.branch_relations.map(x=>'<span class="pill-tag">'+escapeHtml((x.branches||[]).join('—'))+' '+escapeHtml(x.relation)+'</span>').join('')+'</div>':'<div class="empty-state">当前四柱未识别到已列出的六合、六冲、六害或同支关系。</div>')+
    '<p class="hint" style="margin-top:12px">'+escapeHtml(z.calculation_note||'五行计数仅为简单计数，不等同旺衰权重。')+'</p></div>';
+  const bd=d.bazi_details||{}, bdP=bd.pillars||{};
+  const detailRows=[
+   row('纳音',k=>bdP[k]&&bdP[k].nayin),
+   row('十二长生（日干）',k=>bdP[k]&&bdP[k].day_master_growth_stage),
+   row('本柱旬空',k=>bdP[k]&&(bdP[k].xun_void||[]).join('、')),
+   row('日柱旬空',k=>bdP[k]&&(bdP[k].day_xun_void||[]).join('、'))
+  ].join('');
+  const mainBody=document.querySelector('#chartPanel .chart-table tbody');
+  if(mainBody) mainBody.innerHTML += detailRows;
   const bodyLife=d.body_life_palaces||null, eightKe=d.eight_ke||null;
   document.getElementById('detailPanel').innerHTML=
    card('专业细盘 · 已计算项目',
@@ -337,6 +346,12 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     '<div class="empty-state">大运起运岁数、顺逆排运、交运时间及流年表尚未完成规则校验。<br>此处暂不生成虚构的大运、流年数据。<br>后续将按可核验的传统规则独立实现，并允许切换流派。</div>')+
    card('神煞、纳音与其他项目',
     '<div class="empty-state">纳音、空亡、十二长生、神煞等项目尚未全部接入。<br>项目会逐项注明算法依据和版本，不用 AI 补造计算结果。</div>');
+  document.getElementById('detailPanel').innerHTML +=
+   card('十二长生、纳音与空亡',
+    '<p class="hint">按六十甲子纳音表、旬首空亡和日干十二长生规则计算。</p>'+
+    '<div class="chart-table-wrap"><table class="chart-table"><thead><tr><th>项目</th>'+cols.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+
+    detailRows+
+    '</tbody></table></div><p class="hint">'+escapeHtml((bd.limitations||[]).join('；'))+'</p>');
   document.getElementById('tieshanPanel').innerHTML=
    card('铁板神数 · 规则资料库',
     '<p>当前接入的是《康节说易全书·铁板神数》2003年现代点校本的部分可核验对照规则，属于异本研究资料，不等同清刻足本。</p>'+
