@@ -9,6 +9,7 @@ from flask_cors import CORS
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 import swisseph as swe
+from tieshan import calculate_tieshan_pillars
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -1437,6 +1438,33 @@ def ai_full_report():
     except Exception as exc:
         app.logger.exception("Full report failed")
         return jsonify({"ok": False, "error": "完整报告发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+@app.post("/api/tieshan/pillars")
+def tieshan_pillars():
+    """Calculate transparent Four Pillars data for the standalone Iron Plate app."""
+    payload = request.get_json(silent=True) or {}
+    try:
+        if payload.get("latitude") is not None and payload.get("longitude") is not None:
+            lat, lon = float(payload["latitude"]), float(payload["longitude"])
+            place_label = str(payload.get("place") or "用户提供坐标")
+        elif payload.get("place"):
+            lat, lon, place_label = geocode_place(str(payload["place"]))
+        else:
+            raise ValueError("请填写出生地点，或提供经纬度。")
+        if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+            raise ValueError("出生地点经纬度超出有效范围。")
+        detected_tz = TimezoneFinder().timezone_at(lat=lat, lng=lon)
+        timezone_name = str(payload.get("timezone") or detected_tz or "").strip()
+        if not timezone_name:
+            raise ValueError("无法根据出生地点确定历史时区，请补充 IANA 时区名称。")
+        result = calculate_tieshan_pillars(payload, lat, lon, place_label, timezone_name)
+        return jsonify(result)
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
+    except Exception as exc:
+        app.logger.exception("Iron Plate pillar calculation failed")
+        return jsonify({"ok": False, "error": "四柱计算发生内部错误（" + type(exc).__name__ + "）。"}), 500
 
 
 @app.get("/api/health")
