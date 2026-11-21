@@ -1366,7 +1366,6 @@ def ai_analyze():
         if not isinstance(sections, list) or not 3 <= len(sections) <= 5:
             raise DeepSeekError("AI 报告专题数量不符合要求，已拒绝不完整报告。")
         allowed_ids = {item["id"] for item in evidence}
-        required_fields = ("title", "conclusion", "reasoning", "evidence_ids", "advice")
         for section in sections:
             if not isinstance(section, dict) or any(
                 not isinstance(section.get(field), str) or not section.get(field).strip()
