@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_forty_one_groups_and_four_hundred_nine_entries(self):
+    def test_group_index_contains_forty_seven_groups_and_four_hundred_sixty_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 41)
-        self.assertEqual(data["entry_count"], 409)
+        self.assertEqual(data["group_count"], 47)
+        self.assertEqual(data["entry_count"], 469)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇", "一四八〇", "一四九〇", "一五〇〇", "一五一〇", "一五三〇", "一五四〇", "一五五〇", "一五六〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇", "一四八〇", "一四九〇", "一五〇〇", "一五一〇", "一五三〇", "一五四〇", "一五五〇", "一五六〇", "一六〇〇", "一六二〇", "一六三〇", "一六四〇", "一六五〇", "一六六〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 25)
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 31)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
