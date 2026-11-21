@@ -82,8 +82,8 @@ def derive_classic_reference(pillars):
         result[key] = {
             "stem_trigram": STEM_TO_TRIGRAM.get(stem),
             "branch_trigram": branch_trigram,
-            "stem_heluо_number": HELUO_NUMBER_BY_CHARACTER.get(stem),
-            "branch_heluо_number": HELUO_NUMBER_BY_CHARACTER.get(branch),
+            "stem_heluo_number": HELUO_NUMBER_BY_CHARACTER.get(stem),
+            "branch_heluo_number": HELUO_NUMBER_BY_CHARACTER.get(branch),
             "branch_number_class": list(BRANCH_NUMBER_CLASSES.get(branch, ())),
             "trigram_element": TRIGRAM_TO_ELEMENT.get(branch_trigram),
         }
