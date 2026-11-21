@@ -348,9 +348,7 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     '</tbody></table></div>')+
    card('数理与条文', '<div id="tieshanStepHost"></div>');
   const stepHost=document.getElementById('tieshanStepHost');
-  const oldSteps=document.querySelector('.steps');
-  const oldDetail=document.getElementById('stepDetail');
-  if(oldSteps&&oldDetail){stepHost.appendChild(oldSteps.cloneNode(true));stepHost.appendChild(oldDetail.cloneNode(true));}
+  stepHost.innerHTML='<p>可在上方「专业细盘」查看当前已计算的身命宫与八刻信息。本页专门保存铁板神数规则版本、原文出处、数理映射和条文匹配状态。</p><p>目前尚无可核实的完整清刻足本密码表，故不生成伪造条文编号或人生定数。</p>';
  }
  const originalSubmit=form.addEventListener;
  window.addEventListener('tieshan:calculated',e=>{if(e.detail){buildPages(e.detail);switchPage('chart');}});
