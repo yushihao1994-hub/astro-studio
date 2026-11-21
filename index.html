@@ -22,7 +22,7 @@
     .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer}
     .primary{background:linear-gradient(100deg,#d8bd86,#f0dba9);color:#211b16}.secondary{background:#292d40;color:#e6e4f2;border:1px solid #41465e}
     .note{font-size:12px;color:var(--muted);margin-top:13px}.status{padding:15px;border-radius:12px;background:#10121d;border:1px solid var(--line);color:var(--muted);font-size:13px;margin-top:16px}
-    .status strong{color:var(--gold);display:block;margin-bottom:4px}.features{display:grid;gap:12px}.feature{display:flex;gap:12px;padding:13px;border-radius:12px;background:var(--panel2);border:1px solid #2a2e42}
+    .status strong{color:var(--gold);display:block;margin-bottom:4px}.features{display:grid;gap:12px}.feature{display:flex;align-items:center;gap:12px;width:100%;padding:13px;border-radius:12px;background:var(--panel2);border:1px solid #2a2e42;color:var(--text);text-align:left;cursor:pointer}.feature:focus{outline:2px solid var(--purple);outline-offset:2px}.feature .feature-arrow{margin-left:auto;color:var(--gold);transition:transform .2s}.feature[aria-expanded=true] .feature-arrow{transform:rotate(180deg)}.module-panel{display:none;margin-top:-6px;padding:14px;background:#10121d;border:1px solid #383d55;border-radius:12px;overflow-x:auto}.module-panel.open{display:block}.module-panel h4{color:var(--gold);margin:12px 0 6px}.module-panel p{margin:6px 0;color:#d8d7e5}.module-panel table{width:100%;border-collapse:collapse;font-size:12px;min-width:280px}.module-panel th,.module-panel td{padding:7px 6px;border-bottom:1px solid #2b3045;text-align:left}
     .ico{color:var(--gold);font-size:19px;width:26px;text-align:center}.feature b{display:block;font-size:13px}.feature span{font-size:12px;color:var(--muted)}
     .bottom{color:#777b91;text-align:center;font-size:11px;margin-top:24px}
     .toast{display:none;margin-top:12px;padding:10px 12px;border-radius:9px;background:#332626;color:#ffd0d0;font-size:13px}
@@ -64,10 +64,14 @@
         <h3>专业分析模块</h3>
         <p class="hint">真实星盘数据驱动的专项深度报告</p>
         <div class="features">
-          <div class="feature"><div class="ico">☉</div><div><b>十大行星与交点</b><span>黄经、星座、精确度数与逆行状态</span></div></div>
-          <div class="feature"><div class="ico">⌖</div><div><b>四轴与十二宫</b><span>上升点、天顶、宫头与宫位落点</span></div></div>
-          <div class="feature"><div class="ico">✧</div><div><b>主要相位</b><span>合相、冲相、三分、四分、六分及容许度</span></div></div>
-          <div class="feature"><div class="ico">☽</div><div><b>婚姻感情与财运分析</b><span>金星、火星、月亮、五宫、七宫、二宫、八宫、十宫与主要相位</span></div></div>
+          <button class="feature module-toggle" type="button" data-module="planets" aria-expanded="false"><div class="ico">☉</div><div><b>十大行星与交点</b><span>黄经、星座、精确度数与逆行状态</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-planets">请先计算本命星盘，生成你的行星落点报告。</div>
+          <button class="feature module-toggle" type="button" data-module="houses" aria-expanded="false"><div class="ico">⌖</div><div><b>四轴与十二宫</b><span>上升点、天顶、宫头与宫位落点</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-houses">请先计算本命星盘，生成你的四轴与宫位报告。</div>
+          <button class="feature module-toggle" type="button" data-module="aspects" aria-expanded="false"><div class="ico">✧</div><div><b>主要相位</b><span>合相、冲相、三分、四分、六分及容许度</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-aspects">请先计算本命星盘，生成你的主要相位报告。</div>
+          <button class="feature module-toggle" type="button" data-module="love-money" aria-expanded="false"><div class="ico">☽</div><div><b>婚姻感情与财运分析</b><span>恋爱需求、婚姻关系、赚钱方式、财富积累与风险管理</span></div><span class="feature-arrow">⌄</span></button>
+          <div class="module-panel" id="panel-love-money">请先计算本命星盘，生成你的婚姻感情与财运专项报告。</div>
         </div>
         <div class="status"><strong>计算服务</strong>后端已连接。提交出生资料后，将调用真实星历计算接口；地名会发送给 OpenStreetMap Nominatim 解析坐标。</div>
       </aside>
@@ -106,6 +110,25 @@
           '<p style="margin:0;white-space:normal;line-height:1.85">' + esc(item.content) + '</p></article>'
         ).join('') + '</section>';
     }
+    document.querySelectorAll('.module-toggle').forEach(button => {
+      button.addEventListener('click', () => {
+        const panel = document.getElementById('panel-' + button.dataset.module);
+        const willOpen = button.getAttribute('aria-expanded') !== 'true';
+        document.querySelectorAll('.module-toggle').forEach(other => {
+          other.setAttribute('aria-expanded', 'false');
+          const otherPanel = document.getElementById('panel-' + other.dataset.module);
+          if (otherPanel) otherPanel.classList.remove('open');
+        });
+        if (willOpen) {
+          button.setAttribute('aria-expanded', 'true');
+          panel.classList.add('open');
+        }
+      });
+    });
+    function table(headers, rows) {
+      return '<table><thead><tr>' + headers.map(h => '<th>' + h + '</th>').join('') +
+        '</tr></thead><tbody>' + rows.join('') + '</tbody></table>';
+    }
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       toast.style.display = 'none';
@@ -141,17 +164,27 @@
           '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' +
           esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'
         ).join('');
+        document.getElementById('panel-planets').innerHTML =
+          '<h4>十大行星与交点</h4>' + table(['星体','位置','宫位','状态'], chart.planets.map(p =>
+            '<tr><td>' + esc(p.name) + '</td><td>' + positionText(p) + '</td><td>' + (p.house ? p.house + '宫' : '—') + '</td><td>' + (p.retrograde ? '逆行' : '顺行') + '</td></tr>'));
+        document.getElementById('panel-houses').innerHTML =
+          '<h4>四轴</h4>' + table(['项目','位置'], Object.entries(chart.angles).map(([name,p]) =>
+            '<tr><td>' + esc(name) + '</td><td>' + positionText(p) + '</td></tr>')) +
+          '<h4>十二宫宫头</h4>' + table(['宫位','位置'], chart.houses.map(h =>
+            '<tr><td>第' + h.house + '宫</td><td>' + positionText(h) + '</td></tr>'));
+        document.getElementById('panel-aspects').innerHTML =
+          '<h4>主要相位（最多显示40项）</h4>' + table(['星体','相位','容许度','趋近/分离'], chart.aspects.slice(0,40).map(a =>
+            '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' + esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'));
+        document.getElementById('panel-love-money').innerHTML =
+          renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
+          renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
+          '<p style="color:#a7a8bb;font-size:11px">' + esc(chart.analysis && chart.analysis.method || '') + '</p>';
         result.innerHTML =
           '<strong>本命星盘计算完成：' + esc(data.profileName) + '</strong>' +
           '<p>计算引擎：' + esc(chart.calculation.engine) + '</p>' +
           '<p>出生地解析：' + esc(chart.birth.place_resolved) + '<br>坐标：' + chart.birth.latitude + ', ' + chart.birth.longitude +
           '<br>UTC：' + esc(chart.birth.utc_datetime) + '</p>' +
-          '<h4>十大行星与交点</h4><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th>星体</th><th>位置</th><th>宫位</th><th>状态</th></tr></thead><tbody>' + planetRows + '</tbody></table></div>' +
-          '<h4>四轴</h4><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tbody>' + angleRows + '</tbody></table></div>' +
-          '<h4>主要相位（最多显示40项）</h4><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tbody>' + aspectRows + '</tbody></table></div>' +
-          renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
-          renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
-          '<p style="color:#a7a8bb;font-size:11px">' + esc(chart.analysis && chart.analysis.method || '') + '</p>' +
+          '<p>详细报告已分别放入右侧（手机上位于下方）的四个专业分析模块，点击模块即可展开查看。</p>' +
           '<h4>计算说明</h4><ul>' + chart.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul>';
         result.style.display = 'block';
         result.scrollIntoView({behavior:'smooth',block:'start'});
