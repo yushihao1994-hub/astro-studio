@@ -2,7 +2,7 @@
 
 Uses 6tail/lunar-python (MIT) for validated Chinese calendar dates.
 """
-from datetime import date
+from datetime import date, datetime
 from lunar_python import Lunar, LunarYear
 
 
@@ -65,7 +65,7 @@ def solar_to_lunar(value):
         except ValueError as exc:
             raise ValueError("公历日期格式应为YYYY-MM-DD。") from exc
     _validate_year(value.year)
-    lunar = Lunar.fromDate(value)
+    lunar = Lunar.fromDate(datetime.combine(value, datetime.min.time()))
     month = int(lunar.getMonth())
     return {
         "year": int(lunar.getYear()),
