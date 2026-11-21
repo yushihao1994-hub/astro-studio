@@ -886,7 +886,8 @@ def get_group_index():
              "age_marker_ambiguities": [dict(x) for x in group.get("age_marker_ambiguities", [])],
              "age_marker_candidates": [dict(x) for x in group.get("age_marker_candidates", [])],
              "entries": [dict(entry) for entry in group["entries"]],
-             "layout_note": group.get("layout_note"),\n             "unassigned_number_sequence": dict(group["unassigned_number_sequence"]) if group.get("unassigned_number_sequence") else None }
+             "layout_note": group.get("layout_note"),
+             "unassigned_number_sequence": dict(group["unassigned_number_sequence"]) if group.get("unassigned_number_sequence") else None }
             for group in GROUP_INDEX
         ],
         "limitations": [
