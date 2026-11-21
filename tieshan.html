@@ -394,7 +394,7 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     items.map(item=>'<span style="display:inline-block;padding:5px 8px;border:1px solid #e8e3d8;border-radius:4px;background:#faf9f6;font-size:11px">'+escapeHtml(item.term)+' <small style="color:#999">行'+escapeHtml(item.lines)+'</small></span>').join('')+
     '</div></details>').join('');
    const branchHtml=(g.twelve_branch_collections||[]).map(item=>
-    '<span style="display:inline-block;padding:6px 9px;margin:3px;border:1px solid #e8e3d8;border-radius:4px;background:#faf9f6">'+escapeHtml(item.branch)+'集</span>').join('');
+    '<span style="display:inline-block;padding:6px 9px;margin:3px;border:1px solid #e8e3d8;border-radius:4px;background:#faf9f6">'+escapeHtml(item.branch)+'集 <small style="color:#999">'+escapeHtml(item.printed_page_start)+'页起</small></span>').join('');
    stepHost.innerHTML+='<div class="section-title">坤集分类索引（研究版）</div><p>已整理 '+escapeHtml(g.entry_count)+' 个分类名称，按主题归组；展开即可查看原文位置。这里只是目录索引，不代表已经取得对应密码或条文。</p>'+groupHtml+
     '<div class="section-title">十二地支条文分集</div><div>'+branchHtml+'</div><p class="hint">原文导读文本将酉集识别为“西集”，同书目录列作“酉集”；程序按十二地支顺序规范显示，并保留该异文说明。</p>'+
     '<div class="empty-state">'+(g.limitations||[]).map(escapeHtml).join('<br>')+'</div>';
