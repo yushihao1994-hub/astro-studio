@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, request
-from deepseek_client import analyze_with_deepseek, DeepSeekNotConfigured, DeepSeekError
+from deepseek_client import analyze_with_deepseek, generate_full_report, DeepSeekNotConfigured, DeepSeekError
 from flask_cors import CORS
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
@@ -1388,6 +1388,55 @@ def ai_analyze():
     except Exception as exc:
         app.logger.exception("AI analysis failed")
         return jsonify({"ok": False, "error": "AI 分析发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+@app.post("/api/ai/full-report")
+def ai_full_report():
+    """Create a full report from the real natal/transit evidence already calculated."""
+    payload = request.get_json(silent=True) or {}
+    try:
+        chart_data = payload.get("chart")
+        if not isinstance(chart_data, dict):
+            raise ValueError("缺少有效的星盘数据，请先生成本命盘。")
+        # Merge evidence from all five existing domains, keeping the original IDs.
+        evidence_by_id = {}
+        for topic in ("personality", "relationship", "finance", "career", "trends"):
+            for item in build_ai_evidence(chart_data, topic):
+                evidence_by_id[item["id"]] = item
+        evidence = list(evidence_by_id.values())
+        result = generate_full_report(evidence)
+        sections = result.get("sections")
+        expected_ids = ["identity", "strengths", "mindset", "relationship", "career", "finance", "timing"]
+        if not isinstance(sections, list) or len(sections) != 7:
+            raise DeepSeekError("完整报告专题数量不符合要求，已拒绝不完整报告。")
+        allowed_ids = set(evidence_by_id)
+        for expected, section in zip(expected_ids, sections):
+            if not isinstance(section, dict) or section.get("id") != expected:
+                raise DeepSeekError("完整报告专题结构不完整，已拒绝返回。")
+            if any(not isinstance(section.get(field), str) or not section[field].strip()
+                   for field in ("title", "conclusion", "reasoning", "advice")):
+                raise DeepSeekError("完整报告缺少必要分析内容，已拒绝返回。")
+            ids = section.get("evidence_ids")
+            if not isinstance(ids, list) or not ids or any(
+                not isinstance(value, str) or value not in allowed_ids for value in ids
+            ):
+                raise DeepSeekError("完整报告包含无法核验的星盘依据，已拒绝返回。")
+        plan = result.get("action_plan")
+        if not isinstance(plan, list) or not 3 <= len(plan) <= 5 or any(
+            not isinstance(item, str) or not item.strip() for item in plan
+        ):
+            raise DeepSeekError("完整报告缺少可执行行动方案，已拒绝返回。")
+        return jsonify({"ok": True, "report_type": "full", "report": result})
+    except DeepSeekNotConfigured as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 503
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
+    except DeepSeekError as exc:
+        app.logger.warning("Full report unavailable: %s", str(exc))
+        return jsonify({"ok": False, "error": "完整报告暂时生成失败，原有星盘报告不受影响。请稍后重试。"}), 502
+    except Exception as exc:
+        app.logger.exception("Full report failed")
+        return jsonify({"ok": False, "error": "完整报告发生内部错误（" + type(exc).__name__ + "）。"}), 500
 
 
 @app.get("/api/health")
