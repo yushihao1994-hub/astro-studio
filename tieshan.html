@@ -384,6 +384,21 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
    card('数理与条文', '<div id="tieshanStepHost"></div>');
   const stepHost=document.getElementById('tieshanStepHost');
   stepHost.innerHTML='<p>可在上方「专业细盘」查看当前已计算的身命宫与八刻信息。本页专门保存铁板神数规则版本、原文出处、数理映射和条文匹配状态。</p><p>目前尚无可核实的完整清刻足本密码表，故不生成伪造条文编号或人生定数。</p>';
+  fetch(API+'/api/tieshan/kunji/glossary').then(r=>r.json()).then(data=>{
+   if(!data.ok||!data.glossary)return;
+   const g=data.glossary;
+   const groups={};
+   (g.entries||[]).forEach(item=>{(groups[item.topic]||(groups[item.topic]=[])).push(item);});
+   const groupHtml=Object.entries(groups).map(([topic,items])=>
+    '<details style="border:1px solid #e8e3d8;border-radius:5px;padding:10px;margin:7px 0;background:#fff"><summary style="font-weight:700;color:#7e673f;cursor:pointer">'+escapeHtml(topic)+'（'+items.length+'）</summary><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px">'+
+    items.map(item=>'<span style="display:inline-block;padding:5px 8px;border:1px solid #e8e3d8;border-radius:4px;background:#faf9f6;font-size:11px">'+escapeHtml(item.term)+' <small style="color:#999">行'+escapeHtml(item.lines)+'</small></span>').join('')+
+    '</div></details>').join('');
+   const branchHtml=(g.twelve_branch_collections||[]).map(item=>
+    '<span style="display:inline-block;padding:6px 9px;margin:3px;border:1px solid #e8e3d8;border-radius:4px;background:#faf9f6">'+escapeHtml(item.branch)+'集</span>').join('');
+   stepHost.innerHTML+='<div class="section-title">坤集分类索引（研究版）</div><p>已整理 '+escapeHtml(g.entry_count)+' 个分类名称，按主题归组；展开即可查看原文位置。这里只是目录索引，不代表已经取得对应密码或条文。</p>'+groupHtml+
+    '<div class="section-title">十二地支条文分集</div><div>'+branchHtml+'</div><p class="hint">原文导读文本将酉集识别为“西集”，同书目录列作“酉集”；程序按十二地支顺序规范显示，并保留该异文说明。</p>'+
+    '<div class="empty-state">'+(g.limitations||[]).map(escapeHtml).join('<br>')+'</div>';
+  }).catch(()=>{stepHost.innerHTML+='<p class="hint">坤集分类索引接口暂时不可用，基础排盘不受影响。</p>';});
  }
  const originalSubmit=form.addEventListener;
  window.addEventListener('tieshan:calculated',e=>{if(e.detail){buildPages(e.detail);switchPage('chart');}});
