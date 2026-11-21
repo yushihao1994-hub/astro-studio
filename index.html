@@ -399,7 +399,7 @@
       }
     });
 
-    document.addEventListener('click', (event) => {
+    document.addEventListener('click', async (event) => {
       const openButton = event.target.closest('.paywall-open');
       const modal = document.getElementById('paywallModal');
       if (openButton) {
