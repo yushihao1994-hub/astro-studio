@@ -367,7 +367,8 @@
               '<p><b>实践建议：</b>' + esc(p.advice) + '</p></article>'
             ).join('')
           : '<p>当前规则下未识别到已收录的完整格局。</p>';
-        document.getElementById('panel-technical').innerHTML = technicalHtml + patternsHtml;
+        const technicalPanel = document.getElementById('panel-technical');
+        if (technicalPanel) technicalPanel.innerHTML = technicalHtml + patternsHtml;
 
         document.getElementById('panel-personality').innerHTML =
           renderNatalProfile(chart.natal_profile) ||
