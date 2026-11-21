@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10111b">
+  <meta name="description" content="星盘研究室：出生资料管理与专业本命星盘分析。">
+  <title>星盘研究室 · 专业本命星盘</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0c0d15;--panel:#151724;--panel2:#1b1e2e;--line:#2b3045;--text:#f3f1fb;--muted:#a7a8bb;--gold:#e6c78b;--purple:#a99af5;--danger:#ff9b9b}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#29213d 0,transparent 38%),var(--bg);color:var(--text);font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+    .wrap{max-width:1040px;margin:auto;padding:24px 18px 56px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+    .brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border:1px solid #776b9f;border-radius:50%;display:grid;place-items:center;color:var(--gold);font-size:23px;background:#211d32}
+    h1{font-size:20px;margin:0;letter-spacing:2px}.sub{font-size:12px;color:var(--muted)}.tag{border:1px solid #5b5077;color:#d8c8ff;border-radius:99px;padding:5px 10px;font-size:11px;white-space:nowrap}
+    .hero{padding:26px 24px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(125deg,#1d1b2d,#151724 65%);margin-bottom:20px}
+    .eyebrow{color:var(--gold);font-size:12px;letter-spacing:2px}.hero h2{font-size:clamp(24px,5vw,36px);line-height:1.25;margin:9px 0}.hero p{color:var(--muted);margin:8px 0 0;max-width:650px}
+    .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
+    .card h3{margin:0 0 5px;font-size:17px}.hint{font-size:12px;color:var(--muted);margin:0 0 18px}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field.full{grid-column:1/-1}label{display:block;font-size:13px;color:#d8d7e5;margin-bottom:6px}
+    input{width:100%;height:46px;border:1px solid #383d55;border-radius:10px;background:#10121d;color:var(--text);padding:0 12px;font:inherit;outline:none}
+    input:focus{border-color:var(--purple);box-shadow:0 0 0 3px #a99af522}input::placeholder{color:#777b91}
+    .actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}button{border:0;border-radius:10px;padding:12px 18px;font:inherit;font-weight:600;cursor:pointer}
+    .primary{background:linear-gradient(100deg,#d8bd86,#f0dba9);color:#211b16}.secondary{background:#292d40;color:#e6e4f2;border:1px solid #41465e}
+    .note{font-size:12px;color:var(--muted);margin-top:13px}.status{padding:15px;border-radius:12px;background:#10121d;border:1px solid var(--line);color:var(--muted);font-size:13px;margin-top:16px}
+    .status strong{color:var(--gold);display:block;margin-bottom:4px}.features{display:grid;gap:12px}.feature{display:flex;gap:12px;padding:13px;border-radius:12px;background:var(--panel2);border:1px solid #2a2e42}
+    .ico{color:var(--gold);font-size:19px;width:26px;text-align:center}.feature b{display:block;font-size:13px}.feature span{font-size:12px;color:var(--muted)}
+    .bottom{color:#777b91;text-align:center;font-size:11px;margin-top:24px}
+    .toast{display:none;margin-top:12px;padding:10px 12px;border-radius:9px;background:#332626;color:#ffd0d0;font-size:13px}
+    @media(max-width:760px){.wrap{padding:18px 14px 40px}.grid{grid-template-columns:1fr}.hero{padding:22px 18px}.card{padding:18px}.top{align-items:flex-start}.fields{gap:12px}}
+    @media(max-width:420px){.fields{grid-template-columns:1fr}.field.full{grid-column:auto}.tag{font-size:10px}.wrap{padding-left:12px;padding-right:12px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><div class="logo">✧</div><div><h1>星盘研究室</h1><div class="sub">ASTROLOGY RESEARCH STUDIO</div></div></div>
+      <span class="tag">专业版 · 第一阶段</span>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">YOUR COSMIC BLUEPRINT</div>
+      <h2>从出生时刻，读取<br>你的星空地图。</h2>
+      <p>建立个人出生档案，为本命盘、行星落点、宫位与相位分析做好准备。我们坚持使用可核验的天文计算数据，不以随机内容代替真实星盘。</p>
+    </section>
+    <section class="grid">
+      <div class="card">
+        <h3>创建出生档案</h3>
+        <p class="hint">出生时间越准确，上升点与宫位计算越可靠。</p>
+        <form id="birthForm">
+          <div class="fields">
+            <div class="field full"><label for="profileName">档案名称</label><input id="profileName" name="profileName" maxlength="40" placeholder="例如：我的本命盘" required></div>
+            <div class="field"><label for="birthDate">出生日期</label><input id="birthDate" name="birthDate" type="date" required></div>
+            <div class="field"><label for="birthTime">出生时间（当地时间）</label><input id="birthTime" name="birthTime" type="time" required></div>
+            <div class="field full"><label for="birthPlace">出生地点</label><input id="birthPlace" name="birthPlace" maxlength="100" placeholder="例如：中国河南省周口市郸城县白马镇" required></div>
+            <div class="field"><label for="timezone">时区</label><input id="timezone" name="timezone" value="Asia/Shanghai" required></div>
+            <div class="field"><label for="zodiac">黄道体系</label><input id="zodiac" value="热带黄道（回归黄道）" readonly></div>
+            <div class="field full"><label for="houses">宫位系统</label><input id="houses" value="Placidus（普拉西德）" readonly></div>
+          </div>
+          <div class="actions"><button class="primary" type="submit">保存出生档案</button><button class="secondary" type="button" id="clearBtn">清空表单</button></div>
+          <div class="toast" id="toast" role="alert"></div>
+          <p class="note">档案暂存在当前设备浏览器中，不会上传到服务器。请勿在公共设备保存私人资料。</p>
+        </form>
+      </div>
+      <aside class="card">
+        <h3>专业分析模块</h3>
+        <p class="hint">按真实计算链路逐步开放</p>
+        <div class="features">
+          <div class="feature"><div class="ico">☉</div><div><b>十大行星与交点</b><span>黄经、星座、精确度数与逆行状态</span></div></div>
+          <div class="feature"><div class="ico">⌖</div><div><b>四轴与十二宫</b><span>上升点、天顶、宫头与宫位落点</span></div></div>
+          <div class="feature"><div class="ico">✧</div><div><b>主要相位</b><span>合相、冲相、三分、四分、六分及容许度</span></div></div>
+          <div class="feature"><div class="ico">☽</div><div><b>主题解读报告</b><span>性格、情感、关系、事业与财富倾向</span></div></div>
+        </div>
+        <div class="status"><strong>当前开发状态</strong>出生资料录入界面第一版。真实星历计算与报告引擎尚未接入；此页面不会伪造星体位置或分析结果。</div>
+      </aside>
+    </section>
+    <footer class="bottom">星盘研究室 · 研究与自我探索工具 · 占星内容不构成科学预测或专业决策建议</footer>
+  </main>
+  <script>
+    const form = document.getElementById('birthForm');
+    const toast = document.getElementById('toast');
+    const key = 'astro-studio-profile-draft-v1';
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      toast.style.display = 'none';
+      if (!form.reportValidity()) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      try {
+        localStorage.setItem(key, JSON.stringify(data));
+        toast.style.display = 'block';
+        toast.style.background = '#1d302b';
+        toast.style.color = '#b9f0d2';
+        toast.textContent = '出生档案已保存在本机浏览器。真实星盘计算服务尚未连接。';
+      } catch (_) {
+        toast.style.display = 'block';
+        toast.style.background = '#332626';
+        toast.style.color = '#ffd0d0';
+        toast.textContent = '当前浏览器无法保存本地档案，请检查隐私浏览或存储设置。';
+      }
+    });
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      form.reset();
+      document.getElementById('timezone').value = 'Asia/Shanghai';
+      toast.style.display = 'none';
+    });
+    try {
+      const saved = JSON.parse(localStorage.getItem(key) || 'null');
+      if (saved) for (const [name, value] of Object.entries(saved)) {
+        const field = form.elements.namedItem(name);
+        if (field) field.value = value;
+      }
+    } catch (_) {}
+  </script>
+</body>
+</html>
