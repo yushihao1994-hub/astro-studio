@@ -111,6 +111,13 @@
     .price-options{display:grid;gap:10px;margin:16px 0}.price-option{padding:13px;border:1px solid #51465f;border-radius:12px;background:#ffffff06}
     .price-option b{font-size:15px;color:#f1dfb8}.price-option strong{float:right;color:#e8cb96;font-size:18px}.price-option small{display:block;color:#aaa7b9;font-size:11px;margin-top:4px}
     .paywall-notice{padding:11px;border-radius:10px;background:#322b20;color:#e7d2a5;font-size:11px;line-height:1.7}.paywall-actions{display:flex;gap:9px;margin-top:16px}.paywall-actions button{flex:1}
+    .locked-preview{margin:16px 0;border:1px solid #5b506e;border-radius:14px;overflow:hidden;background:#171a28}
+    .locked-preview-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:13px 14px;background:#252238;color:#f0dfba;font-size:12px}
+    .locked-preview-head span{font-size:10px;color:#c8b8e8;border:1px solid #625477;border-radius:99px;padding:3px 7px;white-space:nowrap}
+    .locked-topic{display:flex;align-items:center;gap:11px;padding:12px 14px;border-top:1px solid #303247}
+    .locked-number{flex:0 0 28px;height:28px;display:grid;place-items:center;border-radius:8px;background:#302943;color:#e6c78b;font-size:10px}
+    .locked-topic>div{min-width:0;flex:1}.locked-topic b{display:block;color:#e9e5f2;font-size:12px}.locked-topic small{display:block;color:#9699ad;font-size:10px;margin-top:3px}
+    .lock-mark{font-size:10px;color:#d7c39b;border:1px solid #5c503d;border-radius:99px;padding:3px 7px}
   </style>
 </head>
 <body>
@@ -301,12 +308,20 @@
         if (!response.ok || !body.ok) throw new Error(body.error || 'AI 深度分析暂时不可用。');
         const analysis = body.analysis;
         const first = (analysis.sections || [])[0];
+        const allSections = Array.isArray(analysis.sections) ? analysis.sections : [];
         const sampleHtml = first
           ? '<details class="report-item" open><summary><span class="report-index">01</span><span class="report-title">' + esc(first.title || '你的个性化发现') + '</span><span class="report-chevron">⌄</span></summary><div class="report-content">' +
-            '<p><b>核心发现：</b>' + esc(first.conclusion || '') + '</p><p><b>星盘依据：</b>' + esc(first.reasoning || '') + '</p><p><b>给你的建议：</b>' + esc(first.advice || '') + '</p></div></details>'
+            '<p><b>核心发现：</b>' + esc(first.conclusion || '') + '</p><p><b>为什么会这样：</b>' + esc(first.reasoning || '') + '</p><p><b>你可以怎么做：</b>' + esc(first.advice || '') + '</p></div></details>'
           : '<p>本次暂时没有生成可展示的样例，请稍后再试。</p>';
+        const lockedTitles = allSections.slice(1).map((item, index) =>
+          '<div class="locked-topic"><span class="locked-number">' + String(index + 2).padStart(2, '0') + '</span><div><b>' + esc(item.title || '深度专题') + '</b><small>完整报告将结合相关星盘证据展开分析</small></div><span class="lock-mark">锁定</span></div>'
+        ).join('');
+        const previewCount = Math.max(allSections.length - 1, 0);
         output.innerHTML = '<section class="report-group"><h3>你的免费深度体验</h3><p class="report-intro">' + esc(analysis.summary || '') + '</p>' +
-          sampleHtml + '<div class="sample-limit"><b>你刚刚看到的是免费体验内容</b><span>完整报告还会继续分析其他关键主题、星盘证据之间的联系，以及更细致的个人建议。</span></div></section>';
+          sampleHtml +
+          (previewCount ? '<div class="locked-preview"><div class="locked-preview-head"><b>你的专属报告还包含 ' + previewCount + ' 个深度专题</b><span>完整版预览</span></div>' + lockedTitles + '</div>' : '') +
+          '<div class="sample-limit"><b>免费部分已经展示你的核心发现</b><span>解锁后可继续查看每个专题的具体表现、星盘依据之间的联系，以及针对现实选择的行动建议。</span></div>' +
+          '<button type="button" class="primary ai-analysis-button paywall-open" data-product="' + topic + '">查看我的完整报告与价格</button></section>';
       } catch (error) {
         output.textContent = error.message || 'AI 深度分析暂时不可用。原有基础报告不受影响。';
       } finally {
@@ -516,7 +531,6 @@ document.getElementById('report-section').classList.add('ready');
     });
     document.getElementById('clearBtn').addEventListener('click', () => {
       form.reset();
-      document.getElementById('timezone').value = 'Asia/Shanghai';
       toast.style.display = 'none';
       result.style.display = 'none';
     });
