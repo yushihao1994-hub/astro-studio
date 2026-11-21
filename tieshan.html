@@ -122,7 +122,7 @@ form.addEventListener('submit',async e=>{
   try{localStorage.setItem(KEY,JSON.stringify(data));}catch(_){}
   const output=document.getElementById('pillarOutput');
   const dateType=data.calendar==='lunar'?'农历':'公历';
-  const dateLabel=data.calendar==='lunar'?(Number(data.birth_month)<0?'闰'+Math.abs(Number(data.birth_month))+'月':data.birth_month+'月')+data.birth_day+'日':data.birth_year+'年'+data.birth_month+'月'+data.birth_day+'日';
+  const dateLabel=data.calendar==='lunar'?(Number(data.birth_month)<0?'闰'+Math.abs(Number(data.birth_month))+'月':data.birth_month+'月')+data.birth_day+'日':data.birth_month+'月'+data.birth_day+'日';
   document.getElementById('summary').textContent=(data.name?data.name+'，':'')+data.gender+'，'+dateType+' '+data.birth_year+'年 '+dateLabel+'，出生时间：'+(data.timeUnknown==='unknown'?'未知':(data.time||'未填写'))+'，出生地：'+(data.place||'未填写')+'。';
   result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'start'});
   if(!data.birth_year||!data.birth_month||!data.birth_day){output.innerHTML='<p style="color:#ffd18a">请完整选择出生年、月、日。</p>';return;}
