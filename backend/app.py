@@ -1463,6 +1463,15 @@ def tieshan_pillars():
         # Expose only explicitly documented lookup mappings from the accessible
         # 2003 compilation; this is not a complete Iron Plate number calculation.
         result["classic_reference"] = derive_classic_reference(result.get("pillars") or {})
+        # Optional classical palace lookup requires an explicitly supplied lunar month;
+        # the solar-term month pillar is not a substitute for a lunar month.
+        if payload.get("lunar_month") not in (None, ""):
+            from tieshan_classic import derive_body_life_palaces
+            lunar_month = int(payload["lunar_month"])
+            hour_branch = (result.get("pillars", {}).get("hour") or {}).get("branch")
+            result["body_life_palaces"] = derive_body_life_palaces(
+                lunar_month, hour_branch, bool(payload.get("leap_month", False))
+            )
         return jsonify(result)
     except ValueError as exc:
         return jsonify({"ok": False, "error": str(exc)}), 400
