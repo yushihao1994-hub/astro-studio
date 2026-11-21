@@ -1362,10 +1362,21 @@ def ai_analyze():
     try:
         evidence = build_ai_evidence(payload.get("chart"), topic)
         result = analyze_with_deepseek(topic, evidence)
+        sections = result.get("sections", [])
+        if not isinstance(sections, list) or not 3 <= len(sections) <= 5:
+            raise DeepSeekError("AI 报告专题数量不符合要求，已拒绝不完整报告。")
         allowed_ids = {item["id"] for item in evidence}
-        for section in result.get("sections", []):
+        required_fields = ("title", "conclusion", "reasoning", "evidence_ids", "advice")
+        for section in sections:
+            if not isinstance(section, dict) or any(
+                not isinstance(section.get(field), str) or not section.get(field).strip()
+                for field in ("title", "conclusion", "reasoning", "advice")
+            ):
+                raise DeepSeekError("AI 报告缺少必要的分析内容，已拒绝不完整报告。")
             ids = section.get("evidence_ids", [])
-            if not isinstance(ids, list) or any(item not in allowed_ids for item in ids):
+            if not isinstance(ids, list) or not ids or any(
+                not isinstance(item, str) or item not in allowed_ids for item in ids
+            ):
                 raise DeepSeekError("AI 返回了无法核验的证据编号，已拒绝该报告。")
         return jsonify({"ok": True, "topic": topic, "analysis": result})
     except DeepSeekNotConfigured as exc:
