@@ -32,6 +32,9 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         kunji=r["available_foundations"]["kunji_reference"]
         self.assertEqual(kunji["status"],"partial_metadata_not_full_cipher")
         self.assertEqual(len(kunji["published_examples"]),7)
+        rule_ids={x["id"] for x in r["rule_registry"]}
+        self.assertIn("KUNJI-CIPHER-EDITORIAL",rule_ids)
+        self.assertIn("QIAN-EIGHT-TRIGRAM-ADD",rule_ids)
         status={x["key"]:x["status"] for x in r["workflow"]}
         self.assertEqual(status["cipher_lookup"],"blocked")
         self.assertFalse(r["can_generate_final_iron_plate_number"])
