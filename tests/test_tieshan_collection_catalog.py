@@ -79,8 +79,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_1110_to_1130_groups_keep_age_candidates_unassigned(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 6)
-        self.assertEqual(data["entry_count"], 60)
+        self.assertEqual(data["group_count"], 7)
+        self.assertEqual(data["entry_count"], 70)
         expected = {
             "一一一〇": {4: "五十三／五十四", 5: "五十七／五十八", 7: "三十三／三十四"},
             "一一二〇": {3: "四十九／五十七／五十五／五十八",
@@ -129,10 +129,10 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         data = get_group_index()
         self.assertEqual(
             [g["pdf_text_lines"] for g in data["groups"][3:]],
-            ["10707-10719", "10721-10741", "10743-10762"]
+            ["10707-10719", "10721-10741", "10743-10762", "10764-10809"]
         )
         self.assertTrue(all(e["pdf_text_lines"] is None
-                            for g in data["groups"][3:] for e in g["entries"]))
+                            for g in data["groups"][3:6] for e in g["entries"]))
 
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
