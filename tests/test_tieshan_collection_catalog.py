@@ -175,6 +175,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_1170_to_1230_keep_ocr_markers_and_missing_1210_gap(self):
         data = get_group_index()
         self.assertEqual(data['groups'][9]['pdf_text_lines'], '10904-10917')
+        self.assertEqual(data['groups'][9]['source_header_ocr']['raw_text'], '康节报具全书')
+        self.assertEqual(data['groups'][9]['source_header_ocr']['normalized_candidate'], '康节说易全书')
         self.assertEqual(data['groups'][10]['raw_group_marker'], '一九〇')
         self.assertEqual(data['groups'][10]['normalized_group_marker_candidate'], '一一八〇')
         self.assertEqual(data['groups'][10]['normalization_status'], 'probable_ocr_correction_pending_image_check')
@@ -183,6 +185,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data['groups'][12]['pdf_text_lines'], '10944-10956')
         self.assertEqual(data['groups'][13]['pdf_text_lines'], '10958-10968')
         self.assertEqual(data['groups'][14]['pdf_text_lines'], '10970-10980')
+        self.assertEqual(data['groups'][14]['age_marker_ambiguities'][0]['raw_token'], '三十作')
+        self.assertIn('三十作', data['groups'][14]['entries'][4]['age_marker_text'])
         self.assertEqual(data['group_gaps'][0]['expected_group_marker'], '一二一〇')
         self.assertIn('do not fabricate', data['group_gaps'][0]['action'])
 
