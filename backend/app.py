@@ -13,6 +13,7 @@ from tieshan import calculate_tieshan_pillars
 from bazi_details import derive_bazi_details
 from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
+from tieshan_engine import build_tieshan_foundation
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
 app = Flask(__name__)
@@ -1526,6 +1527,13 @@ def tieshan_pillars():
         hour_branch = (result.get("pillars", {}).get("hour") or {}).get("branch")
         result["body_life_palaces"] = derive_body_life_palaces(
             lunar_month, hour_branch, bool(lunar_info["is_leap"])
+        )
+        result["iron_plate_engine"] = build_tieshan_foundation(
+            result.get("birth") or {},
+            result.get("pillars") or {},
+            result.get("eight_ke"),
+            result.get("body_life_palaces"),
+            result.get("classic_reference"),
         )
         return jsonify(result)
     except ValueError as exc:
