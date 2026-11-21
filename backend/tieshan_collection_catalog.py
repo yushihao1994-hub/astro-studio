@@ -861,6 +861,63 @@ UNASSIGNED_BLOCKS.append({
         ["11907","11908","11909","11910","11911","11912","11913","11914","11915","11916"],1)]
 })
 
+ 
+# 一六七〇至一七七〇：结构索引与异常隔离
+GROUP_INDEX.extend([
+{"group_marker":"一六七〇","pdf_text_lines":"11928-11939","layout_status":"text_layer_located_content_without_independent_number_column","layout_note":"十条序号与正文可定位；文本层未见独立对应数栏。","entries":_indexed_entries(["11930","11931","11932","11933","11934","11935","11936","11937","11938","11939"])},
+{"group_marker":"一七〇〇","pdf_text_lines":"11960-11972","layout_status":"table_rows_year_sequence_clause","layout_note":"表格十项；原始数字字段保留，不解释为密码数。","entries":[
+{"entry_sequence":1,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"11963"},
+{"entry_sequence":2,"raw_number_text":"六十四／六十六","number_field_present":True,"content_present":True,"pdf_text_lines":"11964"},
+{"entry_sequence":3,"raw_number_text":"三十五／三十六","number_field_present":True,"content_present":True,"pdf_text_lines":"11965"},
+{"entry_sequence":4,"raw_number_text":"三十三／三十四","number_field_present":True,"content_present":True,"pdf_text_lines":"11966"},
+{"entry_sequence":5,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"11967"},
+{"entry_sequence":6,"raw_number_text":"三十三／三十四","number_field_present":True,"content_present":True,"pdf_text_lines":"11968"},
+{"entry_sequence":7,"raw_number_text":"十九／二十","number_field_present":True,"content_present":True,"pdf_text_lines":"11969"},
+{"entry_sequence":8,"raw_number_text":"五十二／五十三","number_field_present":True,"content_present":True,"pdf_text_lines":"11970"},
+{"entry_sequence":9,"raw_number_text":"六十二／六十三","number_field_present":True,"content_present":True,"pdf_text_lines":"11971"},
+{"entry_sequence":10,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"11972"}]},
+{"group_marker":"一七二〇","pdf_text_lines":"12001-12011","layout_status":"text_layer_located_partial_sequence","layout_note":"仅定位序号二至十及续文；第1项未定位，保留9项。","entries":[
+{"entry_sequence":2,"raw_number_text":"四十三","number_field_present":True,"content_present":True,"pdf_text_lines":"12002"},
+{"entry_sequence":3,"raw_number_text":"五十九","number_field_present":True,"content_present":True,"pdf_text_lines":"12003"},
+{"entry_sequence":4,"raw_number_text":"三十一","number_field_present":True,"content_present":True,"pdf_text_lines":"12004"},
+{"entry_sequence":5,"raw_number_text":"五十八","number_field_present":True,"content_present":True,"pdf_text_lines":"12005"},
+{"entry_sequence":6,"raw_number_text":"五十七","number_field_present":True,"content_present":True,"pdf_text_lines":"12006"},
+{"entry_sequence":7,"raw_number_text":"六十一","number_field_present":True,"content_present":True,"pdf_text_lines":"12007"},
+{"entry_sequence":8,"raw_number_text":"四十三／三十七","number_field_present":True,"content_present":True,"pdf_text_lines":"12008"},
+{"entry_sequence":9,"raw_number_text":"三十八","number_field_present":True,"content_present":True,"pdf_text_lines":"12009"},
+{"entry_sequence":10,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"12010-12011"}]},
+{"group_marker":"一七三〇","pdf_text_lines":"12013-12024","layout_status":"text_layer_located_partial_sequence","layout_note":"仅定位序号二至十及续文；第1项未定位，保留9项。","entries":[
+{"entry_sequence":2,"raw_number_text":"七十二","number_field_present":True,"content_present":True,"pdf_text_lines":"12015"},
+{"entry_sequence":3,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"12016"},
+{"entry_sequence":4,"raw_number_text":"六十三","number_field_present":True,"content_present":True,"pdf_text_lines":"12017"},
+{"entry_sequence":5,"raw_number_text":"六十四","number_field_present":True,"content_present":True,"pdf_text_lines":"12018"},
+{"entry_sequence":6,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"12019"},
+{"entry_sequence":7,"raw_number_text":"四十一／四十二","number_field_present":True,"content_present":True,"pdf_text_lines":"12020"},
+{"entry_sequence":8,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"12021"},
+{"entry_sequence":9,"raw_number_text":"五十二／五十二","number_field_present":True,"content_present":True,"pdf_text_lines":"12022"},
+{"entry_sequence":10,"raw_number_text":None,"number_field_present":False,"content_present":True,"pdf_text_lines":"12023-12024"}]},
+{"group_marker":"一七五〇","pdf_text_lines":"12033-12043","layout_status":"text_layer_located_layout_unverified","entries":_indexed_entries(["12034","12035","12036","12037","12038","12039","12040","12041","12042","12043"],raw_numbers={1:"三十七",3:"三十九",5:"五十八",6:"二十七／三十八",7:"十四",8:"五十八",9:"二十四",10:"二十五／六十六"})},
+{"group_marker":"一七六〇","pdf_text_lines":"12045-12056","layout_status":"text_layer_located_layout_unverified","entries":_indexed_entries(["12047","12048","12049","12050","12051","12052","12053","12054","12055","12056"],raw_numbers={1:"三十二",3:"五十七",4:"五十八",5:"四十九／三十三",6:"三十六",7:"四十五",8:"三十五／三十六",10:"六十一／六十三"})},
+{"group_marker":"一七七〇","pdf_text_lines":"12058-12068","layout_status":"text_layer_located_layout_unverified","entries":_indexed_entries(["12059","12060","12061","12062","12063","12064","12065","12066","12067","12068"],raw_numbers={2:"七十五",3:"六十二",4:"四十五",5:"四十六／三十五",6:"三十六／二十一",8:"十九",10:"四十九／四十五／五十"})}
+])
+CANDIDATE_GROUPS.extend([
+{"raw_group_marker":"一九〇","normalized_group_marker_candidate":"一六九〇","pdf_text_lines":"11946-11958","status":"probable_ocr_truncation_candidate_pending_image_check","entries":[
+{"entry_sequence":1,"raw_age_column_text":"三十七","pdf_text_lines":"11949"},{"entry_sequence":2,"raw_age_column_text":"三十八","pdf_text_lines":"11950"},{"entry_sequence":3,"raw_age_column_text":None,"pdf_text_lines":"11951"},{"entry_sequence":4,"raw_age_column_text":"五十三／五十四／五十九","pdf_text_lines":"11952"},{"entry_sequence":5,"raw_age_column_text":"六十／五十七","pdf_text_lines":"11953"},{"entry_sequence":6,"raw_age_column_text":"五十八","pdf_text_lines":"11954"},{"entry_sequence":7,"raw_age_column_text":None,"pdf_text_lines":"11955"},{"entry_sequence":8,"raw_age_column_text":"六十七／六十八","pdf_text_lines":"11956"},{"entry_sequence":9,"raw_age_column_text":"三十三／三十四","pdf_text_lines":"11957"},{"entry_sequence":10,"raw_age_column_text":None,"pdf_text_lines":"11958"}]},
+{"raw_group_marker":"一七〇〇","normalized_group_marker_candidate":"一七一〇","pdf_text_lines":"11974-11986","status":"duplicate_marker_possible_next_group_pending_image_check","entries":[{"entry_sequence":n,"raw_age_column_text":None,"pdf_text_lines":line} for n,line in enumerate(["11977","11978","11979","11980","11981","11982","11983","11984","11985","11986"],1)]}
+])
+GROUP_GAPS.extend([
+{"expected_group_marker":"一六八〇","status":"marker_seen_content_not_located_in_text_layer","evidence":"11940出现一六八〇，未定位到其十条正文。","action":"retain marker-only anomaly; do not fabricate entries"},
+{"expected_group_marker":"一七一〇","status":"possible_duplicate_1700_and_unheaded_block","evidence":"11974重复一七〇〇，11990-11999另有十项无组号内容。","action":"keep candidate and unheaded block separate"},
+{"expected_group_marker":"一七四〇","status":"marker_seen_content_not_extractable_from_text_layer","evidence":"12026出现一七四〇，文本层未取得可逐项解析的正文。","action":"retain marker-only gap; do not infer entries"}
+])
+GROUP_ANOMALIES.extend([
+{"raw_group_marker":"一六八〇","pdf_text_lines":"11940","status":"marker_seen_body_not_located"},
+{"raw_group_marker":"一九〇","normalized_group_marker_candidate":"一六九〇","pdf_text_lines":"11946","status":"probable_ocr_truncation_candidate_pending_image_check"},
+{"raw_group_marker":"一七〇〇","normalized_group_marker_candidate":"一七一〇","pdf_text_lines":"11974","status":"duplicate_marker_possible_next_group_pending_image_check"},
+{"raw_group_marker":"一七四〇","pdf_text_lines":"12026","status":"marker_seen_body_not_extractable_from_text_layer"}
+])
+UNASSIGNED_BLOCKS.append({"block_id":"child_collection_unheaded_block_after_duplicate_1700","pdf_text_lines":"11990-11999","entry_count":10,"status":"group_marker_missing_do_not_assign","note":"疑似重复一七〇〇标题之后出现十条连续内容；可能与一七一〇有关，但无明确组号，不作归组。","entries":[{"entry_sequence":n,"pdf_text_lines":line} for n,line in enumerate(["11990","11991","11992","11993","11994","11995","11996","11997","11998","11999"],1)]})
+
 
 def get_group_index():
     return {
