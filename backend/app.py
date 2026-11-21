@@ -424,9 +424,30 @@ def generate_natal_profile(positions, angles, houses, aspects, patterns=None):
     if pattern_section:
         sections.append(pattern_section)
 
+    # Plain-language layer shown to customers; all calculation terminology remains hidden.
+    def everyday(item, label):
+        if not item:
+            return f"{label}方面的资料不足，先不作具体判断。"
+        style = SIGN_STYLE.get(item.get("sign"), "需要结合现实经历观察")
+        area = PLANET_HOUSE_MEANING.get(item.get("house"), "日常生活")
+        return f"{label}方面，你更容易表现出{style}；这种特点容易在{area}中体现。"
+
+    customer_sections = [
+        f"你身上有两种需要同时照顾的部分：一方面希望主动表达自己、被别人看见；另一方面也需要空间、变化和真实交流。{everyday(sun, '你的核心动力')} {everyday(moon, '你的情绪与安全感')} 别人初识你时感受到的样子，不一定完全等于你私下真实的感受。给自己留出表达真实需求的空间，会比一味迎合别人更轻松。",
+        f"你处理信息和沟通时，容易采用自己熟悉的思考节奏。{everyday(mercury, '你的思考与表达')} 遇到重要决定时，建议把已确认的事实、自己的猜测和还需要核实的部分分开写下来，避免因为一时判断太快而遗漏关键细节。",
+        f"在关系里，你既需要吸引力，也需要实际行动带来的安全感。{everyday(venus, '你表达喜欢和欣赏的方式')} {everyday(mars, '你主动行动和处理分歧的方式')} 不必用猜测代替沟通，也不要只凭一时热情判断一个人是否适合长期相处。",
+        f"事业发展更适合从真实能力和实际需求出发。{everyday(second_pos, '你的收入与资源管理')} {everyday(tenth_pos, '你的事业方向')} 选择方向时，先确认自己能解决什么问题、谁愿意付费、交付成本是多少，再决定是否投入更多时间和资金。",
+        f"长期成长的重点，是让机会和风险管理保持平衡。{everyday(jupiter, '你寻找机会和拓展的方式')} {everyday(saturn, '你面对责任和长期任务的方式')} 有想法可以尝试，但最好先设定预算、期限和检查标准，用实际结果决定下一步。"
+    ]
+    for idx, section in enumerate(sections):
+        if idx < len(customer_sections):
+            section["plain_content"] = customer_sections[idx]
+        else:
+            section["plain_content"] = "这一部分属于补充分析。你可以把它当作自我观察的提示，不需要根据某个标签给自己下定论；更重要的是结合真实经历，判断哪些描述确实符合你。"
+
     return {
-        "title": "本命盘综合人格与人生主题",
-        "intro": "先呈现核心人格，再连接思维、关系、事业资源与长期成长。每一节列出实际星盘依据；解释是占星传统中的象征性阅读，不是科学诊断或确定性预测。",
+        "title": "你的性格与人生方向",
+        "intro": "这里直接讲你的性格特点、思考方式、关系习惯和发展方向。无需了解任何专业知识。",
         "sections": sections
     }
 
