@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_twenty_eight_groups_and_two_hundred_seventy_nine_entries(self):
+    def test_group_index_contains_thirty_three_groups_and_three_hundred_twenty_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 28)
-        self.assertEqual(data["entry_count"], 279)
+        self.assertEqual(data["group_count"], 33)
+        self.assertEqual(data["entry_count"], 329)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇", "一三六〇", "一三八〇", "一四〇〇", "一四一〇", "一四二〇", "一四三〇", "一四四〇", "一四五〇", "一四六〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 12)
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 17)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -305,6 +305,38 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         anomalies = data["group_anomalies"]
         self.assertTrue(any(x.get("expected_group_marker") == "一三七〇" for x in anomalies))
         self.assertTrue(any(x.get("expected_group_marker") == "一三九〇" for x in anomalies))
+    def test_1420_table_keeps_age_column_as_source_text(self):
+        data = get_group_index()
+        group = data["groups"][28]
+        self.assertEqual(group["layout_status"], "table_rows_year_sequence_clause")
+        self.assertEqual(group["entries"][0]["source_index_text"], "三十九")
+        self.assertEqual(group["entries"][9]["source_index_text"], "四十二")
+        self.assertIn("待页面图像核验", group["layout_note"])
+        self.assertEqual(group["entries"][0]["pdf_text_lines"], "11394;11405")
+
+    def test_1430_and_1440_keep_multiple_age_candidates_in_source_order(self):
+        data = get_group_index()
+        g1430, g1440 = data["groups"][29:31]
+        self.assertEqual(g1430["entries"][3]["age_markers"], ["十","四十七","七十八","七十七"])
+        self.assertEqual(g1430["entries"][5]["age_markers"], ["三十七","十八"])
+        self.assertEqual(g1440["entries"][0]["age_markers"], ["八十九","九十"])
+        self.assertEqual(g1440["entries"][4]["age_markers"], ["七十九","四十二"])
+        self.assertEqual(g1440["entries"][9]["age_markers"], ["三十五","三十六"])
+
+    def test_1450_and_1460_have_ten_source_located_entries_without_age_text(self):
+        data = get_group_index()
+        g1450, g1460 = data["groups"][31:33]
+        self.assertEqual(g1450["pdf_text_lines"], "11489-11500")
+        self.assertEqual(g1460["pdf_text_lines"], "11501-11511")
+        self.assertTrue(all(e["age_markers"] == [] for g in (g1450,g1460) for e in g["entries"]))
+        self.assertTrue(all(e["content_present"] is True for g in (g1450,g1460) for e in g["entries"]))
+
+    def test_unheaded_block_after_1440_is_not_assigned(self):
+        data = get_group_index()
+        block = next(x for x in data["unassigned_blocks"]
+                     if x["block_id"] == "child_collection_unheaded_block_after_1440")
+        self.assertEqual(block["entry_count"], 10)
+        self.assertEqual(block["pdf_text_lines"], "11476-11488")
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
