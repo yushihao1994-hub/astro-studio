@@ -269,7 +269,7 @@ def build_pattern_report_section(patterns, relevant_planets, title):
     if not relevant:
         return None
 
-    lines, evidence = [], []
+    lines, plain_lines, evidence = [], [], []
     for pattern in relevant:
         quality = pattern.get("orb_quality", "未评定")
         max_orb = pattern.get("max_orb")
@@ -293,8 +293,27 @@ def build_pattern_report_section(patterns, relevant_planets, title):
             f'需要留意：{pattern.get("challenges", "")}'
             f'实践方向：{pattern.get("advice", "")}'
         )
+        placements = pattern.get("placements", [])
+        placement_text = "、".join(
+            f'{item.get("name")}位于{item.get("sign", "未知")}'
+            + (f'第{item.get("house")}宫' if item.get("house") else "")
+            for item in placements
+        )
+        plain_lines.append(
+            f"你的出生盘中，{placement_text}之间形成了一组相互关联的结构。"
+            f"这组联系的整体紧密程度为“{quality}”，{weight_note}"
+            f"{pattern.get('meaning', '')}"
+            f"它可能带来的优势是：{pattern.get('strengths', '')}"
+            f"需要留意的是：{pattern.get('challenges', '')}"
+            f"可以尝试这样运用：{pattern.get('advice', '')}"
+        )
         evidence.extend(pattern.get("evidence", []))
-    return {"title": title, "content": "\n\n".join(lines), "evidence": evidence}
+    return {
+        "title": title,
+        "content": "\n\n".join(lines),
+        "plain_content": "\n\n".join(plain_lines),
+        "evidence": evidence
+    }
 
 
 def generate_natal_profile(positions, angles, houses, aspects, patterns=None):
@@ -896,6 +915,8 @@ def generate_life_analysis(positions, angles, houses, aspects, patterns=None):
         {"title": title, "content": copy, "plain_content": copy}
         for title, copy in zip(relationship_titles, relationship_plain)
     ]
+    if relationship_pattern_section:
+        relationship.append(relationship_pattern_section)
     for index, item in enumerate(finance):
         if index < len(finance_plain):
             item["plain_content"] = finance_plain[index]
