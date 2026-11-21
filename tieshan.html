@@ -418,7 +418,9 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     const groupHtml=(idx.groups||[]).map(group=>{
      const rows=(group.entries||[]).map(item=>
       '<tr><td>'+escapeHtml(item.entry_sequence)+'</td><td>'+escapeHtml(item.raw_number_text||'未核定')+'</td><td>'+escapeHtml(item.age_marker_text||'待核/—')+'</td><td>'+escapeHtml(item.pdf_text_lines||'组级定位')+'</td></tr>').join('');
-     const markerNote = group.raw_group_marker && group.raw_group_marker!==group.group_marker ? '（原始OCR：'+escapeHtml(group.raw_group_marker)+'；'+escapeHtml(group.normalization_status||'待核')+'）' : '';
+     let markerNote = group.raw_group_marker && group.raw_group_marker!==group.group_marker ? '（原始OCR：'+escapeHtml(group.raw_group_marker)+'；'+escapeHtml(group.normalization_status||'待核')+'）' : '';
+     if(group.source_header_ocr) markerNote += '（页眉OCR待核：'+escapeHtml(group.source_header_ocr.raw_text)+'）';
+     if(group.age_marker_ambiguities&&group.age_marker_ambiguities.length) markerNote += '（岁数异文待核：'+escapeHtml(group.age_marker_ambiguities.map(x=>x.raw_token).join('、'))+'）';
      return '<details style="margin:8px 0"><summary>'+escapeHtml(group.group_marker)+' '+markerNote+' · '+escapeHtml(group.entry_count)+'条</summary><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><thead><tr><th>组内序号</th><th>独立数字栏</th><th>岁数候选</th><th>PDF行号</th></tr></thead><tbody>'+rows+'</tbody></table></div></details>';
     }).join('');
     const gapHtml=(idx.group_gaps||[]).map(gap=>'<p class="hint">缺组待核：'+escapeHtml(gap.expected_group_marker)+'。'+escapeHtml(gap.status)+'；不补造条目。</p>').join('');
