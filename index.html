@@ -55,8 +55,8 @@
             <div class="field"><label for="zodiac">黄道体系</label><input id="zodiac" value="热带黄道（回归黄道）" readonly></div>
             <div class="field full"><label for="houses">宫位系统</label><input id="houses" value="Placidus（普拉西德）" readonly></div>
           </div>
-          <div class="actions"><button class="primary" type="submit">保存出生档案</button><button class="secondary" type="button" id="clearBtn">清空表单</button></div>
-          <div class="toast" id="toast" role="alert"></div>
+          <div class="actions"><button class="primary" type="submit" id="calcBtn">计算真实本命星盘</button><button class="secondary" type="button" id="clearBtn">清空表单</button></div>
+          <div class="toast" id="toast" role="alert"></div><section id="result" class="status" style="display:none" aria-live="polite"></section>
           <p class="note">档案暂存在当前设备浏览器中，不会上传到服务器。请勿在公共设备保存私人资料。</p>
         </form>
       </div>
@@ -69,37 +69,89 @@
           <div class="feature"><div class="ico">✧</div><div><b>主要相位</b><span>合相、冲相、三分、四分、六分及容许度</span></div></div>
           <div class="feature"><div class="ico">☽</div><div><b>主题解读报告</b><span>性格、情感、关系、事业与财富倾向</span></div></div>
         </div>
-        <div class="status"><strong>当前开发状态</strong>出生资料录入界面第一版。真实星历计算与报告引擎尚未接入；此页面不会伪造星体位置或分析结果。</div>
+        <div class="status"><strong>计算服务</strong>后端已连接。提交出生资料后，将调用真实星历计算接口；地名会发送给 OpenStreetMap Nominatim 解析坐标。</div>
       </aside>
     </section>
     <footer class="bottom">星盘研究室 · 研究与自我探索工具 · 占星内容不构成科学预测或专业决策建议</footer>
   </main>
   <script>
+    const API_BASE = 'https://astro-studio-api.onrender.com';
     const form = document.getElementById('birthForm');
     const toast = document.getElementById('toast');
+    const result = document.getElementById('result');
+    const calcBtn = document.getElementById('calcBtn');
     const key = 'astro-studio-profile-draft-v1';
-    form.addEventListener('submit', (event) => {
+
+    function showError(message) {
+      toast.style.display = 'block';
+      toast.style.background = '#332626';
+      toast.style.color = '#ffd0d0';
+      toast.textContent = message;
+    }
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    function positionText(p) {
+      return esc(p.sign) + ' ' + p.degree + '°' + String(p.minute).padStart(2,'0') + '′' + String(p.second).padStart(2,'0') + '″';
+    }
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       toast.style.display = 'none';
+      result.style.display = 'none';
       if (!form.reportValidity()) return;
       const data = Object.fromEntries(new FormData(form).entries());
+      const payload = {
+        birth_date: data.birthDate,
+        birth_time: data.birthTime,
+        timezone: data.timezone,
+        place: data.birthPlace
+      };
+      calcBtn.disabled = true;
+      calcBtn.textContent = '正在计算，请稍候…';
       try {
         localStorage.setItem(key, JSON.stringify(data));
-        toast.style.display = 'block';
-        toast.style.background = '#1d302b';
-        toast.style.color = '#b9f0d2';
-        toast.textContent = '出生档案已保存在本机浏览器。真实星盘计算服务尚未连接。';
-      } catch (_) {
-        toast.style.display = 'block';
-        toast.style.background = '#332626';
-        toast.style.color = '#ffd0d0';
-        toast.textContent = '当前浏览器无法保存本地档案，请检查隐私浏览或存储设置。';
+        const response = await fetch(API_BASE + '/api/chart', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const body = await response.json();
+        if (!response.ok || !body.ok) throw new Error(body.error || '计算失败，请检查出生资料后重试。');
+        const chart = body.chart;
+        const planetRows = chart.planets.map(p =>
+          '<tr><td>' + esc(p.name) + '</td><td>' + positionText(p) + '</td><td>' +
+          (p.house ? p.house + '宫' : '—') + '</td><td>' + (p.retrograde ? '逆行' : '顺行') + '</td></tr>'
+        ).join('');
+        const angleRows = Object.entries(chart.angles).map(([name,p]) =>
+          '<tr><td>' + esc(name) + '</td><td>' + positionText(p) + '</td></tr>'
+        ).join('');
+        const aspectRows = chart.aspects.slice(0,40).map(a =>
+          '<tr><td>' + esc(a.planet_a) + ' — ' + esc(a.planet_b) + '</td><td>' +
+          esc(a.aspect) + '</td><td>' + a.orb + '°</td><td>' + esc(a.phase) + '</td></tr>'
+        ).join('');
+        result.innerHTML =
+          '<strong>本命星盘计算完成：' + esc(data.profileName) + '</strong>' +
+          '<p>计算引擎：' + esc(chart.calculation.engine) + '</p>' +
+          '<p>出生地解析：' + esc(chart.birth.place_resolved) + '<br>坐标：' + chart.birth.latitude + ', ' + chart.birth.longitude +
+          '<br>UTC：' + esc(chart.birth.utc_datetime) + '</p>' +
+          '<h4>十大行星与交点</h4><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th>星体</th><th>位置</th><th>宫位</th><th>状态</th></tr></thead><tbody>' + planetRows + '</tbody></table></div>' +
+          '<h4>四轴</h4><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tbody>' + angleRows + '</tbody></table></div>' +
+          '<h4>主要相位（最多显示40项）</h4><div style="overflow-x:auto"><table style="width:100%;font-size:12px"><tbody>' + aspectRows + '</tbody></table></div>' +
+          '<h4>计算说明</h4><ul>' + chart.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul>';
+        result.style.display = 'block';
+        result.scrollIntoView({behavior:'smooth',block:'start'});
+      } catch (error) {
+        showError(error.message || '暂时无法连接计算服务，请稍后重试。');
+      } finally {
+        calcBtn.disabled = false;
+        calcBtn.textContent = '计算真实本命星盘';
       }
     });
     document.getElementById('clearBtn').addEventListener('click', () => {
       form.reset();
       document.getElementById('timezone').value = 'Asia/Shanghai';
       toast.style.display = 'none';
+      result.style.display = 'none';
     });
     try {
       const saved = JSON.parse(localStorage.getItem(key) || 'null');
