@@ -322,7 +322,22 @@
           intro: '计算基准：' + (monthly.as_of || '本次计算时间') + '。过去30天回顾与未来30天趋势分开列出。',
           sections: monthly.finance
         } : null;
+    function renderNatalProfile(block) {
+      if (!block || !Array.isArray(block.sections)) return '';
+      return '<section style="margin-top:22px;padding-top:16px;border-top:1px solid #383d55">' +
+        '<h3 style="color:#e6c78b;margin:0 0 6px">' + esc(block.title) + '</h3>' +
+        '<p style="color:#a7a8bb;font-size:12px;line-height:1.7">' + esc(block.intro || '') + '</p>' +
+        block.sections.map((item,index) =>
+          '<article style="margin:14px 0;padding:14px;background:#1b1e2e;border:1px solid #2a2e42;border-radius:12px">' +
+          '<h4 style="margin:0 0 7px;color:#d8c8ff">' + (index+1) + '. ' + esc(item.title) + '</h4>' +
+          '<p style="margin:0 0 10px;white-space:pre-line;line-height:1.95">' + esc(item.content) + '</p>' +
+          '<div style="padding:10px;background:#141827;border-radius:9px;color:#b9b2ca;font-size:11px;line-height:1.8"><b style="color:#e6c78b">本节星盘依据</b><br>' +
+          (Array.isArray(item.evidence) ? item.evidence.map(x => '• ' + esc(x)).join('<br>') : '依据资料暂缺') +
+          '</div></article>'
+        ).join('') + '</section>';
+    }
         document.getElementById('panel-love-money').innerHTML =
+          renderNatalProfile(chart.natal_profile) +
           renderAnalysisBlock(chart.analysis && chart.analysis.relationship) +
           renderAnalysisBlock(monthlyRelationship) +
           renderAnalysisBlock(chart.analysis && chart.analysis.finance) +
