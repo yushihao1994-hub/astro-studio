@@ -309,6 +309,22 @@
         const body = await response.json();
         if (!response.ok || !body.ok) throw new Error(body.error || '计算失败，请检查出生资料后重试。');
         const chart = body.chart;
+        const monthlyRelationship = {
+          title: '近期感情趋势',
+          intro: '结合出生地时区的过去30天回顾与未来30天趋势；这是主题提示，不代表事件必然发生。',
+          sections: ((chart.monthly_transits && chart.monthly_transits.relationship) || []).map(item => ({
+            title: item.title,
+            content: item.content
+          }))
+        };
+        const monthlyFinance = {
+          title: '近期财运趋势',
+          intro: '结合出生地时区的过去30天回顾与未来30天趋势；这是主题提示，不代表收入或投资结果。',
+          sections: ((chart.monthly_transits && chart.monthly_transits.finance) || []).map(item => ({
+            title: item.title,
+            content: item.content
+          }))
+        };
         fillOverview(chart, data);
         const planetRows = chart.planets.map(p =>
           '<tr><td>' + esc(p.name) + '</td><td>' + positionText(p) + '</td><td>' +
