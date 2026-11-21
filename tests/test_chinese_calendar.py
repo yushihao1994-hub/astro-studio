@@ -1,7 +1,7 @@
 import unittest
 from datetime import date
 
-from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
+from backend.chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
 
 class ChineseCalendarTests(unittest.TestCase):
