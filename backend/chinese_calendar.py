@@ -73,5 +73,4 @@ def solar_to_lunar(value):
         "month_value": month,
         "day": int(lunar.getDay()),
         "is_leap": month < 0,
-        "month_options": lunar_month_options(int(lunar.getYear())),
     }
