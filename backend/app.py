@@ -15,7 +15,7 @@ from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
 from tieshan_engine import build_tieshan_foundation
 from tieshan_kunji_index import get_kunji_glossary
-from tieshan_collection_catalog import get_collection_sample, get_group_index
+from tieshan_collection_catalog import get_collection_sample, get_group_index, get_collection_progress
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
 
 app = Flask(__name__)
@@ -1451,8 +1451,11 @@ def ai_full_report():
 def tieshan_collection_groups(branch):
     """Return metadata-only group index for a collection."""
     if branch != "子":
+        progress = next((x for x in get_collection_progress()["collections"] if x["collection"] == branch), None)
         return jsonify({"ok": True, "index": {
             "collection": branch, "status": "not_indexed",
+            "printed_page_start": progress["printed_page_start"] if progress else None,
+            "toc_status": progress["toc_status"] if progress else "not_located",
             "group_count": 0, "entry_count": 0, "groups": []
         }})
     return jsonify({"ok": True, "index": get_group_index()})
