@@ -737,6 +737,131 @@ GROUP_ANOMALIES.extend([
 ])
 
 
+
+
+# 一六〇〇至一六六〇：仅建立结构索引，岁数/对应数候选按原文行号保留。
+def _indexed_entries(lines, start=1, raw_numbers=None):
+    raw_numbers = raw_numbers or {}
+    return [
+        {"entry_sequence": n, "raw_number_text": raw_numbers.get(n),
+         "number_field_present": (n in raw_numbers) if raw_numbers else None,
+         "content_present": True, "pdf_text_lines": line,
+         "age_markers": [], "age_marker_association_status": "needs_layout_verification"}
+        for n, line in enumerate(lines, start)
+    ]
+
+GROUP_INDEX.extend([
+    {
+        "group_marker": "一六〇〇", "pdf_text_lines": "11814-11837",
+        "layout_status": "text_layer_located_layout_unverified",
+        "age_marker_candidates": [
+            {"entry_sequence_hint": 1, "raw_text": "十／七十八", "pdf_text_lines": "11816"},
+            {"entry_sequence_hint": 2, "raw_text": "五十五", "pdf_text_lines": "11818"},
+            {"entry_sequence_hint": 3, "raw_text": "五十九", "pdf_text_lines": "11820"},
+            {"entry_sequence_hint": 4, "raw_text": "二十", "pdf_text_lines": "11822"},
+            {"entry_sequence_hint": 6, "raw_text": "六十七／六十八", "pdf_text_lines": "11826-11827"},
+            {"entry_sequence_hint": 7, "raw_text": "三十八", "pdf_text_lines": "11829"},
+            {"entry_sequence_hint": 10, "raw_text": "九十八／九十四／四十五", "pdf_text_lines": "11835-11837"}
+        ],
+        "entries": _indexed_entries(
+            ["11816","11818","11820","11822","11824","11826-11827","11829","11831","11833","11835-11837"],
+            raw_numbers={1:"十／七十八",2:"五十五",3:"五十九",4:"二十",6:"六十七／六十八",7:"三十八",10:"九十八／九十四／四十五"})
+    },
+    {
+        "group_marker": "一六二〇", "pdf_text_lines": "11839-11860",
+        "layout_status": "text_layer_located_layout_unverified",
+        "age_marker_candidates": [
+            {"entry_sequence_hint":1,"raw_text":"六十九","pdf_text_lines":"11841"},
+            {"entry_sequence_hint":3,"raw_text":"四十九／五十","pdf_text_lines":"11845-11846"},
+            {"entry_sequence_hint":4,"raw_text":"十","pdf_text_lines":"11848"},
+            {"entry_sequence_hint":8,"raw_text":"三十三","pdf_text_lines":"11855"},
+            {"entry_sequence_hint":10,"raw_text":"四十九／四十五","pdf_text_lines":"11859-11860"}
+        ],
+        "entries": _indexed_entries(
+            ["11841","11843","11845-11846","11848","11850","11852","11854","11855","11857","11859-11860"],
+            raw_numbers={1:"六十九",3:"四十九／五十",4:"十",8:"三十三",10:"四十九／四十五"})
+    },
+    {
+        "group_marker": "一六三〇", "pdf_text_lines": "11868-11878",
+        "layout_status": "text_layer_located_layout_unverified",
+        "age_marker_candidates": [
+            {"entry_sequence_hint":1,"raw_text":"二十七","pdf_text_lines":"11869"},
+            {"entry_sequence_hint":2,"raw_text":"三十六","pdf_text_lines":"11870"},
+            {"entry_sequence_hint":3,"raw_text":"三十三","pdf_text_lines":"11871"},
+            {"entry_sequence_hint":5,"raw_text":"三十四","pdf_text_lines":"11873"},
+            {"entry_sequence_hint":8,"raw_text":"五十五","pdf_text_lines":"11876"},
+            {"entry_sequence_hint":9,"raw_text":"三十三","pdf_text_lines":"11877"},
+            {"entry_sequence_hint":10,"raw_text":"五十三","pdf_text_lines":"11878"}
+        ],
+        "entries": _indexed_entries(
+            ["11869","11870","11871","11872","11873","11874","11875","11876","11877","11878"],
+            raw_numbers={1:"二十七",2:"三十六",3:"三十三",5:"三十四",8:"五十五",9:"三十三",10:"五十三"})
+    },
+    {
+        "group_marker": "一六四〇", "pdf_text_lines": "11880-11890",
+        "layout_status": "text_layer_located_layout_unverified",
+        "age_marker_candidates": [
+            {"entry_sequence_hint":2,"raw_text":"六十","pdf_text_lines":"11882"},
+            {"entry_sequence_hint":4,"raw_text":"七十三","pdf_text_lines":"11884"},
+            {"entry_sequence_hint":7,"raw_text":"三十九","pdf_text_lines":"11887"},
+            {"entry_sequence_hint":8,"raw_text":"四十五","pdf_text_lines":"11888"},
+            {"entry_sequence_hint":9,"raw_text":"四十七","pdf_text_lines":"11889"},
+            {"entry_sequence_hint":10,"raw_text":"三十三／三十三","pdf_text_lines":"11890"}
+        ],
+        "entries": _indexed_entries(
+            ["11881","11882","11883","11884","11885","11886","11887","11888","11889","11890"],
+            raw_numbers={2:"六十",4:"七十三",7:"三十九",8:"四十五",9:"四十七",10:"三十三／三十三"})
+    },
+    {
+        "group_marker": "一六五〇", "pdf_text_lines": "11891-11901",
+        "layout_status": "text_layer_located_layout_unverified",
+        "age_marker_candidates": [
+            {"entry_sequence_hint":1,"raw_text":"四十三","pdf_text_lines":"11892"},
+            {"entry_sequence_hint":2,"raw_text":"四十四","pdf_text_lines":"11893"},
+            {"entry_sequence_hint":3,"raw_text":"四十一","pdf_text_lines":"11894"},
+            {"entry_sequence_hint":5,"raw_text":"七十九","pdf_text_lines":"11896"},
+            {"entry_sequence_hint":6,"raw_text":"四十五","pdf_text_lines":"11897"},
+            {"entry_sequence_hint":7,"raw_text":"五十七","pdf_text_lines":"11898"},
+            {"entry_sequence_hint":8,"raw_text":"五十二","pdf_text_lines":"11899"},
+            {"entry_sequence_hint":9,"raw_text":"五十五","pdf_text_lines":"11900"},
+            {"entry_sequence_hint":10,"raw_text":"五十六","pdf_text_lines":"11901"}
+        ],
+        "entries": _indexed_entries(
+            ["11892","11893","11894","11895","11896","11897","11898","11899","11900","11901"],
+            raw_numbers={1:"四十三",2:"四十四",3:"四十一",5:"七十九",6:"四十五",7:"五十七",8:"五十二",9:"五十五",10:"五十六"})
+    },
+    {
+        "group_marker": "一六六〇", "pdf_text_lines": "11917-11927",
+        "layout_status": "text_layer_located_content_without_independent_number_column",
+        "layout_note": "文本层可见十条序号与正文，未见独立岁数/对应数栏；不从正文句内数字抽取对应数。",
+        "entries": _indexed_entries(["11918","11919","11920","11921","11922","11923","11924","11925","11926","11927"])
+    }
+])
+
+GROUP_GAPS.extend([
+    {"expected_group_marker":"一六一〇","status":"not_located_between_1600_and_1620_in_available_pdf_text_layer",
+     "evidence":"一六〇〇正文后直接出现一六二〇标题；当前文本层未见一六一〇组标题或十条正文。",
+     "action":"retain as unverified gap; do not fabricate entries"},
+    {"expected_group_marker":"一六一〇/一六二〇_boundary","status":"possible_missing_or_misread_group_marker",
+     "evidence":"11839出现一六二〇；随后11862再次出现一六二〇，11864出现截断的一六三，11868出现完整一六三〇。",
+     "action":"keep duplicate/truncated markers as anomalies pending page-image review"}
+])
+GROUP_ANOMALIES.extend([
+    {"raw_group_marker":"一六二〇","pdf_text_lines":"11862","status":"duplicate_marker_after_1620_block_pending_image_check",
+     "note":"一六二〇在11839和11862均出现；第二处之后有截断标题一六三。不得自动认定为新组。"},
+    {"raw_group_marker":"一六三","normalized_group_marker_candidate":"一六三〇",
+     "pdf_text_lines":"11864","status":"truncated_marker_candidate_pending_image_check"}
+])
+UNASSIGNED_BLOCKS.append({
+    "block_id":"child_collection_unheaded_block_after_1650",
+    "pdf_text_lines":"11907-11916","entry_count":10,
+    "status":"group_marker_missing_do_not_assign",
+    "note":"一六五〇十条后、一六六〇标题前出现十条连续内容，未见明确组号；单独保留，不并入相邻组。",
+    "entries":[{"entry_sequence":n,"pdf_text_lines":line} for n,line in enumerate(
+        ["11907","11908","11909","11910","11911","11912","11913","11914","11915","11916"],1)]
+})
+
+
 def get_group_index():
     return {
         "edition": EDITION,
@@ -761,7 +886,7 @@ def get_group_index():
              "age_marker_ambiguities": [dict(x) for x in group.get("age_marker_ambiguities", [])],
              "age_marker_candidates": [dict(x) for x in group.get("age_marker_candidates", [])],
              "entries": [dict(entry) for entry in group["entries"]],
-             "layout_note": group.get("layout_note") }
+             "layout_note": group.get("layout_note"),\n             "unassigned_number_sequence": dict(group["unassigned_number_sequence"]) if group.get("unassigned_number_sequence") else None }
             for group in GROUP_INDEX
         ],
         "limitations": [
