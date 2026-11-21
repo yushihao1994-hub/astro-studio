@@ -407,10 +407,10 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     if(!result.ok||!result.catalog)return;
     const c=result.catalog;
     const rows=(c.entries||[]).map(item=>
-     '<tr><td>'+escapeHtml(item.entry_sequence)+'</td><td>'+escapeHtml(item.raw_number_text||'原文未列')+'</td><td>'+escapeHtml(item.content)+'</td><td>'+escapeHtml(item.pdf_text_lines)+'</td></tr>').join('');
+     '<tr><td>'+escapeHtml(item.entry_sequence)+'</td><td>'+escapeHtml(item.raw_number_text||'原文未列')+'</td><td>'+escapeHtml((item.age_markers||[]).join('、')||'未独立标注')+'</td><td>'+escapeHtml(item.content)+'</td><td>'+escapeHtml(item.pdf_text_lines)+'</td></tr>').join('');
     stepHost.innerHTML+='<div class="section-title">子集正文样板（第一组）</div><p>原书分组标记：'+escapeHtml(c.group_marker)+'；当前仅转录 '+escapeHtml(c.entry_count)+' 条样本。对应数缺失时不补填。</p>'+
-     '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th>组内序号</th><th>原书对应数</th><th>原文</th><th>PDF行号</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-     '<p class="hint">状态：文本层转录，尚未逐字对照扫描图像；“一〇八〇”是原书分组标记，不是公历年份或密码条号。</p>';
+     '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr><th>组内序号</th><th>原书对应数</th><th>岁数标记</th><th>原文</th><th>PDF行号</th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+     '<p class="hint">状态：文本层转录，尚未逐字对照扫描图像；“一〇八〇”是原书分组标记，不是公历年份或密码条号。岁数标记单独存储，不与组内序号、对应数混用。</p>';
    }).catch(()=>{});
   }).catch(()=>{stepHost.innerHTML+='<p class="hint">坤集分类索引接口暂时不可用，基础排盘不受影响。</p>';});
  }
