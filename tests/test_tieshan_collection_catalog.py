@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_1080_1090_1100_and_thirty_entries(self):
+    def test_group_index_contains_six_groups_and_sixty_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 3)
-        self.assertEqual(data["entry_count"], 30)
+        self.assertEqual(data["group_count"], 6)
+        self.assertEqual(data["entry_count"], 60)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10, 10, 10])
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 6)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
