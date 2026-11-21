@@ -47,15 +47,15 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             "page_image_verification" in x["status"]
                             for x in patterns))
 
-    def test_group_index_contains_twenty_two_groups_and_two_hundred_nineteen_entries(self):
+    def test_group_index_contains_twenty_four_groups_and_two_hundred_thirty_nine_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 22)
-        self.assertEqual(data["entry_count"], 219)
+        self.assertEqual(data["group_count"], 24)
+        self.assertEqual(data["entry_count"], 239)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
-            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇"]
+            ["一〇八〇", "一〇九〇", "一一〇〇", "一一一〇", "一一二〇", "一一三〇", "一一四〇", "一一五〇", "一一六〇", "一一七〇", "一一八〇", "一一九〇", "一二〇〇", "一二二〇", "一二三〇", "一二四〇", "一二五〇", "一二六〇", "一二七〇", "一二八〇", "一三二〇", "一三三〇", "一三四〇", "一三五〇"]
         )
-        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9, 10, 10, 10, 10, 10, 10])
+        self.assertEqual([len(g["entries"]) for g in data["groups"]], [10] * 15 + [9] + [10] * 8)
 
     def test_1090_missing_number_fields_remain_empty(self):
         data = get_group_index()
@@ -259,6 +259,17 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertIsNone(candidate["entries"][7]["raw_age_column_text"])
         self.assertEqual(data["unassigned_blocks"][1]["pdf_text_lines"], "11202-11213")
         self.assertEqual(data["unassigned_blocks"][1]["entry_count"], 10)
+    def test_1340_and_1350_keep_age_markers_and_no_number_column(self):
+        data = get_group_index()
+        g1340, g1350 = data["groups"][22:24]
+        self.assertEqual(g1340["pdf_text_lines"], "11227-11238")
+        self.assertEqual(g1340["entries"][0]["age_markers"], ["十", "三十七"])
+        self.assertEqual(g1340["entries"][4]["age_markers"], ["九", "十七"])
+        self.assertEqual(g1340["entries"][8]["age_markers"], ["三十九"])
+        self.assertEqual(g1350["pdf_text_lines"], "11240-11252")
+        self.assertTrue(all(e["age_markers"] == [] for e in g1350["entries"]))
+        self.assertTrue(all(e["number_field_present"] is False and e["content_present"] is True
+                            for g in (g1340, g1350) for e in g["entries"]))
     def test_catalog_disclaims_ocr_verification_and_automatic_divination(self):
         data = get_collection_sample("子")
         joined = "；".join(data["limitations"])
