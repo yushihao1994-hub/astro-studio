@@ -1026,44 +1026,13 @@ def generate_monthly_transit_analysis(natal_positions, houses, birth_timezone):
 
 
 def calculate_chart(payload):
-    required = ["birth_date", "birth_time", "timezone"]
+    required = ["birth_date", "birth_time"]
     missing = [key for key in required if not payload.get(key)]
     if missing:
         raise ValueError("缺少必填字段：" + ", ".join(missing))
 
-    tz_name = str(payload["timezone"])
-    try:
-        tz = ZoneInfo(tz_name)
-    except Exception:
-        raise ValueError("无效的时区名称，请使用 IANA 时区，例如 Asia/Shanghai。")
-
-    local_naive = datetime.strptime(
-        payload["birth_date"] + " " + payload["birth_time"], "%Y-%m-%d %H:%M"
-    )
-    # Detect daylight-saving gaps and repeated local clock times. A nonexistent
-    # local time cannot be converted reliably; an ambiguous time defaults to
-    # the first occurrence but is explicitly reported to the user.
-    valid_folds = []
-    for fold in (0, 1):
-        candidate = local_naive.replace(tzinfo=tz, fold=fold)
-        roundtrip = candidate.astimezone(timezone.utc).astimezone(tz).replace(tzinfo=None)
-        if roundtrip == local_naive:
-            valid_folds.append(candidate)
-    if not valid_folds:
-        raise ValueError("该出生地日期的当地时间处于夏令时跳时区间，钟表时间不存在，请核对出生记录。")
-    dst_warning = []
-    distinct_offsets = {candidate.utcoffset() for candidate in valid_folds}
-    if len(distinct_offsets) > 1:
-        requested_fold = payload.get("fold")
-        if requested_fold in (0, 1, "0", "1"):
-            local_dt = local_naive.replace(tzinfo=tz, fold=int(requested_fold))
-        else:
-            local_dt = local_naive.replace(tzinfo=tz, fold=0)
-            dst_warning.append("出生时间处于夏令时重复时段，系统暂按第一次出现的当地时间计算；请核对当时钟表记录。")
-    else:
-        local_dt = valid_folds[0]
-    utc_dt = local_dt.astimezone(timezone.utc)
-
+    # Resolve the birthplace first, then derive its IANA time zone. A fixed
+    # front-end default would silently miscalculate charts for users abroad.
     if payload.get("latitude") is not None and payload.get("longitude") is not None:
         lat = float(payload["latitude"])
         lon = float(payload["longitude"])
@@ -1076,9 +1045,48 @@ def calculate_chart(payload):
     if not (-90 <= lat <= 90 and -180 <= lon <= 180):
         raise ValueError("经纬度超出有效范围。")
     detected_tz = TimezoneFinder().timezone_at(lat=lat, lng=lon)
-    timezone_warning = list(dst_warning)
-    if detected_tz and detected_tz != tz_name:
-        timezone_warning.append(f"所选时区 {tz_name} 与坐标推算时区 {detected_tz} 不一致，请核对出生地当地时间。")
+    requested_tz = str(payload.get("timezone") or "").strip()
+    if requested_tz:
+        tz_name = requested_tz
+    elif detected_tz:
+        tz_name = detected_tz
+    else:
+        raise ValueError("无法根据出生地点确定时区，请补充有效的 IANA 时区名称。")
+
+    try:
+        tz = ZoneInfo(tz_name)
+    except Exception:
+        raise ValueError("无效的时区名称，请使用 IANA 时区，例如 Asia/Shanghai。")
+
+    local_naive = datetime.strptime(
+        payload["birth_date"] + " " + payload["birth_time"], "%Y-%m-%d %H:%M"
+    )
+    # Detect daylight-saving gaps and repeated local clock times. Historical
+    # IANA rules are applied for the actual birth date, not today's UTC offset.
+    valid_folds = []
+    for fold in (0, 1):
+        candidate = local_naive.replace(tzinfo=tz, fold=fold)
+        roundtrip = candidate.astimezone(timezone.utc).astimezone(tz).replace(tzinfo=None)
+        if roundtrip == local_naive:
+            valid_folds.append(candidate)
+    if not valid_folds:
+        raise ValueError("该出生地日期的当地时间处于夏令时跳时区间，钟表时间不存在，请核对出生记录。")
+    timezone_warning = []
+    if requested_tz and detected_tz and requested_tz != detected_tz:
+        timezone_warning.append(
+            f"手动指定时区 {requested_tz} 与出生坐标识别时区 {detected_tz} 不一致，请核对出生地和当地时间。"
+        )
+    distinct_offsets = {candidate.utcoffset() for candidate in valid_folds}
+    if len(distinct_offsets) > 1:
+        requested_fold = payload.get("fold")
+        if requested_fold in (0, 1, "0", "1"):
+            local_dt = local_naive.replace(tzinfo=tz, fold=int(requested_fold))
+        else:
+            local_dt = local_naive.replace(tzinfo=tz, fold=0)
+            timezone_warning.append("出生时间处于夏令时重复时段，系统暂按第一次出现的当地时间计算；请核对当时钟表记录。")
+    else:
+        local_dt = valid_folds[0]
+    utc_dt = local_dt.astimezone(timezone.utc)
 
     # Convert UTC to Julian day. Moshier is explicitly selected so the API
     # never claims to be using Swiss Ephemeris data files when none are installed.
