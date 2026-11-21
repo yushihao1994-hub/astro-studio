@@ -128,6 +128,7 @@ def calculate_chart(payload):
     south.update({"name": "南交点", "retrograde": speeds["北交点"] < 0, "longitude_speed_per_day": round(speeds["北交点"], 6)})
     positions.append(south)
     longitudes["南交点"] = south["longitude"]
+    speeds["南交点"] = speeds["北交点"]
 
     try:
         cusps, ascmc = swe.houses_ex(jd_ut, lat, lon, b'P')
