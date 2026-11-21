@@ -129,16 +129,15 @@
           <div class="module-panel" id="panel-finance">请先计算本命盘，生成你的财富与财运详细分析。</div>
           <button class="feature module-toggle" type="button" data-module="monthly" aria-expanded="false"><div class="ico">◷</div><div><b>我的近期运势</b><span>过去30天回顾、未来30天提醒，感情与财务分开分析</span></div><span class="feature-arrow">⌄</span></button>
           <div class="module-panel" id="panel-monthly">请先填写出生资料并生成报告。</div>
-          <button class="feature module-toggle" type="button" data-module="technical" aria-expanded="false"><div class="ico">⌖</div><div><b>专业计算依据（可选）</b><span>本命盘、行星、宫位、相位与格局</span></div><span class="feature-arrow">⌄</span></button>
-          <div class="module-panel" id="panel-technical">请先计算本命盘，生成专业星盘数据。</div>
+          
         </div>
-        <div class="status"><strong>怎么看这份报告</strong>先看每个主题给出的结论，再展开具体分析；专业计算依据放在最后的可选栏目中。</div>
+        <div class="status"><strong>怎么看这份报告</strong>每个主题都用日常语言说明你的特点、可能遇到的情况和可以采取的行动，不需要了解任何专业知识。</div>
       </aside>
     </section>
     <section class="hero">
       <div class="eyebrow">ASTROLOGY RESEARCH STUDIO · PROFESSIONAL</div>
       <h2>输入出生资料，<br><em>读懂你关心的人生主题。</em></h2>
-      <p>完成出生资料后，直接查看感情、婚姻、财富、事业与个人特质。每个主题都提供深入、易懂的个性化分析；专业星盘数据在后台负责支撑结论。</p>
+      <p>完成出生资料后，直接查看感情、婚姻、财富、事业与个人特质。每个主题都提供深入、易懂的个性化分析；系统会在后台完成计算，你只需要看懂报告结论。</p>
       <div class="hero-meta"><span>✦ 一键生成个人分析</span><span>♡ 感情与婚姻</span><span>◇ 财富与事业</span></div>
     </section>
     <nav class="quick-nav" aria-label="页面导航">
@@ -186,16 +185,11 @@
     function renderReportSections(sections, prefix) {
       if (!Array.isArray(sections) || !sections.length) return '<p>该专题暂时没有可展示的详细内容。</p>';
       return sections.map((item, index) => {
-        const evidence = Array.isArray(item.evidence) && item.evidence.length
-          ? '<details class="evidence-details"><summary>查看分析依据</summary><ul>' +
-            item.evidence.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul></details>'
-          : '';
         return '<details class="report-item" id="' + prefix + '-' + index + '">' +
           '<summary><span class="report-index">' + String(index + 1).padStart(2, '0') + '</span><span class="report-title">' +
           esc(cleanSectionTitle(item.title)) + '</span><span class="report-chevron">⌄</span></summary>' +
           '<div class="report-content"><p>' + esc(item.plain_content || item.content || '') + '</p>' +
-          (item.plain_content && item.content ? '<details class="evidence-details"><summary>展开更多分析细节</summary><p>' + esc(item.content) + '</p></details>' : '') +
-          evidence + '</div></details>';
+          '</div></details>';
       }).join('');
     }
     function renderAnalysisBlock(block, prefix) {
