@@ -20,6 +20,48 @@ JIE_TERMS = [
 ]
 YEAR_START = 1984  # 1984 is a 甲子 year.
 
+STEM_ELEMENT = {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"}
+STEM_POLARITY = {"甲":"阳","乙":"阴","丙":"阳","丁":"阴","戊":"阳","己":"阴","庚":"阳","辛":"阴","壬":"阳","癸":"阴"}
+HIDDEN_STEMS = {"子":["癸"],"丑":["己","癸","辛"],"寅":["甲","丙","戊"],"卯":["乙"],"辰":["戊","乙","癸"],"巳":["丙","戊","庚"],"午":["丁","己"],"未":["己","丁","乙"],"申":["庚","壬","戊"],"酉":["辛"],"戌":["戊","辛","丁"],"亥":["壬","甲"]}
+ELEMENT_GENERATES = {"木":"火","火":"土","土":"金","金":"水","水":"木"}
+ELEMENT_CONTROLS = {"木":"土","土":"水","水":"火","火":"金","金":"木"}
+
+def _ten_god(day_stem, target_stem):
+    de, te = STEM_ELEMENT[day_stem], STEM_ELEMENT[target_stem]
+    same = STEM_POLARITY[day_stem] == STEM_POLARITY[target_stem]
+    if de == te: return "比肩" if same else "劫财"
+    if ELEMENT_GENERATES[de] == te: return "食神" if same else "伤官"
+    if ELEMENT_GENERATES[te] == de: return "偏印" if same else "正印"
+    if ELEMENT_CONTROLS[de] == te: return "偏财" if same else "正财"
+    if ELEMENT_CONTROLS[te] == de: return "七杀" if same else "正官"
+    return "未知"
+
+def _derive_bazi_data(pillars):
+    day_stem = pillars["day"]["stem"]
+    counts = {e: 0 for e in ("木","火","土","金","水")}
+    details = {}
+    for key in ("year","month","day","hour"):
+        p = pillars[key]
+        hidden = HIDDEN_STEMS.get(p["branch"], [])
+        counts[STEM_ELEMENT[p["stem"]]] += 1
+        for stem in hidden: counts[STEM_ELEMENT[stem]] += 1
+        details[key] = {"stem_ten_god":"日主" if key=="day" else _ten_god(day_stem,p["stem"]),
+                        "hidden_stems":hidden,
+                        "hidden_ten_gods":[_ten_god(day_stem,x) for x in hidden]}
+    clashes = {frozenset(x) for x in [("子","午"),("丑","未"),("寅","申"),("卯","酉"),("辰","戌"),("巳","亥")]}
+    combines = {frozenset(x) for x in [("子","丑"),("寅","亥"),("卯","戌"),("辰","酉"),("巳","申"),("午","未")]}
+    harms = {frozenset(x) for x in [("子","未"),("丑","午"),("寅","巳"),("卯","辰"),("申","亥"),("酉","戌")]}
+    rels=[]
+    keys=("year","month","day","hour")
+    for i in range(4):
+        for j in range(i+1,4):
+            a,b=keys[i],keys[j]; ba,bb=pillars[a]["branch"],pillars[b]["branch"]; pair=frozenset((ba,bb))
+            relation = "同支" if ba==bb else "六冲" if pair in clashes else "六合" if pair in combines else "六害" if pair in harms else None
+            if relation: rels.append({"pillars":[a,b],"branches":[ba,bb],"relation":relation})
+    return {"day_master":{"stem":day_stem,"element":STEM_ELEMENT[day_stem],"polarity":STEM_POLARITY[day_stem]},
+            "five_element_counts":counts,"pillar_details":details,"branch_relations":rels,
+            "calculation_note":"五行数量为天干与地支藏干的简单计数，不等同旺衰权重；未纳入月令权重、调候、格局取用及完整刑冲会合判定。"}
+
 
 def _sun_lon(jd_ut):
     values, _ = swe.calc_ut(jd_ut, swe.SUN, swe.FLG_MOSEPH | swe.FLG_SPEED)
@@ -169,6 +211,7 @@ def calculate_tieshan_pillars(payload, latitude, longitude, place_label, timezon
             "day": day_pillar,
             "hour": hour_pillar,
         },
+        "derived": _derive_bazi_data({"year": year_pillar, "month": month_pillar, "day": day_pillar, "hour": hour_pillar}),
         "solar_term_boundary": {
             "year_boundary": "立春",
             "month_boundary": month_term,
