@@ -1263,6 +1263,28 @@ def build_ai_evidence(chart, topic):
         "trends": {1, 2, 5, 7, 8, 10, 11}
     }[topic]
 
+    # Traditional sign rulers are included so the model can connect a house
+    # topic to the planet managing that house, rather than reading cusp signs alone.
+    sign_rulers = {
+        "白羊座": "火星", "金牛座": "金星", "双子座": "水星",
+        "巨蟹座": "月亮", "狮子座": "太阳", "处女座": "水星",
+        "天秤座": "金星", "天蝎座": "火星", "射手座": "木星",
+        "摩羯座": "土星", "水瓶座": "土星", "双鱼座": "木星"
+    }
+    planet_by_name = {p.get("name"): p for p in planets}
+    ruler_targets = set()
+    if topic == "personality":
+        asc_sign = (angles.get("上升点") or {}).get("sign")
+        if asc_sign in sign_rulers:
+            ruler_targets.add(("上升点", sign_rulers[asc_sign]))
+    if topic == "career":
+        mc_sign = (angles.get("天顶") or {}).get("sign")
+        if mc_sign in sign_rulers:
+            ruler_targets.add(("天顶", sign_rulers[mc_sign]))
+    for house in houses:
+        if house.get("house") in relevant_houses and house.get("sign") in sign_rulers:
+            ruler_targets.add(("第" + str(house.get("house")) + "宫", sign_rulers[house["sign"]]))
+
     evidence = []
     for p in planets:
         if p.get("name") in selected_planets:
@@ -1289,6 +1311,19 @@ def build_ai_evidence(chart, topic):
                 "id": "house_" + str(h.get("house")), "type": "house_cusp",
                 "house": h.get("house"), "sign": h.get("sign"),
                 "degree": h.get("degree"), "minute": h.get("minute")
+            })
+    for source_name, ruler_name in sorted(ruler_targets):
+        ruler = planet_by_name.get(ruler_name)
+        if ruler:
+            evidence.append({
+                "id": "ruler_" + source_name + "_" + ruler_name,
+                "type": "traditional_house_ruler",
+                "topic_point": source_name,
+                "ruler": ruler_name,
+                "ruler_sign": ruler.get("sign"),
+                "ruler_house": ruler.get("house"),
+                "retrograde": bool(ruler.get("retrograde")),
+                "interpretation_note": "传统守护星；需结合其落座、落宫和相位综合解释"
             })
     for i, aspect in enumerate(aspects):
         names = {aspect.get("planet_a"), aspect.get("planet_b")}
