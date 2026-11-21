@@ -15,10 +15,14 @@ class ChineseCalendarTests(unittest.TestCase):
 
     def test_leap_month_is_listed_as_negative_month(self):
         months = lunar_month_options(2023)
+        self.assertEqual(len(months), 13)
         leap_months = [item for item in months if item["is_leap"]]
         self.assertEqual(len(leap_months), 1)
         self.assertEqual(leap_months[0]["month"], 2)
         self.assertEqual(leap_months[0]["value"], "-2")
+
+    def test_normal_lunar_year_has_twelve_months(self):
+        self.assertEqual(len(lunar_month_options(2024)), 12)
 
     def test_invalid_lunar_date_is_rejected(self):
         with self.assertRaises(ValueError):
