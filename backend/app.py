@@ -4,7 +4,7 @@ from datetime import date, datetime, timezone
 from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, request
-from deepseek_client import analyze_with_deepseek, generate_full_report, analyze_tieshan_profile, DeepSeekNotConfigured, DeepSeekError
+from deepseek_client import analyze_with_deepseek, generate_full_report, analyze_tieshan_profile, analyze_tieshan_topic, DeepSeekNotConfigured, DeepSeekError
 from flask_cors import CORS
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
@@ -1608,6 +1608,44 @@ def tieshan_analyze():
     except Exception as exc:
         app.logger.exception("Iron Plate AI analysis failed")
         return jsonify({"ok": False, "error": "AI 分析发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+
+
+def _tieshan_topic_endpoint(topic):
+    payload = request.get_json(silent=True) or {}
+    try:
+        result = analyze_tieshan_topic(
+            topic,
+            payload.get("pillars"),
+            payload.get("birth") or {},
+            str(payload.get("gender") or ""),
+            payload.get("derived") or {}
+        )
+        label = "财运专项预测" if topic == "finance" else "婚姻专项预测"
+        return jsonify({"ok": True, "topic": topic, "analysis_type": label, "analysis": result})
+    except DeepSeekNotConfigured as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 503
+    except ValueError as exc:
+        return jsonify({"ok": False, "error": str(exc)}), 400
+    except DeepSeekError as exc:
+        app.logger.warning("Iron Plate %s analysis unavailable: %s", topic, str(exc))
+        return jsonify({"ok": False, "error": "AI 专项分析暂时不可用，请稍后重试。"}), 502
+    except Exception as exc:
+        app.logger.exception("Iron Plate %s analysis failed", topic)
+        return jsonify({"ok": False, "error": "专项分析发生内部错误（" + type(exc).__name__ + "）。"}), 500
+
+
+@app.post("/api/tieshan/finance")
+def tieshan_finance():
+    """Dedicated finance reading endpoint; not a final Iron Plate number or financial advice."""
+    return _tieshan_topic_endpoint("finance")
+
+
+@app.post("/api/tieshan/marriage")
+def tieshan_marriage():
+    """Dedicated marriage reading endpoint; not a deterministic event prediction."""
+    return _tieshan_topic_endpoint("marriage")
 
 
 @app.get("/api/health")
