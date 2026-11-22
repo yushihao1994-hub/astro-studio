@@ -1296,3 +1296,30 @@ class YouCollectionIndexThrough10790Tests(unittest.TestCase):
             self.assertEqual(group["raw_group_marker"], marker)
         self.assertEqual(next(g for g in data["groups"] if g["raw_group_marker"] == "一○五七○")["entry_count"], 9)
         self.assertTrue(any(x["raw_group_marker"] == "一○六五○" for x in data["group_anomalies"]))
+
+
+class XuCollectionInitialIndexTests(unittest.TestCase):
+    def test_xu_first_eight_group_markers_keep_raw_ocr_and_candidates_separate(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
+        data = get_collection_branch_group_index("戌")
+        self.assertEqual(data["group_count"], 8)
+        self.assertEqual(data["entry_count"], 80)
+        expected = [
+            ("一○三○", "一一○三○", 26568, "26568-26584"),
+            ("一○四○", "一一○四○", 26586, "26586-26600"),
+            ("一○五○", "一一○五○", 26602, "26602-26638"),
+            ("一○六○", "一一○六○", 26640, "26640-26672"),
+            ("一○七○", "一一○七○", 26674, "26674-26696"),
+            ("一○八○", "一一○八○", 26698, "26698-26712"),
+            ("一○九○", "一一○九○", 26714, "26714-26725"),
+            ("一一○○", "一一一○○", 26727, "26727-26737"),
+        ]
+        for marker, candidate, line, span in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+            self.assertEqual(group["normalized_group_marker_candidate"], candidate)
+            self.assertEqual(group["pdf_text_lines"], span)
+            self.assertEqual(group["entry_count"], 10)
+        self.assertEqual(data["unassigned_blocks"][0]["pdf_text_lines"], "26557-26566")
+        sample = get_collection_sample("戌")
+        self.assertEqual(sample["group_index"]["group_count"], 8)
