@@ -467,7 +467,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][10]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][11]["index_status"], "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending")
         self.assertEqual(data["collections"][11]["group_marker_candidate_count"], 88)
-        self.assertEqual(data["collections"][11]["layout_group_candidate_count"], 76)
+        self.assertEqual(data["collections"][11]["layout_group_candidate_count"], 77)
         self.assertEqual(data["collections"][11]["indexed_groups"], 0)
         self.assertEqual(data["collections"][11]["indexed_entries"], 0)
         self.assertEqual(data["collections"][4]["pdf_text_line_start"], 17109)
@@ -1360,8 +1360,8 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_layout_candidates_keep_only_source_line_ranges(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(data["layout_group_candidate_count"], 76)
-        self.assertEqual(len(data["layout_group_candidates"]), 76)
+        self.assertEqual(data["layout_group_candidate_count"], 77)
+        self.assertEqual(len(data["layout_group_candidates"]), 77)
         for group in data["layout_group_candidates"]:
             self.assertEqual(group["entry_count_candidate"], 10)
             self.assertEqual(len(group["entry_pdf_lines"]), 10)
@@ -1379,11 +1379,14 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(wrapped["一二四六〇"]["entry_continuation_pdf_lines"], [34263, 34266])
         self.assertEqual(wrapped["一二三三〇"]["entry_continuation_pdf_lines"], [34078, 34085, 34089])
         self.assertEqual(wrapped["一二三四〇"]["entry_continuation_pdf_lines"], [34093])
+        self.assertIn("text_layer_only_collection_header_ocr_conflict",
+                      next(g["status"] for g in data["layout_group_candidates"]
+                           if g["raw_group_marker"] == "去集"))
 
     def test_hai_unassigned_regions_and_header_conflicts_remain_explicit(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(len(data["unassigned_blocks"]), 13)
+        self.assertEqual(len(data["unassigned_blocks"]), 18)
         conflict = next(x for x in data["group_anomalies"]
                         if x["type"] == "collection_header_ocr_conflict")
         self.assertIn("玄集", conflict["observed_ocr"])
@@ -1402,7 +1405,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(hai["group_marker_candidate_count"], 88)
         self.assertEqual(hai["normalized_group_marker_unique_count"], 72)
         self.assertEqual(hai["expected_group_sequence_gap_candidate_count"], 28)
-        self.assertEqual(hai["layout_group_candidate_count"], 76)
+        self.assertEqual(hai["layout_group_candidate_count"], 77)
         self.assertEqual(hai["indexed_groups"], 0)
         self.assertEqual(hai["indexed_entries"], 0)
         sample = get_collection_sample("亥")
