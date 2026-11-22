@@ -4817,6 +4817,147 @@ def get_hai_marker_cluster_review_12080_12180():
         "policy": "preserve_raw_ocr_do_not_repair_by_sequence_do_not_promote_candidates",
     }
 
+def get_hai_registry_integrity_audit():
+    """Audit registry counts, identifiers, and PDF-line bounds without resolving source conflicts."""
+    import re
+
+    metadata = COLLECTION_METADATA["亥"]
+    start = metadata["pdf_text_line_start"]
+    end = metadata["pdf_text_line_end"]
+    markers = HAI_GROUP_MARKER_CANDIDATES
+    layouts = HAI_LAYOUT_GROUP_CANDIDATES
+    partial_tables = HAI_PARTIAL_TABLE_GROUP_CANDIDATES
+    blocks = HAI_UNASSIGNED_BLOCKS
+
+    block_ids = [item.get("block_id") for item in blocks]
+    duplicate_block_ids = sorted({
+        value for value in block_ids if block_ids.count(value) > 1
+    })
+    malformed_block_spans = []
+    out_of_range_lines = []
+
+    def check_line(value, source):
+        if not isinstance(value, int):
+            return
+        if value < start or value > end:
+            out_of_range_lines.append({"source": source, "pdf_text_line": value})
+
+    for marker in markers:
+        check_line(marker.get("pdf_text_line"), "group_marker")
+    for index, layout in enumerate(layouts, 1):
+        check_line(layout.get("group_marker_pdf_line"), f"layout_{index}_header")
+        line_fields = (
+            "entry_pdf_lines", "entry_continuation_pdf_lines",
+            "content_pdf_lines", "table_entry_pdf_lines",
+        )
+        for field in line_fields:
+            for line in layout.get(field, []):
+                check_line(line, f"layout_{index}_{field}")
+        for segment_index, segment in enumerate(layout.get("table_segments", []), 1):
+            for line in segment.get("entry_pdf_lines", []):
+                check_line(line, f"layout_{index}_table_segment_{segment_index}")
+    for index, table in enumerate(partial_tables, 1):
+        check_line(table.get("group_marker_pdf_line"), f"partial_table_{index}_header")
+        for field in ("sequence_pdf_lines", "clause_pdf_lines"):
+            for line in table.get(field, []):
+                check_line(line, f"partial_table_{index}_{field}")
+    for block in blocks:
+        block_id = block.get("block_id", "unknown")
+        span = block.get("pdf_text_lines", "")
+        match = re.fullmatch(r"(\d+)-(\d+)", span) if isinstance(span, str) else None
+        if not match:
+            malformed_block_spans.append({"block_id": block_id, "pdf_text_lines": span})
+        else:
+            first, last = int(match.group(1)), int(match.group(2))
+            check_line(first, f"{block_id}_span_start")
+            check_line(last, f"{block_id}_span_end")
+            if first > last:
+                malformed_block_spans.append({"block_id": block_id, "pdf_text_lines": span})
+        for line in block.get("entry_pdf_lines", []):
+            check_line(line, f"{block_id}_entry")
+        for line in block.get("marker_cluster_pdf_lines", []):
+            check_line(line, f"{block_id}_marker")
+        for note in block.get("marker_cluster_notes", []):
+            check_line(note.get("pdf_text_line"), f"{block_id}_marker_note")
+
+    normalized = {
+        item.get("normalized_group_marker_candidate")
+        for item in markers
+        if item.get("normalized_group_marker_candidate") is not None
+    }
+    expected = set(HAI_EXPECTED_GROUP_MARKERS)
+    expected_gaps = sorted(expected - normalized)
+    duplicate_marker_lines = {}
+    for item in markers:
+        duplicate_marker_lines.setdefault(item.get("pdf_text_line"), []).append(item.get("raw_group_marker"))
+    duplicate_marker_lines = [
+        {"pdf_text_line": line, "raw_markers": values}
+        for line, values in sorted(duplicate_marker_lines.items())
+        if len(values) > 1
+    ]
+
+    count_checks = {
+        "marker_candidate_count_matches_metadata": len(markers) == metadata["group_marker_candidate_count"],
+        "normalized_unique_count_matches_metadata": len(normalized) == metadata["normalized_group_marker_unique_count"],
+        "layout_candidate_count_matches_metadata": len(layouts) == metadata["layout_group_candidate_count"],
+        "partial_table_count_matches_metadata": len(partial_tables) == metadata["partial_table_group_candidate_count"],
+        "unassigned_block_count_matches_registry": len(blocks) == 22,
+        "sequence_gap_count_matches_metadata": len(expected_gaps) == metadata["expected_group_sequence_gap_candidate_count"],
+    }
+    integrity_errors = []
+    if duplicate_block_ids:
+        integrity_errors.append("duplicate_unassigned_block_ids")
+    if malformed_block_spans:
+        integrity_errors.append("malformed_unassigned_block_spans")
+    if out_of_range_lines:
+        integrity_errors.append("pdf_text_line_reference_out_of_range")
+    integrity_errors.extend(name for name, passed in count_checks.items() if not passed)
+
+    crosswalk = get_hai_full_crosswalk_audit()
+    coverage = get_hai_text_line_coverage_audit()
+    return {
+        "pdf_text_line_range": [start, end],
+        "total_pdf_text_lines": end - start + 1,
+        "registry_counts": {
+            "raw_marker_candidates": len(markers),
+            "normalizable_marker_occurrences": sum(
+                item.get("normalized_group_marker_candidate") is not None for item in markers
+            ),
+            "normalized_marker_unique_count": len(normalized),
+            "expected_sequence_slots": len(expected),
+            "sequence_gap_candidates": len(expected_gaps),
+            "layout_candidates": len(layouts),
+            "partial_table_candidates": len(partial_tables),
+            "unassigned_blocks": len(blocks),
+        },
+        "count_checks": count_checks,
+        "duplicate_unassigned_block_ids": duplicate_block_ids,
+        "malformed_unassigned_block_spans": malformed_block_spans,
+        "out_of_range_line_reference_count": len(out_of_range_lines),
+        "out_of_range_line_references": out_of_range_lines,
+        "duplicate_marker_line_occurrences": duplicate_marker_lines,
+        "crosswalk_conflict_counts": {
+            "layout_overlap_pairs": crosswalk["layout_entry_overlap_pair_count"],
+            "multiply_owned_entry_lines": crosswalk["multiply_owned_entry_line_count"],
+            "duplicate_normalized_markers": crosswalk["duplicate_normalized_marker_count"],
+            "markers_without_layout_header": crosswalk["marker_candidates_without_layout_header_line_count"],
+            "layouts_without_exact_marker_join": crosswalk["layouts_without_exact_marker_join_count"],
+            "unassigned_block_conflicts": crosswalk["unassigned_blocks_with_marker_or_entry_overlap_count"],
+        },
+        "text_line_coverage": {
+            "unique_classified_lines": coverage["unique_classified_line_count"],
+            "unclassified_lines": coverage["unclassified_line_count"],
+            "multiply_classified_lines": coverage["multiply_classified_line_count"],
+        },
+        "integrity_error_count": len(integrity_errors),
+        "integrity_errors": integrity_errors,
+        "formal_verified_group_count": 0,
+        "formal_verified_entry_count": 0,
+        "verification_status": "registry_integrity_checked_text_layer_only_page_image_verification_pending",
+        "interpretation": "A clean registry audit confirms internal bookkeeping and bounds only; it does not resolve OCR, layout, group assignment, or image verification conflicts.",
+    }
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
@@ -4843,6 +4984,7 @@ def get_collection_branch_group_index(branch):
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
             "crosswalk_audit": get_hai_crosswalk_audit(),
             "full_crosswalk_audit": get_hai_full_crosswalk_audit(),
+            "registry_integrity_audit": get_hai_registry_integrity_audit(),
             "text_line_coverage_audit": get_hai_text_line_coverage_audit(),
             "review_queue": get_hai_review_queue(),
             "priority_conflict_review": get_hai_priority_conflict_review(),
