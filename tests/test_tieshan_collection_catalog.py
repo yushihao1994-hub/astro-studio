@@ -1428,6 +1428,24 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
                             for x in data["group_anomalies"]
                             if x["type"] == "collection_header_ocr_conflict"))
 
+    def test_hai_split_table_candidates_keep_column_counts_and_duplicate_hypothesis_separate(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        tables = data["partial_table_group_candidates"]
+        self.assertEqual(len(tables), 3)
+        for item in tables:
+            self.assertEqual(item["sequence_labels_candidate"], list(range(2, 11)))
+            self.assertEqual(item["clause_row_ordinals"], list(range(1, 11)))
+            self.assertEqual(len(item["sequence_pdf_lines"]), 9)
+            self.assertEqual(len(item["clause_pdf_lines"]), 10)
+            self.assertIn("not_pairable", item["row_alignment_status"])
+        second_duplicate = tables[2]
+        self.assertEqual(second_duplicate["raw_group_marker"], "一二四九〇")
+        self.assertEqual(second_duplicate["possible_group_marker_correction_candidate"], 12500)
+        self.assertIn("hypothesis only", second_duplicate["group_marker_correction_basis"])
+        self.assertIn("unverified", second_duplicate["status"])
+
+
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
