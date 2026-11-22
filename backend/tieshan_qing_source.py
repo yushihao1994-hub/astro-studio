@@ -8,7 +8,7 @@ executable Iron Plate calculations.
 EDITION = "《神機妙算鐵板數》；题署邵康節先生著；封面内页见“貞元書屋藏板”"
 FILE_NAME = "鐵板神數(清刻足本).pdf"
 FILE_SIZE_BYTES = 83686820
-SCAN_PAGE_COUNT = 150
+SCAN_PAGE_COUNT = 665
 PRINTED_PAGE_COUNT_SHOWN = 1363
 STATUS = "scan_acquired_initial_pages_image_reviewed_core_rules_pending"
 SOURCE_CLASS = "user_provided_primary_scan"
@@ -87,7 +87,7 @@ def get_qing_source_reference():
         "edition": EDITION,
         "file_name": FILE_NAME,
         "file_size_bytes": FILE_SIZE_BYTES,
-        "scan_page_count": SCAN_PAGE_COUNT,
+        "scan_page_count": SCAN_PAGE_COUNT,\n        "page_count_basis": "pdfinfo 对用户上传原始 PDF 文件的页数统计",
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
