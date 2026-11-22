@@ -422,9 +422,6 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertIn("不得用于自动考刻", joined)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
     def test_1670_to_1770_keeps_marker_gaps_and_duplicates_separate(self):
         data = get_group_index()
         by = {g["group_marker"]: g for g in data["groups"]}
@@ -460,4 +457,28 @@ if __name__ == "__main__":
         self.assertEqual([x["printed_page_start"] for x in data["collections"]], [138,172,206,240,274,308,342,376,410,444,478,512])
         self.assertTrue(all(x["toc_status"] == "located_in_contents" for x in data["collections"]))
         self.assertEqual(data["collections"][0]["indexed_groups"], 75)
-        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][1:]))
+        self.assertEqual(data["collections"][1]["index_status"], "text_layer_range_located_not_indexed")
+        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][2:]))
+        self.assertEqual(data["collections"][0]["pdf_text_line_start"], 10664)
+        self.assertEqual(data["collections"][0]["pdf_text_line_end"], 12570)
+        self.assertEqual(data["collections"][1]["pdf_text_line_start"], 12572)
+        self.assertEqual(data["collections"][1]["pdf_text_line_end"], 14290)
+
+    def test_collection_progress_exposes_chou_text_range_without_claiming_indexed_groups(self):
+        from backend.tieshan_collection_catalog import get_collection_progress
+        data = get_collection_progress()
+        chou = next(x for x in data["collections"] if x["collection"] == "丑")
+        self.assertEqual(chou["index_status"], "text_layer_range_located_not_indexed")
+        self.assertEqual(chou["pdf_text_line_start"], 12572)
+        self.assertEqual(chou["pdf_text_line_end"], 14290)
+        self.assertEqual(chou["indexed_groups"], 0)
+        self.assertEqual(chou["indexed_entries"], 0)
+        zi = next(x for x in data["collections"] if x["collection"] == "子")
+        self.assertEqual(zi["indexed_groups"], 75)
+        self.assertEqual(zi["indexed_entries"], 747)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
