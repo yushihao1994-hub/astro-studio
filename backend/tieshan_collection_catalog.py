@@ -1013,7 +1013,7 @@ COLLECTION_METADATA = {
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "戌": {"printed_page_start": 478, "pdf_text_line_start": 26556, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 88, "layout_group_candidate_count": 35},
+    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 88, "layout_group_candidate_count": 48},
 }
 
 
@@ -1160,6 +1160,19 @@ HAI_LAYOUT_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二六四〇", "group_marker_pdf_line": 34530, "entry_pdf_lines": list(range(34532, 34542)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
     {"raw_group_marker": "一二六五〇", "group_marker_pdf_line": 34542, "entry_pdf_lines": list(range(34545, 34555)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
     {"raw_group_marker": "一二六六〇", "group_marker_pdf_line": 34556, "entry_pdf_lines": list(range(34559, 34569)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二六九〇", "group_marker_pdf_line": 34609, "entry_pdf_lines": list(range(34611, 34621)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二七〇〇", "group_marker_pdf_line": 34621, "entry_pdf_lines": list(range(34622, 34632)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二七〇", "group_marker_pdf_line": 34632, "entry_pdf_lines": list(range(34637, 34647)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only_marker_truncated"},
+    {"raw_group_marker": "一二七二〇", "group_marker_pdf_line": 34648, "entry_pdf_lines": list(range(34650, 34660)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二七三〇", "group_marker_pdf_line": 34661, "entry_pdf_lines": list(range(34664, 34674)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二七八〇", "group_marker_pdf_line": 34725, "entry_pdf_lines": list(range(34727, 34737)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二七九〇", "group_marker_pdf_line": 34738, "entry_pdf_lines": list(range(34739, 34749)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二八〇〇", "group_marker_pdf_line": 34750, "entry_pdf_lines": list(range(34752, 34762)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二八一〇", "group_marker_pdf_line": 34777, "entry_pdf_lines": list(range(34779, 34789)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二八二〇", "group_marker_pdf_line": 34790, "entry_pdf_lines": list(range(34791, 34801)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二八三〇", "group_marker_pdf_line": 34802, "entry_pdf_lines": list(range(34806, 34816)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二八四〇", "group_marker_pdf_line": 34817, "entry_pdf_lines": list(range(34818, 34828)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二八五〇", "group_marker_pdf_line": 34829, "entry_pdf_lines": list(range(34831, 34841)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
 ]
 
 # 丑集首批结构索引：仅记录分组标题、序号和PDF文本行，不复制条文正文。
