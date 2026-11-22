@@ -3093,6 +3093,55 @@ SHEN_GROUP_INDEX = [
     _shen_group("九二八○", 23853, list(range(23854,23864))),
     _shen_group("九二九○", 23865, list(range(23867,23877))),
     _shen_group("九三○○", 23890, list(range(23892,23902))),
+    _shen_group("九五六○", 24272, list(range(24275,24285))),
+    _shen_group("九五七○", 24286, list(range(24288,24298))),
+    _shen_group("九五八○", 24299, list(range(24300,24310))),
+    _shen_group("九六○○", 24315, list(range(24317,24327))),
+    _shen_group("九六二○", 24356, list(range(24358,24368))),
+    _shen_group("九六三○", 24392, list(range(24394,24404))),
+    _shen_group("九六四○", 24405, list(range(24406,24416))),
+    _shen_group("九六六○", 24434, list(range(24436,24446))),
+    _shen_group("九六七○", 24447, list(range(24448,24458))),
+    _shen_group("九六八○", 24459, list(range(24463,24473))),
+    _shen_group("九六九○", 24474, list(range(24475,24485))),
+    _shen_group("九七○○", 24486, list(range(24488,24498))),
+    {
+        "collection": "申", "raw_group_marker": "九七一○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 24502,
+        "pdf_text_lines": "24502-24547", "layout_status": "ten_entries_with_separate_age_and_clause_spans",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 24504, "record_span": "24504-24510"},
+            {"entry_sequence": 2, "pdf_text_line": 24512, "record_span": "24512-24515"},
+            {"entry_sequence": 3, "pdf_text_line": 24517, "record_span": "24517-24519"},
+            {"entry_sequence": 4, "pdf_text_line": 24521, "record_span": "24521-24523"},
+            {"entry_sequence": 5, "pdf_text_line": 24525, "record_span": "24525-24526"},
+            {"entry_sequence": 6, "pdf_text_line": 24528, "record_span": "24528-24529"},
+            {"entry_sequence": 7, "pdf_text_line": 24530, "record_span": "24530-24533"},
+            {"entry_sequence": 8, "pdf_text_line": 24535, "record_span": "24535-24540"},
+            {"entry_sequence": 9, "pdf_text_line": 24542, "record_span": "24542-24547"},
+            {"entry_sequence": 10, "pdf_text_line": 24548}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "申", "raw_group_marker": "九七二○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 24549,
+        "pdf_text_lines": "24549-24593", "layout_status": "ten_entries_with_age_values_and_clauses",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate([24551,24556,24561,24564,24567,24570,24573,24576,24582,24589],1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "申", "raw_group_marker": "九七三○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 24595,
+        "pdf_text_lines": "24595-24638", "layout_status": "ten_entries_with_age_values_and_clauses",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate([24597,24604,24608,24611,24614,24617,24620,24623,24629,24637],1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
 ]
 
 SHEN_GROUP_ANOMALIES = [
@@ -3103,12 +3152,18 @@ SHEN_GROUP_ANOMALIES = [
     {"raw_group_marker": "九一七○", "pdf_text_line": 23709, "status": "marker_seen_body_not_located_before_9180"},
     {"raw_group_marker": "九二○○", "pdf_text_line": 23756, "status": "marker_seen_body_not_located_before_9210"},
     {"raw_group_marker": "九二六○", "pdf_text_line": 23836, "status": "marker_seen_body_not_located_before_9270"},
-    {"raw_group_marker": "九三一○", "pdf_text_line": 23903, "status": "raw_marker_text_reads_九二二○_possible_sequence_or_ocr_error"}
+    {"raw_group_marker": "九三一○", "pdf_text_line": 23903, "status": "raw_marker_text_reads_九二二○_possible_sequence_or_ocr_error"},
+    {"raw_group_marker": "九五九○", "pdf_text_line": 24311, "status": "marker_seen_body_not_located_before_9600"},
+    {"raw_group_marker": "九六一○", "pdf_text_line": None, "status": "unheaded_ten_entry_block_before_9620"},
+    {"raw_group_marker": "九六五○", "pdf_text_line": 24417, "status": "marker_seen_body_not_located_before_9660"}
 ]
 SHEN_UNASSIGNED_BLOCKS = [
     {"block_id": "shen_unheaded_9100_block", "pdf_text_lines": "23610-23619", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "shen_unheaded_9110_block", "pdf_text_lines": "23620-23629", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
-    {"block_id": "shen_unheaded_9140_block", "pdf_text_lines": "23672-23682", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+    {"block_id": "shen_unheaded_9140_block", "pdf_text_lines": "23672-23682", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "shen_unheaded_9320_block", "pdf_text_lines": "23921-23930", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "shen_unheaded_9440_block", "pdf_text_lines": "24082-24101", "entry_count_candidate": 20, "status": "table_block_without_confirmed_group_heading"},
+    {"block_id": "shen_unheaded_9610_block", "pdf_text_lines": "24328-24346", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
 ]
 
 
