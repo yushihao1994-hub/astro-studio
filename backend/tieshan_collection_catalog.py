@@ -1230,6 +1230,48 @@ HAI_12670_12800_BOUNDARY_AUDIT = {
 }
 
 
+HAI_12810_12990_TERMINAL_AUDIT = {
+    "source_pdf_text_lines": "34777-35025",
+    "status": "text_layer_structure_audit_image_verification_pending",
+    "groups_and_blocks": [
+        {"candidate":12810,"raw_marker":"一二八一〇","marker_line":34777,"entry_lines":list(range(34779,34789)),"entry_count_candidate":10,"status":"previously_located_ten_rows_header_boundary_image_check_pending"},
+        {"candidate":12820,"raw_marker":"一二八二〇","marker_line":34790,"entry_mapping":"not_reaudited_in_this_pass"},
+        {"candidate":12830,"raw_marker":"一二八三〇","marker_line":34802,"entry_mapping":"not_reaudited_in_this_pass"},
+        {"candidate":12840,"raw_marker":"一二八四〇","marker_line":34817,"entry_mapping":"not_reaudited_in_this_pass"},
+        {"candidate":12850,"raw_marker":"一二八五〇","marker_line":34829,"entry_mapping":"not_reaudited_in_this_pass"},
+        {"candidate":12860,"raw_marker":None,"marker_line":None,"header_ocr":"支集","header_line":34842,"entry_lines":list(range(34846,34856)),"following_marker":"一二八七〇","following_marker_line":34856,"status":"ten_rows_without_numeric_group_header_do_not_assign_12860"},
+        {"candidate":12870,"raw_marker":"一二八七〇","marker_line":34856,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12880,"raw_marker":"一二八八〇","marker_line":34868,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12890,"raw_marker":"一二八九〇","marker_line":34879,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12900,"raw_marker":None,"marker_line":None,"entry_lines":list(range(34893,34903)),"sequence_labels":list(range(1,11)),"status":"ten_rows_after_12890_without_own_header_do_not_assign_by_sequence"},
+        {"candidate":12910,"raw_marker":None,"marker_line":None,"entry_lines":list(range(34904,34913)),"sequence_labels":[1,2,4,5,6,7,8,9,10],"missing_sequence":[3],"status":"nine_rows_missing_sequence_3_and_group_header"},
+        {"candidate":12920,"raw_marker":None,"marker_line":None,"collection_header_ocr":"玄集","header_line":34914,"table_entry_lines":list(range(34916,34926)),"following_marker":"一二九三〇","following_marker_line":34927,"status":"ten_table_rows_without_numeric_header_do_not_assign_by_sequence"},
+        {"candidate":12930,"raw_marker":"一二九三〇","marker_line":34927,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12940,"raw_marker":"一二九四〇","marker_line":34940,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12950,"raw_marker":"一二九五〇","marker_line":34953,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12960,"raw_marker":"一二九六〇","marker_line":34967,"table_segment":"e1","table_entry_lines":list(range(34957,34967)),"marker_position":"embedded_in_last_table_row"},
+        {"candidate":12970,"raw_marker":"一二九七〇","marker_line":34980,"table_segment":"e2","table_entry_lines":list(range(34970,34980)),"marker_position":"embedded_in_last_table_row"},
+        {"candidate":12980,"raw_marker":"一二九八〇","marker_line":34993,"table_segment":"e3","table_entry_lines":list(range(34983,34993)),"marker_position":"embedded_in_last_table_row"},
+        {"candidate":12990,"raw_marker":"一九九〇","marker_line":35001,"normalized_candidate":12990,"normalization_status":"hypothesis_only_raw_ocr_conflicts_with_expected_marker","first_table_entry_lines":list(range(35003,35013)),"following_table_entry_lines":list(range(35015,35025)),"following_table_marker":None,"status":"terminal_marker_and_two_tables_not_safely_pairable"}
+    ],
+    "existing_unassigned_block_refs": [
+        "hai_header_conflict_12860",
+        "hai_unheaded_12900",
+        "hai_sequence_gap_12910",
+        "hai_header_only_table_12920",
+        "hai_table_cell_markers_12960_to_12980",
+        "hai_terminal_12990_and_unheaded_following_table"
+    ],
+    "rules": [
+        "Do not infer 12860, 12900, 12910 or 12920 solely from expected numbering.",
+        "Keep the three 12960-12980 table markers embedded in their last table rows; do not shift them into preceding or following tables without page-image layout.",
+        "Keep 一九九〇 as raw OCR; 12990 remains a hypothesis only.",
+        "The second table after line 35014 has no group marker; do not automatically call it 13000."
+    ],
+    "image_verification": "pending"
+}
+
+
 HAI_PARTIAL_TABLE_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二四八〇", "group_marker_pdf_line": 34270, "occurrence": 1,
      "sequence_pdf_lines": list(range(34271, 34280)), "sequence_labels_candidate": list(range(2, 11)),
@@ -3919,6 +3961,7 @@ def get_collection_branch_group_index(branch):
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
             "table_region_audit_12510_12660": HAI_12510_12660_REGION_AUDIT,
             "boundary_audit_12670_12800": HAI_12670_12800_BOUNDARY_AUDIT,
+            "terminal_audit_12810_12990": HAI_12810_12990_TERMINAL_AUDIT,
             "partial_table_group_candidate_count": len(HAI_PARTIAL_TABLE_GROUP_CANDIDATES),
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
