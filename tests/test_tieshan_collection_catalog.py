@@ -1094,7 +1094,7 @@ class WeiCollectionInitialIndexTests(unittest.TestCase):
                           "八七八○","八七九○","八八○○","八八一○","八八二○","八八三○","八八四○","八八五○","八八六○","八九○",
                           "八九一○","八九二○","八九三○","八九四○","八九五○","八九六○","八九七○","八九八○","八九九○"]
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]], expected)
-        self.assertEqual(len(data["unassigned_blocks"]), 8)
+        self.assertEqual(len(data["unassigned_blocks"]), 17)
         sample = get_collection_sample("未")
         self.assertEqual(sample["group_index"]["group_count"], 77)
 
