@@ -1010,7 +1010,7 @@ COLLECTION_METADATA = {
     "巳": {"printed_page_start": 308, "pdf_text_line_start": 18706, "pdf_text_line_end": 20328, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "午": {"printed_page_start": 342, "pdf_text_line_start": 20332, "pdf_text_line_end": 21988, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "未": {"printed_page_start": 376, "pdf_text_line_start": 21990, "pdf_text_line_end": 23443, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "戌": {"printed_page_start": 478, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
