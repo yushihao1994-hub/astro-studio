@@ -165,13 +165,14 @@ footer{color:#7e969b}
 <button type="button" class="home-action" data-go="profile"><span class="action-icon">◷</span><strong>历史记录</strong><small>查看已保存的个人档案</small></button>
 </div></section>
 <nav class="workspace-nav" id="workspaceNav" aria-label="主导航">
-<button type="button" class="active" data-page="archive"><span class="nav-symbol">⌂</span>首页</button><button type="button" data-page="calc"><span class="nav-symbol">☷</span>推算</button><button type="button" data-page="tieshan"><span class="nav-symbol">▤</span>记录</button><button type="button" data-page="profile"><span class="nav-symbol">♙</span>我的</button>
+<button type="button" class="active" data-page="archive"><span class="nav-symbol">⌂</span>首页</button><button type="button" data-page="calc"><span class="nav-symbol">☷</span>推算</button><button type="button" data-page="tieshan"><span class="nav-symbol">▤</span>记录</button><button type="button" data-page="topics"><span class="nav-symbol">✧</span>财运婚姻</button><button type="button" data-page="profile"><span class="nav-symbol">♙</span>我的</button>
 </nav>
 <section class="workspace-panel" id="calcPanel"></section>
 <section class="workspace-panel" id="profilePanel"></section>
 <section class="workspace-panel" id="chartPanel"></section>
 <section class="workspace-panel" id="detailPanel"></section>
 <section class="workspace-panel" id="tieshanPanel"></section>
+<section class="workspace-panel" id="topicsPanel"></section>
 
 <section class="grid">
 <div class="card full"><h3>建立出生档案</h3><p class="hint">请尽量填写准确的出生时间与地点；不确定的资料可以先留空或选择未知。</p>
@@ -373,7 +374,7 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
 (function(){
  const nav=document.getElementById('workspaceNav');
  if(!nav)return;
- const pages=['archive','calc','profile','chart','detail','tieshan'];
+ const pages=['archive','calc','profile','chart','detail','tieshan','topics'];
  function switchPage(page){
   pages.forEach(p=>{const panel=document.getElementById(p==='archive'?'':p+'Panel');if(panel)panel.classList.toggle('active',p===page);});
   document.getElementById('homeDashboard').style.display=page==='archive'?'block':'none';
@@ -448,8 +449,8 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     detailRows+
     '</tbody></table></div><p class="hint">'+escapeHtml((bd.limitations||[]).join('；'))+'</p>');
   const topicPayload={pillars:p,birth:b,gender:(document.querySelector('input[name="gender"]:checked')||{}).value||'',derived:z,iron_plate_engine:d.iron_plate_engine||{}};
-  document.getElementById('chartPanel').innerHTML +=
-   '<div class="panel-card"><h3>专项推算</h3><p class="hint">分别查看财运与婚姻专题。只有完成真实考刻定盘并通过古籍依据核验后，才会生成铁板神数专项结论。</p><div class="topic-actions"><button type="button" class="topic-button" id="runFinance">推算财运</button><button type="button" class="topic-button" id="runMarriage">推算婚姻</button></div><div id="financeResult" class="topic-result" aria-live="polite"></div><div id="marriageResult" class="topic-result" aria-live="polite"></div></div>';
+  document.getElementById('topicsPanel').innerHTML =
+   '<div class="panel-card"><h3>财运与婚姻专项推算</h3><p class="hint">分别查看财运与婚姻专题。只有完成真实考刻定盘并通过古籍依据核验后，才会生成铁板神数专项结论。</p><div class="topic-actions"><button type="button" class="topic-button" id="runFinance">推算财运</button><button type="button" class="topic-button" id="runMarriage">推算婚姻</button></div><div id="financeResult" class="topic-result" aria-live="polite"></div><div id="marriageResult" class="topic-result" aria-live="polite"></div></div>';
   async function runTopic(topic){
    const label=topic==='finance'?'财运':'婚姻',output=document.getElementById(topic+'Result');
    const button=document.getElementById(topic==='finance'?'runFinance':'runMarriage');
