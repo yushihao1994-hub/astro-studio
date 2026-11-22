@@ -4283,6 +4283,53 @@ def get_hai_priority_conflict_review():
 
 
 
+def get_hai_boundary_review_12860_12910():
+    """Review numbered and unheaded text blocks from 12860 through 12910."""
+    source = HAI_12810_12990_TERMINAL_AUDIT
+    rows = {item["candidate"]: item for item in source["groups_and_blocks"]}
+    cases = []
+    for candidate in (12860, 12870, 12880, 12890, 12900, 12910):
+        item = rows[candidate]
+        cases.append({
+            "candidate_reference_only": candidate,
+            "raw_marker": item.get("raw_marker"),
+            "marker_pdf_line": item.get("marker_line"),
+            "header_ocr": item.get("header_ocr"),
+            "header_pdf_line": item.get("header_line"),
+            "entry_pdf_lines": list(item.get("entry_lines", [])),
+            "sequence_labels": list(item.get("sequence_labels", [])),
+            "missing_sequence": list(item.get("missing_sequence", [])),
+            "following_marker": item.get("following_marker"),
+            "following_marker_pdf_line": item.get("following_marker_line"),
+            "status": item["status"],
+            "assignment_status": (
+                "unassigned_no_numeric_group_marker"
+                if item.get("raw_marker") is None
+                else "text_layer_marker_and_rows_located_image_check_pending"
+            ),
+            "formal_index_eligible": False,
+            "required_evidence": [
+                "原页扫描图确认组头、集名页眉和正文的版面关系",
+                "核对正文序号是否完整、是否存在跨栏或续行",
+                "核对无独立组头的文本块是否确实属于某一组，不按顺序补号"
+            ],
+        })
+    return {
+        "source_pdf_text_lines": "34842-34912",
+        "cases": cases,
+        "rules": [
+            "Keep 12860's 支集 header and ten rows unassigned; do not infer a 12860 group marker.",
+            "Preserve 12890's raw header OCR 广节说易全书 at line 34881.",
+            "Keep the 12900 ten-row block unassigned because it has no independent group marker.",
+            "Keep 12910 as nine rows with missing sequence 3 and no group marker.",
+            "Text-layer sequence labels do not establish image-verified entry mapping."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_boundary_review_page_image_verification_pending",
+    }
+
+
 def get_hai_numbered_group_review_12810_12850():
     """Review five numbered text-layer groups and retain the 12830 header OCR conflict."""
     source = HAI_12810_12990_TERMINAL_AUDIT
@@ -4750,6 +4797,7 @@ def get_collection_branch_group_index(branch):
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
+            "boundary_review_12860_12910": get_hai_boundary_review_12860_12910(),
             "numbered_group_review_12810_12850": get_hai_numbered_group_review_12810_12850(),
             "numbered_group_review_12780_12800": get_hai_numbered_group_review_12780_12800(),
             "numbered_group_review_12720_12760": get_hai_numbered_group_review_12720_12760(),
