@@ -1391,6 +1391,19 @@ YIN_GROUP_INDEX = [
     _yin_group("三一八○", 14413, list(range(14415, 14425))),
     _yin_group("三一九○", 14426, list(range(14427, 14437))),
     _yin_group("三二○○", 14438, list(range(14440, 14450))),
+    _yin_group("三二一○", 14453, list(range(14453, 14463)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _yin_group("三二二○", 14465, list(range(14465, 14475)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _yin_group("三二三○", 14477, list(range(14477, 14487)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _yin_group("二三四○", 14501, list(range(14503, 14513)), "raw_marker_preserved_in_yin_collection"),
+    _yin_group("二三五○", 14514, list(range(14516, 14526)), "raw_marker_preserved_in_yin_collection"),
+    _yin_group("三二七○", 14543, list(range(14545, 14555))),
+    _yin_group("三二八○", 14556, list(range(14558, 14568))),
+    _yin_group("三二九○", 14569, list(range(14572, 14582))),
+    _yin_group("三三三○", 14621, list(range(14622, 14632))),
+    _yin_group("三三四○", 14633, list(range(14635, 14645))),
+    _yin_group("三三六○", 14655, list(range(14657, 14667))),
+    _yin_group("三三七○", 14668, list(range(14669, 14679))),
+    _yin_group("三三八○", 14680, list(range(14682, 14692))),
 ]
 
 YIN_GROUP_ANOMALIES = [
@@ -1402,7 +1415,11 @@ YIN_GROUP_ANOMALIES = [
     {"raw_group_marker": "三○八○", "pdf_text_line": 14289,
      "status": "marker_seen_body_not_located_before_3090"},
     {"raw_group_marker": "三一四○", "pdf_text_line": 14368,
-     "status": "marker_seen_body_not_located_before_3150"}
+     "status": "marker_seen_body_not_located_before_3150"},
+    {"raw_group_marker": "三二六○", "pdf_text_line": 14527,
+     "status": "marker_seen_body_boundary_ambiguous_before_special_section_shiji"},
+    {"raw_group_marker": "三三五○", "pdf_text_line": 14646,
+     "status": "marker_seen_body_not_located_before_3360"}
 ]
 
 YIN_UNASSIGNED_BLOCKS = [
@@ -1414,6 +1431,21 @@ YIN_UNASSIGNED_BLOCKS = [
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "yin_unheaded_entries_before_3120",
      "pdf_text_lines": "14331-14341", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "yin_unheaded_entries_before_2340",
+     "pdf_text_lines": "14490-14499", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "yin_special_section_shiji_after_3260",
+     "pdf_text_lines": "14530-14541", "entry_count_candidate": 10,
+     "status": "separate_section_heading_shiji_not_assigned_to_numbered_group"},
+    {"block_id": "yin_unheaded_entries_before_3330_a",
+     "pdf_text_lines": "14583-14592", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "yin_unheaded_entries_before_3330_b",
+     "pdf_text_lines": "14593-14602", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "yin_unheaded_entries_before_3330_c",
+     "pdf_text_lines": "14610-14619", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign"}
 ]
 
