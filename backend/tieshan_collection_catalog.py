@@ -1013,7 +1013,7 @@ COLLECTION_METADATA = {
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "戌": {"printed_page_start": 478, "pdf_text_line_start": 26556, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_located_group_index_pending", "indexed_groups": 0, "indexed_entries": 0},
 }
 
 
@@ -3509,6 +3509,26 @@ XU_UNASSIGNED_BLOCKS = [
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
+    if branch == "亥":
+        return {
+            "edition": EDITION, "collection": "亥集",
+            "status": "source_text_layer_located_group_index_pending",
+            "group_count": 0,
+            "entry_count": 0,
+            "groups": [],
+            "group_anomalies": [],
+            "unassigned_blocks": [
+                {"block_id": "hai_text_layer_segment", "pdf_text_lines": "33598-35025",
+                 "status": "group_markers_and_entry_boundaries_not_yet_systematically_indexed"}
+            ],
+            "limitations": [
+                "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
+                "文本层可见12000段组号序列及后续OCR异文，但尚未逐组核实边界。",
+                "末段组号、页眉集名和数字存在OCR错字，不按连续编号推补。",
+                "目前没有完成逐页图像核对，也没有完成十条逐项映射。",
+                "该状态仅表示已定位文本层，不表示已转录或核验亥集正文。"
+            ]
+        }
     if branch == "戌":
         return {
             "edition": EDITION, "collection": "戌集",
@@ -3703,7 +3723,8 @@ def get_collection_progress():
                  {"indexed_groups": len(WEI_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in WEI_GROUP_INDEX)} if branch == "未" else
                  {"indexed_groups": len(SHEN_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in SHEN_GROUP_INDEX)} if branch == "申" else
                  {"indexed_groups": len(YOU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in YOU_GROUP_INDEX)} if branch == "酉" else
-                 {"indexed_groups": len(XU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in XU_GROUP_INDEX)} if branch == "戌" else {})
+                 {"indexed_groups": len(XU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in XU_GROUP_INDEX)} if branch == "戌" else
+                 {"indexed_groups": 0, "indexed_entries": 0} if branch == "亥" else {})
             )}
             for branch, values in COLLECTION_METADATA.items()
         ],
@@ -3718,7 +3739,7 @@ def get_collection_progress():
 
 
 def get_collection_sample(branch="子"):
-    if branch in ("丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌"):
+    if branch in ("丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"):
         index = get_collection_branch_group_index(branch)
         return {
             "edition": EDITION,
