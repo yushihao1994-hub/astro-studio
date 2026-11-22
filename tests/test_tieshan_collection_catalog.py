@@ -1446,6 +1446,26 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertIn("unverified", second_duplicate["status"])
 
 
+    def test_hai_12670_and_12680_detached_numeric_columns_are_explicit(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        blocks = {item["block_id"]: item for item in data["unassigned_blocks"]}
+        group_12670 = blocks["hai_split_numeric_column_12670"]
+        self.assertEqual(group_12670["group_marker_pdf_line"], 34570)
+        self.assertEqual(group_12670["detached_numeric_pdf_lines"], list(range(34571, 34578)))
+        self.assertEqual(group_12670["entry_pdf_lines"], list(range(34579, 34589)))
+        self.assertEqual(group_12670["sequence_labels_observed"], [2, 3, 3, 4, 5, 6, 7, 8, 9, 10])
+        self.assertEqual(group_12670["sequence_missing_candidates"], [1])
+        self.assertEqual(group_12670["sequence_duplicate_candidates"], [3])
+        self.assertIn("unmapped", group_12670["status"])
+        group_12680 = blocks["hai_header_only_12680"]
+        self.assertEqual(group_12680["group_marker_pdf_line"], 34589)
+        self.assertEqual(group_12680["detached_numeric_pdf_lines"], list(range(34590, 34596)))
+        self.assertEqual(group_12680["collection_header_ocr"], "交集")
+        self.assertEqual(group_12680["collection_header_pdf_line"], 34597)
+        self.assertIn("unverified", group_12680["status"])
+
+
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
