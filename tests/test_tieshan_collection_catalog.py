@@ -1466,6 +1466,28 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertIn("unverified", group_12680["status"])
 
 
+    def test_hai_12770_and_12860_header_anomalies_are_split_and_located(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        blocks = {item["block_id"]: item for item in data["unassigned_blocks"]}
+
+        marker_only = blocks["hai_header_only_12770"]
+        self.assertEqual(marker_only["group_marker_raw"], "一二七七〇")
+        self.assertEqual(marker_only["group_marker_pdf_line"], 34721)
+        self.assertEqual(marker_only["intervening_header_ocr"], "康节道具全书")
+        self.assertEqual(marker_only["entries_before_next_group_marker"], 0)
+        self.assertEqual(marker_only["next_group_marker_raw"], "一二七八〇")
+        self.assertIn("do_not_infer", marker_only["status"])
+
+        conflict = blocks["hai_header_conflict_12860"]
+        self.assertEqual(conflict["collection_header_ocr"], "支集")
+        self.assertEqual(conflict["collection_header_pdf_line"], 34842)
+        self.assertEqual(conflict["entry_pdf_lines"], list(range(34846, 34856)))
+        self.assertEqual(conflict["sequence_labels_observed"], list(range(1, 11)))
+        self.assertEqual(conflict["following_group_marker_pdf_line"], 34856)
+        self.assertIn("unresolved", conflict["status"])
+        self.assertEqual(len(data["unassigned_blocks"]), 20)
+
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
