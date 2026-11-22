@@ -3702,7 +3702,8 @@ def get_collection_progress():
                  {"indexed_groups": len(WU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in WU_GROUP_INDEX)} if branch == "午" else
                  {"indexed_groups": len(WEI_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in WEI_GROUP_INDEX)} if branch == "未" else
                  {"indexed_groups": len(SHEN_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in SHEN_GROUP_INDEX)} if branch == "申" else
-                 {"indexed_groups": len(YOU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in YOU_GROUP_INDEX)} if branch == "酉" else {})
+                 {"indexed_groups": len(YOU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in YOU_GROUP_INDEX)} if branch == "酉" else
+                 {"indexed_groups": len(XU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in XU_GROUP_INDEX)} if branch == "戌" else {})
             )}
             for branch, values in COLLECTION_METADATA.items()
         ],
