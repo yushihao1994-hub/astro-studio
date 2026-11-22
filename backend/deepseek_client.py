@@ -381,7 +381,7 @@ def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None):
         "你只能解释用户提供的四柱与辅助数据，不得自行改算四柱，不得补造十神、旺衰、格局、大运、流年或古籍条文。"
         "必须明确说明：本报告属于四柱基础文化解读，不是完整铁板神数定数，不是古籍原文，也不是科学验证的命运预测。"
         "只输出合法 JSON，不得输出 Markdown。JSON 结构必须为："
-        "{\\"summary\\":\\"\\",\\"sections\\":[{\\"title\\":\\"\\",\\"conclusion\\":\\"\\",\\"reasoning\\":\\"\\",\\"advice\\":\\"\\"}],\\"limitations\\":[\\"\\"]}。"
+        '{"summary":"","sections":[{"title":"","conclusion":"","reasoning":"","advice":""}],"limitations":[]}。'
         "sections 必须恰好6项，标题依照用户任务给出的顺序；每项的 conclusion、reasoning、advice 均须具体且非空。"
         "先用通俗中文回答倾向，再解释对应输入数据；不得把五行简单计数等同于旺衰。"
         "不得虚构用户经历、收入、婚姻状态或现实事件，不得作确定性吉凶断言。"
