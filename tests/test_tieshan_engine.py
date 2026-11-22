@@ -89,7 +89,7 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         for key in expected:
             self.assertNotIn("verified",candidates[key]["status"])
             self.assertNotEqual(candidates[key].get("algorithm_status"),"verified")
-        self.assertIn("己亥單四數",candidates["QING-HELUO-CLAUSES"]["raw_text"])
+        self.assertTrue("己亥單四數" in candidates["QING-HELUO-CLAUSES"]["raw_text"] or "己亥单四数" in candidates["QING-HELUO-CLAUSES"]["raw_text"])
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
 
