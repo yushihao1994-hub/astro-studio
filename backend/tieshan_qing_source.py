@@ -179,6 +179,28 @@ TRANSCRIPTION_CANDIDATES = [
         "ambiguities": ["“皆因未識真刻末分耳”末字需再核；此段按300dpi图像初读，未完成逐字校勘。"],
         "algorithm_status": "not_implemented"
     },
+
+    {
+        "id": "QING-EIGHT-TRIGRAM-ADD-VERSE",
+        "topic": "八卦加则例口诀",
+        "pdf_page": 2,
+        "raw_text": "爻從三十起，乾卦六為頭，兌為後少女，增方隅中一綱，以變知六百止，世應兩同倚。遇十須不用，玄玄妙法周，當看多寡數，及止悉因由。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
+        "ambiguities": ["“增方隅中一綱”及“以變知六百止”需再核字形與句读；原文可能存在异体/讹刻。"],
+        "algorithm_status": "conceptual_only"
+    },
+    {
+        "id": "QING-STEM-BRANCH-NUMBER-TABLES",
+        "topic": "天干河洛配数与地支取数表",
+        "pdf_page": 2,
+        "raw_text_candidates": [
+            "甲己子午九；乙庚丑未八；丙辛寅申七；丁壬卯酉六；戊癸辰戌五；己亥单四数。",
+            "亥子一六水；寅卯三八木；巳午二七火；申酉四九金；辰戌丑未五同归。"
+        ],
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
+        "ambiguities": ["第一组口诀中“己”重复出现，须保留原文歧义，不能擅自改字或生成唯一映射。"],
+        "algorithm_status": "not_implemented"
+    },
     {
         "id": "QING-HELUO-CLAUSES",
         "topic": "河洛配数例",
