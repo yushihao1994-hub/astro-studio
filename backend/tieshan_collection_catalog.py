@@ -2083,6 +2083,56 @@ SI_GROUP_INDEX = [
     _si_group("六二三○", 19099, list(range(19100,19110))),
     _si_group("六二四○", 19140, list(range(19142,19152)), "table_rows_text_layer_located"),
     _si_group("六二五○", 19154, list(range(19156,19166)), "table_rows_text_layer_located"),
+    _si_group("六二六○", 19167, list(range(19174,19184)), "section_header_then_ten_entries"),
+    _si_group("六二七○", 19184, list(range(19186,19196))),
+    _si_group("六二八○", 19196, list(range(19197,19207))),
+    _si_group("六二九○", 19207, list(range(19213,19223)), "page_header_before_ten_entries"),
+    _si_group("六三○○", 19224, list(range(19225,19235))),
+    _si_group("六三一○", 19236, list(range(19238,19248))),
+    _si_group("六三三○", 19265, list(range(19267,19277)), "page_header_before_ten_entries"),
+    _si_group("六三四○", 19278, list(range(19279,19289))),
+    _si_group("六三五○", 19290, list(range(19294,19304)), "page_header_before_ten_entries"),
+    _si_group("六三六○", 19305, list(range(19306,19316))),
+    _si_group("六三七○", 19317, list(range(19319,19329))),
+    {
+        "collection": "巳", "raw_group_marker": "六三九○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19344,
+        "pdf_text_lines": "19344-19366", "layout_status": "age_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(19346,19356),range(19357,19367)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "巳", "raw_group_marker": "六四○○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19368,
+        "pdf_text_lines": "19368-19392", "layout_status": "age_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(19370,19380),range(19382,19392)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _si_group("六四二○", 19393, list(range(19395,19405))),
+    _si_group("六四三○", 19406, list(range(19407,19417))),
+    _si_group("六四五○", 19428, list(range(19430,19440)), "page_header_before_ten_entries"),
+    {
+        "collection": "巳", "raw_group_marker": "六四六○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19441,
+        "pdf_text_lines": "19441-19462", "layout_status": "age_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(19442,19452),range(19452,19462)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "巳", "raw_group_marker": "六四六五○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19463,
+        "pdf_text_lines": "19463-19484", "layout_status": "non_ten_increment_group_marker_age_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(19465,19475),range(19475,19485)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
 ]
 
 SI_GROUP_ANOMALIES = [
@@ -2092,8 +2142,16 @@ SI_GROUP_ANOMALIES = [
      "status": "marker_seen_body_not_located_before_6150"},
     {"raw_group_marker": "六二○○", "pdf_text_line": 19046,
      "status": "marker_seen_body_not_located_before_short_raw_marker_620"},
-    {"raw_group_marker": "六二六○", "pdf_text_line": 19167,
-     "status": "marker_seen_body_not_located_in_current_review_window"}
+    {"raw_group_marker": "六二○○", "pdf_text_line": 19046,
+     "status": "marker_seen_body_not_located_before_short_raw_marker_620"},
+    {"raw_group_marker": "六三二○", "pdf_text_line": None,
+     "status": "unheaded_ten_entry_block_between_6310_and_6330"},
+    {"raw_group_marker": "六三八○", "pdf_text_line": None,
+     "status": "unheaded_ten_entry_block_between_6370_and_6390"},
+    {"raw_group_marker": "六四一○", "pdf_text_line": None,
+     "status": "age_clause_block_remains_with_6400_heading_not_separate_group"},
+    {"raw_group_marker": "六四四○", "pdf_text_line": 19418,
+     "status": "marker_seen_body_not_located_before_6450"}
 ]
 
 SI_UNASSIGNED_BLOCKS = [
@@ -2104,7 +2162,11 @@ SI_UNASSIGNED_BLOCKS = [
     {"block_id": "si_age_data_after_6220", "pdf_text_lines": "19088-19097",
      "entry_count_candidate": 10, "status": "separate_age_column_block_alignment_pending"},
     {"block_id": "si_age_data_after_6230", "pdf_text_lines": "19110-19120",
-     "entry_count_candidate": 11, "status": "separate_age_column_block_alignment_pending"}
+     "entry_count_candidate": 11, "status": "separate_age_column_block_alignment_pending"},
+    {"block_id": "si_unheaded_entries_between_6310_and_6330", "pdf_text_lines": "19254-19263",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "si_unheaded_entries_between_6370_and_6390", "pdf_text_lines": "19333-19342",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
 ]
 
 
