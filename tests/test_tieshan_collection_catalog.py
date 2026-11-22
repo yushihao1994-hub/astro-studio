@@ -470,7 +470,9 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         from backend.tieshan_collection_catalog import get_collection_progress
         data = get_collection_progress()
         chou = next(x for x in data["collections"] if x["collection"] == "丑")
-        self.assertEqual(chou["index_status"], "text_layer_range_located_not_indexed")
+        self.assertEqual(chou["index_status"], "partial_text_layer_index")
+        self.assertEqual(chou["indexed_groups"], 10)
+        self.assertEqual(chou["indexed_entries"], 100)
         self.assertEqual(chou["pdf_text_line_start"], 12572)
         self.assertEqual(chou["pdf_text_line_end"], 14290)
         self.assertEqual(chou["indexed_groups"], 0)
