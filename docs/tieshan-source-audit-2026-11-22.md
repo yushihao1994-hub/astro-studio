@@ -904,3 +904,15 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 - 12990：35001原始OCR「一九九〇」保留；规范化为12990仅是假设。首段表格35003—35012，后续无组头表格35015—35024，不自动补成13000。
 
 12960—12980的表格单元格边界和组号归属需要原页图像确认。12990的原始OCR与预期数字冲突，不强制改号。所有八个区段正式入索资格false。新增API字段 terminal_table_review_12920_12990；测试核对嵌入式标记、页眉异常、12990错号与无组头后续表格、API出口及正式组数仍为0。
+
+
+
+## 第二十六轮：CI失败定位与两个字段映射修复（2026-11-22）
+
+通过直接读取GitHub Actions push触发的工作流记录与失败日志，确认此前多轮Python回归测试均失败，不能按“CI未确认”处理。最近一次运行（run 45017960987）共运行147项测试，结果为1项断言失败、27项错误。
+
+定位到两个直接原因：
+1. get_hai_header_exception_review_12710_12770() 从 hai_header_only_12770 读取了不存在的 next_marker_pdf_line；源数据字段实际为 next_group_marker_pdf_line，导致调用亥集API时出现KeyError，并连带造成多项测试报错。
+2. 新增12860—12910审计将12890页眉字段只读取 header_ocr；源审计对12890使用 intervening_header_ocr，导致该项断言得到None。
+
+本轮修正上述字段映射，并为12770的下一组行号、页眉OCR及页眉行号增加回归断言。此前失败运行链接：https://github.com/yushihao1994-hub/astro-studio/actions/runs/45017960987。修复是否生效以本轮后续push工作流结果为准。
