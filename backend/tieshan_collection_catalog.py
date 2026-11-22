@@ -1004,7 +1004,7 @@ def get_group_index():
 COLLECTION_METADATA = {
     "子": {"printed_page_start": 138, "pdf_text_line_start": 10664, "pdf_text_line_end": 12570, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14174, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "寅": {"printed_page_start": 206, "pdf_text_line_start": 14175, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "寅": {"printed_page_start": 206, "pdf_text_line_start": 14175, "pdf_text_line_end": 15084, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "卯": {"printed_page_start": 240, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "巳": {"printed_page_start": 308, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1404,6 +1404,62 @@ YIN_GROUP_INDEX = [
     _yin_group("三三六○", 14655, list(range(14657, 14667))),
     _yin_group("三三七○", 14668, list(range(14669, 14679))),
     _yin_group("三三八○", 14680, list(range(14682, 14692))),
+    {
+        "collection": "寅", "raw_group_marker": "三三九○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 14757,
+        "pdf_text_lines": "14757-14808", "layout_status": "age_sequence_and_clause_columns_separated",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_span": "14759-14797", "clause_text_line": line}
+                    for n,line in enumerate(range(14799,14809),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "寅", "raw_group_marker": "三四○○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 14810,
+        "pdf_text_lines": "14810-14837", "layout_status": "age_sequence_and_clause_columns_separated",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_span": "14812-14827", "clause_text_line": line}
+                    for n,line in enumerate(range(14828,14838),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _yin_group("三四二○", 14847, list(range(14848, 14858))),
+    _yin_group("三四三○", 14859, list(range(14861, 14871))),
+    _yin_group("三四四○", 14872, list(range(14873, 14883))),
+    _yin_group("三四五○", 14899, list(range(14900, 14910))),
+    _yin_group("三四六○", 14911, list(range(14913, 14923))),
+    _yin_group("三四六○", 14924, list(range(14929, 14939)), "repeated_marker_second_occurrence", occurrence=2),
+    _yin_group("三四八○", 14940, list(range(14943, 14953))),
+    _yin_group("三四九○", 14954, list(range(14956, 14966))),
+    {
+        "collection": "寅", "raw_group_marker": "三五○○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 14966,
+        "pdf_text_lines": "14966-14994", "layout_status": "sequence_and_clause_columns_separated",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line, "clause_text_line": clause}
+                    for n,line,clause in zip(range(1,11),range(14975,14985),range(14985,14995))],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "寅", "raw_group_marker": "三五一○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 14996,
+        "pdf_text_lines": "14996-15019", "layout_status": "age_sequence_and_clause_columns_separated",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_span": "14998-15007", "clause_text_line": line}
+                    for n,line in enumerate(range(15009,15019),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "寅", "raw_group_marker": "三五二○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 15020,
+        "pdf_text_lines": "15020-15041", "layout_status": "sequence_age_and_clause_columns_separated",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "sequence_age_line": seq, "clause_text_line": clause}
+                    for n,(seq,clause) in enumerate(zip(range(15022,15032),range(15032,15042)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _yin_group("三五三○", 15043, list(range(15047, 15057))),
+    _yin_group("三五四○", 15058, list(range(15059, 15069))),
+    _yin_group("三五五○", 15070, list(range(15072, 15082))),
 ]
 
 YIN_GROUP_ANOMALIES = [
@@ -1419,7 +1475,13 @@ YIN_GROUP_ANOMALIES = [
     {"raw_group_marker": "三二六○", "pdf_text_line": 14527,
      "status": "marker_seen_body_boundary_ambiguous_before_special_section_shiji"},
     {"raw_group_marker": "三三五○", "pdf_text_line": 14646,
-     "status": "marker_seen_body_not_located_before_3360"}
+     "status": "marker_seen_body_not_located_before_3360"},
+    {"raw_group_marker": "三四一○", "pdf_text_line": 14839,
+     "status": "marker_seen_body_not_located_before_3420"},
+    {"raw_group_marker": "三四七○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_between_3460_and_3480"},
+    {"raw_group_marker": "三五六○", "pdf_text_line": None,
+     "status": "expected_group_marker_not_seen_before_guest_collection_boundary"}
 ]
 
 YIN_UNASSIGNED_BLOCKS = [
@@ -1446,7 +1508,10 @@ YIN_UNASSIGNED_BLOCKS = [
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "yin_unheaded_entries_before_3330_c",
      "pdf_text_lines": "14610-14619", "entry_count_candidate": 10,
-     "status": "group_marker_missing_do_not_assign"}
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "yin_special_section_shiji_before_3390",
+     "pdf_text_lines": "14696-14755", "entry_count_candidate": 10,
+     "status": "separate_section_heading_shiji_with_age_table_not_assigned_to_numbered_group"}
 ]
 
 
