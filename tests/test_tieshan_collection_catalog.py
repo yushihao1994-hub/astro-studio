@@ -1248,8 +1248,8 @@ class ShenAndYouCollectionTailTests(unittest.TestCase):
         self.assertEqual(shen["group_count"], 59)
         self.assertEqual(shen["entry_count"], 590)
         you = get_collection_branch_group_index("酉")
-        self.assertEqual(you["group_count"], 3)
-        self.assertEqual(you["entry_count"], 30)
+        self.assertEqual(you["group_count"], 27)
+        self.assertEqual(you["entry_count"], 270)
         self.assertEqual([g["raw_group_marker"] for g in you["groups"]],
                          ["一○○五○","一○○六○","一○○七○","一九○九○","一○○一○","一○○一○○",
                           "一○二○","一○三○","一○四○","一○○五○","一○○六○","一○○七○","一○○八○",
