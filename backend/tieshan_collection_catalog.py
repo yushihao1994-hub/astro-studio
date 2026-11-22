@@ -1019,10 +1019,11 @@ COLLECTION_METADATA = {
 
 # 丑集首批结构索引：仅记录分组标题、序号和PDF文本行，不复制条文正文。
 # 组号保留PDF文本层的原始圆圈字符“○”，不擅自统一为“〇”。
-def _chou_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending"):
+def _chou_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", occurrence=1):
     return {
         "collection": "丑",
         "raw_group_marker": raw_marker,
+        "occurrence": occurrence,
         "normalized_group_marker_candidate": None,
         "group_header_pdf_line": header_line,
         "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
@@ -1067,13 +1068,31 @@ CHOU_GROUP_INDEX = [
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending",
     },
+    _chou_group("二一八○", 12824, list(range(12825, 12835))),
+    _chou_group("二一九○", 12836, list(range(12838, 12848))),
+    _chou_group("二二一○", 12851, list(range(12852, 12861)), "table_rows_text_layer_located"),
+    _chou_group("二二二○", 12863, list(range(12864, 12873)), "table_rows_text_layer_located"),
+    _chou_group("二二三○", 12875, list(range(12876, 12886)), "table_rows_text_layer_located", occurrence=2),
+    _chou_group("二二四○", 12894, list(range(12895, 12905)), occurrence=2),
+    _chou_group("二二五○", 12906, list(range(12908, 12918))),
+    _chou_group("二二六○", 12919, list(range(12920, 12930))),
 ]
 
 CHOU_GROUP_ANOMALIES = [
     {"raw_group_marker": "二五○", "pdf_text_line": 12772,
-     "normalized_group_marker_candidate": "二二五○",
-     "status": "probable_ocr_marker_truncation_pending_image_check",
-     "note": "位于二二四○之后、二六○之前；原始文本层仅识别为二五○，不计正式组号。"}
+     "normalized_group_marker_candidate": None,
+     "status": "raw_marker_preserved_numbering_interpretation_unresolved",
+     "note": "文本层原样为二五○，后文另有明确二二五○（12906行）；不得仅凭顺序自动改写。"},
+    {"raw_group_marker": "二六○", "pdf_text_line": 12798,
+     "normalized_group_marker_candidate": None,
+     "status": "raw_marker_preserved_numbering_interpretation_unresolved",
+     "note": "文本层原样为二六○，后文另有明确二二六○（12919行）；该处十条行位尚待扫描页复核。"},
+    {"raw_group_marker": "二二三○", "pdf_text_line": 12875,
+     "occurrence": 2, "status": "repeated_group_marker_second_occurrence",
+     "note": "前段12744行已出现同名组号，按不同出现位置独立保存。"},
+    {"raw_group_marker": "二二四○", "pdf_text_line": 12894,
+     "occurrence": 2, "status": "repeated_group_marker_second_occurrence",
+     "note": "前段12757行已出现同名组号，按不同出现位置独立保存。"}
 ]
 
 CHOU_UNASSIGNED_BLOCKS = [
@@ -1102,12 +1121,12 @@ def get_collection_branch_group_index(branch):
             "group_anomalies": [dict(item) for item in CHOU_GROUP_ANOMALIES],
             "unassigned_blocks": [dict(item) for item in CHOU_UNASSIGNED_BLOCKS],
             "limitations": [
-                "本批仅索引丑集已定位的十三组，不能代表丑集全部内容。",
+                "本批仅索引丑集已定位组号的结构记录，不能代表丑集全部内容。",
                 "仅保存组号、序号和PDF文本行，不复制条文正文。",
                 "PDF文本层中的组号保留原始字符，未擅自规范化。",
                 "所有行号和分组结构仍需扫描页面图像复核。",
                 "未索引的中间组号、缺组和版式异常不自动补造。",
-                "丑集疑似二二五○组号及两段无组号内容单独登记为异常，不计入正式组数；原始组号二六○按文本层照录，规范化待核。",
+                "丑集原始二五○、二六○与后文二二五○、二二六○分开登记；二二三○、二二四○重复出现时按位置分别记录。无组号内容仍独立保存。",
                 "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
             ]
         }
