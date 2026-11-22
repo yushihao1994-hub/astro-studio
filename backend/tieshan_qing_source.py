@@ -324,11 +324,11 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 150,
+        "reviewed_pdf_pages": 250,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
         "blockers": list(BLOCKERS),
-        "review_coverage": "150/665 PDF页已检查（约22.6%）；剩余515页尚未检查",
+        "review_coverage": "250/665 PDF页已检查（约37.6%）；剩余415页尚未检查",
         "can_generate_final_iron_plate_number": False,
     }
