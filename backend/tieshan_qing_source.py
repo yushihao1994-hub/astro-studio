@@ -227,15 +227,38 @@ TRANSCRIPTION_CANDIDATES = [
     },
 
     {
+        "id": "QING-P2-STEM-TRIGRAM-VERSE",
+        "topic": "天干配卦例（右页竖排口诀）",
+        "pdf_page": 2,
+        "printed_pages": [5],
+        "raw_text": "壬甲從乾數，乙癸向坤求，庚求民上立辛在巽方，雷己巳震門起戊以離為頭，丙須坎處出，丁向兌家收。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
+        "ambiguities": [
+            "原页竖排分栏，句读及“庚求民上立辛在巽方”“雷己巳震門”等字词疑有误读；此处按可见字形暂录，不据此生成天干到卦的映射。",
+            "必须结合原页栏位、天干顺序及例表逐项校对。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+    {
+        "id": "QING-P2-BRANCH-TRIGRAM-VERSE",
+        "topic": "地支配卦例（右页竖排口诀）",
+        "pdf_page": 2,
+        "printed_pages": [5],
+        "raw_text": "一數坎兮二數坤，三震四巽，數中分五寄。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
+        "ambiguities": ["六至九及五寄的完整用法须结合左页图表、后续例题复核。"],
+        "algorithm_status": "conceptual_only"
+    },
+    {
         "id": "QING-P3-ANSHEN-MING-INTRO",
         "topic": "安身命例开头说明",
         "pdf_page": 3,
         "printed_pages": [6],
-        "raw_text": "安身命例。太抵人命從子起正月順至季月，又自月起子時……",
-        "status": "partial_image_transcription_candidate",
+        "raw_text": "安身命例。大抵人命從年上起正月順至季月，又自月上起子時逆。本生時安命，順數；未生時安身，若閏月作多一月算。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
         "ambiguities": [
-            "扫描页3左页开头可见“太抵人命從子起正月順至季月”一段，但后续关于起时、逆顺及安身宫的字句需放大复核；省略号部分不得视为已转录。",
-            "下方干支/宫位例表仍未逐行抄录，不能据此计算安身命宫。"
+            "高分辨率500dpi原图可辨“從年上起正月順至季月，又自月上起子時逆”“本生時安命順數，未生時安身，若閏月作多一月算”；“本生时/未生时”具体断句及“顺数”的承接对象仍需结合例表验证。",
+            "下方起五宫例表已定位，但宫名与天干配对的个别字形需逐格复核；目前不编码为映射。"
         ],
         "algorithm_status": "not_implemented"
     },
@@ -244,10 +267,10 @@ TRANSCRIPTION_CANDIDATES = [
         "topic": "河圖、洛書方位次序说明",
         "pdf_page": 3,
         "printed_pages": [7],
-        "raw_text": "河圖之序自北而東，左旋而相生，然對待之位……；洛書之序自北而西，右轉而相尅，然對待之位……",
-        "status": "partial_image_transcription_candidate",
+        "raw_text": "河圖之序自北而東，左旋而相生，然對待之位則北方一六水尅南方巳午火；洛書之序自北而西，右轉而相尅，然對待之位則東南四九金生西方一六水。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
         "ambiguities": [
-            "扫描页3右页可辨“河圖之序自北而東左旋而相生”“洛書之序自北而西右轉而相尅”等语；后半句涉及方位与五行生克的字词须放大确认。",
+            "500dpi原图可辨后半句大致为“則北方一六水尅南方巳午火”“則東南四九金生西方一六水”；“尅/克”异体及个别方位字仍需复核。",
             "此段是方位/生克说明，不足以单独证明出生资料到铁板数的运算公式。"
         ],
         "algorithm_status": "conceptual_only"
