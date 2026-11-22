@@ -1841,7 +1841,7 @@ CHEN_GROUP_INDEX = [
     _chen_group("五二八○", 17576, list(range(17576, 17586)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _chen_group("五二九○", 17588, list(range(17588, 17598)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _chen_group("五三○○", 17616, list(range(17617, 17627))),
-    _chen_group("五三一○", 17628, list(range(17630, 17640))),,
+    _chen_group("五三一○", 17628, list(range(17630, 17640))),
     _chen_group("五二四○", 17535, list(range(17537, 17547)), "sequence_1_missing_sequence_10_repeated"),
     _chen_group("五二五○", 17548, list(range(17549, 17559))),
     _chen_group("五二七○", 17564, list(range(17564, 17574)), "table_rows_text_layer_located_title_row_is_entry_1"),
