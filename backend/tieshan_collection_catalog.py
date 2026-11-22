@@ -1179,13 +1179,6 @@ CHOU_GROUP_INDEX = [
     _chou_group("二六二", 13511, list(range(13511, 13521)), "raw_short_marker_table_rows_title_row_is_entry_1"),
     _chou_group("二六三○", 13546, list(range(13547, 13557)), "ten_clause_lines_without_visible_sequence_column"),
     {
-        "collection": "丑", "raw_group_marker": "二六四○", "occurrence": 1,
-        "normalized_group_marker_candidate": None, "group_header_pdf_line": 13584,
-        "pdf_text_lines": "13584-13616", "layout_status": "complex_multi_column_alignment_unresolved",
-        "entry_count": 10, "entries": [],
-        "verification_status": "marker_seen_body_alignment_pending_image_check"
-    },
-    {
         "collection": "丑", "raw_group_marker": "二六五○", "occurrence": 1,
         "normalized_group_marker_candidate": None, "group_header_pdf_line": 13617,
         "pdf_text_lines": "13617-13640", "layout_status": "multi_line_ordinal_age_clause_spans",
