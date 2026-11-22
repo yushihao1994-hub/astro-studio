@@ -885,7 +885,7 @@ class SiCollectionIndexThrough6250Tests(unittest.TestCase):
             self.assertEqual(group["entry_count"], 10)
         short = next(g for g in data["groups"] if g["raw_group_marker"] == "六二○")
         self.assertEqual(short["normalized_group_marker_candidate"], "六二一○")
-        self.assertTrue(any(x["raw_group_marker"] == "六二六○" for x in data["group_anomalies"]))
+        self.assertTrue(any(x["raw_group_marker"] == "六二六○" for x in data["groups"]))
 
 
 class SiCollectionIndexThrough6465Tests(unittest.TestCase):
