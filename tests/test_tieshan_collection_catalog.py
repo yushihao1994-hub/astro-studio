@@ -2033,6 +2033,38 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(api["group_count"], 0)
 
 
+    def test_hai_numbered_group_review_12720_12760_keeps_continuations_separate(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_numbered_group_review_12720_12760,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_numbered_group_review_12720_12760()
+        self.assertEqual(audit["source_pdf_text_lines"], "34648-34719")
+        self.assertEqual([item["candidate_reference_only"] for item in audit["cases"]],
+                         [12720, 12730, 12750, 12760])
+        expected = {
+            12720: ("一二七二〇", 34648, list(range(34650, 34660)), [1,2,3,4,5,6,7,8,9,10], []),
+            12730: ("一二七三〇", 34661, list(range(34664, 34674)), [1,2,3,4,5,6,7,8,9,10], []),
+            12750: ("一二七五〇", 34691, list(range(34693, 34705)), [1,2,3,4,5,6,7,8,9,10], [34701,34704]),
+            12760: ("一二七六〇", 34706, list(range(34707, 34720)), [1,2,3,4,5,6,7,8,9,10], [34712,34716,34719]),
+        }
+        for item in audit["cases"]:
+            raw, marker_line, entry_lines, labels, continuation_lines = expected[item["candidate_reference_only"]]
+            self.assertEqual((item["raw_marker"], item["marker_pdf_line"]), (raw, marker_line))
+            self.assertEqual(item["entry_pdf_lines"], entry_lines)
+            self.assertEqual(item["entry_count_candidate"], len(entry_lines))
+            self.assertEqual(item["sequence_labels"], labels)
+            self.assertEqual(item["continuation_pdf_lines"], continuation_lines)
+            self.assertEqual(item["continuation_count"], len(continuation_lines))
+            self.assertEqual(item["continuation_mapping"], "text_layer_observation_only_not_page_layout_verified")
+            self.assertFalse(item["formal_index_eligible"])
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["numbered_group_review_12720_12760"], audit)
+        self.assertEqual(api["group_count"], 0)
+
+
     def test_hai_header_exception_review_12710_12770_preserves_truncation_wrapping_and_empty_group(self):
         from backend.tieshan_collection_catalog import (
             get_hai_header_exception_review_12710_12770,
