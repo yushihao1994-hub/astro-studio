@@ -215,6 +215,21 @@ OBSERVATIONS = [
 # These are source strings, not executable mappings; every item remains pending
 # independent character-by-character review against the page image.
 TRANSCRIPTION_CANDIDATES = [
+    {
+        "id": "QING-P2-ADD-VERSE-HIGHRES-SECOND-REVIEW",
+        "topic": "八卦加则例口诀（PDF第2页右页/印刷页5）",
+        "pdf_page": 2,
+        "printed_pages": [5],
+        "raw_text": "爻從三十起；乾卦六為頭；兌為後少女；增方隅中一綱收；以變知六百止；世應兩同倚；遇十須不用；玄玄妙法周；當看多寡數；多止悉因由。",
+        "status": "high_resolution_400dpi_second_review_partial_transcription",
+        "ambiguities": [
+            "400dpi原图确认首字为“爻”，不是“父”；“增方隅中一綱收”及“以變知六百止”仍有字义/断句疑点。",
+            "“多止悉因由”末句字形可辨但语义待考；不据口诀单独编写加数、变卦或停止条件。",
+            "此处只登记右页可辨口诀；左页另有天干、日主、地支配卦例及河洛配数表，须逐栏转录后才能判断调用关系。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+
 
     {
         "id": "QING-OPENING-TRUE-KE-PARAGRAPH",
