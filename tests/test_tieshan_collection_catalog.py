@@ -1883,6 +1883,42 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(get_collection_branch_group_index("亥")["group_count"], 0)
 
 
+
+    def test_hai_12080_marker_cluster_review_preserves_raw_markers_and_boundary_conflict(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_marker_cluster_review_12080_12180,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_marker_cluster_review_12080_12180()
+        self.assertEqual(audit["marker_count"], 13)
+        self.assertEqual(
+            [item["pdf_text_line"] for item in audit["markers"]],
+            [33724, 33732, 33743, 33766, 33778, 33792, 33805,
+             33829, 33833, 33845, 33860, 33875, 33888],
+        )
+        self.assertEqual(
+            [item["raw_marker"] for item in audit["markers"]],
+            ["一二〇八〇", "一九岁", "二〇九〇", "二一〇〇", "二一一〇",
+             "一二二〇", "一二二三〇", "一二二四〇", "一五四", "一五六",
+             "一五七", "一八", "一二一八〇"],
+        )
+        conflict = audit["boundary_conflicts"][0]
+        self.assertEqual(conflict["conflict_id"], "hai_marker_boundary_33829_33833")
+        self.assertEqual(conflict["shared_entry_pdf_lines"], list(range(33834, 33845)))
+        self.assertEqual(conflict["shared_entry_line_count"], 11)
+        shared = [item for item in audit["markers"] if item["conflict_id"]]
+        self.assertEqual({item["pdf_text_line"] for item in shared}, {33829, 33833})
+        self.assertEqual(audit["adjacent_context"][0]["pdf_text_line"], 33888)
+        self.assertEqual(audit["adjacent_context"][0]["relation"],
+                         "adjacent_right_boundary_context_outside_block_span")
+        self.assertTrue(all(item["formal_index_eligible"] is False for item in audit["markers"]))
+        self.assertTrue(all(item["formal_index_eligible"] is False for item in audit["boundary_conflicts"]))
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["marker_cluster_review_12080_12180"], audit)
+        self.assertEqual(api["group_count"], 0)
+
     def test_hai_priority_conflict_review_covers_registered_blocks_without_promotion(self):
         from backend.tieshan_collection_catalog import (
             HAI_UNASSIGNED_BLOCKS, get_hai_priority_conflict_review,
