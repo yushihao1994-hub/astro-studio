@@ -3351,14 +3351,44 @@ YOU_GROUP_INDEX = [
     _you_group("一○一九○", 25510, list(range(25511,25521))),
     _you_group("一○二○○", 25522, list(range(25523,25533))),
     _you_group("一○二一○", 25534, list(range(25536,25546))),
-    _you_group("一○二二○", 25547, list(range(25548,25558))),
+    _you_group("一○三三○", 25547, list(range(25548,25558))),
+    _you_group("一○三四○", 25559, list(range(25561,25571))),
+    _you_group("一○三五○", 25572, list(range(25578,25588))),
+    _you_group("一○三六○", 25588, list(range(25589,25599))),
+    _you_group("一○三七○", 25599, list(range(25601,25611))),
+    _you_group("一○三八○", 25611, list(range(25618,25628))),
+    _you_group("一○三九○", 25629, list(range(25631,25641))),
+    _you_group("一○四○○", 25642, list(range(25643,25653))),
+    _you_group("一○四一○", 25654, list(range(25658,25668))),
+    _you_group("一○四二○", 25668, list(range(25669,25679))),
+    _you_group("一○四三○", 25679, list(range(25681,25691))),
+    _you_group("一○四四○", 25691, list(range(25696,25706))),
+    _you_group("一○四五○", 25706, list(range(25708,25718))),
+    _you_group("一○四六○", 25718, list(range(25719,25729))),
+    _you_group("一○四八○", 25733, list(range(25735,25745)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _you_group("一○四九○", 25746, list(range(25747,25757))),
+    _you_group("一○五○○", 25758, list(range(25760,25770))),
+    _you_group("一○五一○", 25773, list(range(25774,25784))),
+    _you_group("一○五二○", 25784, list(range(25785,25795))),
+    _you_group("一○五三○", 25796, list(range(25797,25807))),
+    {
+        "collection": "酉", "raw_group_marker": "一○五四○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25812,
+        "pdf_text_lines": "25812-25823", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "source_row_line": 25814, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
 ]
 
 YOU_GROUP_ANOMALIES = [
-    {"raw_group_marker": "一○○八○", "pdf_text_line": 25196, "status": "marker_seen_body_not_located_before_10090"}
+    {"raw_group_marker": "一○○八○", "pdf_text_line": 25196, "status": "marker_seen_body_not_located_before_10090"},
+    {"raw_group_marker": "一○二二○", "pdf_text_line": None, "status": "expected_marker_missing_before_10330"},
+    {"raw_group_marker": "一○四七○", "pdf_text_line": 25729, "status": "marker_seen_body_not_located_before_10480"}
 ]
 YOU_UNASSIGNED_BLOCKS = [
-    {"block_id": "you_unheaded_opening_group_before_10050", "pdf_text_lines": "25098-25118", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+    {"block_id": "you_unheaded_opening_group_before_10050", "pdf_text_lines": "25098-25118", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "you_unheaded_10220_candidate_block", "pdf_text_lines": "25534-25545", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
 ]
 
 
