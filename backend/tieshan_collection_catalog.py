@@ -2875,6 +2875,10 @@ WEI_GROUP_INDEX = [
                     for n,line in enumerate([22802,22803,22804,22805,22806,22807,22808,22809,22810,22812],1)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
+    _wei_group("八六○○", 22819, list(range(22824,22834)), "internal_64_hexagram_subsection_heading_before_ten_entries"),
+    _wei_group("八六一○", 22835, list(range(22836,22846))),
+    _wei_group("八六二○", 22846, list(range(22847,22857))),
+    _wei_group("八六三○", 22864, list(range(22866,22876)), "table_rows_text_layer_located"),
 ]
 
 WEI_GROUP_ANOMALIES = [
