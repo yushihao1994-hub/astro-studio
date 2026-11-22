@@ -1013,7 +1013,7 @@ COLLECTION_METADATA = {
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "戌": {"printed_page_start": 478, "pdf_text_line_start": 26556, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 88, "layout_group_candidate_count": 73, "partial_table_group_candidate_count": 3},
+    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 88, "normalized_group_marker_unique_count": 72, "expected_group_sequence_gap_candidate_count": 28, "layout_group_candidate_count": 73, "partial_table_group_candidate_count": 3},
 }
 
 
@@ -1139,6 +1139,19 @@ HAI_PARTIAL_TABLE_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二四九〇", "group_marker_pdf_line": 34313, "occurrence": 2,
      "sequence_pdf_lines": list(range(34314, 34323)), "clause_pdf_lines": list(range(34324, 34334)),
      "sequence_gap_candidates": [1], "status": "duplicate_marker_occurrence_table_columns_split_image_check_pending"}
+]
+
+# 以 12000—12990 每十为一档建立“待核组号序列缺口”清单。
+# 这只是检索/核验清单，不证明每个档位必然在底本中出现；绝不自动生成缺失组。
+HAI_EXPECTED_GROUP_MARKERS = list(range(12000, 13000, 10))
+HAI_NORMALIZED_GROUP_MARKERS = {
+    item["normalized_group_marker_candidate"]
+    for item in HAI_GROUP_MARKER_CANDIDATES
+    if item["normalized_group_marker_candidate"] is not None
+}
+HAI_GROUP_SEQUENCE_GAP_CANDIDATES = [
+    marker for marker in HAI_EXPECTED_GROUP_MARKERS
+    if marker not in HAI_NORMALIZED_GROUP_MARKERS
 ]
 
 # 亥集开头可明确定位的十条序号行。只登记行号，不复制条文；组号/组界仍需扫描图像复核。
@@ -3729,6 +3742,9 @@ def get_collection_branch_group_index(branch):
             ],
             "group_marker_candidates": [dict(item) for item in HAI_GROUP_MARKER_CANDIDATES],
             "group_marker_candidate_count": len(HAI_GROUP_MARKER_CANDIDATES),
+            "normalized_group_marker_unique_count": len(HAI_NORMALIZED_GROUP_MARKERS),
+            "expected_group_sequence_gap_candidates": list(HAI_GROUP_SEQUENCE_GAP_CANDIDATES),
+            "expected_group_sequence_gap_candidate_count": len(HAI_GROUP_SEQUENCE_GAP_CANDIDATES),
             "layout_group_candidates": [dict(item, entry_pdf_lines=list(item["entry_pdf_lines"])) for item in HAI_LAYOUT_GROUP_CANDIDATES],
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
