@@ -209,6 +209,15 @@ OBSERVATIONS = [
         "algorithm_status": "not_implemented",
         "note": "已逐页渲染并检查PDF第551—650页100张扫描图像接触表，并对第551、575、600、625、650页作220dpi高清抽查。第551页可见夫妻、子息/入泮功名、家族等断语；第575页可见夫妻、婚姻变故及子息等断语；第600页可见盗贼/侵扰、流年不利、寿考等内容；第625页可见父母、妻室、子女及家业财帛等主题；第650页可见父母寿考、婚姻、子息及功名等主题。各主题以不同条文分列在数字栏头下，条文索引与数值对应关系仍需逐条校勘。本批仅完成图像版式初检及五页高清抽查，未完成全文转录、索引验证或可执行算法。"
     },
+    {
+        "id": "QING-SECOND-PASS-PDF-001-050",
+        "topic": "第二阶段第1—50页结构分区与图表定位复核",
+        "pdf_pages": [1, 50],
+        "printed_pages": [1, 101],
+        "status": "contact_sheet_reviewed_and_selected_pages_high_resolution_spot_checked_transcription_pending",
+        "note": "本批将PDF第1—50页全部以160dpi渲染并制作两张25页联系表逐页检查；另对第6、7、8、10、11页进行高分辨率抽查。第6—9页可见金四局、水二局、木三局及相邻局式图表和起长生等说明；第10—11页可见庙旺得地利益、安紫府图及纳甲卦/干支组合密集表格；第16—50页版面由分类断语和组合条目构成，页面密度与分栏方式有变化。此轮只完成结构定位，不声称50页逐字转录；图表单元格、短标记和断语对应关系仍待逐格校录。",
+        "algorithm_status": "not_implemented"
+    },
 ]
 
 # Conservative transcription candidates copied from the legible scan text.
@@ -373,16 +382,7 @@ TRANSCRIPTION_CANDIDATES = [
         "note": "已渲染并检查PDF第651—665页全部15张扫描图像，并对651、655、660—665页作220dpi抽查。第651—664页继续呈现九至一数字栏头及多列竖排断语；第665页为末页局部版面，仍可见数字栏头与数列断语。末段可辨婚姻、妻室、子息、功名、家宅等主题，但未逐字转录，数字栏头与具体条文索引关系未验证。",
         "algorithm_status": "not_implemented"
     },
-    {
-        "id": "QING-SECOND-PASS-PDF-001-050",
-        "topic": "第二阶段第1—50页结构分区与图表定位复核",
-        "pdf_pages": [1, 50],
-        "printed_pages": [1, 101],
-        "status": "contact_sheet_reviewed_and_selected_pages_high_resolution_spot_checked_transcription_pending",
-        "note": "本批将PDF第1—50页全部以160dpi渲染并制作两张25页联系表逐页检查；另对第6、7、8、10、11页进行高分辨率抽查。第6—9页可见金四局、水二局、木三局及相邻局式图表和起长生等说明；第10—11页可见庙旺得地利益、安紫府图及纳甲卦/干支组合密集表格；第16—50页版面由分类断语和组合条目构成，页面密度与分栏方式有变化。此轮只完成结构定位，不声称50页逐字转录；图表单元格、短标记和断语对应关系仍待逐格校录。",
-        "algorithm_status": "not_implemented"
-    },
-    {
+   {
         "id": "QING-P4-STAR-VERSES-AND-NAYIN-FRAGMENTS",
         "topic": "安身命星诀、左辅右弼诀、天乙贵人诀及纳音干支条目",
         "pdf_page": 4,
