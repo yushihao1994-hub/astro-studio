@@ -1788,7 +1788,7 @@ MAO_UNASSIGNED_BLOCKS = [
 ]
 
 
-def _chen_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", sequence_start=1):
+def _chen_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", sequence_start=1, occurrence=1):
     return {
         "collection": "辰",
         "raw_group_marker": raw_marker,
@@ -1805,17 +1805,15 @@ def _chen_group(raw_marker, header_line, entry_lines, layout_status="text_layer_
 
 
 CHEN_GROUP_INDEX = [
-    _chen_group("五○一○", 17112, [17112,17118,17124,17130,17136,17142,17148,17154,17160],
-                "sequence_1_missing_nine_rows_only", sequence_start=2),
-    _chen_group("五○二○", 17168, [17168,17174,17180,17186,17192,17198,17204,17210,17216,17222],
-                "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五○三○", 17244, list(range(17246, 17256))),
-    _chen_group("五○四○", 17257, list(range(17258, 17268))),
-    _chen_group("五○六○", 17273, list(range(17275, 17285))),
-    _chen_group("五○七○", 17298, list(range(17300, 17310))),
-    _chen_group("五○八○", 17311, list(range(17318, 17328))),
-    _chen_group("五○九○", 17329, list(range(17331, 17341))),
-    _chen_group("五一○○", 17342, list(range(17343, 17353))),
+    _chen_group("五○一○", 17112, [17112,17118,17124,17130,17136,17142,17148,17154,17160], "sequence_1_missing_nine_rows_only", sequence_start=2),
+    _chen_group("五○二○", 17168, [17168,17174,17180,17186,17192,17198,17204,17210,17216,17222], "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五○三○", 17244, list(range(17246,17256))),
+    _chen_group("五○四○", 17257, list(range(17258,17268))),
+    _chen_group("五○六○", 17273, list(range(17275,17285)), "table_rows_text_layer_located"),
+    _chen_group("五○七○", 17298, list(range(17300,17310)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五○八○", 17311, list(range(17318,17328)), "title_followed_by_branch_header_then_ten_entries"),
+    _chen_group("五○九○", 17329, list(range(17331,17341))),
+    _chen_group("五一○○", 17342, list(range(17343,17353))),
     {
         "collection": "辰", "raw_group_marker": "五一二○", "occurrence": 1,
         "normalized_group_marker_candidate": None, "group_header_pdf_line": 17358,
@@ -1825,30 +1823,40 @@ CHEN_GROUP_INDEX = [
                    [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(17358,17367),2)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-    _chen_group("五一三○", 17369, list(range(17369, 17379)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五一四○", 17381, list(range(17381, 17391)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五一五○", 17411, list(range(17413, 17423))),
-    _chen_group("五一六○", 17425, list(range(17426, 17436))),
-    _chen_group("五一七○", 17436, list(range(17442, 17452))),
-    _chen_group("五一八○", 17453, list(range(17454, 17464))),
-    _chen_group("五一九○", 17465, list(range(17467, 17477))),
-    _chen_group("五二一○", 17483, list(range(17484, 17494)), "table_rows_text_layer_located"),
-    _chen_group("五二二○", 17496, list(range(17496, 17506)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五二三○", 17508, list(range(17508, 17518)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五二四○", 17535, list(range(17537, 17547)), "sequence_1_missing_sequence_10_repeated"),
-    _chen_group("五二五○", 17548, list(range(17549, 17559))),
-    _chen_group("五二七○", 17564, list(range(17564, 17574)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五二八○", 17576, list(range(17576, 17586)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五二九○", 17588, list(range(17588, 17598)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五三○○", 17616, list(range(17617, 17627))),
-    _chen_group("五三一○", 17628, list(range(17630, 17640))),
-    _chen_group("五二四○", 17535, list(range(17537, 17547)), "sequence_1_missing_sequence_10_repeated"),
-    _chen_group("五二五○", 17548, list(range(17549, 17559))),
-    _chen_group("五二七○", 17564, list(range(17564, 17574)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五二八○", 17576, list(range(17576, 17586)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五二九○", 17588, list(range(17588, 17598)), "table_rows_text_layer_located_title_row_is_entry_1"),
-    _chen_group("五三○○", 17616, list(range(17617, 17627))),
-    _chen_group("五三一○", 17628, list(range(17630, 17640)))
+    _chen_group("五一三○", 17369, list(range(17369,17379)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五一四○", 17381, list(range(17381,17391)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五一五○", 17411, list(range(17413,17423)), "multi_line_age_clause_spans"),
+    _chen_group("五一六○", 17425, list(range(17426,17436))),
+    _chen_group("五一七○", 17436, list(range(17442,17452)), "header_then_page_break_before_ten_entries"),
+    _chen_group("五一八○", 17453, list(range(17454,17464))),
+    _chen_group("五一九○", 17465, list(range(17467,17477))),
+    _chen_group("五二一○", 17483, list(range(17484,17494)), "table_rows_text_layer_located"),
+    _chen_group("五二二○", 17496, list(range(17496,17506)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五二三○", 17508, list(range(17508,17518)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五二四○", 17535, list(range(17537,17547)), "sequence_1_missing_sequence_10_repeated"),
+    _chen_group("五二五○", 17548, list(range(17549,17559))),
+    _chen_group("五二七○", 17564, list(range(17564,17574)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五二八○", 17576, list(range(17576,17586)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五二九○", 17588, list(range(17588,17598)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五三○○", 17616, list(range(17617,17627))),
+    _chen_group("五三一○", 17628, list(range(17630,17640))),
+    _chen_group("五三三○", 17653, list(range(17655,17665))),
+    _chen_group("五三四○", 17666, list(range(17667,17677))),
+    _chen_group("五三五○", 17678, list(range(17682,17692))),
+    _chen_group("五三六○", 17693, list(range(17694,17704))),
+    _chen_group("五三七○", 17705, list(range(17707,17717))),
+    _chen_group("五三八○", 17718, list(range(17734,17744)), "sequence_age_table_rows_after_sequence_key"),
+    _chen_group("五三九○", 17745, list(range(17759,17769)), "sequence_age_table_rows_after_sequence_key"),
+    _chen_group("五四○○", 17770, list(range(17784,17794)), "sequence_age_table_rows_after_sequence_key"),
+    _chen_group("五四一○", 17795, list(range(17799,17809)), "first_occurrence_before_repeated_marker"),
+    _chen_group("五四一○", 17810, list(range(17811,17821)), "repeated_marker_second_occurrence", occurrence=2),
+    _chen_group("五四三○", 17822, list(range(17824,17834))),
+    _chen_group("五四四○", 17837, list(range(17840,17850))),
+    _chen_group("五四五○", 17851, list(range(17853,17863))),
+    _chen_group("五四六○", 17864, list(range(17865,17875))),
+    _chen_group("五四七○", 17876, list(range(17884,17894)), "page_header_age_line_before_ten_entries"),
+    _chen_group("五四八○", 17895, list(range(17896,17906))),
+    _chen_group("五四九○", 17906, list(range(17907,17917))),
 ]
 
 CHEN_GROUP_ANOMALIES = [
@@ -1861,7 +1869,11 @@ CHEN_GROUP_ANOMALIES = [
     {"raw_group_marker": "五二六○", "pdf_text_line": 17560,
      "status": "marker_seen_body_not_located_before_5270"},
     {"raw_group_marker": "五三二○", "pdf_text_line": None,
-     "status": "expected_group_marker_missing_before_unheaded_ten_entry_block"}
+     "status": "expected_group_marker_missing_before_unheaded_ten_entry_block"},
+    {"raw_group_marker": "五四二○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_between_repeated_5410_and_5430"},
+    {"raw_group_marker": "五五○○", "pdf_text_line": 17922,
+     "status": "marker_seen_body_not_located_before_5510"}
 ]
 
 CHEN_UNASSIGNED_BLOCKS = [
