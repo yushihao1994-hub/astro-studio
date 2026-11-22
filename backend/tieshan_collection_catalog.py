@@ -1117,10 +1117,28 @@ HAI_UNASSIGNED_BLOCKS = [
     {"block_id": "hai_missing_or_unheaded_12240_to_12260", "pdf_text_lines": "33952-33984", "status": "ten_entry_blocks_visible_but_group_headers_missing_or_unreliable"},
     {"block_id": "hai_unheaded_12300_to_12380", "pdf_text_lines": "34026-34150", "status": "multiple_ten_entry_blocks_without_reliable_group_headers"},
     {"block_id": "hai_split_layout_12440_to_12500", "pdf_text_lines": "34220-34337", "status": "wrapped_columns_and_duplicate_markers_require_page_layout"},
-    {"block_id": "hai_split_numeric_column_12670_to_12680", "pdf_text_lines": "34570-34608", "status": "numeric_column_extracted_separately_from_entry_text"},
+    {"block_id": "hai_split_numeric_column_12670", "pdf_text_lines": "34570-34588", "status": "age_column_separated_sequence_labels_missing_or_duplicated"},
+    {"block_id": "hai_header_only_12680", "pdf_text_lines": "34589-34597", "status": "separate_age_column_and_collection_header_before_entries"},
     {"block_id": "hai_missing_header_12770_and_12810", "pdf_text_lines": "34721-34776", "status": "header_or_group_marker_not_reliably_extracted"},
-    {"block_id": "hai_header_conflict_12860_to_12920", "pdf_text_lines": "34842-34926", "status": "collection_header_ocr_conflict_and_missing_group_marker"},
-    {"block_id": "hai_table_cell_markers_12960_to_12990", "pdf_text_lines": "34967-35025", "status": "group_markers_embedded_in_table_cells_end_of_pdf_text"}
+    {"block_id": "hai_header_conflict_12860", "pdf_text_lines": "34842-34855", "status": "collection_header_ocr_conflict_and_group_marker_missing"},
+    {"block_id": "hai_unheaded_12900", "pdf_text_lines": "34893-34902", "status": "ten_sequence_rows_located_but_group_marker_missing"},
+    {"block_id": "hai_sequence_gap_12910", "pdf_text_lines": "34904-34912", "status": "sequence_three_missing_and_group_marker_missing"},
+    {"block_id": "hai_header_only_table_12920", "pdf_text_lines": "34914-34926", "status": "ten_table_rows_located_but_numeric_group_marker_missing"},
+    {"block_id": "hai_table_cell_markers_12960_to_12980", "pdf_text_lines": "34967-34994", "status": "group_markers_embedded_in_table_cells_and_12980_entries_missing"},
+    {"block_id": "hai_terminal_12990_and_unheaded_following_table", "pdf_text_lines": "34999-35025", "status": "last_marker_ocr_corrupt_and_following_ten_row_table_unheaded"}
+]
+
+# 亥集存在组号与序号/断语分栏抽取的表格段。缺失序号或列映射不补造。
+HAI_PARTIAL_TABLE_GROUP_CANDIDATES = [
+    {"raw_group_marker": "一二四八〇", "group_marker_pdf_line": 34270, "occurrence": 1,
+     "sequence_pdf_lines": list(range(34271, 34280)), "clause_pdf_lines": list(range(34281, 34291)),
+     "sequence_gap_candidates": [1], "status": "table_columns_split_first_sequence_row_missing_image_check_pending"},
+    {"raw_group_marker": "一二四九〇", "group_marker_pdf_line": 34292, "occurrence": 1,
+     "sequence_pdf_lines": list(range(34293, 34302)), "clause_pdf_lines": list(range(34302, 34312)),
+     "sequence_gap_candidates": [1], "status": "table_columns_split_first_sequence_row_missing_image_check_pending"},
+    {"raw_group_marker": "一二四九〇", "group_marker_pdf_line": 34313, "occurrence": 2,
+     "sequence_pdf_lines": list(range(34314, 34323)), "clause_pdf_lines": list(range(34324, 34334)),
+     "sequence_gap_candidates": [1], "status": "duplicate_marker_occurrence_table_columns_split_image_check_pending"}
 ]
 
 # 亥集开头可明确定位的十条序号行。只登记行号，不复制条文；组号/组界仍需扫描图像复核。
@@ -1173,6 +1191,9 @@ HAI_LAYOUT_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二六四〇", "group_marker_pdf_line": 34530, "entry_pdf_lines": list(range(34532, 34542)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
     {"raw_group_marker": "一二六五〇", "group_marker_pdf_line": 34542, "entry_pdf_lines": list(range(34545, 34555)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
     {"raw_group_marker": "一二六六〇", "group_marker_pdf_line": 34556, "entry_pdf_lines": list(range(34559, 34569)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
+    {"raw_group_marker": "一二六七〇", "group_marker_pdf_line": 34570, "entry_pdf_lines": list(range(34579, 34589)), "age_column_pdf_lines": list(range(34571, 34578)), "entry_count_candidate": 10, "status": "ten_table_rows_located_text_layer_only_sequence_labels_anomalous"},
+    {"raw_group_marker": "一二六八〇", "group_marker_pdf_line": 34589, "entry_pdf_lines": list(range(34599, 34609)), "age_column_pdf_lines": list(range(34590, 34597)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only_separate_age_column"},
+
     {"raw_group_marker": "一二六九〇", "group_marker_pdf_line": 34609, "entry_pdf_lines": list(range(34611, 34621)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
     {"raw_group_marker": "一二七〇〇", "group_marker_pdf_line": 34621, "entry_pdf_lines": list(range(34622, 34632)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
     {"raw_group_marker": "一二七〇", "group_marker_pdf_line": 34632, "entry_pdf_lines": list(range(34637, 34647)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only_marker_truncated"},
@@ -3711,6 +3732,8 @@ def get_collection_branch_group_index(branch):
             "layout_group_candidates": [dict(item, entry_pdf_lines=list(item["entry_pdf_lines"])) for item in HAI_LAYOUT_GROUP_CANDIDATES],
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
+            "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
+            "partial_table_group_candidate_count": len(HAI_PARTIAL_TABLE_GROUP_CANDIDATES),
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
                 "已登记88处原始组号OCR候选，其中75处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
