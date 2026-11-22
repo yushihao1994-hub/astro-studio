@@ -1877,7 +1877,7 @@ CHEN_GROUP_ANOMALIES = [
 ]
 
 CHEN_UNASSIGNED_BLOCKS = [
-    {"block_id": "chen_unheaded_ten_entries_before_5030",
+    {"block_id": "chen_unheaded_entries_before_5030",
      "pdf_text_lines": "17233-17242", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "chen_unheaded_ten_entries_after_5230",
