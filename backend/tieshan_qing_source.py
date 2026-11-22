@@ -203,7 +203,7 @@ TRANSCRIPTION_CANDIDATES = [
     },
     {
         "id": "QING-HELUO-CLAUSES",
-        "topic": "河洛配数例",
+        "topic": "河洛配数例（PDF第2页左页/印刷页4）",
         "pdf_page": 2,
         "raw_text": "甲己子午九；乙庚丑未八；丙辛寅申七；丁壬卯酉六；戊癸辰戌五；己亥单四数。",
         "status": "image_transcribed_candidate_pending_second_review",
@@ -211,7 +211,7 @@ TRANSCRIPTION_CANDIDATES = [
     },
     {
         "id": "QING-BRANCH-NUMBER",
-        "topic": "地支取数例",
+        "topic": "地支取数例（PDF第2页左页/印刷页4）",
         "pdf_page": 2,
         "raw_text": "亥子一六水；寅卯三八木；巳午二七火；申酉四九金；辰戌丑未五同归。",
         "status": "image_transcribed_candidate_pending_second_review",
@@ -219,41 +219,13 @@ TRANSCRIPTION_CANDIDATES = [
     },
     {
         "id": "QING-LUOSHU-TRIGRAM",
-        "topic": "洛书数卦定局",
+        "topic": "洛书数卦定局（PDF第2页左页/印刷页4）",
         "pdf_page": 2,
         "raw_text": "一数坎兮二数坤；三震四巽；数中分五寄。",
         "status": "image_transcribed_candidate_pending_second_review",
         "ambiguities": ["六至九的完整对应表需结合左页图表逐字复核。"],
     },
 
-    {
-        "id": "QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION",
-        "topic": "天干配卦、日主配卦及河洛地支配数表（原页局部转录）",
-        "pdf_page": 2,
-        "printed_pages": [4],
-        "raw_text": "中宮六乾是七艮八兌九離門。日主配卦例。河洛配數例。甲己子午九，乙庚丑未八，丙辛寅申七，丁壬卯酉六，戊癸辰戌五，己亥單四數。地支配數例。亥子一六水，寅卯三八木，巳午二七火，申酉四九金，辰戌丑未五同歸。",
-        "status": "image_transcribed_candidate_pending_second_review",
-        "ambiguities": [
-            "“中宮六乾是七艮八兌九離門”是图表中的连续竖排文字，表格栏位和标点关系尚未复核，不能据此推导完整九宫映射。",
-            "“甲己子午九”至“己亥單四數”中“己”重复；必须保留原文，不擅自修订或编码成唯一映射。",
-            "本条为扫描页2左页可辨文字的连续转录候选，尚未逐字放大复核。"
-        ],
-        "algorithm_status": "not_implemented"
-    },
-    {
-        "id": "QING-P2-RIGHT-PAGE-EIGHT-TRIGRAM-VERSE",
-        "topic": "八卦加則例口诀（右页逐行转录候选）",
-        "pdf_page": 2,
-        "printed_pages": [5],
-        "raw_text": "爻從三十起，乾卦六為頭，兌為後少女，增方隅中一綱，以變知六百止，世應兩同倚。遇十須不用，玄玄妙法周，當看多寡數，及止悉因由。",
-        "status": "image_transcribed_candidate_pending_second_review",
-        "ambiguities": [
-            "“增方隅中一綱”中间字词字形不清，须局部放大；不能据现代点校本替换。",
-            "“以變知六百止”中“知”字疑似异体或误识，待放大确认。",
-            "“世應兩同倚”与现代点校本存在异文可能，暂按清刻图像候选保留。"
-        ],
-        "algorithm_status": "conceptual_only"
-    },
     {
         "id": "QING-P3-ANSHEN-MING-INTRO",
         "topic": "安身命例开头说明",
