@@ -1386,11 +1386,17 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_unassigned_regions_and_header_conflicts_remain_explicit(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(len(data["unassigned_blocks"]), 18)
+        self.assertEqual(len(data["unassigned_blocks"]), 20)
         conflict = next(x for x in data["group_anomalies"]
                         if x["type"] == "collection_header_ocr_conflict")
         self.assertIn("玄集", conflict["observed_ocr"])
         self.assertIn("支集", conflict["observed_ocr"])
+        by_id = {x["block_id"]: x for x in data["unassigned_blocks"]}
+        for block_id in ("hai_unheaded_12240_candidate", "hai_unheaded_12250_candidate",
+                         "hai_unheaded_12260_candidate", "hai_unheaded_12360",
+                         "hai_unheaded_12370", "hai_unheaded_12900"):
+            self.assertEqual(by_id[block_id]["entry_count_candidate"], 10)
+        self.assertEqual(by_id["hai_sequence_gap_12910"]["entry_count_candidate"], 9)
         self.assertTrue(all("printed_page_image_verification_required" in x["status"]
                             for x in data["group_anomalies"]
                             if x["type"] == "collection_header_ocr_conflict"))
