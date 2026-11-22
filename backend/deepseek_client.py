@@ -330,3 +330,131 @@ def analyze_tieshan_profile(pillars, birth, gender="", derived=None):
         raise DeepSeekError("DeepSeek 网络请求失败。") from exc
     except (KeyError, TypeError, IndexError) as exc:
         raise DeepSeekError("DeepSeek 响应结构无法解析。") from exc
+
+
+def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None):
+    """Generate a dedicated finance or marriage reading from supplied Four Pillars evidence."""
+    topic = str(topic or "").strip().lower()
+    if topic not in ("finance", "marriage"):
+        raise ValueError("专项主题只能是 finance 或 marriage。")
+    if not isinstance(pillars, dict) or not all(
+        isinstance(pillars.get(k), dict) and isinstance(pillars[k].get("name"), str)
+        for k in ("year", "month", "day", "hour")
+    ):
+        raise ValueError("缺少有效四柱数据，请先完成四柱计算。")
+
+    api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+    if not api_key:
+        raise DeepSeekNotConfigured("DeepSeek API 尚未配置，请在 Render 环境变量中设置 DEEPSEEK_API_KEY。")
+    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    model = os.environ.get("DEEPSEEK_MODEL", "deepseek-flash")
+
+    guides = {
+        "finance": {
+            "name": "财运专项",
+            "sections": [
+                "整体财务倾向与资源基础",
+                "正财、职业收入与稳定现金流",
+                "偏财、机会型收入与风险边界",
+                "适合积累的能力与求财路径",
+                "财务压力、消费与合作风险",
+                "阶段性行动建议"
+            ],
+            "focus": "围绕传统四柱文化中可谨慎讨论的财务资源、劳动收入、机会型收入、风险意识和积累习惯展开。不能仅凭某一个十神或五行数量断定富贵、贫穷或财星旺衰；若输入没有足够的旺衰、格局或大运资料，必须明确降低判断力度。将传统象义与现实经营能力区分开。禁止预测具体收入金额、中奖、发财年份或投资涨跌；不得给出买卖金融产品的指令。"
+        },
+        "marriage": {
+            "name": "婚姻专项",
+            "sections": [
+                "整体感情与婚姻倾向",
+                "情感需求与相处模式",
+                "伴侣关系中的优势与磨合点",
+                "长期婚姻、家庭责任与沟通",
+                "关系风险与择偶边界",
+                "现实行动与关系经营建议"
+            ],
+            "focus": "围绕传统四柱文化中可谨慎讨论的关系需求、相处模式、长期承诺、家庭责任和沟通方式展开。性别信息仅作为传统术语背景，不得刻板化。不得断言配偶身份、外貌、职业、年龄、婚期、离婚、复合或生育事件；缺少大运流年等资料时，不得伪造具体年份或婚恋窗口。强调现实关系以双方持续行为为准。"
+        }
+    }[topic]
+
+    system_prompt = (
+        "你是一位严谨的中国传统干支文化研究报告撰写者。"
+        "你只能解释用户提供的四柱与辅助数据，不得自行改算四柱，不得补造十神、旺衰、格局、大运、流年或古籍条文。"
+        "必须明确说明：本报告属于四柱基础文化解读，不是完整铁板神数定数，不是古籍原文，也不是科学验证的命运预测。"
+        "只输出合法 JSON，不得输出 Markdown。JSON 结构必须为："
+        "{\\"summary\\":\\"\\",\\"sections\\":[{\\"title\\":\\"\\",\\"conclusion\\":\\"\\",\\"reasoning\\":\\"\\",\\"advice\\":\\"\\"}],\\"limitations\\":[\\"\\"]}。"
+        "sections 必须恰好6项，标题依照用户任务给出的顺序；每项的 conclusion、reasoning、advice 均须具体且非空。"
+        "先用通俗中文回答倾向，再解释对应输入数据；不得把五行简单计数等同于旺衰。"
+        "不得虚构用户经历、收入、婚姻状态或现实事件，不得作确定性吉凶断言。"
+        "每项至少给出一条普通人能执行的现实建议；内容彼此不得重复。"
+    )
+    payload = {
+        "topic": guides["name"],
+        "required_sections": guides["sections"],
+        "topic_method": guides["focus"],
+        "four_pillars": {
+            key: {"name": pillars[key].get("name"), "stem": pillars[key].get("stem"),
+                  "branch": pillars[key].get("branch")}
+            for key in ("year", "month", "day", "hour")
+        },
+        "derived_bazi_data": derived or {},
+        "birth_context": {
+            "gender": gender,
+            "local_datetime": (birth or {}).get("local_datetime"),
+            "timezone": (birth or {}).get("timezone"),
+            "place_resolved": (birth or {}).get("place_resolved")
+        },
+        "output_style": "输出面向普通用户的专项报告，先给清楚结论，再给依据和建议。不要用空话填充；资料不足时直说不足。"
+    }
+    try:
+        response = requests.post(
+            base_url + "/chat/completions",
+            headers={"Authorization": "Bearer " + api_key, "Content-Type": "application/json"},
+            json={
+                "model": model,
+                "thinking": {"type": "disabled"},
+                "messages": [
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": json.dumps(payload, ensure_ascii=False)}
+                ],
+                "response_format": {"type": "json_object"},
+                "temperature": 0.3,
+                "max_tokens": 6000,
+                "stream": False
+            },
+            timeout=(10, 120)
+        )
+        if response.status_code >= 400:
+            raise DeepSeekError("DeepSeek HTTP " + str(response.status_code))
+        body = response.json()
+        choices = body.get("choices") or []
+        if not choices:
+            raise DeepSeekError("DeepSeek 响应缺少 choices。")
+        choice = choices[0]
+        if choice.get("finish_reason") == "length":
+            raise DeepSeekError("专项报告达到输出长度上限，请重试。")
+        message = choice.get("message") or {}
+        result = _extract_json_object(message.get("content"))
+        sections = result.get("sections")
+        if not isinstance(result.get("summary"), str) or not isinstance(sections, list) or len(sections) != 6:
+            raise DeepSeekError("专项报告结构不完整。")
+        for index, section in enumerate(sections):
+            if not isinstance(section, dict) or any(
+                not isinstance(section.get(key), str) or not section[key].strip()
+                for key in ("title", "conclusion", "reasoning", "advice")
+            ):
+                raise DeepSeekError("专项报告第" + str(index + 1) + "项内容不完整。")
+        if not isinstance(result.get("limitations"), list):
+            result["limitations"] = []
+        result["report_type"] = guides["name"]
+        result["basis"] = "四柱基础文化解读"
+        result["not_iron_plate_final_number"] = True
+        return result
+    except (DeepSeekError, DeepSeekNotConfigured, ValueError):
+        raise
+    except requests.Timeout as exc:
+        raise DeepSeekError("专项分析请求超时。") from exc
+    except requests.RequestException as exc:
+        raise DeepSeekError("专项分析网络请求失败。") from exc
+    except (KeyError, TypeError, IndexError) as exc:
+        raise DeepSeekError("专项分析响应结构无法解析。") from exc
+
