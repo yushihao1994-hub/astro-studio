@@ -82,11 +82,13 @@ class TieshanFoundationEngineTests(unittest.TestCase):
             "QING-EIGHT-TRIGRAM-ADD-VERSE",
             "QING-P3-ANSHEN-MING-INTRO",
             "QING-P3-HETU-LUOSHU-ORDER",
+            "QING-P2-STEM-TRIGRAM-VERSE",
+            "QING-P2-BRANCH-TRIGRAM-VERSE",
         }
         self.assertTrue(expected.issubset(set(candidates)))
         for key in expected:
             self.assertNotIn("verified",candidates[key]["status"])
-            self.assertNotEqual(candidates[key]["algorithm_status"],"verified")
+            self.assertNotEqual(candidates[key].get("algorithm_status"),"verified")
         self.assertIn("己亥單四數",candidates["QING-HELUO-CLAUSES"]["raw_text"])
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
