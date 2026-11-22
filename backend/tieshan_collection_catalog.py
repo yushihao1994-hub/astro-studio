@@ -2084,4 +2084,3 @@ def get_collection_sample(branch="子"):
         "field_guide": dict(FIELD_GUIDE),
         "limitations": list(LIMITATIONS),
     }
-]
