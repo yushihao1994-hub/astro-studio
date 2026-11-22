@@ -467,7 +467,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][10]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][11]["index_status"], "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending")
         self.assertEqual(data["collections"][11]["group_marker_candidate_count"], 88)
-        self.assertEqual(data["collections"][11]["layout_group_candidate_count"], 57)
+        self.assertEqual(data["collections"][11]["layout_group_candidate_count"], 61)
         self.assertEqual(data["collections"][11]["indexed_groups"], 0)
         self.assertEqual(data["collections"][11]["indexed_entries"], 0)
         self.assertEqual(data["collections"][4]["pdf_text_line_start"], 17109)
@@ -1349,7 +1349,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(
             sum(x["normalized_group_marker_candidate"] is not None
                 for x in data["group_marker_candidates"]),
-            72,
+            75,
         )
         self.assertTrue(all(x["raw_group_marker"] and x["pdf_text_line"]
                             for x in data["group_marker_candidates"]))
@@ -1357,8 +1357,8 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_layout_candidates_keep_only_source_line_ranges(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(data["layout_group_candidate_count"], 57)
-        self.assertEqual(len(data["layout_group_candidates"]), 57)
+        self.assertEqual(data["layout_group_candidate_count"], 61)
+        self.assertEqual(len(data["layout_group_candidates"]), 61)
         for group in data["layout_group_candidates"]:
             self.assertEqual(group["entry_count_candidate"], 10)
             self.assertEqual(len(group["entry_pdf_lines"]), 10)
@@ -1384,7 +1384,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(hai["pdf_text_line_start"], 33598)
         self.assertEqual(hai["pdf_text_line_end"], 35025)
         self.assertEqual(hai["group_marker_candidate_count"], 88)
-        self.assertEqual(hai["layout_group_candidate_count"], 57)
+        self.assertEqual(hai["layout_group_candidate_count"], 61)
         self.assertEqual(hai["indexed_groups"], 0)
         self.assertEqual(hai["indexed_entries"], 0)
         sample = get_collection_sample("亥")
