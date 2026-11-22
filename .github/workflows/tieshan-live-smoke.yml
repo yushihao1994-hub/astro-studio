@@ -86,4 +86,22 @@ jobs:
           assert pillars.get("birth", {}).get("converted_solar_date"), pillars
           assert "eight_ke" in pillars and "iron_plate_engine" in pillars, pillars
           print("PASS pillars: four pillars + eight_ke + iron_plate_engine")
+          
+          # Verify the dedicated endpoints are deployed without calling the paid AI API:
+          # an empty payload must be rejected by four-pillar validation with HTTP 400.
+          for endpoint in ("/api/tieshan/finance", "/api/tieshan/marriage"):
+              req = urllib.request.Request(
+                  base + endpoint,
+                  data=json.dumps({}).encode(),
+                  headers={"Content-Type": "application/json"},
+                  method="POST",
+              )
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as response:
+                      raise AssertionError(f"{endpoint}: expected HTTP 400, got {response.status}")
+              except urllib.error.HTTPError as exc:
+                  detail = json.loads(exc.read().decode("utf-8", errors="replace"))
+                  assert exc.code == 400 and detail.get("ok") is False, (endpoint, exc.code, detail)
+                  print("PASS deployed endpoint:", endpoint, "rejects missing pillars")
+
           PY
