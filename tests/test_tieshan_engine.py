@@ -43,7 +43,8 @@ class TieshanFoundationEngineTests(unittest.TestCase):
     def test_qing_scan_is_primary_but_not_verified_for_calculation(self):
         source=get_qing_source_reference()
         self.assertEqual(source["source_class"],"user_provided_primary_scan")
-        self.assertEqual(source["scan_page_count"],665)
+        self.assertEqual(source["scan_page_count"],150)
+        self.assertEqual(source["reviewed_pdf_pages"],30)
         self.assertIn("清刻",PRIMARY_REFERENCE)
         self.assertIn("待",QING_REFERENCE_STATUS)
         self.assertFalse(source["can_generate_final_iron_plate_number"])
