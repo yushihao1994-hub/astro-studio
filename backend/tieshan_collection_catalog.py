@@ -4344,7 +4344,7 @@ def get_hai_boundary_review_12860_12910():
             "candidate_reference_only": candidate,
             "raw_marker": item.get("raw_marker"),
             "marker_pdf_line": item.get("marker_line"),
-            "header_ocr": item.get("header_ocr"),
+            "header_ocr": item.get("header_ocr") or item.get("intervening_header_ocr"),
             "header_pdf_line": item.get("header_line"),
             "entry_pdf_lines": list(item.get("entry_lines", [])),
             "sequence_labels": list(item.get("sequence_labels", [])),
@@ -4566,7 +4566,7 @@ def get_hai_header_exception_review_12710_12770():
                 "intervening_header_ocr": e12770.get("intervening_header_ocr"),
                 "intervening_header_pdf_line": e12770.get("intervening_header_pdf_line"),
                 "next_marker_raw": e12770["next_marker"],
-                "next_marker_pdf_line": e12770["next_marker_pdf_line"],
+                "next_marker_pdf_line": e12770["next_group_marker_pdf_line"],
                 "status": m12770["status"],
                 "formal_index_eligible": False,
                 "required_evidence": [
