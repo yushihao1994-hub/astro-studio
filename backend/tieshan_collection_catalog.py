@@ -4922,6 +4922,54 @@ def get_hai_unified_conflict_worklist():
     }
 
 
+
+def get_hai_p0_image_evidence_manifest():
+    """Prepare scan-image evidence requests for P0 Hai anomalies without inventing page mappings."""
+    priority = get_hai_priority_conflict_review()
+    p0_records = [item for item in priority["records"] if item["priority"] == "P0"]
+    entries = []
+    for item in p0_records:
+        entries.append({
+            "block_id": item["block_id"],
+            "priority": "P0",
+            "start_pdf_text_line": item["start_pdf_text_line"],
+            "end_pdf_text_line": item["end_pdf_text_line"],
+            "text_layer_locator": (
+                str(item["start_pdf_text_line"]) + "-" +
+                str(item["end_pdf_text_line"])
+            ),
+            "candidate_group_marker": item["candidate_group_marker"],
+            "printed_page_mapping_status": "not_mapped",
+            "printed_page_start": None,
+            "printed_page_end": None,
+            "scan_image_locator": None,
+            "uploaded_scan_coverage_status": "outside_uploaded_scan_coverage",
+            "required_review_action": item["required_review_action"],
+            "required_evidence": list(item["required_evidence"]) + [
+                "对应原书印刷页512页及以后、覆盖该PDF文本行区段的底本扫描图",
+                "扫描图须同时显示组号字形、正文行/栏边界及相邻页衔接"
+            ],
+            "formal_index_eligible": False,
+            "status": "evidence_manifest_only_image_not_verified",
+        })
+    return {
+        "manifest_version": "1.0",
+        "collection": "亥集",
+        "source_text_layer_pdf_lines": [33598, 35025],
+        "source_text_layer_line_count": 1428,
+        "source_printed_page_start": 512,
+        "uploaded_scan_printed_page_coverage": [4, 301],
+        "uploaded_scan_page_coverage_status": "does_not_cover_hai_collection_start_or_p0_regions",
+        "page_mapping_policy": "do_not_infer_printed_pages_from_text_line_numbers",
+        "entry_count": len(entries),
+        "entries": entries,
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "entry_count_verified": 0,
+        "image_verified_group_count": 0,
+        "verification_status": "p0_evidence_manifest_prepared_scan_images_unavailable_for_target_pages",
+    }
+
 def get_hai_registry_integrity_audit():
     """Audit registry counts, identifiers, and PDF-line bounds without resolving source conflicts."""
     import re
@@ -5094,6 +5142,7 @@ def get_collection_branch_group_index(branch):
             "review_queue": get_hai_review_queue(),
             "priority_conflict_review": get_hai_priority_conflict_review(),
             "unified_conflict_worklist": get_hai_unified_conflict_worklist(),
+            "p0_image_evidence_manifest": get_hai_p0_image_evidence_manifest(),
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
