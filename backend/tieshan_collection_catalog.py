@@ -4280,6 +4280,70 @@ def get_hai_priority_conflict_review():
 
 
 
+
+def get_hai_table_region_review_12440_12500():
+    """Expand the three 12440-12500 table segments without pairing OCR columns."""
+    source = HAI_12440_12500_TABLE_AUDIT
+    segments = []
+    for item in source["segments"]:
+        sequence_lines = list(item["sequence_lines"])
+        clause_lines = list(item["clause_lines"])
+        segments.append({
+            "segment_id": item["segment_id"],
+            "raw_marker": item["raw_marker"],
+            "marker_pdf_line": item["marker_line"],
+            "sequence_pdf_lines": sequence_lines,
+            "sequence_labels": list(item["sequence_labels"]),
+            "sequence_label_count": len(item["sequence_labels"]),
+            "clause_pdf_lines": clause_lines,
+            "clause_count": item["clause_count"],
+            "gap_lines": list(item.get("gap_lines", [])),
+            "blank_separator_lines": list(item.get("blank_separator_lines", [])),
+            "possible_correction": item.get("possible_correction"),
+            "correction_basis": item.get("correction_basis"),
+            "counter_evidence": item.get("counter_evidence"),
+            "sequence_clause_line_overlap": sorted(set(sequence_lines) & set(clause_lines)),
+            "row_pairing_allowed": False,
+            "source_status": item["status"],
+            "formal_index_eligible": False,
+            "status": "text_layer_candidate_only_page_image_check_required",
+            "required_evidence": [
+                "34220-34337对应原页扫描图",
+                "组号、序号栏和断语栏的横向列边界",
+                "每段十条断语的实际版面起止位置",
+                "第二个一二四九〇的原始字形是否确为一二四九〇"
+            ],
+        })
+    conflicts = [{
+        "conflict_id": "hai_duplicate_marker_12490_lines_34292_34313",
+        "marker_occurrences": [
+            {"pdf_text_line": 34292, "raw_marker": "一二四九〇", "candidate": 12490},
+            {"pdf_text_line": 34313, "raw_marker": "一二四九〇", "candidate": 12490},
+        ],
+        "unconfirmed_hypothesis": {"candidate": 12500, "source_line": 34313},
+        "counter_evidence": "PDF文本层在34313行仍识别为一二四九〇；目前没有页面图像证据支持改为12500",
+        "resolution": "preserve_both_raw_12490_markers_until_page_image_check",
+        "formal_index_eligible": False,
+        "required_evidence": [
+            "34292与34313所在原页的扫描图",
+            "两处组号字形及其与表格栏线的相对位置",
+            "第二处标题是否实际印为一二四九〇或一二五〇〇"
+        ],
+    }]
+    return {
+        "source_pdf_text_lines": source["source_pdf_text_lines"],
+        "segment_count": len(segments),
+        "segments": segments,
+        "conflicts": conflicts,
+        "column_alignment_rule": source["column_alignment_rule"],
+        "promotion_rule": source["promotion_rule"],
+        "row_pairing_allowed": False,
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_table_audit_page_image_verification_pending",
+    }
+
+
 def get_hai_marker_cluster_review_12080_12180():
     """Expand the 12080-12180 OCR marker cluster into evidence-gated marker records."""
     block = next(item for item in HAI_UNASSIGNED_BLOCKS
@@ -4392,6 +4456,7 @@ def get_collection_branch_group_index(branch):
             "review_queue": get_hai_review_queue(),
             "priority_conflict_review": get_hai_priority_conflict_review(),
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
+            "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
