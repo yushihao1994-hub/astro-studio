@@ -2058,11 +2058,20 @@ SI_GROUP_INDEX = [
     _si_group("六○五○", 18802, list(range(18809,18819)), "heading_then_page_header_before_ten_entries"),
     _si_group("六○六○", 18820, list(range(18821,18831))),
     _si_group("六○七○", 18832, list(range(18834,18844))),
+    _si_group("六○八○", 18845, list(range(18865,18875)), "sequence_key_rows_then_clause_rows"),
+    _si_group("六○九○", 18876, list(range(18889,18899)), "sequence_key_rows_then_clause_rows"),
+    _si_group("六一○○", 18900, list(range(18912,18922)), "sequence_key_rows_then_clause_rows"),
+    _si_group("六一一○", 18923, list(range(18930,18940)), "page_header_before_ten_entries"),
+    _si_group("六一二○", 18941, list(range(18943,18953))),
+    _si_group("六一三○", 18954, list(range(18955,18965))),
+    _si_group("六一五○", 18973, list(range(18973,18983)), "table_rows_text_layer_located_title_row_is_entry_1"),
 ]
 
 SI_GROUP_ANOMALIES = [
     {"raw_group_marker": "六○○○", "pdf_text_line": None,
-     "status": "ten_unheaded_entries_at_collection_start_no_explicit_group_marker"}
+     "status": "ten_unheaded_entries_at_collection_start_no_explicit_group_marker"},
+    {"raw_group_marker": "六一四○", "pdf_text_line": 18966,
+     "status": "marker_seen_body_not_located_before_6150"}
 ]
 
 SI_UNASSIGNED_BLOCKS = [
