@@ -13,7 +13,7 @@ from tieshan import calculate_tieshan_pillars
 from bazi_details import derive_bazi_details
 from tieshan_time import derive_eight_ke
 from tieshan_classic import derive_classic_reference, derive_body_life_palaces
-from tieshan_engine import build_tieshan_foundation
+from tieshan_engine import build_tieshan_foundation, is_kaoke_attestation_trusted
 from tieshan_kunji_index import get_kunji_glossary
 from tieshan_collection_catalog import get_collection_sample, get_group_index, get_collection_progress, get_collection_branch_group_index
 from chinese_calendar import lunar_month_options, lunar_to_solar, solar_to_lunar
@@ -1617,11 +1617,11 @@ def _tieshan_topic_endpoint(topic):
     try:
         engine = payload.get("iron_plate_engine") or {}
         kaoke = engine.get("kaoke_result") if isinstance(engine, dict) else None
-        if not isinstance(kaoke, dict) or kaoke.get("status") != "verified":
+        if not isinstance(kaoke, dict) or not is_kaoke_attestation_trusted(kaoke):
             return jsonify({
                 "ok": False,
                 "code": "KAOKE_NOT_VERIFIED",
-                "error": "真实考刻定盘尚未完成校验。当前不会用普通四柱或 AI 推测代替铁板神数结论。"
+                "error": "服务端尚无经过清刻本规则与原书命例回归验证的考刻证明。客户端传入的 verified 标记不作为核验凭据；当前不会用普通四柱或 AI 推测代替铁板神数结论。"
             }), 409
         result = analyze_tieshan_topic(
             topic,
