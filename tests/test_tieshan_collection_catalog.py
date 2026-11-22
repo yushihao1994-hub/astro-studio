@@ -1488,6 +1488,30 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertIn("unresolved", conflict["status"])
         self.assertEqual(len(data["unassigned_blocks"]), 20)
 
+    def test_hai_12900_to_12920_unassigned_blocks_keep_sequence_and_table_boundaries(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        blocks = {item["block_id"]: item for item in data["unassigned_blocks"]}
+
+        block_12900 = blocks["hai_unheaded_12900"]
+        self.assertEqual(block_12900["entry_pdf_lines"], list(range(34893, 34903)))
+        self.assertEqual(block_12900["sequence_labels_observed"], list(range(1, 11)))
+        self.assertEqual(block_12900["preceding_group_marker_pdf_line"], 34879)
+        self.assertIn("missing", block_12900["status"])
+
+        block_12910 = blocks["hai_sequence_gap_12910"]
+        self.assertEqual(block_12910["entry_pdf_lines"], list(range(34904, 34913)))
+        self.assertEqual(block_12910["sequence_labels_observed"], [1, 2, 4, 5, 6, 7, 8, 9, 10])
+        self.assertEqual(block_12910["sequence_missing_candidates"], [3])
+        self.assertIn("do_not_repair", block_12910["status"])
+
+        block_12920 = blocks["hai_header_only_table_12920"]
+        self.assertEqual(block_12920["collection_header_ocr"], "玄集")
+        self.assertEqual(block_12920["table_entry_pdf_lines"], list(range(34916, 34926)))
+        self.assertEqual(block_12920["sequence_labels_observed"], list(range(1, 11)))
+        self.assertEqual(block_12920["following_group_marker_pdf_line"], 34927)
+        self.assertEqual(len(data["unassigned_blocks"]), 20)
+
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
