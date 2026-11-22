@@ -105,6 +105,39 @@ class IronPlateApiSmokeTests(unittest.TestCase):
         self.assertEqual(body["analysis"]["summary"], "测试摘要")
         mocked.assert_called_once()
 
+    def test_finance_and_marriage_endpoints_use_dedicated_topics(self):
+        fake_report = {
+            "summary": "专项测试摘要",
+            "sections": [
+                {"title": "专题", "conclusion": "结论", "reasoning": "依据", "advice": "建议"}
+                for _ in range(6)
+            ],
+            "limitations": ["四柱基础文化解读"],
+        }
+        pillars = {
+            "year": {"name": "甲戌", "stem": "甲", "branch": "戌"},
+            "month": {"name": "己巳", "stem": "己", "branch": "巳"},
+            "day": {"name": "乙亥", "stem": "乙", "branch": "亥"},
+            "hour": {"name": "辛巳", "stem": "辛", "branch": "巳"},
+        }
+        for topic, path, label in (
+            ("finance", "/api/tieshan/finance", "财运专项预测"),
+            ("marriage", "/api/tieshan/marriage", "婚姻专项预测"),
+        ):
+            with self.subTest(topic=topic):
+                with patch.object(backend_app, "analyze_tieshan_topic", return_value=fake_report) as mocked:
+                    response = self.client.post(
+                        path,
+                        json={"pillars": pillars, "birth": {}, "gender": "男", "derived": {}},
+                    )
+                self.assertEqual(response.status_code, 200, response.get_json())
+                body = response.get_json()
+                self.assertTrue(body["ok"])
+                self.assertEqual(body["topic"], topic)
+                self.assertEqual(body["analysis_type"], label)
+                self.assertEqual(len(body["analysis"]["sections"]), 6)
+                mocked.assert_called_once_with(topic, pillars, {}, "男", {})
+
     def test_hai_collection_endpoint_does_not_claim_unverified_groups(self):
         response = self.client.get("/api/tieshan/collections/亥/groups")
         self.assertEqual(response.status_code, 200)
