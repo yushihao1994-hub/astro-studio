@@ -4279,6 +4279,89 @@ def get_hai_priority_conflict_review():
     }
 
 
+
+def get_hai_marker_cluster_review_12080_12180():
+    """Expand the 12080-12180 OCR marker cluster into evidence-gated marker records."""
+    block = next(item for item in HAI_UNASSIGNED_BLOCKS
+                 if item["block_id"] == "hai_ocr_corrupt_12080_to_12170")
+    conflict_id = "hai_marker_boundary_33829_33833"
+    shared_lines = list(range(33834, 33845))
+    records = []
+    for note in block.get("marker_cluster_notes", []):
+        line = note["pdf_text_line"]
+        raw = note["raw_group_marker"]
+        interpretations = []
+        if line == 33743:
+            interpretations = ["12090或12100前缀缺失；无法唯一确定"]
+        elif line == 33766:
+            interpretations = ["12100前缀歧义；无法唯一确定"]
+        elif line == 33778:
+            interpretations = ["12110前缀歧义；无法唯一确定"]
+        elif line == 33792:
+            interpretations = ["截断的12120候选；尚未确认"]
+        elif line == 33829:
+            interpretations = ["文本层候选12240；正文边界与33833标记冲突"]
+        elif line == 33833:
+            interpretations = ["截断标记；与33829候选共用正文行"]
+        related = shared_lines if line in (33829, 33833) else []
+        records.append({
+            "pdf_text_line": line,
+            "raw_marker": raw,
+            "normalized_candidate": note.get("normalized_candidate"),
+            "marker_status": note["status"],
+            "candidate_interpretations": interpretations,
+            "related_entry_lines": related,
+            "conflict_id": conflict_id if related else None,
+            "review_action": (
+                "先核对与另一标记的版面位置及共享正文边界，不得拆成两组"
+                if related else
+                "对照扫描页确认字形、栏位和独立组头位置；不按编号顺序修复"
+            ),
+            "required_evidence": [
+                "对应原页扫描图及相邻页连续版面",
+                "组头字形与PDF文本行的逐项对应",
+                "组内十项正文的实际起止边界"
+            ],
+            "formal_index_eligible": False,
+            "status": "text_layer_candidate_only" if note.get("normalized_candidate") is not None else "image_check_required",
+        })
+    conflicts = [{
+        "conflict_id": conflict_id,
+        "left_marker": {"pdf_text_line": 33829, "raw_marker": "一二二四〇", "normalized_candidate": 12240},
+        "right_marker": {"pdf_text_line": 33833, "raw_marker": "一五四", "normalized_candidate": None},
+        "shared_entry_pdf_lines": shared_lines,
+        "shared_entry_line_count": len(shared_lines),
+        "resolution": "unresolved_until_original_page_image_check",
+        "formal_index_eligible": False,
+        "required_evidence": [
+            "33829与33833所在页面的扫描图",
+            "33834-33844横向栏线、缩进及行距",
+            "两标记是否各自拥有独立十项正文的版面证据"
+        ],
+    }]
+    adjacent = [{
+        "pdf_text_line": 33888,
+        "raw_marker": "一二一八〇",
+        "normalized_candidate": 12180,
+        "relation": "adjacent_right_boundary_context_outside_block_span",
+        "block_span": block["pdf_text_lines"],
+        "formal_index_eligible": False,
+        "status": "text_layer_candidate_only",
+        "required_evidence": ["33888所在原页扫描图", "与前一异常块末端的版面边界"],
+    }]
+    return {
+        "block_id": block["block_id"],
+        "block_pdf_text_lines": block["pdf_text_lines"],
+        "marker_count": len(records),
+        "markers": records,
+        "boundary_conflicts": conflicts,
+        "adjacent_context": adjacent,
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "text_layer_marker_audit_only_page_image_verification_pending",
+        "policy": "preserve_raw_ocr_do_not_repair_by_sequence_do_not_promote_candidates",
+    }
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
@@ -4308,6 +4391,7 @@ def get_collection_branch_group_index(branch):
             "text_line_coverage_audit": get_hai_text_line_coverage_audit(),
             "review_queue": get_hai_review_queue(),
             "priority_conflict_review": get_hai_priority_conflict_review(),
+            "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
