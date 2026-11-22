@@ -457,7 +457,9 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual([x["printed_page_start"] for x in data["collections"]], [138,172,206,240,274,308,342,376,410,444,478,512])
         self.assertTrue(all(x["toc_status"] == "located_in_contents" for x in data["collections"]))
         self.assertEqual(data["collections"][0]["indexed_groups"], 75)
-        self.assertEqual(data["collections"][1]["index_status"], "text_layer_range_located_not_indexed")
+        self.assertEqual(data["collections"][1]["index_status"], "partial_text_layer_index")
+        self.assertEqual(data["collections"][1]["indexed_groups"], 10)
+        self.assertEqual(data["collections"][1]["indexed_entries"], 100)
         self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][2:]))
         self.assertEqual(data["collections"][0]["pdf_text_line_start"], 10664)
         self.assertEqual(data["collections"][0]["pdf_text_line_end"], 12570)
@@ -476,6 +478,20 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         zi = next(x for x in data["collections"] if x["collection"] == "子")
         self.assertEqual(zi["indexed_groups"], 75)
         self.assertEqual(zi["indexed_entries"], 747)
+
+    def test_chou_first_ten_groups_are_indexed_without_transcribing_clause_text(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
+        data = get_collection_branch_group_index("丑")
+        self.assertEqual(data["group_count"], 10)
+        self.assertEqual(data["entry_count"], 100)
+        self.assertEqual(data["groups"][0]["raw_group_marker"], "二○三○")
+        self.assertEqual(data["groups"][0]["pdf_text_lines"], "12576-12586")
+        self.assertEqual(data["groups"][-1]["raw_group_marker"], "二一二○")
+        self.assertEqual(len(data["groups"][-1]["entries"]), 10)
+        self.assertTrue(all("content" not in entry for group in data["groups"] for entry in group["entries"]))
+        progress = get_collection_progress()
+        chou = next(x for x in progress["collections"] if x["collection"] == "丑")
+        self.assertEqual((chou["indexed_groups"], chou["indexed_entries"]), (10, 100))
 
 
 if __name__ == "__main__":
