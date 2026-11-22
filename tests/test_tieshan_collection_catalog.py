@@ -27,9 +27,9 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_other_collections_are_not_fabricated(self):
         data = get_collection_sample("丑")
         self.assertEqual(data["status"], "partial_text_layer_index_image_verification_pending")
-        self.assertEqual(data["entry_count"], 460)
+        self.assertEqual(data["entry_count"], 550)
         self.assertEqual(data["entries"], [])
-        self.assertEqual(data["group_index"]["group_count"], 46)
+        self.assertEqual(data["group_index"]["group_count"], 55)
 
     def test_age_markers_are_separate_lists_not_clause_numbers(self):
         data = get_collection_sample("子")
@@ -459,8 +459,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all(x["toc_status"] == "located_in_contents" for x in data["collections"]))
         self.assertEqual(data["collections"][0]["indexed_groups"], 75)
         self.assertEqual(data["collections"][1]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][1]["indexed_groups"], 46)
-        self.assertEqual(data["collections"][1]["indexed_entries"], 460)
+        self.assertEqual(data["collections"][1]["indexed_groups"], 55)
+        self.assertEqual(data["collections"][1]["indexed_entries"], 550)
         self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][2:]))
         self.assertEqual(data["collections"][0]["pdf_text_line_start"], 10664)
         self.assertEqual(data["collections"][0]["pdf_text_line_end"], 12570)
@@ -472,8 +472,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         data = get_collection_progress()
         chou = next(x for x in data["collections"] if x["collection"] == "丑")
         self.assertEqual(chou["index_status"], "partial_text_layer_index")
-        self.assertEqual(chou["indexed_groups"], 46)
-        self.assertEqual(chou["indexed_entries"], 460)
+        self.assertEqual(chou["indexed_groups"], 55)
+        self.assertEqual(chou["indexed_entries"], 550)
         self.assertEqual(chou["pdf_text_line_start"], 12572)
         self.assertEqual(chou["pdf_text_line_end"], 14290)
         zi = next(x for x in data["collections"] if x["collection"] == "子")
@@ -483,8 +483,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_chou_index_through_2350_is_indexed_without_transcribing_clause_text(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
         data = get_collection_branch_group_index("丑")
-        self.assertEqual(data["group_count"], 46)
-        self.assertEqual(data["entry_count"], 460)
+        self.assertEqual(data["group_count"], 55)
+        self.assertEqual(data["entry_count"], 550)
         self.assertEqual(data["groups"][0]["raw_group_marker"], "二○三○")
         self.assertEqual(data["groups"][0]["pdf_text_lines"], "12576-12586")
         raw_260 = next(g for g in data["groups"] if g["group_header_pdf_line"] == 12798)
@@ -507,7 +507,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all("content" not in entry for group in data["groups"] for entry in group["entries"]))
         progress = get_collection_progress()
         chou = next(x for x in progress["collections"] if x["collection"] == "丑")
-        self.assertEqual((chou["indexed_groups"], chou["indexed_entries"]), (46, 460))
+        self.assertEqual((chou["indexed_groups"], chou["indexed_entries"]), (55, 550))
 
 
     def test_chou_repeated_markers_and_2250_2260_are_separately_indexed(self):
@@ -531,11 +531,17 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         anomalies = data["group_anomalies"]
         self.assertTrue(any(x["raw_group_marker"] == "二五○" and x["normalized_group_marker_candidate"] is None for x in anomalies))
         self.assertTrue(any(x["raw_group_marker"] == "二六○" and x["normalized_group_marker_candidate"] is None for x in anomalies))
-        self.assertEqual(len(data["unassigned_blocks"]), 6)
+        self.assertEqual(len(data["unassigned_blocks"]), 7)
         self.assertTrue(all(x["status"] in {"group_marker_missing_do_not_assign","group_boundary_ambiguous_do_not_promote"} for x in data["unassigned_blocks"]))
         self.assertIn("chou_unheaded_entries_before_2330", {x["block_id"] for x in data["unassigned_blocks"]})
         self.assertIn("chou_possible_2390_group_body", {x["block_id"] for x in data["unassigned_blocks"]})
         self.assertIn("chou_possible_2400_group_body", {x["block_id"] for x in data["unassigned_blocks"]})
+        self.assertIn("chou_possible_2680_group_body", {x["block_id"] for x in data["unassigned_blocks"]})
+        for marker, line in [("二六一",13487),("二六○",13499),("二六二",13511),("二六三○",13546),("二六五○",13617),("二六六○",13642),("二六七○",13664),("二六九○",13699),("二七○○",13712)]:
+            g = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(g["raw_group_marker"], marker)
+            self.assertEqual(len(g["entries"]), 10)
+        self.assertTrue(any(x["raw_group_marker"] == "二六四○" for x in data["group_anomalies"]))
         for marker, line in [("二四二○",13233),("二四三○",13247),("二四四○",13261),("二四五○",13279),("二四六○",13291),("二四七○",13303),("二四八○",13331),("二四九○",13344),("二五一○",13360),("二五二○",13373),("二五三○",13385),("二五四○",13410),("二五五○",13423),("二五七○",13443),("二五八○",13457),("二五九○",13471)]:
             g = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
             self.assertEqual(g["raw_group_marker"], marker)
