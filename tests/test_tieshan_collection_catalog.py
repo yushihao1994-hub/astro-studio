@@ -2031,3 +2031,38 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         api = get_collection_branch_group_index("亥")
         self.assertEqual(api["detached_numeric_review_12670_12680"], audit)
         self.assertEqual(api["group_count"], 0)
+
+
+    def test_hai_header_exception_review_12710_12770_preserves_truncation_wrapping_and_empty_group(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_header_exception_review_12710_12770,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_header_exception_review_12710_12770()
+        self.assertEqual(audit["source_pdf_text_lines"], "34632-34725")
+        self.assertEqual(len(audit["cases"]), 3)
+        truncated, wrapped, empty = audit["cases"]
+        self.assertEqual((truncated["raw_marker"], truncated["marker_pdf_line"]), ("一二七〇", 34632))
+        self.assertIsNone(truncated["normalized_candidate"])
+        self.assertEqual(truncated["pre_entry_number_line"], 34636)
+        self.assertEqual(truncated["entry_pdf_lines"], list(range(34637, 34647)))
+        self.assertEqual(truncated["sequence_labels"], list(range(1, 11)))
+        self.assertEqual(truncated["group_association"], "unconfirmed")
+        self.assertEqual(wrapped["raw_marker"], "一二七四〇")
+        self.assertEqual(wrapped["marker_pdf_line"], 34675)
+        self.assertEqual(wrapped["collection_header_ocr"], "玄集")
+        self.assertEqual(wrapped["collection_header_pdf_line"], 34677)
+        self.assertEqual(wrapped["continuation_pdf_lines"], [34686, 34689])
+        self.assertEqual(wrapped["entry_pdf_lines"], list(range(34678, 34690)))
+        self.assertEqual(wrapped["sequence_labels"], list(range(1, 11)))
+        self.assertEqual(empty["raw_marker"], "一二七七〇")
+        self.assertEqual(empty["marker_pdf_line"], 34721)
+        self.assertEqual(empty["entry_pdf_lines"], [])
+        self.assertEqual(empty["next_marker_raw"], "一二七八〇")
+        self.assertEqual(empty["next_marker_pdf_line"], 34725)
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        self.assertTrue(all(item["formal_index_eligible"] is False for item in audit["cases"]))
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["header_exception_review_12710_12770"], audit)
+        self.assertEqual(api["group_count"], 0)
