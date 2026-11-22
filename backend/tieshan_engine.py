@@ -3,21 +3,23 @@ This module orchestrates only source-traceable steps already implemented.
 It deliberately does not invent a final number, six-relative numbers, or clauses.
 """
 SYSTEM_NAME = "铁板神数推演基础引擎"
-ENGINE_VERSION = "0.3.0-kunji-reference"
-PRIMARY_REFERENCE = "康节说易全书·铁板神数，学林出版社2003年陈明点校本（现代异本）"
-QING_REFERENCE_STATUS = "清刻虚白庐藏本及秘钞密码表全文尚未取得，不能标记为已验证"
+ENGINE_VERSION = "0.4.0-qing-source-audit"
+PRIMARY_REFERENCE = "《神機妙算鐵板數》清刻影印本（用户提供扫描件；核心规则待逐页核验）"
+QING_REFERENCE_STATUS = "清刻足本扫描件已取得，已初步检查前15个扫描页；起数、考刻、六亲数及秘钞密码仍待逐页核验"
 from tieshan_kunji import get_kunji_reference
+from tieshan_qing_source import get_qing_source_reference
 KUNJI_REFERENCE = get_kunji_reference()
+QING_SOURCE_REFERENCE = get_qing_source_reference()
 WORKFLOW = [
     {"key":"birth_record","name":"出生资料与历法归档","status":"verified","description":"保存原始历法输入、换算公历日期、农历日期、地点与时区。"},
     {"key":"four_pillars","name":"四柱基础定位","status":"verified","description":"四柱仅作为铁板起数的输入资料，不将普通八字解释当作铁板结论。"},
     {"key":"eight_ke","name":"八刻十五分分段","status":"partial","description":"当前仅按钟表时间切分时辰内八段，尚不等于传统考刻定盘。"},
-    {"key":"body_life","name":"安身命宫","status":"partial","description":"按已核对现代点校本安身命例定位；闰月进位仍待异本核验。"},
+    {"key":"body_life","name":"安身命宫","status":"partial","description":"清刻本原页已定位，规则正在逐字转录；当前现代点校本函数只作异本参照。"},
     {"key":"classic_tables","name":"乾集基础数理表","status":"partial","description":"分开保存天干配卦、洛书数卦、日主配卦、河洛配数及地支取数类。"},
     {"key":"start_number","name":"起数与卦值日月推数","status":"blocked","description":"缺少完整可复核的连贯例题及全部中间步骤，禁止生成最终铁板数。"},
-    {"key":"traditional_examination","name":"考刻定盘","status":"blocked","description":"需要版本明确的考刻规则、六亲校验资料与历史时间修正。"},
+    {"key":"traditional_examination","name":"考刻定盘","status":"blocked","description":"清刻本已取得；仍需复原六亲校验、刻分推进、历史时刻修正及可复算例题。"},
     {"key":"six_relatives","name":"六亲数推演","status":"blocked","description":"尚未取得可复核的六亲数完整取数公式与例题。"},
-    {"key":"cipher_lookup","name":"秘钞密码数与条文定位","status":"blocked","description":"清刻足本附录密码表全文未取得，不生成、不猜测条文编号。"},
+    {"key":"cipher_lookup","name":"秘钞密码数与条文定位","status":"blocked","description":"清刻扫描件已取得；附录密码表尚未定位、转录和核验，不生成、不猜测条文编号。"},
     {"key":"life_interpretation","name":"一生命运条文汇编","status":"blocked","description":"必须以已验证的数序命中原文条文后才可解释，不以AI故事替代古籍条文。"},
 ]
 RULE_REGISTRY = [
@@ -29,7 +31,11 @@ RULE_REGISTRY = [
     {"id":"QIAN-BODY-LIFE","name":"安身命例","source":"乾集，PDF文本行810-817；闰月口径待核","status":"partial"},
     {"id":"QIAN-EIGHT-KE","name":"每时八刻、每刻十五分","source":"乾集开篇说明；当前只实现钟表分段","status":"partial"},
     {"id":"QIAN-EIGHT-TRIGRAM-ADD","name":"八卦加则例","source":"乾集，PDF文本行684-715；逐句解说行699-715","status":"documented_conceptual_only"},
-    {"id":"KUNJI-CIPHER-EDITORIAL","name":"坤集密码代号（点校本编者说明）","source":"坤集浅释，PDF文本行250-277；含十天干数字代号与少量示例","status":"partial_editorial_metadata_not_full_cipher"},
+    {"id":"KUNJI-CIPHER-EDITORIAL","name":"坤集密码代号（2003点校本编者说明）","source":"坤集浅释，PDF文本行250-277；含十天干数字代号与少量示例","status":"partial_editorial_metadata_not_full_cipher"},
+    {"id":"QING-FRONT-EIGHT-KE","name":"清刻本八刻十五分说明","source":"用户提供清刻扫描件，PDF图像第1页封面内页","status":"image_observed_transcription_pending"},
+    {"id":"QING-STEM-TRIGRAM","name":"清刻本天干配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
+    {"id":"QING-DAYMASTER-TRIGRAM","name":"清刻本日主配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
+    {"id":"QING-BODY-LIFE","name":"清刻本安身命例","source":"用户提供清刻扫描件，PDF图像第3页（印刷页6-7）","status":"image_located_transcription_pending"},
 ]
 
 def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=None, classic_reference=None):
@@ -59,10 +65,11 @@ def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=No
         "overall_status": "foundation_only", "can_generate_final_iron_plate_number": False,
         "birth_basis": {key: birth.get(key) for key in ("input_calendar","input_date","converted_solar_date","converted_lunar_date","place_resolved","timezone")},
         "four_pillars": {key: {field: (pillars.get(key) or {}).get(field) for field in ("name","stem","branch")} for key in ("year","month","day","hour")},
-        "available_foundations": {"eight_ke":eight_ke,"body_life_palaces":body_life_palaces,"classic_reference":classic_reference, "eight_trigram_addition":classic_reference.get("eight_trigram_addition"), "kunji_reference":KUNJI_REFERENCE},
+        "available_foundations": {"eight_ke":eight_ke,"body_life_palaces":body_life_palaces,"classic_reference":classic_reference, "eight_trigram_addition":classic_reference.get("eight_trigram_addition"), "kunji_reference":KUNJI_REFERENCE, "qing_source_reference":QING_SOURCE_REFERENCE},
         "workflow": steps, "rule_registry": [dict(item) for item in RULE_REGISTRY],
         "stop_reasons": [
-            "目前可访问的资料为2003年现代点校本部分可检索文本，不是清刻虚白庐藏本完整影印件。",
+            "清刻足本扫描件已取得，但目前只完成前15个扫描页的初步图像检查，核心规则和附录密码表尚未完整转录。",
+            "2003年点校本规则仅作异本参照，不得直接标记为清刻本规则。",
             "完整起数、考刻、六亲数、秘钞密码表和条文编号匹配尚未形成可逐步复算的证据链。",
             "在上述关键环节补齐并通过原文例题回归测试之前，不输出所谓最终铁板定数或人生断语。",
         ],
