@@ -464,7 +464,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][2]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][3]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][4]["index_status"], "partial_text_layer_index")
-        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][8:]))
+        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][9:]))
         self.assertEqual(data["collections"][4]["pdf_text_line_start"], 17109)
         self.assertEqual(data["collections"][4]["indexed_groups"], 88)
         self.assertEqual(data["collections"][4]["indexed_entries"], 877)
@@ -479,6 +479,10 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][7]["indexed_groups"], 77)
         self.assertEqual(data["collections"][7]["indexed_entries"], 770)
         self.assertEqual(data["collections"][7]["pdf_text_line_start"], 21990)
+        self.assertEqual(data["collections"][8]["index_status"], "partial_text_layer_index")
+        self.assertEqual(data["collections"][8]["indexed_groups"], 4)
+        self.assertEqual(data["collections"][8]["indexed_entries"], 40)
+        self.assertEqual(data["collections"][8]["pdf_text_line_start"], 23449)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
         self.assertEqual(data["collections"][3]["indexed_groups"], 78)
@@ -1165,3 +1169,15 @@ class WeiCollectionIndexThrough8990Tests(unittest.TestCase):
         self.assertEqual(wei["pdf_text_line_end"], 23443)
         self.assertEqual(shen["pdf_text_line_start"], 23449)
         self.assertTrue(any(x["raw_group_marker"] == "九○○○" for x in data["group_anomalies"]))
+
+
+class ShenCollectionInitialIndexTests(unittest.TestCase):
+    def test_shen_first_four_groups(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
+        data = get_collection_branch_group_index("申")
+        self.assertEqual(data["group_count"], 4)
+        self.assertEqual(data["entry_count"], 40)
+        self.assertEqual([g["raw_group_marker"] for g in data["groups"]],
+                         ["九○一○","九○二○","九○三○","九○四○"])
+        sample = get_collection_sample("申")
+        self.assertEqual(sample["group_index"]["group_count"], 4)
