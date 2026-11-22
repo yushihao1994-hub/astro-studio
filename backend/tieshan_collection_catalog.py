@@ -4282,6 +4282,90 @@ def get_hai_priority_conflict_review():
 
 
 
+
+def get_hai_header_exception_review_12710_12770():
+    """Review truncated 12710, wrapped 12740, and header-only 12770 without inferred repair."""
+    source = HAI_12670_12800_BOUNDARY_AUDIT
+    markers = {item["candidate"]: item for item in source["markers"]}
+    exceptions = {item["block_id"]: item for item in source["known_exceptions"]}
+    m12710 = markers[12710]
+    m12740 = markers[12740]
+    m12770 = markers[12770]
+    e12710 = exceptions["hai_truncated_marker_12710"]
+    e12770 = exceptions["hai_header_only_12770"]
+    return {
+        "source_pdf_text_lines": "34632-34725",
+        "cases": [
+            {
+                "candidate_reference_only": 12710,
+                "raw_marker": m12710["raw"],
+                "marker_pdf_line": m12710["line"],
+                "normalized_candidate": m12710["normalized_candidate"],
+                "pre_entry_number_line": m12710["pre_entry_number_line"],
+                "entry_pdf_lines": list(m12710["entry_lines"]),
+                "entry_count_candidate": len(m12710["entry_lines"]),
+                "sequence_labels": list(m12710["sequence_labels"]),
+                "group_association": e12710["group_association"],
+                "status": m12710["status"],
+                "formal_index_eligible": False,
+                "required_evidence": [
+                    "34632所在原页扫描图，核对组头是否被OCR截断",
+                    "34636独立数字行的原图内容及其版面位置",
+                    "34637-34646十条正文与34632组头是否属于同一版面单元",
+                    "不得仅凭前后编号把原始「一二七〇」补成「一二七一〇」"
+                ],
+            },
+            {
+                "candidate_reference_only": 12740,
+                "raw_marker": m12740["raw"],
+                "marker_pdf_line": m12740["line"],
+                "entry_pdf_lines": list(m12740["entry_lines"]),
+                "sequence_labels": list(m12740["sequence_labels"]),
+                "continuation_pdf_lines": list(m12740["continuation_lines"]),
+                "continuation_count": len(m12740["continuation_lines"]),
+                "collection_header_ocr": m12740["collection_header_ocr"],
+                "collection_header_pdf_line": m12740["header_line"],
+                "status": m12740["status"],
+                "formal_index_eligible": False,
+                "required_evidence": [
+                    "34675-34689所在原页扫描图",
+                    "34677页眉OCR「玄集」的原图字形",
+                    "34686及34689续行与相邻序号正文的实际行列关系",
+                    "确认十个序号是否对应十条完整条文，续行是否应并入上一条"
+                ],
+            },
+            {
+                "candidate_reference_only": 12770,
+                "raw_marker": m12770["raw"],
+                "marker_pdf_line": m12770["line"],
+                "entry_pdf_lines": list(m12770["entry_lines"]),
+                "entry_count_candidate": len(m12770["entry_lines"]),
+                "intervening_header_ocr": e12770.get("intervening_header_ocr"),
+                "intervening_header_pdf_line": e12770.get("intervening_header_pdf_line"),
+                "next_marker_raw": e12770["next_marker"],
+                "next_marker_pdf_line": e12770["next_marker_pdf_line"],
+                "status": m12770["status"],
+                "formal_index_eligible": False,
+                "required_evidence": [
+                    "34721-34725所在原页扫描图",
+                    "34721组头与34723页眉的版面位置",
+                    "34721至34725之间是否存在被文本层漏提取的正文",
+                    "确认34725「一二七八〇」是否开启下一组；不得把12780正文借给12770"
+                ],
+            },
+        ],
+        "rules": [
+            "Preserve the truncated raw marker 一二七〇; do not normalize it to 12710.",
+            "Keep 12740 continuation lines separate from sequence labels until page layout is checked.",
+            "Keep 12770 header-only; never borrow entries from 12780.",
+            "All three cases remain text-layer candidates, not image-verified groups."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_exception_review_page_image_verification_pending",
+    }
+
+
 def get_hai_detached_numeric_review_12670_12680():
     """Record detached numeric columns for 12670/12680 without guessing row alignment."""
     blocks = {item["block_id"]: item for item in HAI_UNASSIGNED_BLOCKS}
@@ -4540,6 +4624,7 @@ def get_collection_branch_group_index(branch):
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
+            "header_exception_review_12710_12770": get_hai_header_exception_review_12710_12770(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
