@@ -27,9 +27,9 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_other_collections_are_not_fabricated(self):
         data = get_collection_sample("丑")
         self.assertEqual(data["status"], "partial_text_layer_index_image_verification_pending")
-        self.assertEqual(data["entry_count"], 120)
+        self.assertEqual(data["entry_count"], 130)
         self.assertEqual(data["entries"], [])
-        self.assertEqual(data["group_index"]["group_count"], 12)
+        self.assertEqual(data["group_index"]["group_count"], 13)
 
     def test_age_markers_are_separate_lists_not_clause_numbers(self):
         data = get_collection_sample("子")
@@ -459,8 +459,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all(x["toc_status"] == "located_in_contents" for x in data["collections"]))
         self.assertEqual(data["collections"][0]["indexed_groups"], 75)
         self.assertEqual(data["collections"][1]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][1]["indexed_groups"], 12)
-        self.assertEqual(data["collections"][1]["indexed_entries"], 120)
+        self.assertEqual(data["collections"][1]["indexed_groups"], 13)
+        self.assertEqual(data["collections"][1]["indexed_entries"], 130)
         self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][2:]))
         self.assertEqual(data["collections"][0]["pdf_text_line_start"], 10664)
         self.assertEqual(data["collections"][0]["pdf_text_line_end"], 12570)
@@ -526,5 +526,6 @@ class ChouRawMarker2260Tests(unittest.TestCase):
         self.assertEqual(group["pdf_text_lines"], "12798-12809")
         self.assertIsNone(group["normalized_group_marker_candidate"])
         self.assertEqual(len(group["entries"]), 10)
+        self.assertTrue(all(e["pdf_text_line"] is None for e in group["entries"]))
         self.assertIn("chou_unheaded_entries_after_raw_marker_二六○",
                       {b["block_id"] for b in data["unassigned_blocks"]})
