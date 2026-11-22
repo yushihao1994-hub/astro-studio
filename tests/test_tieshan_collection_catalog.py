@@ -1987,3 +1987,47 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         api = get_collection_branch_group_index("亥")
         self.assertEqual(api["table_region_review_12440_12500"], audit)
         self.assertEqual(api["group_count"], 0)
+
+
+    def test_hai_detached_numeric_review_12670_12680_preserves_unmapped_cells(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_detached_numeric_review_12670_12680,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_detached_numeric_review_12670_12680()
+        group_12670 = audit["group_12670"]
+        self.assertEqual(group_12670["raw_group_marker"], "一二六七〇")
+        self.assertEqual(group_12670["marker_pdf_line"], 34570)
+        self.assertEqual(
+            [(item["pdf_text_line"], item["raw_numeric_text"])
+             for item in group_12670["detached_numeric_cells"]],
+            list(zip(range(34571, 34578),
+                      ["六十九", "六十一", "五十三", "五十四", "三十七", "十九", "二十二"])),
+        )
+        self.assertEqual(group_12670["entry_pdf_lines"], list(range(34579, 34589)))
+        self.assertEqual(group_12670["sequence_labels_observed"], [2,3,3,4,5,6,7,8,9,10])
+        self.assertTrue(group_12670["sequence_anomalies"]["missing_label_1"])
+        self.assertTrue(group_12670["sequence_anomalies"]["repeated_label_3"])
+        self.assertTrue(all(item["mapped_entry_pdf_line"] is None
+                            for item in group_12670["detached_numeric_cells"]))
+        group_12680 = audit["group_12680"]
+        self.assertEqual(group_12680["raw_group_marker"], "一二六八〇")
+        self.assertEqual(group_12680["marker_pdf_line"], 34589)
+        self.assertEqual(
+            [(item["pdf_text_line"], item["raw_numeric_text"])
+             for item in group_12680["detached_numeric_cells"]],
+            list(zip(range(34590, 34596),
+                      ["五十五", "五十六", "三十九", "三十", "三十三", "三十四"])),
+        )
+        self.assertEqual(group_12680["collection_header_ocr"], "交集")
+        self.assertEqual(group_12680["collection_header_pdf_line"], 34597)
+        self.assertEqual(group_12680["entry_pdf_lines"], list(range(34599, 34609)))
+        self.assertEqual(group_12680["entry_count"], 10)
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        self.assertTrue(all(item["formal_index_eligible"] is False
+                            for key in ("group_12670", "group_12680")
+                            for item in audit[key]["detached_numeric_cells"]))
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["detached_numeric_review_12670_12680"], audit)
+        self.assertEqual(api["group_count"], 0)
