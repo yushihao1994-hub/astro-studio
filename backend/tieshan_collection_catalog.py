@@ -4108,6 +4108,34 @@ def get_hai_review_queue():
             "source": source,
             "required_review_action": action,
             "detail": detail,
+            "candidate_group_marker": None,
+            "related_layout_candidate_indices": (
+                detail.get("layout_candidate_indices", [])
+                if isinstance(detail, dict) else []
+            ),
+            "related_marker_pdf_lines": (
+                [detail["pdf_text_line"]]
+                if isinstance(detail, dict) and isinstance(detail.get("pdf_text_line"), int)
+                else []
+            ),
+            "overlap_status": (
+                "overlap_detected" if "overlap" in issue_type
+                or "conflict" in issue_type or issue_type == "multiply_classified_line"
+                else "not_established"
+            ),
+            "possible_layout_explanation": (
+                "可能涉及页眉、页码、表格单元格、跨行续文或OCR版面读取顺序；需对照原页判断"
+                if issue_type == "unclassified_text_line_range"
+                else "可能由重复标记、跨栏表格、续行或OCR错位造成；不能仅凭文本层确定"
+            ),
+            "required_evidence": [
+                "对应印刷页扫描图像",
+                "组号字形与PDF文本行位置相符",
+                "正文十条边界及序号可逐项对应",
+                "相邻组边界无未解决重叠或冲突",
+            ],
+            "formal_index_eligible": False,
+            "status": "image_check_required",
         })
 
     for span in coverage["unclassified_line_ranges"]:
