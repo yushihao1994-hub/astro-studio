@@ -227,6 +227,62 @@ TRANSCRIPTION_CANDIDATES = [
     },
 ]
 
+
+    {
+        "id": "QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION",
+        "topic": "天干配卦、日主配卦及河洛地支配数表（原页局部转录）",
+        "pdf_page": 2,
+        "printed_pages": [4],
+        "raw_text": "中宮六乾是七艮八兌九離門。日主配卦例。河洛配數例。甲己子午九，乙庚丑未八，丙辛寅申七，丁壬卯酉六，戊癸辰戌五，己亥單四數。地支配數例。亥子一六水，寅卯三八木，巳午二七火，申酉四九金，辰戌丑未五同歸。",
+        "status": "image_transcribed_candidate_pending_second_review",
+        "ambiguities": [
+            "“中宮六乾是七艮八兌九離門”是图表中的连续竖排文字，表格栏位和标点关系尚未复核，不能据此推导完整九宫映射。",
+            "“甲己子午九”至“己亥單四數”中“己”重复；必须保留原文，不擅自修订或编码成唯一映射。",
+            "本条为扫描页2左页可辨文字的连续转录候选，尚未逐字放大复核。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+    {
+        "id": "QING-P2-RIGHT-PAGE-EIGHT-TRIGRAM-VERSE",
+        "topic": "八卦加則例口诀（右页逐行转录候选）",
+        "pdf_page": 2,
+        "printed_pages": [5],
+        "raw_text": "爻從三十起，乾卦六為頭，兌為後少女，增方隅中一綱，以變知六百止，世應兩同倚。遇十須不用，玄玄妙法周，當看多寡數，及止悉因由。",
+        "status": "image_transcribed_candidate_pending_second_review",
+        "ambiguities": [
+            "“增方隅中一綱”中间字词字形不清，须局部放大；不能据现代点校本替换。",
+            "“以變知六百止”中“知”字疑似异体或误识，待放大确认。",
+            "“世應兩同倚”与现代点校本存在异文可能，暂按清刻图像候选保留。"
+        ],
+        "algorithm_status": "conceptual_only"
+    },
+    {
+        "id": "QING-P3-ANSHEN-MING-INTRO",
+        "topic": "安身命例开头说明",
+        "pdf_page": 3,
+        "printed_pages": [6],
+        "raw_text": "安身命例。太抵人命從子起正月順至季月，又自月起子時……",
+        "status": "partial_image_transcription_candidate",
+        "ambiguities": [
+            "扫描页3左页开头可见“太抵人命從子起正月順至季月”一段，但后续关于起时、逆顺及安身宫的字句需放大复核；省略号部分不得视为已转录。",
+            "下方干支/宫位例表仍未逐行抄录，不能据此计算安身命宫。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+    {
+        "id": "QING-P3-HETU-LUOSHU-ORDER",
+        "topic": "河圖、洛書方位次序说明",
+        "pdf_page": 3,
+        "printed_pages": [7],
+        "raw_text": "河圖之序自北而東，左旋而相生，然對待之位……；洛書之序自北而西，右轉而相尅，然對待之位……",
+        "status": "partial_image_transcription_candidate",
+        "ambiguities": [
+            "扫描页3右页可辨“河圖之序自北而東左旋而相生”“洛書之序自北而西右轉而相尅”等语；后半句涉及方位与五行生克的字词须放大确认。",
+            "此段是方位/生克说明，不足以单独证明出生资料到铁板数的运算公式。"
+        ],
+        "algorithm_status": "conceptual_only"
+    },
+
 BLOCKERS = [
     "清刻本起数/卦值日月推数的完整步骤尚未逐页转录并复算。",
     "传统考刻的六亲验证、刻分推进与最终定盘条件尚未形成可重复算法。",
