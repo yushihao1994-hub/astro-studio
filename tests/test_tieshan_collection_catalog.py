@@ -1881,3 +1881,39 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
             audit,
         )
         self.assertEqual(get_collection_branch_group_index("亥")["group_count"], 0)
+
+
+    def test_hai_priority_conflict_review_covers_registered_blocks_without_promotion(self):
+        from backend.tieshan_collection_catalog import (
+            HAI_UNASSIGNED_BLOCKS, get_hai_priority_conflict_review,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_priority_conflict_review()
+        records = audit["records"]
+        self.assertEqual(audit["record_count"], len(records))
+        self.assertEqual(audit["record_count"], len(HAI_UNASSIGNED_BLOCKS))
+        self.assertEqual(
+            records,
+            sorted(records, key=lambda item: (
+                item["start_pdf_text_line"], item["end_pdf_text_line"], item["block_id"]
+            )),
+        )
+        self.assertEqual(
+            audit["priority_counts"],
+            {level: sum(item["priority"] == level for item in records)
+             for level in ("P0", "P1", "P2")},
+        )
+        self.assertTrue(all(item["formal_index_eligible"] is False for item in records))
+        self.assertTrue(all(item["status"] == "image_check_required" for item in records))
+        self.assertTrue(all(item["required_evidence"] for item in records))
+        p0_ids = {item["block_id"] for item in records if item["priority"] == "P0"}
+        self.assertTrue({
+            "hai_ocr_corrupt_12080_to_12170",
+            "hai_split_layout_12440_to_12500",
+            "hai_split_numeric_column_12670",
+            "hai_table_cell_markers_12960_to_12980",
+            "hai_terminal_12990_and_unheaded_following_table",
+        }.issubset(p0_ids))
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["priority_conflict_review"], audit)
+        self.assertEqual(api["group_count"], 0)
