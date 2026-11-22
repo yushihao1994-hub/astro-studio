@@ -472,8 +472,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][5]["indexed_groups"], 78)
         self.assertEqual(data["collections"][5]["indexed_entries"], 780)
         self.assertEqual(data["collections"][6]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][6]["indexed_groups"], 40)
-        self.assertEqual(data["collections"][6]["indexed_entries"], 400)
+        self.assertEqual(data["collections"][6]["indexed_groups"], 59)
+        self.assertEqual(data["collections"][6]["indexed_entries"], 589)
         self.assertEqual(data["collections"][6]["pdf_text_line_start"], 20332)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -966,17 +966,20 @@ class WuCollectionInitialIndexTests(unittest.TestCase):
     def test_wu_first_fourteen_groups_and_unheaded_block(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("午")
-        self.assertEqual(data["group_count"], 40)
-        self.assertEqual(data["entry_count"], 400)
+        self.assertEqual(data["group_count"], 59)
+        self.assertEqual(data["entry_count"], 589)
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]],
                          ["七○一○","七○二○","七○三○","七○四○","七○五○","七○六○","七○七○",
                           "七○八○","七○九○","七一○○","七一一○","七一二○","七一三○","七一四○",
                           "七一八○","七一九○","七二○○","七二二○","七二三○","七二四○","七二五○",
                           "七一七○","七二八○","七二九○","七三○○","七三二○","七三三○","七三四○","七三五○","七三六○","七三七○","七三九○",
-                          "七四一○","七四二○","七四三○","七四五○","七四六○","七四七○","七四八○","七四九○"])
+                          "七四一○","七四二○","七四三○","七四五○","七四六○","七四七○","七四八○","七四九○",
+                          "七五○○","七五一○","七五二○","七五三○","七五四○","七五五○","一九五七○",
+                          "一九五八○","一九五九○","七六○○","七六一○","七六三○","七六四○","七六五○",
+                          "七六六○","七六七○","七六八○","七六九○","七七○○"])
         self.assertEqual(data["unassigned_blocks"][0]["pdf_text_lines"], "20359-20368")
         sample = get_collection_sample("午")
-        self.assertEqual(sample["group_index"]["group_count"], 40)
+        self.assertEqual(sample["group_index"]["group_count"], 59)
 
 
 class WuCollectionIndexThrough7350Tests(unittest.TestCase):
@@ -1011,3 +1014,21 @@ class WuCollectionIndexThrough7490Tests(unittest.TestCase):
             self.assertEqual(group["entry_count"], 10)
         self.assertTrue(any(x["raw_group_marker"] == "七四四○" for x in data["group_anomalies"]))
         self.assertTrue(any(x["raw_group_marker"] == "七三八○" for x in data["group_anomalies"]))
+
+
+class WuCollectionIndexThrough7700Tests(unittest.TestCase):
+    def test_wu_groups_through_7700_keep_short_and_ocr_markers(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("午")
+        expected = [("七五○○",21148),("七五一○",21165),("七五二○",21185),
+                    ("七五三○",21202),("七五四○",21217),("七五五○",21229),
+                    ("一九五七○",21246),("一九五八○",21258),("一九五九○",21271),
+                    ("七六○○",21299),("七六一○",21312),("七六三○",21331),
+                    ("七六四○",21343),("七六五○",21354),("七六六○",21379),
+                    ("七六七○",21391),("七六八○",21404),("七六九○",21418),("七七○○",21431)]
+        for marker,line in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+        short = next(g for g in data["groups"] if g["raw_group_marker"] == "七五五○")
+        self.assertEqual(short["entry_count"], 9)
+        self.assertTrue(any(x["raw_group_marker"] == "七六二○" for x in data["group_anomalies"]))
