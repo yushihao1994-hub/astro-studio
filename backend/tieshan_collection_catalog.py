@@ -5097,6 +5097,184 @@ def get_hai_p0_coordinate_breakdown():
         "verification_status": "p0_text_coordinate_breakdown_prepared_image_geometry_not_verified",
     }
 
+
+def get_hai_p0_coordinate_integrity_audit():
+    """Cross-audit P0 evidence spans against coordinate layers and the full anomaly registry."""
+    manifest = get_hai_p0_image_evidence_manifest()
+    breakdown = get_hai_p0_coordinate_breakdown()
+    manifest_entries = manifest["entries"]
+    coordinate_blocks = breakdown["blocks"]
+    registry = HAI_UNASSIGNED_BLOCKS
+
+    manifest_by_id = {item["block_id"]: item for item in manifest_entries}
+    coordinate_by_id = {item["block_id"]: item for item in coordinate_blocks}
+    registry_by_id = {item["block_id"]: item for item in registry}
+
+    missing_coordinate_blocks = sorted(set(manifest_by_id) - set(coordinate_by_id))
+    extra_coordinate_blocks = sorted(set(coordinate_by_id) - set(manifest_by_id))
+    missing_registry_blocks = sorted(set(manifest_by_id) - set(registry_by_id))
+
+    span_mismatches = []
+    p0_registry_span_checks = []
+    for block_id, item in manifest_by_id.items():
+        registry_item = registry_by_id.get(block_id)
+        if registry_item is None:
+            continue
+        span = registry_item.get("pdf_text_lines", "")
+        try:
+            registry_start, registry_end = [int(value) for value in span.split("-", 1)]
+        except (TypeError, ValueError):
+            registry_start = registry_end = None
+        matches = (
+            registry_start == item["start_pdf_text_line"]
+            and registry_end == item["end_pdf_text_line"]
+        )
+        p0_registry_span_checks.append({
+            "block_id": block_id,
+            "manifest_span": [item["start_pdf_text_line"], item["end_pdf_text_line"]],
+            "registry_span": [registry_start, registry_end],
+            "matches": matches,
+        })
+        if not matches:
+            span_mismatches.append(block_id)
+
+    overlaps = []
+    for p0_id, p0_item in manifest_by_id.items():
+        p0_start = p0_item["start_pdf_text_line"]
+        p0_end = p0_item["end_pdf_text_line"]
+        for other in registry:
+            other_id = other.get("block_id")
+            if other_id == p0_id:
+                continue
+            try:
+                other_start, other_end = [int(value) for value in other["pdf_text_lines"].split("-", 1)]
+            except (KeyError, TypeError, ValueError):
+                continue
+            overlap_start = max(p0_start, other_start)
+            overlap_end = min(p0_end, other_end)
+            if overlap_start <= overlap_end:
+                overlaps.append({
+                    "p0_block_id": p0_id,
+                    "other_block_id": other_id,
+                    "overlap_pdf_text_lines": [overlap_start, overlap_end],
+                    "overlap_line_count": overlap_end - overlap_start + 1,
+                    "resolution": "unresolved_preserve_both_registry_records",
+                })
+
+    duplicate_marker_lines = []
+    marker_line_owners = {}
+    for block in coordinate_blocks:
+        for layer in block["coordinate_layers"]:
+            if layer["layer"] != "group_marker_candidates":
+                continue
+            for item in layer["items"]:
+                line = item.get("pdf_text_line")
+                if isinstance(line, int):
+                    marker_line_owners.setdefault(line, []).append({
+                        "block_id": block["block_id"],
+                        "raw_text": item.get("raw_text"),
+                    })
+    for line, owners in sorted(marker_line_owners.items()):
+        if len(owners) > 1:
+            duplicate_marker_lines.append({
+                "pdf_text_line": line,
+                "owners": owners,
+                "resolution": "duplicate_coordinate_reference_requires_source_review",
+            })
+
+    table_column_conflicts = []
+    for block in coordinate_blocks:
+        for layer in block["coordinate_layers"]:
+            if layer["layer"] != "table_segment_columns":
+                continue
+            for item in layer["items"]:
+                sequence_lines = set(item.get("sequence_pdf_lines", []))
+                clause_lines = set(item.get("clause_pdf_lines", []))
+                overlap_lines = sorted(sequence_lines & clause_lines)
+                recorded_overlap = sorted(item.get("sequence_clause_line_overlap", []))
+                if overlap_lines != recorded_overlap:
+                    table_column_conflicts.append({
+                        "block_id": block["block_id"],
+                        "segment_id": item.get("segment_id"),
+                        "computed_overlap_lines": overlap_lines,
+                        "recorded_overlap_lines": recorded_overlap,
+                        "resolution": "retain_source_columns_do_not_pair",
+                    })
+
+    out_of_span_coordinates = []
+    for block in coordinate_blocks:
+        manifest_item = manifest_by_id.get(block["block_id"])
+        if manifest_item is None:
+            continue
+        lower = manifest_item["start_pdf_text_line"]
+        upper = manifest_item["end_pdf_text_line"]
+        for layer in block["coordinate_layers"]:
+            if layer["layer"] == "adjacent_boundary_context" or layer["layer"].startswith("adjacent_"):
+                continue
+            for item in layer["items"]:
+                for key, value in item.items():
+                    if key.endswith("_pdf_line") and isinstance(value, int) and not lower <= value <= upper:
+                        out_of_span_coordinates.append({
+                            "block_id": block["block_id"],
+                            "layer": layer["layer"],
+                            "field": key,
+                            "pdf_text_line": value,
+                        })
+                    elif key.endswith("_pdf_lines") and isinstance(value, list):
+                        for line in value:
+                            if isinstance(line, int) and not lower <= line <= upper:
+                                out_of_span_coordinates.append({
+                                    "block_id": block["block_id"],
+                                    "layer": layer["layer"],
+                                    "field": key,
+                                    "pdf_text_line": line,
+                                })
+
+    unresolved_conflicts = []
+    for block_id in missing_coordinate_blocks:
+        unresolved_conflicts.append({"kind": "missing_coordinate_block", "block_id": block_id})
+    for block_id in extra_coordinate_blocks:
+        unresolved_conflicts.append({"kind": "unmatched_coordinate_block", "block_id": block_id})
+    for block_id in missing_registry_blocks:
+        unresolved_conflicts.append({"kind": "missing_registry_block", "block_id": block_id})
+    for block_id in span_mismatches:
+        unresolved_conflicts.append({"kind": "manifest_registry_span_mismatch", "block_id": block_id})
+    for item in overlaps:
+        unresolved_conflicts.append({"kind": "registry_span_overlap", **item})
+    for item in duplicate_marker_lines:
+        unresolved_conflicts.append({"kind": "duplicate_marker_coordinate", **item})
+    for item in table_column_conflicts:
+        unresolved_conflicts.append({"kind": "table_column_overlap_mismatch", **item})
+    for item in out_of_span_coordinates:
+        unresolved_conflicts.append({"kind": "coordinate_outside_p0_span", **item})
+
+    return {
+        "audit_version": "1.0",
+        "manifest_block_count": len(manifest_entries),
+        "coordinate_block_count": len(coordinate_blocks),
+        "registry_block_count": len(registry),
+        "manifest_coordinate_ids_match": not missing_coordinate_blocks and not extra_coordinate_blocks,
+        "manifest_registry_ids_present": not missing_registry_blocks,
+        "manifest_registry_spans_match": not span_mismatches,
+        "p0_registry_span_checks": p0_registry_span_checks,
+        "missing_coordinate_blocks": missing_coordinate_blocks,
+        "extra_coordinate_blocks": extra_coordinate_blocks,
+        "missing_registry_blocks": missing_registry_blocks,
+        "span_mismatches": span_mismatches,
+        "registry_span_overlaps": overlaps,
+        "duplicate_marker_coordinate_lines": duplicate_marker_lines,
+        "table_column_overlap_mismatches": table_column_conflicts,
+        "coordinates_outside_p0_span": out_of_span_coordinates,
+        "unresolved_conflict_count": len(unresolved_conflicts),
+        "unresolved_conflicts": unresolved_conflicts,
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "entry_count": 0,
+        "image_verified_group_count": 0,
+        "verification_status": "p0_coordinate_integrity_cross_audited_conflicts_preserved_for_source_review",
+    }
+
+
 def get_hai_registry_integrity_audit():
     """Audit registry counts, identifiers, and PDF-line bounds without resolving source conflicts."""
     import re
@@ -5271,6 +5449,7 @@ def get_collection_branch_group_index(branch):
             "unified_conflict_worklist": get_hai_unified_conflict_worklist(),
             "p0_image_evidence_manifest": get_hai_p0_image_evidence_manifest(),
             "p0_coordinate_breakdown": get_hai_p0_coordinate_breakdown(),
+            "p0_coordinate_integrity_audit": get_hai_p0_coordinate_integrity_audit(),
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
