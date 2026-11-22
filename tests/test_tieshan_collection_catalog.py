@@ -1413,7 +1413,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_unassigned_regions_and_header_conflicts_remain_explicit(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(len(data["unassigned_blocks"]), 21)
+        self.assertEqual(len(data["unassigned_blocks"]), 22)
         conflict = next(x for x in data["group_anomalies"]
                         if x["type"] == "collection_header_ocr_conflict")
         self.assertIn("玄集", conflict["observed_ocr"])
@@ -1603,6 +1603,27 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         tail = blocks["hai_unheaded_12360"]["neighbor_context"]
         self.assertEqual(tail["after_marker"]["raw"], "去集")
         self.assertIsNone(tail["after_marker"]["candidate"])
+    def test_hai_12670_12800_boundary_audit_keeps_marker_only_candidates_unassigned(self):
+        from backend.tieshan_collection_catalog import (
+            HAI_12670_12800_BOUNDARY_AUDIT, get_collection_branch_group_index,
+        )
+        audit = HAI_12670_12800_BOUNDARY_AUDIT
+        markers = {item["candidate"]: item for item in audit["markers"]}
+        self.assertEqual(len(markers), 14)
+        self.assertEqual(markers[12710]["raw"], "一二七〇")
+        self.assertIsNone(markers[12710]["normalized_candidate"])
+        self.assertEqual(markers[12770]["detail_ref"], "hai_header_only_12770")
+        self.assertEqual(markers[12770]["next_marker_line"], 34725)
+        self.assertEqual(markers[12670]["detail_ref"], "hai_split_numeric_column_12670")
+        self.assertEqual(markers[12680]["detail_ref"], "hai_header_only_12680")
+        self.assertEqual(audit["verification_status"],
+                         "marker_positions_partly_recovered_text_layer_body_mapping_incomplete_page_image_pending")
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(data["boundary_audit_12670_12800"]["markers"][2]["entry_mapping"], "pending")
+        block = next(x for x in data["unassigned_blocks"] if x["block_id"] == "hai_truncated_marker_12710")
+        self.assertIsNone(block["normalized_group_marker_candidate"])
+
+
     def test_hai_12510_12660_region_audit_preserves_missing_and_duplicate_rows(self):
         from backend.tieshan_collection_catalog import (
             HAI_12510_12660_REGION_AUDIT, get_collection_branch_group_index,
@@ -1652,7 +1673,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_crosswalk_audits_unassigned_blocks_without_assigning_groups(self):
         from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
         audit = get_hai_crosswalk_audit()
-        self.assertEqual(audit["unassigned_block_count"], 21)
+        self.assertEqual(audit["unassigned_block_count"], 22)
         blocks = {row["block_id"]: row for row in audit["unassigned_block_crosswalk"]}
         self.assertEqual(blocks["hai_unheaded_12240_candidate"]["explicit_entry_line_count"], 10)
         self.assertTrue(blocks["hai_ocr_corrupt_12080_to_12170"]["marker_candidates_inside_block"])
