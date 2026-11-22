@@ -372,7 +372,7 @@ TRANSCRIPTION_CANDIDATES = [
         "status": "image_reviewed_layout_and_section_continuity_transcription_pending",
         "note": "已渲染并检查PDF第651—665页全部15张扫描图像，并对651、655、660—665页作220dpi抽查。第651—664页继续呈现九至一数字栏头及多列竖排断语；第665页为末页局部版面，仍可见数字栏头与数列断语。末段可辨婚姻、妻室、子息、功名、家宅等主题，但未逐字转录，数字栏头与具体条文索引关系未验证。",
         "algorithm_status": "not_implemented"
-    },,
+    },
     {
         "id": "QING-SECOND-PASS-PDF-001-050",
         "topic": "第二阶段第1—50页结构分区与图表定位复核",
