@@ -4820,12 +4820,9 @@ def get_hai_marker_cluster_review_12080_12180():
 def get_hai_unified_conflict_worklist():
     """Merge block priorities and crosswalk findings without double-counting linked issues."""
     import json
-    import re
-
     priority = get_hai_priority_conflict_review()
     review = get_hai_review_queue()
     blocks = []
-    spans = []
     for item in priority["records"]:
         start = item["start_pdf_text_line"]
         end = item["end_pdf_text_line"]
@@ -4844,12 +4841,12 @@ def get_hai_unified_conflict_worklist():
             "formal_index_eligible": False,
             "status": "image_check_required",
         })
-        spans.append((start, end, item["block_id"]))
 
     # Link crosswalk findings to their containing anomaly block. Linked findings
     # remain visible as evidence, but do not become additional worklist issues.
     global_findings = []
     linked_count = 0
+    multi_owner_finding_count = 0
     seen = set()
     for index, item in enumerate(review["queue"], 1):
         start = item["start_pdf_text_line"]
@@ -4874,6 +4871,8 @@ def get_hai_unified_conflict_worklist():
             if start <= block["end_pdf_text_line"] and end >= block["start_pdf_text_line"]
         ]
         if owners:
+            if len(owners) > 1:
+                multi_owner_finding_count += 1
             for owner in owners:
                 owner["related_crosswalk_findings"].append(finding)
             linked_count += 1
@@ -4906,6 +4905,8 @@ def get_hai_unified_conflict_worklist():
         "anomaly_block_count": len(blocks),
         "global_crosswalk_issue_count": len(global_findings),
         "linked_crosswalk_finding_count": linked_count,
+        "multi_owner_crosswalk_finding_count": multi_owner_finding_count,
+        "crosswalk_accounting_check": linked_count + len(global_findings) == len(seen),
         "deduplicated_crosswalk_finding_count": len(seen),
         "priority_counts": {
             level: sum(item["priority"] == level for item in worklist)
