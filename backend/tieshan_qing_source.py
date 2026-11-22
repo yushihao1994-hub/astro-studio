@@ -8,7 +8,7 @@ executable Iron Plate calculations.
 EDITION = "《神機妙算鐵板數》；题署邵康節先生著；封面内页见“貞元書屋藏板”"
 FILE_NAME = "鐵板神數(清刻足本).pdf"
 FILE_SIZE_BYTES = 83686820
-SCAN_PAGE_COUNT = 665
+SCAN_PAGE_COUNT = 150
 PRINTED_PAGE_COUNT_SHOWN = 1363
 STATUS = "scan_acquired_initial_pages_image_reviewed_core_rules_pending"
 SOURCE_CLASS = "user_provided_primary_scan"
@@ -16,8 +16,7 @@ SOURCE_CLASS = "user_provided_primary_scan"
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
 # Each scan image may contain a two-page spread.
 IMAGE_REVIEWED_RANGES = [
-    {"pdf_pages": [1, 5], "review_status": "image_reviewed"},
-    {"pdf_pages": [6, 15], "review_status": "image_reviewed"},
+    {"pdf_pages": [1, 20], "review_status": "image_reviewed"},
 ]
 
 OBSERVATIONS = [
@@ -84,6 +83,26 @@ OBSERVATIONS = [
         "note": "已定位原版图像；具体顺逆、起宫及闰月规则须按原页重新转录，不沿用现代本函数。",
     },
     {
+        "id": "QING-NAYIN-NAJIA-TABLES",
+        "topic": "納音卦、納甲卦及相關配卦表",
+        "pdf_pages": [11, 15],
+        "printed_pages": [22, 31],
+        "location": "圖表與例表連續頁",
+        "status": "image_reviewed_structure_transcription_pending",
+        "algorithm_status": "not_implemented",
+        "note": "已確認後續頁面出現納音卦、納甲卦及大量干支組合表；目前僅登記表類與頁段，不將縮略圖辨字直接寫成映射。",
+    },
+    {
+        "id": "QING-LIFE-EVENT-TABLES",
+        "topic": "六親、壽夭、兄弟、婚姻等條目表",
+        "pdf_pages": [16, 20],
+        "printed_pages": [32, 41],
+        "location": "分類條目密集頁",
+        "status": "image_reviewed_structure_transcription_pending",
+        "algorithm_status": "not_implemented",
+        "note": "頁面可見比劫、姻緣、兄弟等分類標題及干支條目；具體條文和索引須放大逐條轉錄，暫不作為財運婚姻可執行資料庫。",
+    },
+    {
         "id": "QING-NINE-PALACE-CHARTS",
         "topic": "九宫/局数图表",
         "pdf_pages": [6, 7, 8, 9],
@@ -144,6 +163,7 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
+        "reviewed_pdf_pages": 20,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
