@@ -16,7 +16,7 @@ SOURCE_CLASS = "user_provided_primary_scan"
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
 # Each scan image may contain a two-page spread.
 IMAGE_REVIEWED_RANGES = [
-    {"pdf_pages": [1, 90], "review_status": "image_reviewed"},
+    {"pdf_pages": [1, 100], "review_status": "image_reviewed"},
 ]
 
 OBSERVATIONS = [
@@ -145,13 +145,13 @@ OBSERVATIONS = [
     {
         "id": "QING-NUMBERED-CLAUSE-SECTION",
         "topic": "按數字序列編排的斷語條文區",
-        "pdf_pages": [66, 90],
-        "printed_pages": [132, 181],
+        "pdf_pages": [66, 100],
+        "printed_pages": [132, 201],
         "location": "數字欄頭與直排斷語連續頁",
         "status": "image_reviewed_sample_headings_and_clauses",
         "algorithm_status": "not_implemented",
-        "sample_text": ["婚姻早配天喜並頭", "移花接木艱難培植", "大生兩口孝服之憂", "子孫釣於富春江游然自得", "四子送老皆庶所出", "身入宮門可以謀衣食", "五湖水順江水順好行舟", "兄弟十人數有五貴"],
-        "note": "PDF第66頁起版式由干支/卦名分組表轉為數字欄頭及直排斷語條文。上述僅為可辨識的短句樣本，目前可見條文涉及婚姻、子女、家宅、財祿、仕途/職業、疾病/災厄、兄弟親屬等不同主題；第81—90頁仍沿用數字欄頭與直排條文版式。尚未逐條校字、確認數字欄位意義及建立命盤到條文的檢索映射。",
+        "sample_text": ["婚姻早配天喜並頭", "移花接木艱難培植", "大生兩口孝服之憂", "子孫釣於富春江游然自得", "四子送老皆庶所出", "身入宮門可以謀衣食", "五湖水順江水順好行舟", "兄弟十人數有五貴", "兄弟三人數有貴", "妻生一子妾生二兒", "鬼怪出世破財多失"],
+        "note": "PDF第66頁起版式由干支/卦名分組表轉為數字欄頭及直排斷語條文。上述僅為可辨識的短句樣本，目前可見條文涉及婚姻、子女、家宅、財祿、仕途/職業、疾病/災厄、兄弟親屬等不同主題；第81—100頁仍沿用數字欄頭與直排條文版式，條目持续覆盖六亲、婚姻、子女、财禄、仕途及寿夭等主题。尚未逐條校字、確認數字欄位意義及建立命盤到條文的檢索映射。",
     },
     {
         "id": "QING-NINE-PALACE-CHARTS",
@@ -214,7 +214,7 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 90,
+        "reviewed_pdf_pages": 100,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
