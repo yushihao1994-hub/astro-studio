@@ -655,7 +655,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                       {x["block_id"] for x in data["unassigned_blocks"]})
         sample = get_collection_sample("辰")
         self.assertEqual(sample["collection"], "辰集")
-        self.assertEqual(sample["group_index"]["group_count"], 58)
+        self.assertEqual(sample["group_index"]["group_count"], 76)
 
     def test_collection_progress_exposes_chou_text_range_and_indexed_groups(self):
         from backend.tieshan_collection_catalog import get_collection_progress
@@ -775,8 +775,8 @@ class ChenCollectionIndexTests(unittest.TestCase):
     def test_chen_first_batch_preserves_partial_and_unheaded_records(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
         data = get_collection_branch_group_index("辰")
-        self.assertEqual(data["group_count"], 58)
-        self.assertEqual(data["entry_count"], 579)
+        self.assertEqual(data["group_count"], 76)
+        self.assertEqual(data["entry_count"], 757)
         first = next(g for g in data["groups"] if g["raw_group_marker"] == "五○一○")
         self.assertEqual(first["entry_count"], 9)
         self.assertEqual([e["entry_sequence"] for e in first["entries"]], list(range(2, 11)))
