@@ -1512,6 +1512,35 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(block_12920["following_group_marker_pdf_line"], 34927)
         self.assertEqual(len(data["unassigned_blocks"]), 20)
 
+    def test_hai_12960_to_12980_table_cell_markers_and_terminal_tables_are_structured(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        blocks = {item["block_id"]: item for item in data["unassigned_blocks"]}
+
+        tables = blocks["hai_table_cell_markers_12960_to_12980"]
+        self.assertEqual(len(tables["table_segments"]), 3)
+        expected = [
+            ("e1", 34956, list(range(34957, 34967)), "一二九六〇", 34967),
+            ("e2", 34969, list(range(34970, 34980)), "一二九七〇", 34980),
+            ("e3", 34982, list(range(34983, 34993)), "一二九八〇", 34993),
+        ]
+        for actual, item in zip(tables["table_segments"], expected):
+            self.assertEqual(actual["table_id"], item[0])
+            self.assertEqual(actual["table_start_pdf_line"], item[1])
+            self.assertEqual(actual["entry_pdf_lines"], item[2])
+            self.assertEqual(actual["embedded_next_group_marker"], item[3])
+            self.assertEqual(actual["embedded_marker_pdf_line"], item[4])
+        self.assertIn("page_image", tables["status"])
+
+        terminal = blocks["hai_terminal_12990_and_unheaded_following_table"]
+        self.assertEqual(terminal["last_group_marker_raw"], "一九九〇")
+        self.assertEqual(terminal["last_group_marker_normalization_candidate"], 12990)
+        self.assertEqual(terminal["normalization_status"], "candidate_only_ocr_digit_sequence_conflicts_with_expected_12990_not_confirmed")
+        self.assertEqual(terminal["first_table_entry_pdf_lines"], list(range(35003, 35013)))
+        self.assertEqual(terminal["following_table_entry_pdf_lines"], list(range(35015, 35025)))
+        self.assertIsNone(terminal["following_table_group_marker"])
+        self.assertEqual(len(data["unassigned_blocks"]), 20)
+
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
