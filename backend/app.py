@@ -1615,12 +1615,21 @@ def tieshan_analyze():
 def _tieshan_topic_endpoint(topic):
     payload = request.get_json(silent=True) or {}
     try:
+        engine = payload.get("iron_plate_engine") or {}
+        kaoke = engine.get("kaoke_result") if isinstance(engine, dict) else None
+        if not isinstance(kaoke, dict) or kaoke.get("status") != "verified":
+            return jsonify({
+                "ok": False,
+                "code": "KAOKE_NOT_VERIFIED",
+                "error": "真实考刻定盘尚未完成校验。当前不会用普通四柱或 AI 推测代替铁板神数结论。"
+            }), 409
         result = analyze_tieshan_topic(
             topic,
             payload.get("pillars"),
             payload.get("birth") or {},
             str(payload.get("gender") or ""),
-            payload.get("derived") or {}
+            payload.get("derived") or {},
+            kaoke
         )
         label = "财运专项预测" if topic == "finance" else "婚姻专项预测"
         return jsonify({"ok": True, "topic": topic, "analysis_type": label, "analysis": result})
