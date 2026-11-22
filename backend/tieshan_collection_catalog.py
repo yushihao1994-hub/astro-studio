@@ -1003,7 +1003,7 @@ def get_group_index():
 # 2003点校本目录页所列的分集起始印刷页。仅记录起始页，不推断结束页。
 COLLECTION_METADATA = {
     "子": {"printed_page_start": 138, "pdf_text_line_start": 10664, "pdf_text_line_end": 12570, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14290, "toc_status": "located_in_contents", "index_status": "text_layer_range_located_not_indexed", "indexed_groups": 0, "indexed_entries": 0},
+    "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14290, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "寅": {"printed_page_start": 206, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "卯": {"printed_page_start": 240, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1016,21 +1016,87 @@ COLLECTION_METADATA = {
     "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
 }
 
+
+# 丑集首批结构索引：仅记录分组标题、序号和PDF文本行，不复制条文正文。
+# 组号保留PDF文本层的原始圆圈字符“○”，不擅自统一为“〇”。
+def _chou_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending"):
+    return {
+        "collection": "丑",
+        "raw_group_marker": raw_marker,
+        "normalized_group_marker_candidate": None,
+        "group_header_pdf_line": header_line,
+        "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
+        "layout_status": layout_status,
+        "entry_count": len(entry_lines),
+        "entries": [
+            {"entry_sequence": sequence, "pdf_text_line": line}
+            for sequence, line in enumerate(entry_lines, 1)
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending",
+    }
+
+
+CHOU_GROUP_INDEX = [
+    _chou_group("二○三○", 12576, list(range(12577, 12587))),
+    _chou_group("二○四○", 12588, list(range(12589, 12599))),
+    _chou_group("二○五○", 12599, list(range(12600, 12610))),
+    _chou_group("二○六○", 12613, list(range(12615, 12625))),
+    _chou_group("二○七○", 12626, list(range(12627, 12637))),
+    _chou_group("二○八○", 12638, list(range(12640, 12650))),
+    _chou_group("二○九○", 12664, list(range(12667, 12677)), "table_rows_text_layer_located"),
+    _chou_group("二一○○", 12689, list(range(12693, 12703)), "table_rows_text_layer_located"),
+    _chou_group("二一一○", 12714, list(range(12718, 12728)), "table_rows_text_layer_located"),
+    _chou_group("二一二○", 12732, list(range(12733, 12743))),
+]
+
+
+def get_collection_branch_group_index(branch):
+    if branch == "子":
+        return get_group_index()
+    if branch == "丑":
+        return {
+            "edition": EDITION,
+            "collection": "丑集",
+            "status": "partial_text_layer_index_image_verification_pending",
+            "group_count": len(CHOU_GROUP_INDEX),
+            "entry_count": sum(len(group["entries"]) for group in CHOU_GROUP_INDEX),
+            "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]])
+                       for group in CHOU_GROUP_INDEX],
+            "limitations": [
+                "本批仅索引丑集开头十组，不能代表丑集全部内容。",
+                "仅保存组号、序号和PDF文本行，不复制条文正文。",
+                "PDF文本层中的组号保留原始字符，未擅自规范化。",
+                "所有行号和分组结构仍需扫描页面图像复核。",
+                "未索引的中间组号、缺组和版式异常不自动补造。",
+                "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
+            ]
+        }
+    return {
+        "edition": EDITION,
+        "collection": branch,
+        "status": "not_transcribed",
+        "group_count": 0,
+        "entry_count": 0,
+        "groups": [],
+        "limitations": ["该分集尚未开始结构索引。"]
+    }
+
+
 def get_collection_progress():
     return {
         "edition": EDITION,
         "source_note": "分集起始印刷页来自2003点校本目录；仅登记起始页，不推断结束页或正文条数。",
         "collections": [
             {"collection": branch, **dict(values), **(
-                {"indexed_groups": len(GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in GROUP_INDEX)}
-                if branch == "子" else {}
+                ({"indexed_groups": len(GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in GROUP_INDEX)} if branch == "子" else
+                 {"indexed_groups": len(CHOU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in CHOU_GROUP_INDEX)} if branch == "丑" else {})
             )}
             for branch, values in COLLECTION_METADATA.items()
         ],
         "limitations": [
             "目录页码定位不代表正文已经转录。",
             "子集索引是PDF文本层结构记录，仍待扫描图像核验。",
-            "丑集已定位PDF文本层范围12572-14290，尚未完成逐组结构索引；寅集至亥集尚未转录。",
+            "丑集已完成开头十组、100条序号结构索引；其余组尚未整理，扫描图像核验待完成。",
             "PDF文本层行号不是印刷页码；所有组号与条目结构仍需逐项核对。",
             "未核实的组号、对应数和条文不生成、不补齐。"
         ]
