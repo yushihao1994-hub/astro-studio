@@ -512,4 +512,137 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
  window.addEventListener('storage',()=>{});
 })();
 </script>
+
+<script>
+/* Home-first birth profile: place the real form controls inside the three homepage information areas. */
+(function(){
+  const form=document.getElementById('birthForm');
+  const home=document.getElementById('homeDashboard');
+  const grid=document.querySelector('main.wrap > .grid');
+  const info=document.querySelector('.home-info-strip');
+  const actions=form&&form.querySelector('.actions');
+  const fields=form&&form.querySelector('.fields');
+  const homeActions=document.querySelector('.home-actions');
+  if(!form||!home||!grid||!info||!fields||!homeActions)return;
+
+  const birthCard=form.closest('.card');
+  /* The form card becomes part of the homepage; the result card stays in the calculation workspace. */
+  home.insertBefore(birthCard,homeActions);
+  form.insertBefore(info,fields);
+
+  const boxes=[...info.children];
+  const specs=[
+    {title:'姓名',ids:['name'],extra:['gender']},
+    {title:'出生信息',ids:['calendar','time','birthYear'],extra:['accuracy']},
+    {title:'地理位置',ids:['provinceSelect'],extra:[]}
+  ];
+  boxes.forEach((box,i)=>{
+    box.innerHTML='<span class="home-field-heading">'+specs[i].title+'</span><div class="home-field-slot"></div>';
+    box.classList.add('home-info-box');
+  });
+  const slots=boxes.map(x=>x.querySelector('.home-field-slot'));
+  function moveField(id,index){
+    const el=document.getElementById(id);
+    const field=el&&el.closest('.field');
+    if(field)slots[index].appendChild(field);
+  }
+  moveField('name',0);
+  const gender=form.querySelector('input[name="gender"]');
+  if(gender)slots[0].appendChild(gender.closest('.field'));
+  moveField('calendar',1);
+  moveField('time',1);
+  moveField('birthYear',1);
+  moveField('accuracy',1);
+  moveField('provinceSelect',2);
+  /* The date selectors share one field; the address selectors and natural-village input share another. */
+  const dateField=document.getElementById('birthMonth').closest('.field');
+  if(dateField&&dateField!==slots[1].querySelector('.field'))slots[1].appendChild(dateField);
+  const addressField=document.getElementById('citySelect').closest('.field');
+  if(addressField&&addressField!==slots[2].querySelector('.field'))slots[2].appendChild(addressField);
+  /* Remove now-empty section headings and the old grid wrapper. */
+  fields.remove();
+  const sectionTitles=form.querySelectorAll('.form-section-title');
+  sectionTitles.forEach(x=>{const field=x.closest('.field');if(field)field.remove();});
+  if(actions)form.appendChild(actions);
+  grid.style.display='none';
+  birthCard.classList.add('home-entry-card');
+
+  /* Compact controls so all three fields remain usable in the homepage strip. */
+  const style=document.createElement('style');
+  style.textContent=`
+    .home-entry-card{margin:10px 16px 16px!important;padding:12px!important;border:1px solid #45636d!important;border-radius:14px!important;background:linear-gradient(145deg,#142733,#0c1b26)!important}
+    .home-entry-card>h3,.home-entry-card>.hint{display:none}
+    .home-info-strip{display:grid!important;grid-template-columns:.9fr 1.25fr 1.45fr;gap:7px;margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;align-items:stretch}
+    .home-info-box{min-width:0;padding:9px 7px;border:1px solid #49616a;border-radius:9px;background:linear-gradient(180deg,#172d38,#0d1c27);text-align:left!important}
+    .home-field-heading{display:block;color:#e8c18e;font-size:12px;font-weight:700;margin:0 0 8px;letter-spacing:1px}
+    .home-field-slot,.home-field-slot .field{min-width:0;width:100%}
+    .home-info-strip .field{margin:0 0 7px!important;grid-column:auto!important}
+    .home-info-strip label{font-size:10px!important;line-height:1.4;margin-bottom:4px!important;color:#b9c8c8!important}
+    .home-info-strip input,.home-info-strip select{height:36px!important;min-height:36px!important;padding:0 5px!important;font-size:12px!important;border-radius:5px!important;width:100%;min-width:0}
+    .home-info-strip .choice{gap:4px}
+    .home-info-strip .choice span{min-height:36px;padding:5px 2px;font-size:12px}
+    .home-info-strip .date-parts{grid-template-columns:repeat(3,minmax(0,1fr));gap:3px}
+    .home-info-strip .date-parts select{padding:0 2px!important;font-size:10px!important}
+    .home-info-strip .address-parts{gap:4px;overflow-x:auto}
+    .home-info-strip .address-parts select{flex:0 0 94px;width:94px;font-size:11px!important}
+    .home-info-strip #naturalVillage{margin-top:5px}
+    .home-info-strip small{font-size:9px!important;line-height:1.45;display:block;margin-top:4px}
+    .home-entry-card .actions{display:grid;grid-template-columns:1.5fr 1fr;gap:7px;margin-top:10px}
+    .home-entry-card .actions button{min-height:42px;padding:8px 5px;font-size:12px}
+    .home-entry-card .notice{margin-top:9px;font-size:10px}
+    @media(max-width:520px){
+      .home-dashboard{padding-left:8px;padding-right:8px}
+      .home-entry-card{margin:8px 8px 13px!important;padding:9px!important}
+      .home-info-strip{grid-template-columns:.82fr 1.18fr 1.35fr;gap:4px}
+      .home-info-box{padding:7px 5px}
+      .home-field-heading{font-size:11px;margin-bottom:6px}
+      .home-info-strip label{font-size:9px!important}
+      .home-info-strip input,.home-info-strip select{font-size:11px!important;padding:0 3px!important}
+      .home-info-strip .address-parts select{flex-basis:88px;width:88px}
+      .home-entry-card .actions button{font-size:11px}
+    }
+    @media(max-width:360px){.home-info-strip{grid-template-columns:.78fr 1.12fr 1.3fr;gap:3px}.home-info-box{padding:6px 4px}}
+  `;
+  document.head.appendChild(style);
+
+  /* Live homepage summary labels remain useful for compact screens and saved-profile context. */
+  function updateHomeSummary(){
+    const name=document.getElementById('name')?.value.trim();
+    const y=document.getElementById('birthYear')?.value,m=document.getElementById('birthMonth')?.selectedOptions[0]?.textContent,d=document.getElementById('birthDay')?.selectedOptions[0]?.textContent;
+    const t=document.getElementById('timeUnknown')?.value==='unknown'?'时间不详':(document.getElementById('time')?.value||'时辰未填');
+    const place=document.getElementById('place')?.value;
+    const n=document.getElementById('homeName'),b=document.getElementById('homeBirth'),p=document.getElementById('homePlace');
+    if(n)n.textContent=name||'待填写';if(b)b.textContent=[y,m,d,t].filter(Boolean).join(' ')||'待填写';if(p)p.textContent=place||'待选择';
+  }
+  form.addEventListener('input',updateHomeSummary);
+  form.addEventListener('change',updateHomeSummary);
+  updateHomeSummary();
+
+  /* The homepage's primary action submits the exact same form; no second data-entry screen. */
+  homeActions.querySelectorAll('[data-go="calc"]').forEach(button=>{
+    button.addEventListener('click',event=>{
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      form.requestSubmit();
+    },true);
+  });
+  form.addEventListener('submit',()=>{
+    home.style.display='none';
+    grid.style.display='grid';
+    document.querySelectorAll('.workspace-panel').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.workspace-nav button').forEach(x=>x.classList.toggle('active',x.dataset.page==='calc'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  },true);
+  /* Returning to the calculation tab returns to the homepage form for edits. */
+  const calcNav=document.querySelector('#workspaceNav [data-page="calc"]');
+  if(calcNav)calcNav.addEventListener('click',event=>{
+    event.preventDefault();event.stopImmediatePropagation();
+    home.style.display='block';grid.style.display='none';
+    document.querySelectorAll('.workspace-panel').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.workspace-nav button').forEach(x=>x.classList.toggle('active',x.dataset.page==='archive'));
+    window.scrollTo({top:0,behavior:'smooth'});
+  },true);
+})();
+</script>
+
 </body></html>
