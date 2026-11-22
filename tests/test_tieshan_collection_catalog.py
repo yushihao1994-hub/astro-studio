@@ -1603,6 +1603,31 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         tail = blocks["hai_unheaded_12360"]["neighbor_context"]
         self.assertEqual(tail["after_marker"]["raw"], "去集")
         self.assertIsNone(tail["after_marker"]["candidate"])
+    def test_hai_12810_12990_terminal_audit_preserves_unheaded_and_table_markers(self):
+        from backend.tieshan_collection_catalog import (
+            HAI_12810_12990_TERMINAL_AUDIT, get_collection_branch_group_index,
+        )
+        audit = HAI_12810_12990_TERMINAL_AUDIT
+        rows = {item["candidate"]: item for item in audit["groups_and_blocks"]}
+        self.assertEqual(len(rows), 19)
+        self.assertEqual(rows[12810]["entry_lines"], list(range(34779, 34789)))
+        self.assertEqual(rows[12860]["header_ocr"], "支集")
+        self.assertEqual(rows[12860]["entry_lines"], list(range(34846, 34856)))
+        self.assertEqual(rows[12900]["entry_lines"], list(range(34893, 34903)))
+        self.assertEqual(rows[12910]["missing_sequence"], [3])
+        self.assertEqual(rows[12920]["collection_header_ocr"], "玄集")
+        self.assertEqual(rows[12960]["marker_position"], "embedded_in_last_table_row")
+        self.assertEqual(rows[12970]["marker_position"], "embedded_in_last_table_row")
+        self.assertEqual(rows[12980]["marker_position"], "embedded_in_last_table_row")
+        self.assertEqual(rows[12990]["raw_marker"], "一九九〇")
+        self.assertEqual(rows[12990]["normalization_status"],
+                         "hypothesis_only_raw_ocr_conflicts_with_expected_marker")
+        self.assertIsNone(rows[12990]["following_table_marker"])
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(data["terminal_audit_12810_12990"]["image_verification"], "pending")
+        self.assertEqual(len(data["unassigned_blocks"]), 22)
+
+
     def test_hai_12670_12800_boundary_audit_keeps_marker_only_candidates_unassigned(self):
         from backend.tieshan_collection_catalog import (
             HAI_12670_12800_BOUNDARY_AUDIT, get_collection_branch_group_index,
