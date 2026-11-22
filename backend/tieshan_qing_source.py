@@ -16,7 +16,7 @@ SOURCE_CLASS = "user_provided_primary_scan"
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
 # Each scan image may contain a two-page spread.
 IMAGE_REVIEWED_RANGES = [
-    {"pdf_pages": [1, 20], "review_status": "image_reviewed"},
+    {"pdf_pages": [1, 30], "review_status": "image_reviewed"},
 ]
 
 OBSERVATIONS = [
@@ -103,6 +103,16 @@ OBSERVATIONS = [
         "note": "頁面可見比劫、姻緣、兄弟等分類標題及干支條目；具體條文和索引須放大逐條轉錄，暫不作為財運婚姻可執行資料庫。",
     },
     {
+        "id": "QING-LIFE-CLAUSE-EXPANSION",
+        "topic": "分類命例及財祿、外財、婚姻相關條目",
+        "pdf_pages": [21, 30],
+        "printed_pages": [42, 61],
+        "location": "分類命例頁",
+        "status": "image_reviewed_headings_and_layout",
+        "algorithm_status": "not_implemented",
+        "note": "已看到分類命例密集排布，部分頁面可辨認外財、妻妾、婚姻類標題；條文正文和編號尚未逐條放大轉錄，不能據此輸出專項斷語。",
+    },
+    {
         "id": "QING-NINE-PALACE-CHARTS",
         "topic": "九宫/局数图表",
         "pdf_pages": [6, 7, 8, 9],
@@ -163,7 +173,7 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 20,
+        "reviewed_pdf_pages": 30,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
