@@ -2331,11 +2331,51 @@ WU_GROUP_INDEX = [
                     for n,line in enumerate(range(20527,20537),1)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
+    _wu_group("七一八○", 20569, list(range(20571,20581)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _wu_group("七一九○", 20582, list(range(20584,20594)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _wu_group("七二○○", 20595, list(range(20597,20607)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _wu_group("七二二○", 20637, list(range(20638,20648))),
+    _wu_group("七二三○", 20649, list(range(20659,20669)), "table_rows_text_layer_located"),
+    _wu_group("七二四○", 20671, list(range(20675,20685)), "table_rows_text_layer_located"),
+    _wu_group("七二五○", 20687, list(range(20691,20701)), "table_rows_text_layer_located"),
+    {
+        "collection": "午", "raw_group_marker": "七一七○", "occurrence": 1,
+        "normalized_group_marker_candidate": "七二七○", "group_header_pdf_line": 20710,
+        "pdf_text_lines": "20710-20724", "layout_status": "raw_marker_candidate_7270_after_7260_header",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(20714,20724),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _wu_group("七二八○", 20726, list(range(20730,20740)), "table_rows_text_layer_located"),
+    _wu_group("七二九○", 20742, list(range(20746,20756)), "table_rows_text_layer_located"),
+    _wu_group("七三○○", 20760, list(range(20763,20773)), "table_rows_text_layer_located"),
+    _wu_group("七三二○", 20786, list(range(20789,20799)), "table_rows_text_layer_located"),
+    _wu_group("七三三○", 20807, list(range(20810,20820)), "table_rows_text_layer_located"),
+    _wu_group("七三四○", 20821, list(range(20824,20834)), "table_rows_text_layer_located"),
+    _wu_group("七三五○", 20835, list(range(20838,20848)), "table_rows_text_layer_located"),
 ]
 
-WU_GROUP_ANOMALIES = []
+WU_GROUP_ANOMALIES = [
+    {"raw_group_marker": "七一六○", "pdf_text_line": 20538,
+     "status": "short_marker_fragment_candidate_7160"},
+    {"raw_group_marker": "七一七○", "pdf_text_line": 20551,
+     "status": "short_marker_fragment_candidate_7170"},
+    {"raw_group_marker": "七二一○", "pdf_text_line": None,
+     "status": "unheaded_ten_entry_block_before_7220"},
+    {"raw_group_marker": "七二六○", "pdf_text_line": 20703,
+     "status": "marker_seen_body_not_located_before_raw_7170_candidate"}
+]
 WU_UNASSIGNED_BLOCKS = [
     {"block_id": "wu_unheaded_ten_entries_after_7020", "pdf_text_lines": "20359-20368",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "wu_possible_7160_fragment", "pdf_text_lines": "20538-20549",
+     "entry_count_candidate": 10, "status": "short_marker_fragment_alignment_pending"},
+    {"block_id": "wu_possible_7170_fragment", "pdf_text_lines": "20551-20563",
+     "entry_count_candidate": 10, "status": "short_marker_fragment_alignment_pending"},
+    {"block_id": "wu_unheaded_entries_before_7220", "pdf_text_lines": "20613-20623",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "wu_possible_7310_table", "pdf_text_lines": "20775-20785",
      "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
 ]
 
