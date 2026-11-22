@@ -1328,3 +1328,61 @@ class XuCollectionInitialIndexTests(unittest.TestCase):
         xu_progress = next(x for x in progress["collections"] if x["collection"] == "戌")
         self.assertEqual(xu_progress["indexed_groups"], 8)
         self.assertEqual(xu_progress["indexed_entries"], 80)
+
+
+class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
+    def test_hai_candidates_preserve_ocr_and_do_not_claim_verified_groups(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(
+            data["status"],
+            "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending",
+        )
+        self.assertEqual(data["group_count"], 0)
+        self.assertEqual(data["entry_count"], 0)
+        self.assertEqual(data["group_marker_candidate_count"], 88)
+        self.assertEqual(len(data["group_marker_candidates"]), 88)
+        self.assertEqual(
+            sum(x["normalized_group_marker_candidate"] is not None
+                for x in data["group_marker_candidates"]),
+            72,
+        )
+        self.assertTrue(all(x["raw_group_marker"] and x["pdf_text_line"]
+                            for x in data["group_marker_candidates"]))
+
+    def test_hai_layout_candidates_keep_only_source_line_ranges(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(data["layout_group_candidate_count"], 15)
+        self.assertEqual(len(data["layout_group_candidates"]), 15)
+        for group in data["layout_group_candidates"]:
+            self.assertEqual(group["entry_count_candidate"], 10)
+            self.assertEqual(len(group["entry_pdf_lines"]), 10)
+            self.assertIn("text_layer_only", group["status"])
+
+    def test_hai_unassigned_regions_and_header_conflicts_remain_explicit(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(len(data["unassigned_blocks"]), 8)
+        conflict = next(x for x in data["group_anomalies"]
+                        if x["type"] == "collection_header_ocr_conflict")
+        self.assertIn("玄集", conflict["observed_ocr"])
+        self.assertIn("支集", conflict["observed_ocr"])
+        self.assertTrue(all("printed_page_image_verification_required" in x["status"]
+                            for x in data["group_anomalies"]
+                            if x["type"] == "collection_header_ocr_conflict"))
+
+    def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
+        from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
+        progress = get_collection_progress()
+        hai = next(x for x in progress["collections"] if x["collection"] == "亥")
+        self.assertEqual(hai["printed_page_start"], 512)
+        self.assertEqual(hai["pdf_text_line_start"], 33598)
+        self.assertEqual(hai["pdf_text_line_end"], 35025)
+        self.assertEqual(hai["group_marker_candidate_count"], 88)
+        self.assertEqual(hai["layout_group_candidate_count"], 15)
+        self.assertEqual(hai["indexed_groups"], 0)
+        self.assertEqual(hai["indexed_entries"], 0)
+        sample = get_collection_sample("亥")
+        self.assertEqual(sample["entry_count"], 0)
+        self.assertEqual(sample["group_index"]["group_marker_candidate_count"], 88)
