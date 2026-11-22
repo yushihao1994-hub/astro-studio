@@ -47,7 +47,7 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertEqual(source["reviewed_pdf_pages"],650)
         self.assertIn({"pdf_pages":[151,250],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
         self.assertIn({"pdf_pages":[251,350],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
-        self.assertIn("350/665",source["review_coverage"])
+        self.assertIn("650/665",source["review_coverage"])
         self.assertIn({"pdf_pages":[351,450],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
         self.assertIn({"pdf_pages":[451,550],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
         self.assertIn({"pdf_pages":[551,650],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
