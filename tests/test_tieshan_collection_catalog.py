@@ -1611,6 +1611,12 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         rows = {item["candidate"]: item for item in audit["groups_and_blocks"]}
         self.assertEqual(len(rows), 19)
         self.assertEqual(rows[12810]["entry_lines"], list(range(34779, 34789)))
+        self.assertEqual(rows[12820]["entry_lines"], list(range(34791, 34801)))
+        self.assertEqual(rows[12830]["entry_lines"], list(range(34806, 34816)))
+        self.assertEqual(rows[12870]["entry_lines"], list(range(34858, 34868)))
+        self.assertEqual(rows[12890]["entry_lines"], list(range(34883, 34893)))
+        self.assertEqual(rows[12930]["table_entry_lines"], list(range(34929, 34939)))
+        self.assertEqual(rows[12950]["table_entry_lines"], list(range(34957, 34967)))
         self.assertEqual(rows[12860]["header_ocr"], "支集")
         self.assertEqual(rows[12860]["entry_lines"], list(range(34846, 34856)))
         self.assertEqual(rows[12900]["entry_lines"], list(range(34893, 34903)))
@@ -1628,6 +1634,21 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(len(data["unassigned_blocks"]), 22)
 
 
+
+    def test_hai_12670_12800_boundary_audit_records_recovered_text_layer_rows(self):
+        from backend.tieshan_collection_catalog import HAI_12670_12800_BOUNDARY_AUDIT
+        rows = {item["candidate"]: item for item in HAI_12670_12800_BOUNDARY_AUDIT["markers"]}
+        self.assertEqual(rows[12690]["entry_lines"], list(range(34611, 34621)))
+        self.assertEqual(rows[12700]["entry_lines"], list(range(34622, 34632)))
+        self.assertEqual(rows[12710]["raw"], "一二七〇")
+        self.assertIsNone(rows[12710]["normalized_candidate"])
+        self.assertEqual(rows[12710]["entry_lines"], list(range(34637, 34647)))
+        self.assertEqual(rows[12740]["continuation_lines"], [34686, 34689])
+        self.assertEqual(rows[12770]["entry_lines"], [])
+        self.assertEqual(rows[12800]["entry_lines"], list(range(34752, 34762)))
+        self.assertEqual(HAI_12670_12800_BOUNDARY_AUDIT["verification_status"],
+                         "text_layer_rows_reaudited_page_image_verification_pending")
+
     def test_hai_12670_12800_boundary_audit_keeps_marker_only_candidates_unassigned(self):
         from backend.tieshan_collection_catalog import (
             HAI_12670_12800_BOUNDARY_AUDIT, get_collection_branch_group_index,
@@ -1644,7 +1665,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(audit["verification_status"],
                          "marker_positions_partly_recovered_text_layer_body_mapping_incomplete_page_image_pending")
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(data["boundary_audit_12670_12800"]["markers"][2]["entry_mapping"], "pending")
+        self.assertEqual(data["boundary_audit_12670_12800"]["markers"][2]["entry_lines"], list(range(34611, 34621)))
         block = next(x for x in data["unassigned_blocks"] if x["block_id"] == "hai_truncated_marker_12710")
         self.assertIsNone(block["normalized_group_marker_candidate"])
 
