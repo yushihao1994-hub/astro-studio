@@ -2242,6 +2242,8 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(empty["entry_pdf_lines"], [])
         self.assertEqual(empty["next_marker_raw"], "一二七八〇")
         self.assertEqual(empty["next_marker_pdf_line"], 34725)
+        self.assertEqual(empty["intervening_header_ocr"], "康节道具全书")
+        self.assertEqual(empty["intervening_header_pdf_line"], 34723)
         self.assertEqual(audit["formal_index_eligible_count"], 0)
         self.assertEqual(audit["group_count"], 0)
         self.assertTrue(all(item["formal_index_eligible"] is False for item in audit["cases"]))
