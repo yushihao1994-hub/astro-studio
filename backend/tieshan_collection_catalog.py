@@ -1012,7 +1012,7 @@ COLLECTION_METADATA = {
     "未": {"printed_page_start": 376, "pdf_text_line_start": 21990, "pdf_text_line_end": 23443, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "戌": {"printed_page_start": 478, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "戌": {"printed_page_start": 478, "pdf_text_line_start": 26556, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
 }
 
@@ -3463,9 +3463,69 @@ YOU_UNASSIGNED_BLOCKS = [
 ]
 
 
+def _xu_group(raw_marker, normalized_candidate, header_line, source_start, source_end):
+    return {
+        "collection": "戌", "raw_group_marker": raw_marker, "occurrence": 1,
+        "normalized_group_marker_candidate": normalized_candidate,
+        "group_header_pdf_line": header_line,
+        "pdf_text_lines": f"{source_start}-{source_end}",
+        "layout_status": "ten_sequence_structure_text_layer_detected_alignment_pending",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": None,
+                     "source_span": f"{source_start}-{source_end}",
+                     "alignment_status": "group_span_known_individual_row_alignment_pending"}
+                    for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    }
+
+
+XU_GROUP_INDEX = [
+    _xu_group("一○三○", "一一○三○", 26568, 26568, 26584),
+    _xu_group("一○四○", "一一○四○", 26586, 26586, 26600),
+    _xu_group("一○五○", "一一○五○", 26602, 26602, 26638),
+    _xu_group("一○六○", "一一○六○", 26640, 26640, 26672),
+    _xu_group("一○七○", "一一○七○", 26674, 26674, 26696),
+    _xu_group("一○八○", "一一○八○", 26698, 26698, 26712),
+    _xu_group("一○九○", "一一○九○", 26714, 26714, 26725),
+    _xu_group("一一○○", "一一一○○", 26727, 26727, 26737),
+]
+
+XU_GROUP_ANOMALIES = [
+    {"raw_group_marker": "一一○○○", "pdf_text_line": 26527,
+     "status": "marker_precedes_printed_page_478_boundary_belongs_to_previous_collection_pending_page_image"},
+    {"raw_group_marker": "一一○一○", "pdf_text_line": None,
+     "status": "possible_unheaded_block_before_first_located_11030_group"},
+    {"raw_group_marker": "一一一○○", "pdf_text_line": None,
+     "status": "next_group_after_11100_not_yet_located"},
+]
+XU_UNASSIGNED_BLOCKS = [
+    {"block_id": "xu_unheaded_opening_ten_entries", "pdf_text_lines": "26557-26566",
+     "entry_count_candidate": 10, "status": "opening_group_marker_missing_do_not_assign"},
+    {"block_id": "xu_unheaded_after_11100", "pdf_text_lines": "26739-26741",
+     "entry_count_candidate": 0, "status": "page_header_artifact_not_counted_as_entries"},
+]
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
+    if branch == "戌":
+        return {
+            "edition": EDITION, "collection": "戌集",
+            "status": "partial_text_layer_index_image_verification_pending",
+            "group_count": len(XU_GROUP_INDEX),
+            "entry_count": sum(len(group["entries"]) for group in XU_GROUP_INDEX),
+            "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]]) for group in XU_GROUP_INDEX],
+            "group_anomalies": [dict(item) for item in XU_GROUP_ANOMALIES],
+            "unassigned_blocks": [dict(item) for item in XU_UNASSIGNED_BLOCKS],
+            "limitations": [
+                "戌集仅完成一一○三○至一一一○○附近的首批结构定位，不代表全篇完成。",
+                "原始文本层组号保留，一一○三○等规范化编号只作为候选，不覆盖原始字形。",
+                "首段无组号十条内容单独保存，不强行并入组号。",
+                "个别组仅记录整体行范围，十条内部逐行对应仍待扫描图像核验。",
+                "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
+            ]
+        }
     if branch == "酉":
         return {
             "edition": EDITION, "collection": "酉集",
@@ -3657,7 +3717,7 @@ def get_collection_progress():
 
 
 def get_collection_sample(branch="子"):
-    if branch in ("丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉"):
+    if branch in ("丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌"):
         index = get_collection_branch_group_index(branch)
         return {
             "edition": EDITION,
