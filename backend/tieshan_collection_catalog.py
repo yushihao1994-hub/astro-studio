@@ -4283,6 +4283,47 @@ def get_hai_priority_conflict_review():
 
 
 
+def get_hai_numbered_group_review_12810_12850():
+    """Review five numbered text-layer groups and retain the 12830 header OCR conflict."""
+    source = HAI_12810_12990_TERMINAL_AUDIT
+    rows = {item["candidate"]: item for item in source["groups_and_blocks"]}
+    cases = []
+    for candidate in (12810, 12820, 12830, 12840, 12850):
+        item = rows[candidate]
+        cases.append({
+            "candidate_reference_only": candidate,
+            "raw_marker": item["raw_marker"],
+            "marker_pdf_line": item["marker_line"],
+            "entry_pdf_lines": list(item["entry_lines"]),
+            "entry_count_candidate": item["entry_count_candidate"],
+            "sequence_labels": list(item["sequence_labels"]),
+            "intervening_header_ocr": item.get("intervening_header_ocr"),
+            "header_pdf_line": item.get("header_line"),
+            "status": item["status"],
+            "header_conflict_resolution": "unresolved_preserve_raw_ocr" if item.get("intervening_header_ocr") else None,
+            "formal_index_eligible": False,
+            "required_evidence": [
+                f"候选组号{candidate}所在原页扫描图",
+                "核对组头、正文和序号在页面中的实际位置",
+                "核对十条正文是否完整并检查跨栏、续行或漏行",
+                "如有页眉OCR冲突，核对原页图像后再决定是否修订"
+            ],
+        })
+    return {
+        "source_pdf_text_lines": "34777-34840",
+        "cases": cases,
+        "rules": [
+            "Preserve the original OCR marker and source PDF text line locations.",
+            "Keep the 12830 intervening header OCR 贵节说易全书 at line 34804 unresolved.",
+            "Ten sequence labels and ten text rows are not image-level proof of entry mapping.",
+            "Do not infer or alter collection headers from neighboring group order."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_numbered_group_review_page_image_verification_pending",
+    }
+
+
 def get_hai_numbered_group_review_12780_12800():
     """Expand 12780-12800 source markers and numbered rows without image-level claims."""
     source = HAI_12670_12800_BOUNDARY_AUDIT
@@ -4709,6 +4750,7 @@ def get_collection_branch_group_index(branch):
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
+            "numbered_group_review_12810_12850": get_hai_numbered_group_review_12810_12850(),
             "numbered_group_review_12780_12800": get_hai_numbered_group_review_12780_12800(),
             "numbered_group_review_12720_12760": get_hai_numbered_group_review_12720_12760(),
             "header_exception_review_12710_12770": get_hai_header_exception_review_12710_12770(),
