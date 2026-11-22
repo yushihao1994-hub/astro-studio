@@ -626,7 +626,14 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
       form.requestSubmit();
     },true);
   });
-  form.addEventListener('submit',()=>{
+  form.addEventListener('submit',(event)=>{
+    if(!provinceSelect.value||!citySelect.value||!districtSelect.value||!townSelect.value){
+      event.preventDefault();event.stopImmediatePropagation();
+      const hint=document.getElementById('addressHint');
+      if(hint)hint.textContent='请至少选择省、市、县区和乡镇；村/社区为选填。';
+      return;
+    }
+    if(!form.reportValidity()){event.preventDefault();event.stopImmediatePropagation();return;}
     home.style.display='none';
     grid.style.display='grid';
     document.querySelectorAll('.workspace-panel').forEach(x=>x.classList.remove('active'));
