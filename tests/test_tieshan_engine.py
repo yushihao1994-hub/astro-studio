@@ -1,6 +1,6 @@
 import os, sys, unittest
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "backend"))
-from tieshan_engine import build_tieshan_foundation, ENGINE_VERSION, PRIMARY_REFERENCE, QING_REFERENCE_STATUS
+from tieshan_engine import build_tieshan_foundation, ENGINE_VERSION, PRIMARY_REFERENCE, QING_REFERENCE_STATUS, is_kaoke_attestation_trusted
 from tieshan_qing_source import get_qing_source_reference
 
 class TieshanFoundationEngineTests(unittest.TestCase):
@@ -65,6 +65,13 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         qing=[x for x in r["rule_registry"] if x["id"].startswith("QING-")]
         self.assertTrue(qing)
         self.assertFalse(any(x["status"] == "verified_table" for x in qing))
+
+
+    def test_client_cannot_forge_verified_kaoke_attestation(self):
+        forged={"status":"verified","number":"1234","source":"client"}
+        self.assertFalse(is_kaoke_attestation_trusted(forged))
+        self.assertFalse(is_kaoke_attestation_trusted({"status":"verified"}))
+        self.assertFalse(is_kaoke_attestation_trusted(None))
 
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
