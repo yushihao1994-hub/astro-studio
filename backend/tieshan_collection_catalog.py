@@ -1013,7 +1013,7 @@ COLLECTION_METADATA = {
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "戌": {"printed_page_start": 478, "pdf_text_line_start": 26556, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 82},
+    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 88},
 }
 
 
@@ -1037,6 +1037,10 @@ HAI_GROUP_MARKER_CANDIDATES = [
     {"raw_group_marker": "一二二〇", "pdf_text_line": 33792, "normalized_group_marker_candidate": None, "status": "possible_12120_marker_ocr_truncated"},
     {"raw_group_marker": "一二二三〇", "pdf_text_line": 33805, "normalized_group_marker_candidate": None, "status": "possible_12130_marker_prefix_ambiguous"},
     {"raw_group_marker": "一二二四〇", "pdf_text_line": 33829, "normalized_group_marker_candidate": None, "status": "possible_12140_marker_prefix_ambiguous"},
+    {"raw_group_marker": "一五四", "pdf_text_line": 33833, "normalized_group_marker_candidate": None, "status": "truncated_marker_candidate_do_not_normalize"},
+    {"raw_group_marker": "一五六", "pdf_text_line": 33845, "normalized_group_marker_candidate": None, "status": "truncated_marker_candidate_do_not_normalize"},
+    {"raw_group_marker": "一五七", "pdf_text_line": 33860, "normalized_group_marker_candidate": None, "status": "truncated_marker_candidate_do_not_normalize"},
+    {"raw_group_marker": "一八", "pdf_text_line": 33875, "normalized_group_marker_candidate": None, "status": "truncated_marker_candidate_do_not_normalize"},
     {"raw_group_marker": "一二一八〇", "pdf_text_line": 33888, "normalized_group_marker_candidate": 12180, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二二〇〇", "pdf_text_line": 33900, "normalized_group_marker_candidate": 12200, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二二一〇", "pdf_text_line": 33917, "normalized_group_marker_candidate": 12210, "status": "text_layer_marker_clear_image_check_pending"},
@@ -1056,8 +1060,10 @@ HAI_GROUP_MARKER_CANDIDATES = [
     {"raw_group_marker": "一二四四〇", "pdf_text_line": 34220, "normalized_group_marker_candidate": 12440, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二四五〇", "pdf_text_line": 34225, "normalized_group_marker_candidate": 12450, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二四六〇", "pdf_text_line": 34240, "normalized_group_marker_candidate": 12460, "status": "duplicate_marker_later_reappears_check_image"},
+    {"raw_group_marker": "一二四六〇", "pdf_text_line": 34254, "normalized_group_marker_candidate": 12460, "status": "duplicate_ocr_marker_occurrence_check_page_layout"},
     {"raw_group_marker": "一二四八〇", "pdf_text_line": 34270, "normalized_group_marker_candidate": 12480, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二四九〇", "pdf_text_line": 34292, "normalized_group_marker_candidate": 12490, "status": "duplicate_marker_later_reappears_check_image"},
+    {"raw_group_marker": "一二四九〇", "pdf_text_line": 34313, "normalized_group_marker_candidate": 12490, "status": "duplicate_ocr_marker_occurrence_check_page_layout"},
     {"raw_group_marker": "一二五一〇", "pdf_text_line": 34338, "normalized_group_marker_candidate": 12510, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二五二〇", "pdf_text_line": 34351, "normalized_group_marker_candidate": 12520, "status": "text_layer_marker_clear_image_check_pending"},
     {"raw_group_marker": "一二五三〇", "pdf_text_line": 34364, "normalized_group_marker_candidate": 12530, "status": "text_layer_marker_clear_image_check_pending"},
@@ -3600,7 +3606,7 @@ def get_collection_branch_group_index(branch):
     if branch == "亥":
         return {
             "edition": EDITION, "collection": "亥集",
-            "status": "source_text_layer_located_group_index_pending",
+            "status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending",
             "group_count": 0,
             "entry_count": 0,
             "groups": [],
@@ -3619,7 +3625,7 @@ def get_collection_branch_group_index(branch):
             ],
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
-                "已登记82处原始组号OCR候选，其中70处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
+                "已登记88处原始组号OCR候选，其中70处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
                 "末段组号、页眉集名和数字存在OCR错字，不按连续编号推补。",
                 "目前没有完成逐页图像核对，也没有完成十条逐项映射。",
                 "该状态仅表示已定位文本层，不表示已转录或核验亥集正文。"
