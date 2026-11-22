@@ -776,3 +776,12 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 ### 第十五轮补充：待复核项证据门槛字段
 
 为避免队列项被误认为可直接入库，每项统一增加 candidate_group_marker、related_layout_candidate_indices、related_marker_pdf_lines、overlap_status、possible_layout_explanation、required_evidence、formal_index_eligible 和 status 字段。当前所有队列项的 formal_index_eligible 均为 false，status 均为 image_check_required。正式入索至少需要原页扫描图、组号字形与文本行位置对应、正文十条边界可逐项映射、相邻组冲突解除；单凭OCR文本层或编号连续性不满足门槛。新增测试覆盖这些字段。
+
+
+## 第十六轮：亥集异常块优先级复核工作单（2026-11-22）
+
+新增 get_hai_priority_conflict_review()，将已登记的22个未分配异常块逐块转成按PDF行号排序的复核工作单。每项保留block_id、原始行段、原状态、邻接上下文、边界冲突、优先级、具体复核动作和所需证据。
+
+优先级仅代表处理顺序：P0先处理可能影响多个组边界或表格结构的冲突，包括12080—12170 OCR标记簇、12440—12500分栏表格、12670脱离数字栏、12960—12980表格内嵌组号、12990终端组号及后续无组头表格；P1处理缺组头、截断标记、序号缺项等；P2处理其余边界待核项目。优先级不代表组号真伪或条文归属的确定程度。
+
+每项均要求扫描图像和版面证据，formal_index_eligible统一为false。邻组顺序假设不自动转换为组号。新增测试要求22个异常块全部进入工作单、排序正确、P0关键块覆盖完整、API暴露且正式组数仍为0。
