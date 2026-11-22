@@ -3379,16 +3379,87 @@ YOU_GROUP_INDEX = [
         "entries": [{"entry_sequence": n, "source_row_line": 25814, "cell_sequence": n} for n in range(1,11)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
+    _you_group("一○五五○", 25825, list(range(25827,25837)), "single_table_row_contains_ten_clause_cells"),
+    _you_group("一○五六○", 25838, list(range(25844,25854)), "single_table_row_contains_ten_clause_cells"),
+    {
+        "collection": "酉", "raw_group_marker": "一○五七○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25857,
+        "pdf_text_lines": "25857-25866", "layout_status": "sequence_1_missing_nine_entries_only",
+        "entry_count": 9,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(25858,25867),2)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _you_group("一○五八○", 25868, list(range(25869,25879))),
+    _you_group("一○五九○", 25879, list(range(25880,25890))),
+    _you_group("一○六○○", 25903, list(range(25904,25914))),
+    _you_group("一○六一○", 25914, list(range(25916,25926))),
+    {
+        "collection": "酉", "raw_group_marker": "一○六二○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25926,
+        "pdf_text_lines": "25926-25949", "layout_status": "sequence_key_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "sequence_key_line": key, "clause_line": clause}
+                    for n,(key,clause) in enumerate(zip(range(25930,25940),range(25940,25950)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○六三○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25951,
+        "pdf_text_lines": "25951-25973", "layout_status": "sequence_key_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "sequence_key_line": key, "clause_line": clause}
+                    for n,(key,clause) in enumerate(zip(range(25953,25963),range(25964,25974)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○六四○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25975,
+        "pdf_text_lines": "25975-25997", "layout_status": "sequence_key_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "sequence_key_line": key, "clause_line": clause}
+                    for n,(key,clause) in enumerate(zip(range(25977,25987),range(25987,25997)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _you_group("一○七二○", 26145, list(range(26147,26157))),
+    _you_group("一○七三○", 26158, list(range(26159,26169))),
+    {
+        "collection": "酉", "raw_group_marker": "一九七五○", "occurrence": 1,
+        "normalized_group_marker_candidate": "一○七五○", "group_header_pdf_line": 26174,
+        "pdf_text_lines": "26174-26185", "layout_status": "raw_ocr_marker_candidate_10750",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(26176,26186),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一九七六○", "occurrence": 1,
+        "normalized_group_marker_candidate": "一○七六○", "group_header_pdf_line": 26186,
+        "pdf_text_lines": "26186-26198", "layout_status": "raw_ocr_marker_candidate_10760",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(26188,26198),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一九七七○", "occurrence": 1,
+        "normalized_group_marker_candidate": "一○七七○", "group_header_pdf_line": 26199,
+        "pdf_text_lines": "26199-26211", "layout_status": "raw_ocr_marker_candidate_10770",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(26201,26211),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _you_group("一○七八○", 26224, list(range(26226,26236))),
+    _you_group("一○七九○", 26237, list(range(26239,26249))),
 ]
 
 YOU_GROUP_ANOMALIES = [
     {"raw_group_marker": "一○○八○", "pdf_text_line": 25196, "status": "marker_seen_body_not_located_before_10090"},
     {"raw_group_marker": "一○二二○", "pdf_text_line": None, "status": "expected_marker_missing_before_10330"},
-    {"raw_group_marker": "一○四七○", "pdf_text_line": 25729, "status": "marker_seen_body_not_located_before_10480"}
+    {"raw_group_marker": "一○四七○", "pdf_text_line": 25729, "status": "marker_seen_body_not_located_before_10480"},
+    {"raw_group_marker": "一○六五○", "pdf_text_line": 25998, "status": "marker_seen_body_not_located_before_末集_age_subsection"},
+    {"raw_group_marker": "一○六六○", "pdf_text_line": 26007, "status": "raw_marker_一○六○_age_subsection_not_confirmed_as_10660"},
+    {"raw_group_marker": "一○七四○", "pdf_text_line": 26170, "status": "marker_seen_body_not_located_before_10750_candidate"},
+    {"raw_group_marker": "一○八○○", "pdf_text_line": 26250, "status": "marker_seen_body_not_located_before_next_subsection"}
 ]
 YOU_UNASSIGNED_BLOCKS = [
     {"block_id": "you_unheaded_opening_group_before_10050", "pdf_text_lines": "25098-25118", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
-    {"block_id": "you_unheaded_10220_candidate_block", "pdf_text_lines": "25534-25545", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+    {"block_id": "you_unheaded_10220_candidate_block", "pdf_text_lines": "25534-25545", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "you_age_subsection_after_10650", "pdf_text_lines": "26007-26143", "entry_count_candidate": 30, "status": "age_subheadings_and_three_table_blocks_alignment_pending"}
 ]
 
 
