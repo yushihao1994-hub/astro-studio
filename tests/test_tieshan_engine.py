@@ -124,6 +124,13 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
 
+    def test_qing_second_pass_first_50_pages_is_structure_review_only(self):
+        source=get_qing_source_reference()
+        item=next(x for x in source["observations"] if x["id"]=="QING-SECOND-PASS-PDF-001-050")
+        self.assertEqual(item["pdf_pages"],[1,50])
+        self.assertIn("结构定位",item["note"])
+        self.assertEqual(item["algorithm_status"],"not_implemented")
+
     def test_qing_page2_add_rule_verse_has_high_resolution_second_review_record(self):
         source=get_qing_source_reference()
         by_id={x["id"]:x for x in source["transcription_candidates"]}
