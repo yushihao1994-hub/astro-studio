@@ -925,3 +925,6 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 
 
 第二十六轮CI复测补充：上一轮根据日志中间字段误判，当前后端函数实际应使用源字段 next_group_marker_pdf_line（而非 next_marker_line）。现已对照源数据结构修正为真实字段名。上一轮运行 https://github.com/yushihao1994-hub/astro-studio/actions/runs/45018213353 仍失败，错误集中为该字段KeyError；等待本次push复测结果。
+
+
+第二十六轮字段修复补充：进一步追溯后确认12770审计的两个来源并不在同一对象：known_exceptions中的字段实际为 next_marker；下一组的行号应从 markers[12780]["line"] 读取。已改为分别读取这两个真实来源，避免把未在异常对象中存储的字段当作存在。上一轮CI失败记录：https://github.com/yushihao1994-hub/astro-studio/actions/runs/45018322127。
