@@ -1575,6 +1575,19 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(data["group_count"], 0)
         self.assertEqual(data["entry_count"], 0)
 
+
+    def test_hai_12080_to_12170_marker_cluster_preserves_corrupt_and_overlapping_headers(self):
+        from backend.tieshan_collection_catalog import HAI_UNASSIGNED_BLOCKS
+        block = next(item for item in HAI_UNASSIGNED_BLOCKS if item["block_id"] == "hai_ocr_corrupt_12080_to_12170")
+        notes = {item["pdf_text_line"]: item for item in block["marker_cluster_notes"]}
+        self.assertIsNone(notes[33732]["normalized_candidate"])
+        self.assertIsNone(notes[33743]["normalized_candidate"])
+        self.assertIsNone(notes[33766]["normalized_candidate"])
+        self.assertEqual(notes[33829]["normalized_candidate"], 12240)
+        self.assertIsNone(notes[33833]["normalized_candidate"])
+        conflict = block["boundary_conflicts"][0]
+        self.assertEqual(conflict["shared_entry_pdf_lines"], list(range(33834, 33845)))
+        self.assertEqual(block["status"], "marker_cluster_and_entry_boundaries_conflict_page_layout_required")
     def test_hai_crosswalk_audits_unassigned_blocks_without_assigning_groups(self):
         from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
         audit = get_hai_crosswalk_audit()
