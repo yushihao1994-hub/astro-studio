@@ -263,6 +263,32 @@ TRANSCRIPTION_CANDIDATES = [
         "algorithm_status": "not_implemented"
     },
     {
+        "id": "QING-P3-WUYUAN-START-MONTH",
+        "topic": "起五宫例（年干起寅月干候选）",
+        "pdf_page": 3,
+        "printed_pages": [6],
+        "raw_text": "甲己之歲起丙寅；丙辛之歲起庚寅；戊癸之歲起甲寅；乙庚之歲起戊寅；丁壬之歲起壬寅。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
+        "ambiguities": [
+            "500dpi图像中五组竖排文字可辨，标点为整理者断句；标题原文为“起五宫例”，不能擅自改题为“五虎遁”。",
+            "该组口诀与传统年干起月干规则形式相合，但本项目仍以清刻本原页为主证，须继续核对异本及书内实例。"
+        ],
+        "algorithm_status": "calendar_helper_candidate_not_iron_plate_number_rule"
+    },
+    {
+        "id": "QING-P3-NAYIN-SONG-FRAGMENTS",
+        "topic": "六十花甲子纳音歌（局部可见条目）",
+        "pdf_page": 3,
+        "printed_pages": [6],
+        "raw_text": "甲子乙丑海中金；丙寅丁卯爐中火；戊辰己巳大林木；庚午辛未路傍土；壬申癸酉劍鋒金；甲戌乙亥山頭火；丙子丁丑澗下水；戊寅己卯城頭土；庚辰辛巳白蠟金；壬午癸未楊柳木；甲申乙酉泉中水；丙戌丁亥屋上土。",
+        "status": "partial_high_resolution_image_transcription_candidate",
+        "ambiguities": [
+            "本条仅登记当前放大图中可读的前十二组，尚未完成整首纳音歌逐行校勘；“爐/炉”“傍/旁”等字形按图像暂录。",
+            "纳音歌属于干支辅助资料，不能单独作为铁板神数起数、考刻或定数算法。"
+        ],
+        "algorithm_status": "calendar_reference_only_not_iron_plate_number_rule"
+    },
+    {
         "id": "QING-P3-HETU-LUOSHU-ORDER",
         "topic": "河圖、洛書方位次序说明",
         "pdf_page": 3,
