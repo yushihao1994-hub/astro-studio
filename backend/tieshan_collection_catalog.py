@@ -1337,11 +1337,11 @@ CHOU_GROUP_ANOMALIES = [
      "status": "marker_seen_body_not_located_before_2960"}
 ]
 
-def _yin_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending"):
+def _yin_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", occurrence=1):
     return {
         "collection": "寅",
         "raw_group_marker": raw_marker,
-        "occurrence": 1,
+        "occurrence": occurrence,
         "normalized_group_marker_candidate": None,
         "group_header_pdf_line": header_line,
         "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
