@@ -4511,6 +4511,7 @@ def get_hai_header_exception_review_12710_12770():
     source = HAI_12670_12800_BOUNDARY_AUDIT
     markers = {item["candidate"]: item for item in source["markers"]}
     exceptions = {item["block_id"]: item for item in source["known_exceptions"]}
+    unassigned_blocks = {item["block_id"]: item for item in HAI_UNASSIGNED_BLOCKS}
     m12710 = markers[12710]
     m12740 = markers[12740]
     m12770 = markers[12770]
@@ -4564,8 +4565,8 @@ def get_hai_header_exception_review_12710_12770():
                 "marker_pdf_line": m12770["line"],
                 "entry_pdf_lines": list(m12770["entry_lines"]),
                 "entry_count_candidate": len(m12770["entry_lines"]),
-                "intervening_header_ocr": e12770.get("intervening_header_ocr"),
-                "intervening_header_pdf_line": e12770.get("intervening_header_pdf_line"),
+                "intervening_header_ocr": unassigned_blocks["hai_header_only_12770"].get("intervening_header_ocr"),
+                "intervening_header_pdf_line": unassigned_blocks["hai_header_only_12770"].get("intervening_header_pdf_line"),
                 "next_marker_raw": e12770["next_marker"],
                 "next_marker_pdf_line": m12780["line"],
                 "status": m12770["status"],
