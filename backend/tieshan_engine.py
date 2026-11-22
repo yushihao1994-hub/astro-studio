@@ -5,7 +5,7 @@ It deliberately does not invent a final number, six-relative numbers, or clauses
 SYSTEM_NAME = "铁板神数推演基础引擎"
 ENGINE_VERSION = "0.4.0-qing-source-audit"
 PRIMARY_REFERENCE = "《神機妙算鐵板數》清刻影印本（用户提供扫描件；核心规则待逐页核验）"
-QING_REFERENCE_STATUS = "清刻足本扫描件已取得，已初步检查前20个扫描页；起数、考刻、六亲数及秘钞密码仍待逐页核验"
+QING_REFERENCE_STATUS = "清刻足本当前可访问的150个PDF图像页已完成第一轮检查；原书印刷页至约1363页，起数、考刻、六亲数、秘钞密码及条文索引仍待逐条转录和验证"
 from tieshan_kunji import get_kunji_reference
 from tieshan_qing_source import get_qing_source_reference
 KUNJI_REFERENCE = get_kunji_reference()
