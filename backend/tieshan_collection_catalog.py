@@ -1002,8 +1002,8 @@ def get_group_index():
 
 # 2003点校本目录页所列的分集起始印刷页。仅记录起始页，不推断结束页。
 COLLECTION_METADATA = {
-    "子": {"printed_page_start": 138, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": 75, "indexed_entries": 747},
-    "丑": {"printed_page_start": 172, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "子": {"printed_page_start": 138, "pdf_text_line_start": 10664, "pdf_text_line_end": 12570, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14290, "toc_status": "located_in_contents", "index_status": "text_layer_range_located_not_indexed", "indexed_groups": 0, "indexed_entries": 0},
     "寅": {"printed_page_start": 206, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "卯": {"printed_page_start": 240, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1020,11 +1020,19 @@ def get_collection_progress():
     return {
         "edition": EDITION,
         "source_note": "分集起始印刷页来自2003点校本目录；仅登记起始页，不推断结束页或正文条数。",
-        "collections": [{"collection": branch, **dict(values)} for branch, values in COLLECTION_METADATA.items()],
+        "collections": [
+            {"collection": branch, **dict(values), **(
+                {"indexed_groups": len(GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in GROUP_INDEX)}
+                if branch == "子" else {}
+            )}
+            for branch, values in COLLECTION_METADATA.items()
+        ],
         "limitations": [
             "目录页码定位不代表正文已经转录。",
             "子集索引是PDF文本层结构记录，仍待扫描图像核验。",
-            "丑集至亥集未完成正文结构转录，不生成空白条目或密码数。"
+            "丑集已定位PDF文本层范围12572-14290，尚未完成逐组结构索引；寅集至亥集尚未转录。",
+            "PDF文本层行号不是印刷页码；所有组号与条目结构仍需逐项核对。",
+            "未核实的组号、对应数和条文不生成、不补齐。"
         ]
     }
 
