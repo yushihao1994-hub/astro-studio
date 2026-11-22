@@ -1007,8 +1007,8 @@ COLLECTION_METADATA = {
     "寅": {"printed_page_start": 206, "pdf_text_line_start": 14175, "pdf_text_line_end": 15796, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "卯": {"printed_page_start": 240, "pdf_text_line_start": 15797, "pdf_text_line_end": 17108, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "辰": {"printed_page_start": 274, "pdf_text_line_start": 17109, "pdf_text_line_end": 18702, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "巳": {"printed_page_start": 308, "pdf_text_line_start": 18706, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "午": {"printed_page_start": 342, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "巳": {"printed_page_start": 308, "pdf_text_line_start": 18706, "pdf_text_line_end": 20328, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "午": {"printed_page_start": 342, "pdf_text_line_start": 20332, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "未": {"printed_page_start": 376, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "申": {"printed_page_start": 410, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "酉": {"printed_page_start": 444, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -2287,7 +2287,11 @@ SI_UNASSIGNED_BLOCKS = [
     {"block_id": "si_possible_6700_fragment_after_6690", "pdf_text_lines": "19861-19864",
      "entry_count_candidate": 4, "status": "group_boundary_unresolved_do_not_assign"},
     {"block_id": "si_second_and_third_tables_after_690_short_marker", "pdf_text_lines": "20150-20172",
-     "entry_count_candidate": 20, "status": "no_independent_group_markers_do_not_assign"}
+     "entry_count_candidate": 20, "status": "no_independent_group_markers_do_not_assign"},
+    {"block_id": "si_visual_candidate_6990", "pdf_text_lines": "20267-20296",
+     "entry_count_candidate": 10, "status": "marker_visible_in_page_visual_description_not_text_layer_heading"},
+    {"block_id": "si_visual_candidate_7000", "pdf_text_lines": "20298-20328",
+     "entry_count_candidate": 10, "status": "marker_visible_in_page_visual_description_not_text_layer_heading"}
 ]
 
 
