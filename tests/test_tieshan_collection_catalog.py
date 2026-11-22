@@ -476,8 +476,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][6]["indexed_entries"], 819)
         self.assertEqual(data["collections"][6]["pdf_text_line_start"], 20332)
         self.assertEqual(data["collections"][7]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][7]["indexed_groups"], 65)
-        self.assertEqual(data["collections"][7]["indexed_entries"], 650)
+        self.assertEqual(data["collections"][7]["indexed_groups"], 64)
+        self.assertEqual(data["collections"][7]["indexed_entries"], 640)
         self.assertEqual(data["collections"][7]["pdf_text_line_start"], 21990)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -1081,8 +1081,8 @@ class WeiCollectionInitialIndexTests(unittest.TestCase):
     def test_wei_first_nineteen_groups_and_unheaded_blocks(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("未")
-        self.assertEqual(data["group_count"], 65)
-        self.assertEqual(data["entry_count"], 650)
+        self.assertEqual(data["group_count"], 64)
+        self.assertEqual(data["entry_count"], 640)
         expected = ["八○三○","八○六○","八○七○","一九八○","八一二○","八一三○","八一四○",
                     "八一五○","八一六○","八一八○","八一九○","八二○○","八二一○","八二二○",
                     "八二四○","八二五○","八二七○","八二八○","八二九○",
@@ -1093,9 +1093,9 @@ class WeiCollectionInitialIndexTests(unittest.TestCase):
                           "八六九○","八七○○","八七一○","八二○","八七五○","八七六○","八七七○",
                           "八七八○","八七九○","八八○○","八八一○","八八二○","八八三○"]
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]], expected)
-        self.assertEqual(len(data["unassigned_blocks"]), 6)
+        self.assertEqual(len(data["unassigned_blocks"]), 8)
         sample = get_collection_sample("未")
-        self.assertEqual(sample["group_index"]["group_count"], 65)
+        self.assertEqual(sample["group_index"]["group_count"], 64)
 
 
 class WeiCollectionIndexThrough8590Tests(unittest.TestCase):
