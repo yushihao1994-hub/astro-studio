@@ -1890,6 +1890,38 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(terminal["following_table_entry_pdf_lines"], list(range(35015, 35025)))
 
 
+    def test_hai_registry_integrity_audit_checks_counts_ranges_and_preserves_unverified_state(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_registry_integrity_audit,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_registry_integrity_audit()
+        self.assertEqual(audit["pdf_text_line_range"], [33598, 35025])
+        self.assertEqual(audit["total_pdf_text_lines"], 1428)
+        self.assertEqual(audit["registry_counts"], {
+            "raw_marker_candidates": 88,
+            "normalizable_marker_occurrences": 75,
+            "normalized_marker_unique_count": 72,
+            "expected_sequence_slots": 100,
+            "sequence_gap_candidates": 28,
+            "layout_candidates": 77,
+            "partial_table_candidates": 3,
+            "unassigned_blocks": 22,
+        })
+        self.assertTrue(all(audit["count_checks"].values()))
+        self.assertEqual(audit["duplicate_unassigned_block_ids"], [])
+        self.assertEqual(audit["malformed_unassigned_block_spans"], [])
+        self.assertEqual(audit["out_of_range_line_reference_count"], 0)
+        self.assertEqual(audit["integrity_error_count"], 0)
+        self.assertEqual(audit["integrity_errors"], [])
+        self.assertEqual(audit["formal_verified_group_count"], 0)
+        self.assertEqual(audit["formal_verified_entry_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["registry_integrity_audit"], audit)
+        self.assertEqual(api["group_count"], 0)
+        self.assertEqual(api["entry_count"], 0)
+
+
     def test_hai_full_crosswalk_registers_all_conflict_classes_without_promotion(self):
         from backend.tieshan_collection_catalog import (
             get_hai_full_crosswalk_audit, get_collection_branch_group_index,
