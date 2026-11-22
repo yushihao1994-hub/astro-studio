@@ -2133,7 +2133,7 @@ SI_GROUP_INDEX = [
                     for n,(age,clause) in enumerate(zip(range(19465,19475),range(19475,19485)),1)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-    _si_group("六四六七○", 19485, list(range(19493,19504)), "page_header_before_ten_entries"),
+    _si_group("六四六七○", 19485, [19493,19494,19495,19497,19498,19499,19500,19501,19502,19503], "entry_3_spans_two_age_lines"),
     _si_group("六四八○", 19505, list(range(19506,19516))),
     _si_group("六四九○", 19517, list(range(19519,19529))),
     _si_group("六五一○", 19536, list(range(19536,19546)), "table_rows_text_layer_located_title_row_is_entry_1"),
@@ -2165,7 +2165,7 @@ SI_GROUP_INDEX = [
                     for n,(age,clause) in enumerate(zip(range(19803,19813),range(19814,19824)),1)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-    _si_group("六六八○", 19825, list(range(19837,19848)), "page_header_before_ten_entries"),
+    _si_group("六六八○", 19825, [19837,19838,19839,19840,19841,19842,19843,19844,19846,19847], "entry_8_spans_two_age_lines"),
     _si_group("六六九○", 19849, list(range(19851,19861))),
     {
         "collection": "巳", "raw_group_marker": "六七一○", "occurrence": 1,
