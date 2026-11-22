@@ -2133,6 +2133,20 @@ SI_GROUP_INDEX = [
                     for n,(age,clause) in enumerate(zip(range(19465,19475),range(19475,19485)),1)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
+    _si_group("六四六七○", 19485, list(range(19493,19504)), "page_header_before_ten_entries"),
+    _si_group("六四八○", 19505, list(range(19506,19516))),
+    _si_group("六四九○", 19517, list(range(19519,19529))),
+    _si_group("六五一○", 19536, list(range(19536,19546)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六五三○", 19559, list(range(19560,19570)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六五四○", 19586, list(range(19588,19598))),
+    _si_group("六五五○", 19599, list(range(19600,19610))),
+    _si_group("六五六○", 19613, list(range(19618,19628)), "page_header_and_age_marker_before_ten_entries"),
+    _si_group("六六○○", 19696, list(range(19698,19708))),
+    _si_group("六六一○", 19709, list(range(19711,19721))),
+    _si_group("六六二○", 19722, list(range(19725,19735)), "page_header_before_ten_entries"),
+    _si_group("六六三○", 19736, list(range(19738,19748))),
+    _si_group("六六四○", 19749, list(range(19750,19760))),
+    _si_group("六六五○", 19761, list(range(19767,19777)), "page_header_before_ten_entries"),
 ]
 
 SI_GROUP_ANOMALIES = [
@@ -2149,7 +2163,17 @@ SI_GROUP_ANOMALIES = [
     {"raw_group_marker": "六四一○", "pdf_text_line": None,
      "status": "age_clause_block_remains_with_6400_heading_not_separate_group"},
     {"raw_group_marker": "六四四○", "pdf_text_line": 19418,
-     "status": "marker_seen_body_not_located_before_6450"}
+     "status": "marker_seen_body_not_located_before_6450"},
+    {"raw_group_marker": "六五○○", "pdf_text_line": 19530,
+     "status": "marker_seen_body_not_located_before_6510"},
+    {"raw_group_marker": "六五二○", "pdf_text_line": None,
+     "status": "unheaded_ten_entry_candidate_before_6530"},
+    {"raw_group_marker": "六五七○", "pdf_text_line": 19628,
+     "status": "complex_age_subblocks_10_plus_10_plus_10_alignment_unresolved"},
+    {"raw_group_marker": "六五八○", "pdf_text_line": 19649,
+     "status": "age_subheading_not_confirmed_as_independent_group"},
+    {"raw_group_marker": "六五九○", "pdf_text_line": 19670,
+     "status": "age_subheading_not_confirmed_as_independent_group"}
 ]
 
 SI_UNASSIGNED_BLOCKS = [
@@ -2164,7 +2188,11 @@ SI_UNASSIGNED_BLOCKS = [
     {"block_id": "si_unheaded_entries_between_6310_and_6330", "pdf_text_lines": "19254-19263",
      "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "si_unheaded_entries_between_6370_and_6390", "pdf_text_lines": "19333-19342",
-     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "si_possible_6520_body", "pdf_text_lines": "19547-19556",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "si_complex_6570_age_subblocks", "pdf_text_lines": "19629-19680",
+     "entry_count_candidate": 30, "status": "age_subblocks_and_clause_block_alignment_unresolved"}
 ]
 
 
