@@ -484,8 +484,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][8]["indexed_entries"], 590)
         self.assertEqual(data["collections"][8]["pdf_text_line_start"], 23449)
         self.assertEqual(data["collections"][9]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][9]["indexed_groups"], 3)
-        self.assertEqual(data["collections"][9]["indexed_entries"], 30)
+        self.assertEqual(data["collections"][9]["indexed_groups"], 27)
+        self.assertEqual(data["collections"][9]["indexed_entries"], 270)
         self.assertEqual(data["collections"][9]["pdf_text_line_start"], 25096)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -1251,5 +1251,8 @@ class ShenAndYouCollectionTailTests(unittest.TestCase):
         self.assertEqual(you["group_count"], 3)
         self.assertEqual(you["entry_count"], 30)
         self.assertEqual([g["raw_group_marker"] for g in you["groups"]],
-                         ["一○○五○","一○○六○","一○○七○"])
-        self.assertEqual(get_collection_sample("酉")["group_index"]["group_count"], 3)
+                         ["一○○五○","一○○六○","一○○七○","一九○九○","一○○一○","一○○一○○",
+                          "一○二○","一○三○","一○四○","一○○五○","一○○六○","一○○七○","一○○八○",
+                          "一○○九○","一○一○○","一○一一○","一○一二○","一○一三○","一○一四○",
+                          "一○一五○","一○一六○","一○一七○","一○一八○","一○一九○","一○二○○","一○二一○","一○二二○"])
+        self.assertEqual(get_collection_sample("酉")["group_index"]["group_count"], 27)
