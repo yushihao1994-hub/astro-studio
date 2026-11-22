@@ -1837,3 +1837,38 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
             audit,
         )
         self.assertEqual(get_collection_branch_group_index("亥")["group_count"], 0)
+
+
+    def test_hai_review_queue_is_line_sorted_and_preserves_unverified_status(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_review_queue, get_collection_branch_group_index,
+        )
+        audit = get_hai_review_queue()
+        queue = audit["queue"]
+        self.assertEqual(audit["queue_item_count"], len(queue))
+        self.assertEqual(audit["sort_order"], "ascending_pdf_text_line")
+        self.assertEqual(
+            queue,
+            sorted(queue, key=lambda item: (
+                item["start_pdf_text_line"],
+                item["end_pdf_text_line"],
+                item["issue_type"],
+            )),
+        )
+        self.assertTrue(all(
+            33598 <= item["start_pdf_text_line"] <= item["end_pdf_text_line"] <= 35025
+            for item in queue
+        ))
+        self.assertEqual(
+            audit["candidate_policy"],
+            "no_sequence_completion_no_candidate_promotion",
+        )
+        self.assertEqual(
+            audit["verification_status"],
+            "review_queue_generated_from_text_layer_only_page_image_verification_pending",
+        )
+        self.assertEqual(
+            get_collection_branch_group_index("亥")["review_queue"],
+            audit,
+        )
+        self.assertEqual(get_collection_branch_group_index("亥")["group_count"], 0)
