@@ -771,3 +771,8 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 每条队列记录包含起止PDF行号、问题类型、来源审计、下一步需要的核验动作和必要上下文。对于异常块边界，只有存在可解析的行号时才生成队列项。队列是文本层审查工作单，不代表缺失条文，不按编号连续性补齐，不提升候选为正式组。
 
 新增测试检查队列排序、行号范围、条目数一致、状态标识及亥集API暴露情况。测试是否通过仍以GitHub Actions真实运行结果为准。
+
+
+### 第十五轮补充：待复核项证据门槛字段
+
+为避免队列项被误认为可直接入库，每项统一增加 candidate_group_marker、related_layout_candidate_indices、related_marker_pdf_lines、overlap_status、possible_layout_explanation、required_evidence、formal_index_eligible 和 status 字段。当前所有队列项的 formal_index_eligible 均为 false，status 均为 image_check_required。正式入索至少需要原页扫描图、组号字形与文本行位置对应、正文十条边界可逐项映射、相邻组冲突解除；单凭OCR文本层或编号连续性不满足门槛。新增测试覆盖这些字段。
