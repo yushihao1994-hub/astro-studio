@@ -1138,14 +1138,22 @@ HAI_UNASSIGNED_BLOCKS = [
 # 亥集存在组号与序号/断语分栏抽取的表格段。缺失序号或列映射不补造。
 HAI_PARTIAL_TABLE_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二四八〇", "group_marker_pdf_line": 34270, "occurrence": 1,
-     "sequence_pdf_lines": list(range(34271, 34280)), "clause_pdf_lines": list(range(34281, 34291)),
-     "sequence_gap_candidates": [1], "status": "table_columns_split_first_sequence_row_missing_image_check_pending"},
+     "sequence_pdf_lines": list(range(34271, 34280)), "sequence_labels_candidate": list(range(2, 11)),
+     "clause_pdf_lines": list(range(34281, 34291)), "clause_row_ordinals": list(range(1, 11)),
+     "sequence_gap_candidates": [1], "row_alignment_status": "nine_sequence_labels_and_ten_clause_rows_not_pairable_from_text_layer",
+     "status": "table_columns_split_first_sequence_row_missing_image_check_pending"},
     {"raw_group_marker": "一二四九〇", "group_marker_pdf_line": 34292, "occurrence": 1,
-     "sequence_pdf_lines": list(range(34293, 34302)), "clause_pdf_lines": list(range(34302, 34312)),
-     "sequence_gap_candidates": [1], "status": "table_columns_split_first_sequence_row_missing_image_check_pending"},
+     "sequence_pdf_lines": list(range(34293, 34302)), "sequence_labels_candidate": list(range(2, 11)),
+     "clause_pdf_lines": list(range(34302, 34312)), "clause_row_ordinals": list(range(1, 11)),
+     "sequence_gap_candidates": [1], "row_alignment_status": "nine_sequence_labels_and_ten_clause_rows_not_pairable_from_text_layer",
+     "status": "table_columns_split_first_sequence_row_missing_image_check_pending"},
     {"raw_group_marker": "一二四九〇", "group_marker_pdf_line": 34313, "occurrence": 2,
-     "sequence_pdf_lines": list(range(34314, 34323)), "clause_pdf_lines": list(range(34324, 34334)),
-     "sequence_gap_candidates": [1], "status": "duplicate_marker_occurrence_table_columns_split_image_check_pending"}
+     "sequence_pdf_lines": list(range(34314, 34323)), "sequence_labels_candidate": list(range(2, 11)),
+     "clause_pdf_lines": list(range(34324, 34334)), "clause_row_ordinals": list(range(1, 11)),
+     "sequence_gap_candidates": [1], "possible_group_marker_correction_candidate": 12500,
+     "group_marker_correction_basis": "intervening position between first 12490 and following 12510; hypothesis only, not normalized",
+     "row_alignment_status": "nine_sequence_labels_and_ten_clause_rows_not_pairable_from_text_layer",
+     "status": "duplicate_marker_occurrence_possible_12500_ocr_error_unverified_image_check_pending"}
 ]
 
 # 以 12000—12990 每十为一档建立“待核组号序列缺口”清单。
