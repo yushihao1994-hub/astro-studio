@@ -1857,6 +1857,20 @@ CHEN_GROUP_INDEX = [
     _chen_group("五四七○", 17876, list(range(17884,17894)), "page_header_age_line_before_ten_entries"),
     _chen_group("五四八○", 17895, list(range(17896,17906))),
     _chen_group("五四九○", 17906, list(range(17907,17917))),
+    _chen_group("五五一○", 17926, list(range(17926,17936)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五五二○", 17938, list(range(17938,17948)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五五三○", 17950, list(range(17950,17960)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五五四○", 17963, list(range(17964,17974))),
+    _chen_group("五五五○", 17975, list(range(17976,17986))),
+    _chen_group("五五六○", 17986, list(range(17987,17997))),
+    _chen_group("五五七○", 18011, list(range(18012,18022))),
+    _chen_group("五五八○", 18023, list(range(18025,18035))),
+    _chen_group("五六○○", 18045, list(range(18045,18055)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五六一○", 18059, list(range(18059,18069)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五六二○", 18073, list(range(18073,18083)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五六三○", 18090, list(range(18090,18100)), "sequence_10_precedes_sequences_1_to_9"),
+    _chen_group("五六四○", 18102, list(range(18102,18112)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五六五○", 18114, list(range(18114,18124)), "table_rows_text_layer_located_title_row_is_entry_1"),
 ]
 
 CHEN_GROUP_ANOMALIES = [
@@ -1873,7 +1887,9 @@ CHEN_GROUP_ANOMALIES = [
     {"raw_group_marker": "五四二○", "pdf_text_line": None,
      "status": "expected_group_marker_missing_between_repeated_5410_and_5430"},
     {"raw_group_marker": "五五○○", "pdf_text_line": 17922,
-     "status": "marker_seen_body_not_located_before_5510"}
+     "status": "marker_seen_body_not_located_before_5510"},
+    {"raw_group_marker": "五五九○", "pdf_text_line": 18036,
+     "status": "marker_seen_body_not_located_before_5600"}
 ]
 
 CHEN_UNASSIGNED_BLOCKS = [
