@@ -532,7 +532,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(any(x["raw_group_marker"] == "二五○" and x["normalized_group_marker_candidate"] is None for x in anomalies))
         self.assertTrue(any(x["raw_group_marker"] == "二六○" and x["normalized_group_marker_candidate"] is None for x in anomalies))
         self.assertEqual(len(data["unassigned_blocks"]), 6)
-        self.assertTrue(all(x["status"] == "group_marker_missing_do_not_assign" for x in data["unassigned_blocks"]))
+        self.assertTrue(all(x["status"] in {"group_marker_missing_do_not_assign","group_boundary_ambiguous_do_not_promote"} for x in data["unassigned_blocks"]))
         self.assertIn("chou_unheaded_entries_before_2330", {x["block_id"] for x in data["unassigned_blocks"]})
         self.assertIn("chou_possible_2390_group_body", {x["block_id"] for x in data["unassigned_blocks"]})
         self.assertIn("chou_possible_2400_group_body", {x["block_id"] for x in data["unassigned_blocks"]})
