@@ -4281,6 +4281,88 @@ def get_hai_priority_conflict_review():
 
 
 
+
+def get_hai_detached_numeric_review_12670_12680():
+    """Record detached numeric columns for 12670/12680 without guessing row alignment."""
+    blocks = {item["block_id"]: item for item in HAI_UNASSIGNED_BLOCKS}
+    block_12670 = blocks["hai_split_numeric_column_12670"]
+    block_12680 = blocks["hai_header_only_12680"]
+
+    def numeric_cells(block):
+        return [
+            {
+                "pdf_text_line": line,
+                "raw_numeric_text": value,
+                "mapped_entry_pdf_line": None,
+                "mapping_status": "unmapped_pending_original_page_layout",
+                "formal_index_eligible": False,
+            }
+            for line, value in zip(
+                block["detached_numeric_pdf_lines"],
+                block["detached_numeric_column"],
+            )
+        ]
+
+    return {
+        "region_pdf_text_lines": "34570-34608",
+        "group_12670": {
+            "block_id": block_12670["block_id"],
+            "raw_group_marker": block_12670["group_marker_raw"],
+            "marker_pdf_line": block_12670["group_marker_pdf_line"],
+            "detached_numeric_cells": numeric_cells(block_12670),
+            "detached_numeric_count": len(block_12670["detached_numeric_column"]),
+            "entry_pdf_lines": list(block_12670["entry_pdf_lines"]),
+            "entry_count": len(block_12670["entry_pdf_lines"]),
+            "sequence_labels_observed": list(block_12670["sequence_labels_observed"]),
+            "missing_sequence_candidates": list(block_12670["sequence_missing_candidates"]),
+            "duplicate_sequence_candidates": list(block_12670["sequence_duplicate_candidates"]),
+            "sequence_anomalies": {
+                "missing_label_1": 1 in block_12670["sequence_missing_candidates"],
+                "repeated_label_3": 3 in block_12670["sequence_duplicate_candidates"],
+                "row_to_detached_number_pairing": "not_established",
+            },
+            "status": block_12670["status"],
+            "formal_index_eligible": False,
+            "required_evidence": [
+                "34570-34588对应原页扫描图",
+                "34571-34577数字栏与34579-34588十条正文的横向位置关系",
+                "序号栏缺失1及重复3是否为OCR或版面读取异常",
+                "七个数字是否分别属于本组及其对应条目"
+            ],
+        },
+        "group_12680": {
+            "block_id": block_12680["block_id"],
+            "raw_group_marker": block_12680["group_marker_raw"],
+            "marker_pdf_line": block_12680["group_marker_pdf_line"],
+            "detached_numeric_cells": numeric_cells(block_12680),
+            "detached_numeric_count": len(block_12680["detached_numeric_column"]),
+            "collection_header_ocr": block_12680["collection_header_ocr"],
+            "collection_header_pdf_line": block_12680["collection_header_pdf_line"],
+            "entry_pdf_lines": list(range(34599, 34609)),
+            "entry_count": 10,
+            "sequence_labels_observed": list(range(1, 11)),
+            "detached_numeric_to_entry_mapping": "not_established",
+            "status": block_12680["status"],
+            "formal_index_eligible": False,
+            "required_evidence": [
+                "34589-34608对应原页扫描图",
+                "34590-34595六个数字单元的实际列位置",
+                "34597页眉OCR「交集」的原图字形及栏位",
+                "六个数字与34599-34608十条正文是否同表、是否跨栏"
+            ],
+        },
+        "shared_rules": [
+            "Detached numeric values are preserved verbatim and in source line order.",
+            "No detached numeric value is assigned to an entry without page-layout evidence.",
+            "Missing or duplicate sequence labels are recorded, never auto-repaired.",
+            "Text-layer locations do not establish image-verified group membership."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_numeric_column_audit_page_image_verification_pending",
+    }
+
+
 def get_hai_table_region_review_12440_12500():
     """Expand the three 12440-12500 table segments without pairing OCR columns."""
     source = HAI_12440_12500_TABLE_AUDIT
@@ -4457,6 +4539,7 @@ def get_collection_branch_group_index(branch):
             "priority_conflict_review": get_hai_priority_conflict_review(),
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
+            "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
