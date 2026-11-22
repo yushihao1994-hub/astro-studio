@@ -1758,3 +1758,14 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
             [x["sequence_gap_candidates"] for x in sample["group_index"]["partial_table_group_candidates"]],
             [[1], [1], [1]],
         )
+
+
+    def test_hai_unassigned_registry_is_python_importable_and_uses_python_null(self):
+        from backend.tieshan_collection_catalog import HAI_UNASSIGNED_BLOCKS
+        self.assertEqual(len(HAI_UNASSIGNED_BLOCKS), 22)
+        terminal = next(
+            item for item in HAI_UNASSIGNED_BLOCKS
+            if item["block_id"] == "hai_terminal_12990_and_unheaded_following_table"
+        )
+        self.assertIsNone(terminal["following_table_group_marker"])
+        self.assertEqual(terminal["following_table_entry_pdf_lines"], list(range(35015, 35025)))
