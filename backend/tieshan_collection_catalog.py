@@ -3702,7 +3702,7 @@ def get_collection_branch_group_index(branch):
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
-                "已登记88处原始组号OCR候选，其中72处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
+                "已登记88处原始组号OCR候选，其中75处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
                 "末段组号、页眉集名和数字存在OCR错字，不按连续编号推补。",
                 "目前没有完成逐页图像核对，也没有完成十条逐项映射。",
                 "该状态仅表示已定位文本层，不表示已转录或核验亥集正文。"
