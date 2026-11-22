@@ -922,3 +922,6 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 
 
 第二十六轮最终字段核对：HAI_UNASSIGNED_BLOCKS 中12770异常块的实际键为 next_group_marker_raw 与 next_group_marker_pdf_line；审计函数现映射这两个准确键，并在测试中分别核对原始下一组标记「一二七八〇」及其行号34725。前两次修复提交仍因源字段名不匹配失败，当前修正以实际源对象为准。
+
+
+第二十六轮CI复测补充：上一轮根据日志中间字段误判，当前后端函数实际应使用源字段 next_group_marker_pdf_line（而非 next_marker_line）。现已对照源数据结构修正为真实字段名。上一轮运行 https://github.com/yushihao1994-hub/astro-studio/actions/runs/45018213353 仍失败，错误集中为该字段KeyError；等待本次push复测结果。
