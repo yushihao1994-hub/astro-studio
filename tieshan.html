@@ -172,7 +172,7 @@ footer{color:#7e969b}
 <section class="workspace-panel" id="chartPanel"></section>
 <section class="workspace-panel" id="detailPanel"></section>
 <section class="workspace-panel" id="tieshanPanel"></section>
-<section class="workspace-panel" id="topicsPanel"></section>
+<section class="workspace-panel" id="topicsPanel"><div class="panel-card"><h3>财运与婚姻专项推算</h3><p class="hint">先建立出生档案并完成排盘，再分别进行财运、婚姻专项推算。</p><div class="topic-actions"><button type="button" class="topic-button" disabled>推算财运</button><button type="button" class="topic-button" disabled>推算婚姻</button></div><div class="empty-state">尚未生成命盘。请先进入“推算”填写出生资料并完成排盘。</div></div></section>
 
 <section class="grid">
 <div class="card full"><h3>建立出生档案</h3><p class="hint">请尽量填写准确的出生时间与地点；不确定的资料可以先留空或选择未知。</p>
@@ -380,7 +380,7 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
   document.getElementById('homeDashboard').style.display=page==='archive'?'block':'none';
   document.querySelector('.grid').style.display=page==='calc'?'grid':'none';
   nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-  if(page!=='archive'&&page!=='calc'&&!lastPillarData){const target=document.getElementById(page+'Panel');if(target)target.innerHTML='<div class="empty-state">请先进入「推算」填写出生资料并完成计算。<br>已有档案会保存在当前设备。</div>';}
+  if(page!=='archive'&&page!=='calc'&&page!=='topics'&&!lastPillarData){const target=document.getElementById(page+'Panel');if(target)target.innerHTML='<div class="empty-state">请先进入「推算」填写出生资料并完成计算。<br>已有档案会保存在当前设备。</div>';}
   window.scrollTo({top:0,behavior:'smooth'});
  }
  nav.addEventListener('click',e=>{const b=e.target.closest('button[data-page]');if(b)switchPage(b.dataset.page);});
