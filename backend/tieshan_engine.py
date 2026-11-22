@@ -41,6 +41,9 @@ RULE_REGISTRY = [
     {"id":"QING-STEM-TRIGRAM","name":"清刻本天干配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
     {"id":"QING-DAYMASTER-TRIGRAM","name":"清刻本日主配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
     {"id":"QING-BODY-LIFE","name":"清刻本安身命例","source":"用户提供清刻扫描件，PDF图像第3页（印刷页6-7）","status":"image_located_transcription_pending"},
+    {"id":"QING-P2-TABLE-TRANSCRIPTION","name":"清刻本第2页配卦/配数表转录候选","source":"用户提供清刻扫描件，PDF图像第2页左页（印刷页4）；原文候选已登记，栏位关系与异文待复核","status":"image_transcribed_candidate_pending_second_review"},
+    {"id":"QING-P2-EIGHT-TRIGRAM-VERSE","name":"清刻本第2页八卦加则例口诀","source":"用户提供清刻扫描件，PDF图像第2页右页（印刷页5）；疑字待放大校勘","status":"image_transcribed_candidate_pending_second_review"},
+    {"id":"QING-P3-HETU-LUOSHU-ORDER","name":"清刻本河图洛书方位次序说明","source":"用户提供清刻扫描件，PDF图像第3页右页（印刷页7）；仅有局部转录候选","status":"partial_image_transcription_candidate"},
 ]
 
 
