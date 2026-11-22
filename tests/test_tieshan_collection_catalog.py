@@ -1769,3 +1769,45 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         )
         self.assertIsNone(terminal["following_table_group_marker"])
         self.assertEqual(terminal["following_table_entry_pdf_lines"], list(range(35015, 35025)))
+
+
+    def test_hai_full_crosswalk_registers_all_conflict_classes_without_promotion(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_full_crosswalk_audit, get_collection_branch_group_index,
+        )
+        audit = get_hai_full_crosswalk_audit()
+        self.assertEqual(audit["layout_candidate_count"], 77)
+        self.assertEqual(audit["marker_candidate_count"], 88)
+        self.assertEqual(audit["unassigned_block_count"], 22)
+        self.assertEqual(
+            audit["layout_entry_overlap_pair_count"],
+            len(audit["layout_entry_overlap_pairs"]),
+        )
+        self.assertEqual(
+            audit["multiply_owned_entry_line_count"],
+            len(audit["multiply_owned_entry_lines"]),
+        )
+        self.assertEqual(
+            audit["duplicate_normalized_marker_count"],
+            len(audit["duplicate_normalized_markers"]),
+        )
+        self.assertEqual(
+            audit["marker_candidates_without_layout_header_line_count"],
+            len(audit["marker_candidates_without_layout_header_line"]),
+        )
+        self.assertEqual(
+            audit["layouts_without_exact_marker_join_count"],
+            len(audit["layouts_without_exact_marker_join"]),
+        )
+        self.assertEqual(
+            audit["unassigned_blocks_with_marker_or_entry_overlap_count"],
+            len(audit["unassigned_block_conflicts"]),
+        )
+        self.assertTrue(audit["does_not_promote_candidates_to_verified_groups"])
+        self.assertEqual(
+            audit["verification_status"],
+            "text_layer_conflict_register_page_image_verification_pending",
+        )
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(data["full_crosswalk_audit"], audit)
+        self.assertEqual(data["group_count"], 0)
