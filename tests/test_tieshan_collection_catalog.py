@@ -1301,7 +1301,7 @@ class YouCollectionIndexThrough10790Tests(unittest.TestCase):
 
 class XuCollectionInitialIndexTests(unittest.TestCase):
     def test_xu_first_eight_group_markers_keep_raw_ocr_and_candidates_separate(self):
-        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample, get_collection_progress
         data = get_collection_branch_group_index("戌")
         self.assertEqual(data["group_count"], 8)
         self.assertEqual(data["entry_count"], 80)
@@ -1324,3 +1324,7 @@ class XuCollectionInitialIndexTests(unittest.TestCase):
         self.assertEqual(data["unassigned_blocks"][0]["pdf_text_lines"], "26557-26566")
         sample = get_collection_sample("戌")
         self.assertEqual(sample["group_index"]["group_count"], 8)
+        progress = get_collection_progress()
+        xu_progress = next(x for x in progress["collections"] if x["collection"] == "戌")
+        self.assertEqual(xu_progress["indexed_groups"], 8)
+        self.assertEqual(xu_progress["indexed_entries"], 80)
