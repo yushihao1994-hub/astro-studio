@@ -464,7 +464,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][2]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][3]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][4]["index_status"], "partial_text_layer_index")
-        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][7:]))
+        self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][8:]))
         self.assertEqual(data["collections"][4]["pdf_text_line_start"], 17109)
         self.assertEqual(data["collections"][4]["indexed_groups"], 88)
         self.assertEqual(data["collections"][4]["indexed_entries"], 877)
@@ -475,6 +475,10 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][6]["indexed_groups"], 82)
         self.assertEqual(data["collections"][6]["indexed_entries"], 819)
         self.assertEqual(data["collections"][6]["pdf_text_line_start"], 20332)
+        self.assertEqual(data["collections"][7]["index_status"], "partial_text_layer_index")
+        self.assertEqual(data["collections"][7]["indexed_groups"], 19)
+        self.assertEqual(data["collections"][7]["indexed_entries"], 190)
+        self.assertEqual(data["collections"][7]["pdf_text_line_start"], 21990)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
         self.assertEqual(data["collections"][3]["indexed_groups"], 78)
@@ -1071,3 +1075,18 @@ class WuCollectionIndexThrough8010Tests(unittest.TestCase):
         self.assertEqual(wu["pdf_text_line_end"], 21988)
         self.assertEqual(wei["pdf_text_line_start"], 21990)
         self.assertTrue(any(x["raw_group_marker"] == "八○○○" for x in data["group_anomalies"]))
+
+
+class WeiCollectionInitialIndexTests(unittest.TestCase):
+    def test_wei_first_nineteen_groups_and_unheaded_blocks(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
+        data = get_collection_branch_group_index("未")
+        self.assertEqual(data["group_count"], 19)
+        self.assertEqual(data["entry_count"], 190)
+        expected = ["八○三○","八○六○","八○七○","一九八○","八一二○","八一三○","八一四○",
+                    "八一五○","八一六○","八一八○","八一九○","八二○○","八二一○","八二二○",
+                    "八二四○","八二五○","八二七○","八二八○","八二九○"]
+        self.assertEqual([g["raw_group_marker"] for g in data["groups"]], expected)
+        self.assertEqual(len(data["unassigned_blocks"]), 6)
+        sample = get_collection_sample("未")
+        self.assertEqual(sample["group_index"]["group_count"], 19)
