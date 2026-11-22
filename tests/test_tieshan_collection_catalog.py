@@ -484,8 +484,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][8]["indexed_entries"], 590)
         self.assertEqual(data["collections"][8]["pdf_text_line_start"], 23449)
         self.assertEqual(data["collections"][9]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][9]["indexed_groups"], 47)
-        self.assertEqual(data["collections"][9]["indexed_entries"], 470)
+        self.assertEqual(data["collections"][9]["indexed_groups"], 64)
+        self.assertEqual(data["collections"][9]["indexed_entries"], 639)
         self.assertEqual(data["collections"][9]["pdf_text_line_start"], 25096)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -1257,7 +1257,9 @@ class ShenAndYouCollectionTailTests(unittest.TestCase):
                           "一○一五○","一○一六○","一○一七○","一○一八○","一○一九○","一○二○○","一○二一○","一○三三○","一○三四○","一○三五○","一○三六○",
                           "一○三七○","一○三八○","一○三九○","一○四○○","一○四一○","一○四二○",
                           "一○四三○","一○四四○","一○四五○","一○四六○","一○四八○","一○四九○",
-                          "一○五○○","一○五一○","一○五二○","一○五三○","一○五四○"])
+                          "一○五○○","一○五一○","一○五二○","一○五三○","一○五四○","一○五五○","一○五六○","一○五七○","一○五八○","一○五九○",
+                          "一○六○○","一○六一○","一○六二○","一○六三○","一○六四○","一○七二○","一○七三○",
+                          "一九七五○","一九七六○","一九七七○","一○七八○","一○七九○"])
         self.assertEqual(get_collection_sample("酉")["group_index"]["group_count"], 27)
 
 
@@ -1277,3 +1279,20 @@ class YouCollectionIndexThrough10540Tests(unittest.TestCase):
             self.assertEqual(group["raw_group_marker"], marker)
             self.assertEqual(group["entry_count"], 10)
         self.assertTrue(any(x["raw_group_marker"] == "一○四七○" for x in data["group_anomalies"]))
+
+
+class YouCollectionIndexThrough10790Tests(unittest.TestCase):
+    def test_you_groups_through_10790_and_age_subsection(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("酉")
+        expected = [("一○五五○",25825),("一○五六○",25838),("一○五七○",25857),
+                    ("一○五八○",25868),("一○五九○",25879),("一○六○○",25903),
+                    ("一○六一○",25914),("一○六二○",25926),("一○六三○",25951),
+                    ("一○六四○",25975),("一○七二○",26145),("一○七三○",26158),
+                    ("一九七五○",26174),("一九七六○",26186),("一九七七○",26199),
+                    ("一○七八○",26224),("一○七九○",26237)]
+        for marker,line in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+        self.assertEqual(next(g for g in data["groups"] if g["raw_group_marker"] == "一○五七○")["entry_count"], 9)
+        self.assertTrue(any(x["raw_group_marker"] == "一○六五○" for x in data["group_anomalies"]))
