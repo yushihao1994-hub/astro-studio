@@ -409,3 +409,12 @@ Nayona 书目/目录页面可直接读取到完整十二集目录：子138、丑
 - `expected_group_sequence_gap_candidates`：具体待核数字清单
 
 该清单只用于定位下一轮核验任务，不会自动生成组号或条文。正式已核验组数仍为 0。
+
+
+### 组号序列缺口追踪器回归复测
+
+加入 12000—12990 十位档位的缺口候选清单后，Python regression tests 通过：
+
+- 测试提交：`781a3afd54d1bb20a9740d3e385833538184ba18`
+- 结果：118 tests，全部通过（OK）
+- 运行记录：https://github.com/yushihao1994-hub/astro-studio/actions/runs/44993175243
