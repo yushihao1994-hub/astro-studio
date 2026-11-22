@@ -1541,6 +1541,39 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertIsNone(terminal["following_table_group_marker"])
         self.assertEqual(len(data["unassigned_blocks"]), 20)
 
+
+    def test_hai_crosswalk_matches_marker_lines_and_flags_overlapping_layout_rows(self):
+        from backend.tieshan_collection_catalog import (
+            get_collection_branch_group_index, get_hai_crosswalk_audit,
+        )
+        audit = get_hai_crosswalk_audit()
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(audit["layout_candidate_count"], 77)
+        self.assertEqual(audit["marker_candidate_count"], 88)
+        self.assertTrue(audit["does_not_promote_candidates_to_verified_groups"])
+        self.assertEqual(audit["verification_status"],
+                         "text_layer_crosswalk_only_page_image_verification_pending")
+        self.assertEqual(data["crosswalk_audit"]["layout_candidate_count"], 77)
+
+        by_line = {row["group_marker_pdf_line"]: row for row in audit["rows"]}
+        self.assertEqual(
+            by_line[33829]["marker_join_status"],
+            "exact_text_line_and_raw_marker_match_image_check_pending",
+        )
+        self.assertTrue(any(
+            overlap["shared_entry_pdf_lines"]
+            for overlap in by_line[33829]["entry_line_overlaps"]
+        ))
+        duplicate_12460 = [
+            row for row in audit["rows"] if row["raw_group_marker"] == "一二四六〇"
+        ]
+        self.assertEqual(len(duplicate_12460), 2)
+        self.assertEqual(
+            [row["group_marker_pdf_line"] for row in duplicate_12460],
+            [34240, 34254],
+        )
+        self.assertEqual(data["group_count"], 0)
+        self.assertEqual(data["entry_count"], 0)
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
