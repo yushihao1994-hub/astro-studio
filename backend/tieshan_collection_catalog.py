@@ -3120,7 +3120,7 @@ SHEN_GROUP_INDEX = [
             {"entry_sequence": 7, "pdf_text_line": 24530, "record_span": "24530-24533"},
             {"entry_sequence": 8, "pdf_text_line": 24535, "record_span": "24535-24540"},
             {"entry_sequence": 9, "pdf_text_line": 24542, "record_span": "24542-24547"},
-            {"entry_sequence": 10, "pdf_text_line": 24548}
+            {"entry_sequence": 10, "pdf_text_line": 24542, "record_span": "24542-24547"}
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
