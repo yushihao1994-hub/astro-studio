@@ -423,8 +423,7 @@ TRANSCRIPTION_CANDIDATES = [
             "此页星诀与纳音资料属于辅助排布/干支参考，不据此推断铁板神数起数或考刻公式。"
         ],
         "algorithm_status": "not_implemented"
-    },,
-
+    },
     {
         "id": "QING-P5-ZIWEI-STAR-PLACEMENT-FRAGMENTS",
         "topic": "祿權科忌星化诀、天空地劫、命前命后、祿存擎羊陀羅及火鈴星诀",
