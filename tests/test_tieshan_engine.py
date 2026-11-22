@@ -123,6 +123,17 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertEqual(by_id["QING-P3-NAYIN-SONG-FRAGMENTS"]["algorithm_status"],"calendar_reference_only_not_iron_plate_number_rule")
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
+
+    def test_qing_page2_add_rule_verse_has_high_resolution_second_review_record(self):
+        source=get_qing_source_reference()
+        by_id={x["id"]:x for x in source["transcription_candidates"]}
+        item=by_id["QING-P2-ADD-VERSE-HIGHRES-SECOND-REVIEW"]
+        self.assertEqual(item["pdf_page"],2)
+        self.assertIn("爻從三十起",item["raw_text"])
+        self.assertIn("增方隅中一綱收",item["raw_text"])
+        self.assertEqual(item["algorithm_status"],"not_implemented")
+        self.assertFalse(source["can_generate_final_iron_plate_number"])
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
