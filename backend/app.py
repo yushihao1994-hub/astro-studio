@@ -1576,7 +1576,14 @@ def tieshan_pillars():
         return jsonify({"ok": False, "error": str(exc)}), 400
     except Exception as exc:
         app.logger.exception("Iron Plate pillar calculation failed")
-        return jsonify({"ok": False, "error": "四柱计算发生内部错误（" + type(exc).__name__ + "）。"}), 500
+        # Temporary bounded diagnostic for production recovery; never include
+        # request payloads, environment variables, or secret values.
+        detail = str(exc).replace("\n", " ")[:240]
+        return jsonify({
+            "ok": False,
+            "error": "四柱计算发生内部错误（" + type(exc).__name__ + "）。",
+            "diagnostic": detail,
+        }), 500
 
 
 @app.post("/api/tieshan/analyze")
