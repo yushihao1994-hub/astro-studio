@@ -1379,7 +1379,7 @@ YIN_GROUP_INDEX = [
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-    _yin_group("三○七○", 14274, list(range(14275, 14288))),
+    _yin_group("三○七○", 14274, [14275,14277,14278,14279,14280,14281,14283,14285,14286,14287], "multi_line_age_clause_spans"),
 ]
 
 YIN_GROUP_ANOMALIES = [
