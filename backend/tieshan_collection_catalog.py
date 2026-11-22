@@ -1628,6 +1628,27 @@ MAO_GROUP_INDEX = [
     _mao_group("四二四○", 15992, list(range(15992, 16002)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _mao_group("四二五○", 16004, list(range(16004, 16014)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _mao_group("四二六○", 16016, list(range(16016, 16026)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _mao_group("四二七○", 16046, [16048,16049,16050,16051,16052,16054,16055,16056,16057,16058], "multi_line_age_clause_spans"),
+    _mao_group("四二八○", 16060, [16061,16065,16066,16067,16068,16069,16070,16071,16073], "sequence_10_missing_text_layer_nine_rows_only"),
+    _mao_group("四二九○", 16075, list(range(16079, 16089))),
+    _mao_group("四三○○", 16090, list(range(16091, 16101))),
+    _mao_group("四三一○", 16102, list(range(16104, 16114))),
+    _mao_group("四三三○", 16120, list(range(16121, 16131))),
+    _mao_group("四三四○", 16132, list(range(16133, 16143))),
+    _mao_group("四三五○", 16143, list(range(16144, 16154))),
+    _mao_group("四三六○", 16157, list(range(16157, 16167)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _mao_group("四三七○", 16167, list(range(16167, 16177)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _mao_group("四三二○", 16177, list(range(16177, 16187)), "repeated_marker_late_occurrence_table_title_row_is_entry_1", occurrence=2),
+    _mao_group("四三九○", 16194, list(range(16198, 16208)), "table_rows_text_layer_located"),
+    _mao_group("四四○○", 16209, list(range(16212, 16222)), "table_rows_text_layer_located"),
+    _mao_group("四四一○", 16223, list(range(16226, 16236)), "table_rows_text_layer_located"),
+    _mao_group("四四二○", 16252, list(range(16253, 16263))),
+    _mao_group("四四三○", 16264, list(range(16266, 16276))),
+    _mao_group("四四四○", 16277, list(range(16281, 16291)), "extra_leading_sequence_row_16280_not_counted"),
+    _mao_group("四四六○", 16292, list(range(16293, 16303))),
+    _mao_group("四四七○", 16303, list(range(16304, 16314)), "table_rows_text_layer_located"),
+    _mao_group("四四八○", 16317, list(range(16319, 16329)), "raw_marker_preserved_possible_short_form"),
+    _mao_group("四四九○", 16330, list(range(16331, 16341))),
 ]
 
 MAO_GROUP_ANOMALIES = [
@@ -1638,7 +1659,15 @@ MAO_GROUP_ANOMALIES = [
     {"raw_group_marker": "四一七○", "pdf_text_line": None,
      "status": "expected_group_marker_missing_before_4180"},
     {"raw_group_marker": "四二三○", "pdf_text_line": 15988,
-     "status": "marker_seen_body_not_located_before_4240"}
+     "status": "marker_seen_body_not_located_before_4240"},
+    {"raw_group_marker": "四三二○", "pdf_text_line": 16115,
+     "status": "marker_seen_body_not_located_before_4330"},
+    {"raw_group_marker": "四三八○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_between_4370_and_4390"},
+    {"raw_group_marker": "四四五○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_between_4440_and_4460"},
+    {"raw_group_marker": "四四八○", "pdf_text_line": 16317,
+     "status": "raw_marker_possible_4480_text_layer_short_form"}
 ]
 
 MAO_UNASSIGNED_BLOCKS = [
@@ -1650,7 +1679,10 @@ MAO_UNASSIGNED_BLOCKS = [
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "mao_possible_4170_group_body",
      "pdf_text_lines": "15913-15922", "entry_count_candidate": 10,
-     "status": "group_marker_missing_do_not_assign"}
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "mao_bp_collection_subsection",
+     "pdf_text_lines": "16192-16193", "entry_count_candidate": 0,
+     "status": "internal_section_heading_not_branch_boundary"}
 ]
 
 
