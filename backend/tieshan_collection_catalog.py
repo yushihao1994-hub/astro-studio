@@ -1136,6 +1136,32 @@ HAI_UNASSIGNED_BLOCKS = [
 ]
 
 # 亥集存在组号与序号/断语分栏抽取的表格段。缺失序号或列映射不补造。
+HAI_12440_12500_TABLE_AUDIT = {
+    "source": "https://vr-d.com/pdf-file/%E5%91%A8%E6%98%93%2F%E5%BA%B7%E8%8A%82%E8%AF%B4%E6%98%93%E5%85%A8%E4%B9%A6%E9%93%81%E6%9D%BF%E7%A5%9E%E6%95%B0%28%E5%AE%8B%29%E9%82%B5%E9%9B%8D%29.pdf",
+    "source_pdf_text_lines": "34220-34337",
+    "segments": [
+        {"segment_id": "12480", "raw_marker": "一二四八〇", "marker_line": 34270,
+         "sequence_lines": list(range(34271, 34280)), "sequence_labels": list(range(2, 11)),
+         "clause_lines": list(range(34281, 34291)), "clause_count": 10,
+         "gap_lines": [34280], "status": "nine_sequence_labels_ten_clause_rows_no_row_pairing"},
+        {"segment_id": "12490_occurrence_1", "raw_marker": "一二四九〇", "marker_line": 34292,
+         "sequence_lines": list(range(34293, 34302)), "sequence_labels": list(range(2, 11)),
+         "clause_lines": list(range(34302, 34312)), "clause_count": 10,
+         "status": "nine_sequence_labels_ten_clause_rows_no_row_pairing"},
+        {"segment_id": "12490_occurrence_2", "raw_marker": "一二四九〇", "marker_line": 34313,
+         "sequence_lines": list(range(34314, 34323)), "sequence_labels": list(range(2, 11)),
+         "blank_separator_lines": [34323], "clause_lines": list(range(34324, 34334)), "clause_count": 10,
+         "possible_correction": 12500,
+         "correction_basis": "position between first 12490 occurrence and following 12510 marker; this is ordering evidence only",
+         "counter_evidence": "source text layer explicitly reads 一二四九〇 at line 34313; no page image proof for 12500",
+         "status": "duplicate_raw_marker_preserved_12500_hypothesis_not_confirmed"}
+    ],
+    "column_alignment_rule": "sequence column and clause column are separate OCR text streams; never zip by ordinal or infer missing first label",
+    "promotion_rule": "do not create verified groups or normalize second 12490 to 12500 without page image confirmation",
+    "verification_status": "pdf_text_layer_audit_page_image_pending"
+}
+
+
 HAI_PARTIAL_TABLE_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二四八〇", "group_marker_pdf_line": 34270, "occurrence": 1,
      "sequence_pdf_lines": list(range(34271, 34280)), "sequence_labels_candidate": list(range(2, 11)),
@@ -3822,6 +3848,7 @@ def get_collection_branch_group_index(branch):
             "crosswalk_audit": get_hai_crosswalk_audit(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
+            "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
             "partial_table_group_candidate_count": len(HAI_PARTIAL_TABLE_GROUP_CANDIDATES),
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
