@@ -4031,6 +4031,65 @@ XU_UNASSIGNED_BLOCKS = [
 ]
 
 
+
+def get_hai_text_line_coverage_audit():
+    """Classify recorded Hai PDF text lines; uncovered lines are review leads, not missing entries."""
+    metadata = COLLECTION_METADATA["亥"]
+    start, end = metadata["pdf_text_line_start"], metadata["pdf_text_line_end"]
+    categories = {
+        "group_marker_lines": set(), "layout_entry_lines": set(),
+        "layout_continuation_lines": set(), "layout_content_lines": set(),
+        "partial_table_sequence_lines": set(), "partial_table_clause_lines": set(),
+        "unassigned_explicit_entry_lines": set(), "unassigned_marker_lines": set(),
+    }
+    for marker in HAI_GROUP_MARKER_CANDIDATES:
+        categories["group_marker_lines"].add(marker["pdf_text_line"])
+    for layout in HAI_LAYOUT_GROUP_CANDIDATES:
+        categories["layout_entry_lines"].update(layout.get("entry_pdf_lines", []))
+        categories["layout_continuation_lines"].update(layout.get("entry_continuation_pdf_lines", []))
+        categories["layout_content_lines"].update(layout.get("content_pdf_lines", []))
+        categories["layout_content_lines"].update(layout.get("table_entry_pdf_lines", []))
+        for segment in layout.get("table_segments", []):
+            categories["layout_content_lines"].update(segment.get("entry_pdf_lines", []))
+    for table in HAI_PARTIAL_TABLE_GROUP_CANDIDATES:
+        categories["partial_table_sequence_lines"].update(table.get("sequence_pdf_lines", []))
+        categories["partial_table_clause_lines"].update(table.get("clause_pdf_lines", []))
+    for block in HAI_UNASSIGNED_BLOCKS:
+        categories["unassigned_explicit_entry_lines"].update(block.get("entry_pdf_lines", []))
+        categories["unassigned_marker_lines"].update(block.get("marker_cluster_pdf_lines", []))
+        for note in block.get("marker_cluster_notes", []):
+            if note.get("pdf_text_line") is not None:
+                categories["unassigned_marker_lines"].add(note["pdf_text_line"])
+    owners = {}
+    for category, lines in categories.items():
+        for line in lines:
+            owners.setdefault(line, []).append(category)
+    classified = set(owners)
+    uncovered = [line for line in range(start, end + 1) if line not in classified]
+    ranges = []
+    for line in uncovered:
+        if not ranges or line > ranges[-1]["end"] + 1:
+            ranges.append({"start": line, "end": line})
+        else:
+            ranges[-1]["end"] = line
+    multiply_classified = [
+        {"pdf_text_line": line, "categories": sorted(names)}
+        for line, names in sorted(owners.items()) if len(names) > 1
+    ]
+    return {
+        "pdf_text_line_range": [start, end],
+        "total_pdf_text_lines_in_range": end - start + 1,
+        "category_line_counts": {name: len(lines) for name, lines in categories.items()},
+        "unique_classified_line_count": len(classified),
+        "unclassified_line_count": len(uncovered),
+        "unclassified_line_ranges": ranges,
+        "multiply_classified_line_count": len(multiply_classified),
+        "multiply_classified_lines": multiply_classified,
+        "interpretation": "unclassified_lines_are_review_leads_not_proof_of_missing_entries_or_groups",
+        "verification_status": "text_layer_line_coverage_only_page_image_verification_pending",
+    }
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
@@ -4057,6 +4116,7 @@ def get_collection_branch_group_index(branch):
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
             "crosswalk_audit": get_hai_crosswalk_audit(),
             "full_crosswalk_audit": get_hai_full_crosswalk_audit(),
+            "text_line_coverage_audit": get_hai_text_line_coverage_audit(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
