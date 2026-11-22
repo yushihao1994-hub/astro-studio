@@ -4817,6 +4817,110 @@ def get_hai_marker_cluster_review_12080_12180():
         "policy": "preserve_raw_ocr_do_not_repair_by_sequence_do_not_promote_candidates",
     }
 
+def get_hai_unified_conflict_worklist():
+    """Merge block priorities and crosswalk findings without double-counting linked issues."""
+    import json
+    import re
+
+    priority = get_hai_priority_conflict_review()
+    review = get_hai_review_queue()
+    blocks = []
+    spans = []
+    for item in priority["records"]:
+        start = item["start_pdf_text_line"]
+        end = item["end_pdf_text_line"]
+        blocks.append({
+            "issue_key": "block:" + item["block_id"],
+            "issue_kind": "unassigned_anomaly_block",
+            "start_pdf_text_line": start,
+            "end_pdf_text_line": end,
+            "priority": item["priority"],
+            "source_ids": ["priority_conflict_review"],
+            "source_status": item["source_status"],
+            "candidate_group_marker": item["candidate_group_marker"],
+            "required_review_action": item["required_review_action"],
+            "required_evidence": list(item["required_evidence"]),
+            "related_crosswalk_findings": [],
+            "formal_index_eligible": False,
+            "status": "image_check_required",
+        })
+        spans.append((start, end, item["block_id"]))
+
+    # Link crosswalk findings to their containing anomaly block. Linked findings
+    # remain visible as evidence, but do not become additional worklist issues.
+    global_findings = []
+    linked_count = 0
+    seen = set()
+    for index, item in enumerate(review["queue"], 1):
+        start = item["start_pdf_text_line"]
+        end = item["end_pdf_text_line"]
+        detail_key = json.dumps(item.get("detail"), ensure_ascii=False, sort_keys=True, default=str)
+        dedupe_key = (item["issue_type"], start, end, item["source"], detail_key)
+        if dedupe_key in seen:
+            continue
+        seen.add(dedupe_key)
+        finding = {
+            "finding_key": "crosswalk:" + str(index),
+            "issue_type": item["issue_type"],
+            "start_pdf_text_line": start,
+            "end_pdf_text_line": end,
+            "source": item["source"],
+            "required_review_action": item["required_review_action"],
+            "detail": item.get("detail"),
+            "formal_index_eligible": False,
+        }
+        owners = [
+            block for block in blocks
+            if start <= block["end_pdf_text_line"] and end >= block["start_pdf_text_line"]
+        ]
+        if owners:
+            for owner in owners:
+                owner["related_crosswalk_findings"].append(finding)
+            linked_count += 1
+        else:
+            global_findings.append(finding)
+
+    worklist = blocks + [{
+        "issue_key": item["finding_key"],
+        "issue_kind": "global_crosswalk_finding",
+        "start_pdf_text_line": item["start_pdf_text_line"],
+        "end_pdf_text_line": item["end_pdf_text_line"],
+        "priority": "P1" if item["issue_type"] in {
+            "duplicate_normalized_group_marker", "overlapping_layout_entry_ranges",
+            "unassigned_block_crosswalk_conflict"
+        } else "P2",
+        "source_ids": ["review_queue"],
+        "source_status": item["issue_type"],
+        "candidate_group_marker": None,
+        "required_review_action": item["required_review_action"],
+        "required_evidence": ["对应印刷页扫描图", "原始组号字形及正文版面边界"],
+        "related_crosswalk_findings": [item],
+        "formal_index_eligible": False,
+        "status": "image_check_required",
+    } for item in global_findings]
+    worklist.sort(key=lambda item: (
+        item["start_pdf_text_line"], item["end_pdf_text_line"], item["issue_key"]
+    ))
+    return {
+        "worklist_count": len(worklist),
+        "anomaly_block_count": len(blocks),
+        "global_crosswalk_issue_count": len(global_findings),
+        "linked_crosswalk_finding_count": linked_count,
+        "deduplicated_crosswalk_finding_count": len(seen),
+        "priority_counts": {
+            level: sum(item["priority"] == level for item in worklist)
+            for level in ("P0", "P1", "P2")
+        },
+        "worklist": worklist,
+        "ordering": "ascending_pdf_text_line",
+        "deduplication_rule": "crosswalk findings overlapping a registered anomaly block are attached as evidence rather than counted as separate worklist issues",
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "entry_count": 0,
+        "verification_status": "unified_text_layer_worklist_page_image_verification_pending",
+    }
+
+
 def get_hai_registry_integrity_audit():
     """Audit registry counts, identifiers, and PDF-line bounds without resolving source conflicts."""
     import re
@@ -4988,6 +5092,7 @@ def get_collection_branch_group_index(branch):
             "text_line_coverage_audit": get_hai_text_line_coverage_audit(),
             "review_queue": get_hai_review_queue(),
             "priority_conflict_review": get_hai_priority_conflict_review(),
+            "unified_conflict_worklist": get_hai_unified_conflict_worklist(),
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
