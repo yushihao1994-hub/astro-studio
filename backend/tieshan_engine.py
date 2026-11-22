@@ -33,6 +33,8 @@ RULE_REGISTRY = [
     {"id":"QIAN-EIGHT-TRIGRAM-ADD","name":"八卦加则例","source":"乾集，PDF文本行684-715；逐句解说行699-715","status":"documented_conceptual_only"},
     {"id":"KUNJI-CIPHER-EDITORIAL","name":"坤集密码代号（2003点校本编者说明）","source":"坤集浅释，PDF文本行250-277；含十天干数字代号与少量示例","status":"partial_editorial_metadata_not_full_cipher"},
     {"id":"QING-FRONT-EIGHT-KE","name":"清刻本八刻十五分说明","source":"用户提供清刻扫描件，PDF图像第1页封面内页","status":"image_observed_transcription_pending"},
+    {"id":"QING-TRUE-KE-EXAMINATION","name":"清刻本真刻与考刻原则","source":"用户提供清刻扫描件，PDF图像第1页封面内页","status":"image_observed_transcription_pending"},
+    {"id":"QING-EIGHT-TRIGRAM-ADD","name":"清刻本八卦加则例口诀","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_observed_variant_transcription_pending"},
     {"id":"QING-STEM-TRIGRAM","name":"清刻本天干配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
     {"id":"QING-DAYMASTER-TRIGRAM","name":"清刻本日主配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
     {"id":"QING-BODY-LIFE","name":"清刻本安身命例","source":"用户提供清刻扫描件，PDF图像第3页（印刷页6-7）","status":"image_located_transcription_pending"},
