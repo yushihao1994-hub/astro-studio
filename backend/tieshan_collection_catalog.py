@@ -2189,6 +2189,45 @@ SI_GROUP_INDEX = [
     _si_group("六七二○", 19887, list(range(19887,19897)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _si_group("六七三○", 19899, list(range(19899,19909)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _si_group("六七四○", 19911, list(range(19911,19921)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六八○○", 19993, list(range(19994,20004)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    {
+        "collection": "巳", "raw_group_marker": "八八一○", "occurrence": 1,
+        "normalized_group_marker_candidate": "六八一○", "group_header_pdf_line": 20010,
+        "pdf_text_lines": "20010-20020", "layout_status": "raw_marker_ocr_variant_candidate_6810",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(20010,20020),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "巳", "raw_group_marker": "八八二○", "occurrence": 1,
+        "normalized_group_marker_candidate": "六八二○", "group_header_pdf_line": 20022,
+        "pdf_text_lines": "20022-20032", "layout_status": "raw_marker_ocr_variant_candidate_6820",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(20022,20032),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "巳", "raw_group_marker": "八八三○", "occurrence": 1,
+        "normalized_group_marker_candidate": "六八三○", "group_header_pdf_line": 20034,
+        "pdf_text_lines": "20034-20044", "layout_status": "raw_marker_ocr_variant_candidate_6830",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(20034,20044),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _si_group("六八四○", 20060, list(range(20062,20072))),
+    _si_group("六八五○", 20073, list(range(20074,20084))),
+    _si_group("六八七○", 20092, list(range(20095,20105)), "table_header_then_ten_entries"),
+    _si_group("六八八○", 20106, list(range(20109,20119)), "table_rows_text_layer_located"),
+    _si_group("六八九○", 20120, list(range(20123,20133)), "table_rows_text_layer_located"),
+    {
+        "collection": "巳", "raw_group_marker": "六九○", "occurrence": 1,
+        "normalized_group_marker_candidate": "六九○○", "group_header_pdf_line": 20136,
+        "pdf_text_lines": "20136-20148", "layout_status": "short_marker_first_ten_row_table_only",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line} for n,line in enumerate(range(20138,20148),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _si_group("六九三○", 20181, list(range(20185,20195)), "page_header_before_ten_entries"),
+    _si_group("六九四○", 20196, list(range(20199,20209)), "table_rows_text_layer_located"),
+    _si_group("六九五○", 20210, list(range(20213,20223)), "table_rows_text_layer_located"),
+    _si_group("六九六○", 20237, list(range(20238,20248))),
+    _si_group("六九七○", 20249, list(range(20251,20261))),
 ]
 
 SI_GROUP_ANOMALIES = [
@@ -2217,7 +2256,15 @@ SI_GROUP_ANOMALIES = [
     {"raw_group_marker": "六五九○", "pdf_text_line": 19670,
      "status": "age_subheading_not_confirmed_as_independent_group"},
     {"raw_group_marker": "六七○○", "pdf_text_line": None,
-     "status": "expected_marker_missing_between_6690_and_6710"}
+     "status": "expected_marker_missing_between_6690_and_6710"},
+    {"raw_group_marker": "六八六○", "pdf_text_line": 20085,
+     "status": "marker_seen_body_not_located_before_6870"},
+    {"raw_group_marker": "六九一○", "pdf_text_line": None,
+     "status": "expected_marker_missing_in_6900_short_marker_section"},
+    {"raw_group_marker": "六九二○", "pdf_text_line": None,
+     "status": "expected_marker_missing_in_6900_short_marker_section"},
+    {"raw_group_marker": "六九八○", "pdf_text_line": 20262,
+     "status": "complex_two_or_more_subblocks_alignment_unresolved"}
 ]
 
 SI_UNASSIGNED_BLOCKS = [
@@ -2238,7 +2285,9 @@ SI_UNASSIGNED_BLOCKS = [
     {"block_id": "si_complex_6570_age_subblocks", "pdf_text_lines": "19629-19680",
      "entry_count_candidate": 30, "status": "age_subblocks_and_clause_block_alignment_unresolved"},
     {"block_id": "si_possible_6700_fragment_after_6690", "pdf_text_lines": "19861-19864",
-     "entry_count_candidate": 4, "status": "group_boundary_unresolved_do_not_assign"}
+     "entry_count_candidate": 4, "status": "group_boundary_unresolved_do_not_assign"},
+    {"block_id": "si_second_and_third_tables_after_690_short_marker", "pdf_text_lines": "20150-20172",
+     "entry_count_candidate": 20, "status": "no_independent_group_markers_do_not_assign"}
 ]
 
 
