@@ -73,6 +73,23 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertFalse(is_kaoke_attestation_trusted({"status":"verified"}))
         self.assertFalse(is_kaoke_attestation_trusted(None))
 
+
+    def test_opening_page_transcriptions_are_traceable_but_not_executable(self):
+        source=get_qing_source_reference()
+        candidates={x["id"]:x for x in source["transcription_candidates"]}
+        expected={
+            "QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION",
+            "QING-P2-RIGHT-PAGE-EIGHT-TRIGRAM-VERSE",
+            "QING-P3-ANSHEN-MING-INTRO",
+            "QING-P3-HETU-LUOSHU-ORDER",
+        }
+        self.assertTrue(expected.issubset(set(candidates)))
+        for key in expected:
+            self.assertIn("pending",candidates[key]["status"])
+            self.assertEqual(candidates[key]["algorithm_status"],"not_implemented" if key != "QING-P2-RIGHT-PAGE-EIGHT-TRIGRAM-VERSE" and key != "QING-P3-HETU-LUOSHU-ORDER" else candidates[key]["algorithm_status"])
+        self.assertIn("己亥單四數",candidates["QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION"]["raw_text"])
+        self.assertFalse(source["can_generate_final_iron_plate_number"])
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
