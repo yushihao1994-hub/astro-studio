@@ -1859,6 +1859,15 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
             33598 <= item["start_pdf_text_line"] <= item["end_pdf_text_line"] <= 35025
             for item in queue
         ))
+        self.assertTrue(all(item["formal_index_eligible"] is False for item in queue))
+        self.assertTrue(all(item["status"] == "image_check_required" for item in queue))
+        self.assertTrue(all(item["required_evidence"] for item in queue))
+        self.assertTrue(all(
+            isinstance(item["related_layout_candidate_indices"], list)
+            and isinstance(item["related_marker_pdf_lines"], list)
+            for item in queue
+        ))
+        self.assertTrue(all(item["candidate_group_marker"] is None for item in queue))
         self.assertEqual(
             audit["candidate_policy"],
             "no_sequence_completion_no_candidate_promotion",
