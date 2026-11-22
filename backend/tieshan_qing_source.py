@@ -16,7 +16,7 @@ SOURCE_CLASS = "user_provided_primary_scan"
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
 # Each scan image may contain a two-page spread.
 IMAGE_REVIEWED_RANGES = [
-    {"pdf_pages": [1, 30], "review_status": "image_reviewed"},
+    {"pdf_pages": [1, 40], "review_status": "image_reviewed"},
 ]
 
 OBSERVATIONS = [
@@ -113,6 +113,16 @@ OBSERVATIONS = [
         "note": "已看到分類命例密集排布，部分頁面可辨認外財、妻妾、婚姻類標題；條文正文和編號尚未逐條放大轉錄，不能據此輸出專項斷語。",
     },
     {
+        "id": "QING-CLASSIFIED-TABULAR-SEQUENCES",
+        "topic": "干支组合分类表与分栏索引页",
+        "pdf_pages": [31, 40],
+        "printed_pages": [62, 81],
+        "location": "连续双页表格区",
+        "status": "image_reviewed_layout_only",
+        "algorithm_status": "not_implemented",
+        "note": "页面以密集干支组合、分栏标题和分类表格为主，版式与前段命例散文不同；本轮只确认其为分类索引/组合表连续区，未逐字转录栏标题与单元格，不据此建立映射。",
+    },
+    {
         "id": "QING-NINE-PALACE-CHARTS",
         "topic": "九宫/局数图表",
         "pdf_pages": [6, 7, 8, 9],
@@ -173,7 +183,7 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 30,
+        "reviewed_pdf_pages": 40,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
