@@ -275,6 +275,7 @@ def analyze_tieshan_profile(pillars, birth, gender="", derived=None):
             for key in ("year", "month", "day", "hour")
         },
         "derived_bazi_data": derived or {},
+        "verified_kaoke_evidence": kaoke_evidence,
         "birth_context": {
             "gender": gender,
             "local_datetime": birth.get("local_datetime"),
@@ -332,8 +333,8 @@ def analyze_tieshan_profile(pillars, birth, gender="", derived=None):
         raise DeepSeekError("DeepSeek 响应结构无法解析。") from exc
 
 
-def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None):
-    """Generate a dedicated finance or marriage reading from supplied Four Pillars evidence."""
+def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None, kaoke_evidence=None):
+    """Generate a finance or marriage reading only from verified Iron Plate examination evidence."""
     topic = str(topic or "").strip().lower()
     if topic not in ("finance", "marriage"):
         raise ValueError("专项主题只能是 finance 或 marriage。")
@@ -342,6 +343,23 @@ def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None):
         for k in ("year", "month", "day", "hour")
     ):
         raise ValueError("缺少有效四柱数据，请先完成四柱计算。")
+    if not isinstance(kaoke_evidence, dict) or kaoke_evidence.get("status") != "verified":
+        raise ValueError("真实考刻数据尚未通过校验，暂不生成财运或婚姻结论。")
+    if not str(kaoke_evidence.get("source_edition") or "").strip():
+        raise ValueError("考刻结果缺少明确的底本版本信息。")
+    if not str(kaoke_evidence.get("method_version") or "").strip():
+        raise ValueError("考刻结果缺少算法版本信息。")
+    steps = kaoke_evidence.get("calculation_steps")
+    articles = kaoke_evidence.get("matched_articles")
+    if not isinstance(steps, list) or not steps or not isinstance(articles, list) or not articles:
+        raise ValueError("考刻结果缺少可复核的运算步骤或原文命中条文。")
+    if not all(
+        isinstance(item, dict)
+        and str(item.get("text") or "").strip()
+        and str(item.get("source_ref") or "").strip()
+        for item in articles
+    ):
+        raise ValueError("命中条文缺少原文或出处，不能作为预测依据。")
 
     api_key = os.environ.get("DEEPSEEK_API_KEY", "").strip()
     if not api_key:
@@ -377,15 +395,17 @@ def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None):
     }[topic]
 
     system_prompt = (
-        "你是一位严谨的中国传统干支文化研究报告撰写者。"
-        "你只能解释用户提供的四柱与辅助数据，不得自行改算四柱，不得补造十神、旺衰、格局、大运、流年或古籍条文。"
-        "必须明确说明：本报告属于四柱基础文化解读，不是完整铁板神数定数，不是古籍原文，也不是科学验证的命运预测。"
+        "你是一位严谨的铁板神数文献研究报告撰写者。"
+        "你必须以已校验的铁板神数考刻结果、逐步运算记录和实际命中的原文条文为唯一核心依据。四柱只能作为来源上下文，不得退回普通八字泛化分析。"
+        "不得自行改算考刻、补造定数、六亲数、条号、古籍条文或来源；每个判断都必须引用输入中真实存在的 matched_articles。"
+        "若条文没有明确涉及财运或婚姻，必须说明证据不足，不得从无关条文牵强推断。"
+        "必须明确说明：本报告是对指定版本铁板神数资料的传统文本解释，不是科学验证的命运预测。"
         "只输出合法 JSON，不得输出 Markdown。JSON 结构必须为："
         '{"summary":"","sections":[{"title":"","conclusion":"","reasoning":"","advice":""}],"limitations":[]}。'
         "sections 必须恰好6项，标题依照用户任务给出的顺序；每项的 conclusion、reasoning、advice 均须具体且非空。"
-        "先用通俗中文回答倾向，再解释对应输入数据；不得把五行简单计数等同于旺衰。"
+        "每项 reasoning 必须写明所依据的考刻步骤或原文条文出处；不得把四柱、五行计数当作考刻结论。"
         "不得虚构用户经历、收入、婚姻状态或现实事件，不得作确定性吉凶断言。"
-        "每项至少给出一条普通人能执行的现实建议；内容彼此不得重复。"
+        "若证据仅能支持定性解释，不得推演具体金额、年份、婚期或事件。每项给出一条现实建议。"
     )
     payload = {
         "topic": guides["name"],
@@ -446,8 +466,11 @@ def analyze_tieshan_topic(topic, pillars, birth, gender="", derived=None):
         if not isinstance(result.get("limitations"), list):
             result["limitations"] = []
         result["report_type"] = guides["name"]
-        result["basis"] = "四柱基础文化解读"
-        result["not_iron_plate_final_number"] = True
+        result["basis"] = "经校验的铁板神数考刻步骤与原文命中条文"
+        result["source_edition"] = kaoke_evidence.get("source_edition")
+        result["method_version"] = kaoke_evidence.get("method_version")
+        result["evidence_articles"] = articles
+        result["not_scientifically_validated"] = True
         return result
     except (DeepSeekError, DeepSeekNotConfigured, ValueError):
         raise
