@@ -776,6 +776,52 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
             self.assertEqual(g["raw_group_marker"], marker)
             self.assertEqual(len(g["entries"]), 10)
 
+    def test_hai_p0_image_evidence_manifest_keeps_page_mapping_unresolved(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_p0_image_evidence_manifest,
+            get_hai_priority_conflict_review,
+            get_collection_branch_group_index,
+        )
+        manifest = get_hai_p0_image_evidence_manifest()
+        priority = get_hai_priority_conflict_review()
+        expected = {
+            item["block_id"] for item in priority["records"]
+            if item["priority"] == "P0"
+        }
+        actual = {item["block_id"] for item in manifest["entries"]}
+        self.assertEqual(manifest["entry_count"], 5)
+        self.assertEqual(actual, expected)
+        self.assertEqual(manifest["source_text_layer_pdf_lines"], [33598, 35025])
+        self.assertEqual(manifest["source_text_layer_line_count"], 1428)
+        self.assertEqual(manifest["source_printed_page_start"], 512)
+        self.assertEqual(manifest["uploaded_scan_printed_page_coverage"], [4, 301])
+        self.assertEqual(
+            manifest["uploaded_scan_page_coverage_status"],
+            "does_not_cover_hai_collection_start_or_p0_regions",
+        )
+        for item in manifest["entries"]:
+            self.assertIsInstance(item["start_pdf_text_line"], int)
+            self.assertIsInstance(item["end_pdf_text_line"], int)
+            self.assertLessEqual(item["start_pdf_text_line"], item["end_pdf_text_line"])
+            self.assertEqual(item["printed_page_mapping_status"], "not_mapped")
+            self.assertIsNone(item["printed_page_start"])
+            self.assertIsNone(item["printed_page_end"])
+            self.assertIsNone(item["scan_image_locator"])
+            self.assertEqual(item["uploaded_scan_coverage_status"],
+                             "outside_uploaded_scan_coverage")
+            self.assertTrue(item["required_evidence"])
+            self.assertFalse(item["formal_index_eligible"])
+            self.assertEqual(item["status"],
+                             "evidence_manifest_only_image_not_verified")
+        self.assertEqual(manifest["formal_index_eligible_count"], 0)
+        self.assertEqual(manifest["group_count"], 0)
+        self.assertEqual(manifest["entry_count_verified"], 0)
+        self.assertEqual(manifest["image_verified_group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["p0_image_evidence_manifest"], manifest)
+        self.assertEqual(api["group_count"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
 
