@@ -3142,6 +3142,37 @@ SHEN_GROUP_INDEX = [
                     for n,line in enumerate([24597,24604,24608,24611,24614,24617,24620,24623,24629,24637],1)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
+    {
+        "collection": "申", "raw_group_marker": "九七五○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 24644,
+        "pdf_text_lines": "24644-24655", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "source_row_line": 24644, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "申", "raw_group_marker": "九七六○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 24657,
+        "pdf_text_lines": "24657-24667", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "source_row_line": 24657, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "申", "raw_group_marker": "九七七○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 24669,
+        "pdf_text_lines": "24669-24679", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "source_row_line": 24669, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _shen_group("九七八○", 24697, list(range(24699,24709))),
+    _shen_group("九七九○", 24710, list(range(24711,24721))),
+    _shen_group("九八一○", 24736, list(range(24738,24748)), "table_rows_text_layer_located"),
+    _shen_group("九八二○", 24759, list(range(24760,24770))),
+    _shen_group("九八三○", 24781, list(range(24783,24793))),
+    _shen_group("九八四○", 24810, list(range(24812,24822))),
+    _shen_group("九八五○", 24823, list(range(24825,24835))),
+    _shen_group("九八六○", 24838, list(range(24841,24851))),
+    _shen_group("九八七○", 24851, list(range(24853,24863))),
+    _shen_group("九八八○", 24863, list(range(24865,24875))),
 ]
 
 SHEN_GROUP_ANOMALIES = [
@@ -3155,7 +3186,10 @@ SHEN_GROUP_ANOMALIES = [
     {"raw_group_marker": "九三一○", "pdf_text_line": 23903, "status": "raw_marker_text_reads_九二二○_possible_sequence_or_ocr_error"},
     {"raw_group_marker": "九五九○", "pdf_text_line": 24311, "status": "marker_seen_body_not_located_before_9600"},
     {"raw_group_marker": "九六一○", "pdf_text_line": None, "status": "unheaded_ten_entry_block_before_9620"},
-    {"raw_group_marker": "九六五○", "pdf_text_line": 24417, "status": "marker_seen_body_not_located_before_9660"}
+    {"raw_group_marker": "九六五○", "pdf_text_line": 24417, "status": "marker_seen_body_not_located_before_9660"},
+    {"raw_group_marker": "九七四○", "pdf_text_line": 24640, "status": "marker_seen_body_not_located_before_9750"},
+    {"raw_group_marker": "九八○○", "pdf_text_line": 24722, "status": "heading_followed_by_age_only_block_no_clause_alignment"},
+    {"raw_group_marker": "九八九○", "pdf_text_line": 24875, "status": "marker_seen_body_not_located_before_9900"}
 ]
 SHEN_UNASSIGNED_BLOCKS = [
     {"block_id": "shen_unheaded_9100_block", "pdf_text_lines": "23610-23619", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
@@ -3163,7 +3197,8 @@ SHEN_UNASSIGNED_BLOCKS = [
     {"block_id": "shen_unheaded_9140_block", "pdf_text_lines": "23672-23682", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "shen_unheaded_9320_block", "pdf_text_lines": "23921-23930", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "shen_unheaded_9440_block", "pdf_text_lines": "24082-24101", "entry_count_candidate": 20, "status": "table_block_without_confirmed_group_heading"},
-    {"block_id": "shen_unheaded_9610_block", "pdf_text_lines": "24328-24346", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+    {"block_id": "shen_unheaded_9610_block", "pdf_text_lines": "24328-24346", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "shen_9800_age_only_block", "pdf_text_lines": "24726-24735", "entry_count_candidate": 10, "status": "age_numbers_without_confirmed_clause_mapping"}
 ]
 
 
