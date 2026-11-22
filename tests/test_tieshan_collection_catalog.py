@@ -464,7 +464,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][2]["index_status"], "partial_text_layer_index")
         self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][3:]))
         self.assertEqual(data["collections"][2]["pdf_text_line_start"], 14175)
-        self.assertEqual(data["collections"][2]["pdf_text_line_end"], 15084)
+        self.assertIsNone(data["collections"][2]["pdf_text_line_end"])
         self.assertEqual(data["collections"][2]["indexed_groups"], 46)
         self.assertEqual(data["collections"][2]["indexed_entries"], 460)
         self.assertEqual(data["collections"][0]["pdf_text_line_start"], 10664)
