@@ -476,8 +476,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][6]["indexed_entries"], 819)
         self.assertEqual(data["collections"][6]["pdf_text_line_start"], 20332)
         self.assertEqual(data["collections"][7]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][7]["indexed_groups"], 47)
-        self.assertEqual(data["collections"][7]["indexed_entries"], 470)
+        self.assertEqual(data["collections"][7]["indexed_groups"], 65)
+        self.assertEqual(data["collections"][7]["indexed_entries"], 650)
         self.assertEqual(data["collections"][7]["pdf_text_line_start"], 21990)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -1081,19 +1081,21 @@ class WeiCollectionInitialIndexTests(unittest.TestCase):
     def test_wei_first_nineteen_groups_and_unheaded_blocks(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("未")
-        self.assertEqual(data["group_count"], 47)
-        self.assertEqual(data["entry_count"], 470)
+        self.assertEqual(data["group_count"], 65)
+        self.assertEqual(data["entry_count"], 650)
         expected = ["八○三○","八○六○","八○七○","一九八○","八一二○","八一三○","八一四○",
                     "八一五○","八一六○","八一八○","八一九○","八二○○","八二一○","八二二○",
                     "八二四○","八二五○","八二七○","八二八○","八二九○",
                     "八三○○","八三一○","八三三○","八三四○","八三五○","八三六○","八三七○",
                     "八三九○","八四○○","八四一○","八四二○","八四三○","八四四○","八四五○",
                     "八四六○","八四八○","八四九○","八五一○","八五二○","八五四○","八五五○",
-                    "八五七○","八五八○","八五九○","八六○○","八六一○","八六二○","八六三○"]
+                    "八五七○","八五八○","八五九○","八六○○","八六一○","八六二○","八六三○","八六四○","八六五○","八六六○","八六七○",
+                          "八六九○","八七○○","八七一○","八二○","八七五○","八七六○","八七七○",
+                          "八七八○","八七九○","八八○○","八八一○","八八二○","八八三○"]
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]], expected)
         self.assertEqual(len(data["unassigned_blocks"]), 6)
         sample = get_collection_sample("未")
-        self.assertEqual(sample["group_index"]["group_count"], 47)
+        self.assertEqual(sample["group_index"]["group_count"], 65)
 
 
 class WeiCollectionIndexThrough8590Tests(unittest.TestCase):
@@ -1125,3 +1127,20 @@ class WeiCollectionIndexThrough8630Tests(unittest.TestCase):
             group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
             self.assertEqual(group["raw_group_marker"], marker)
             self.assertEqual(group["entry_count"], 10)
+
+
+class WeiCollectionIndexThrough8830Tests(unittest.TestCase):
+    def test_wei_groups_through_8830_and_末集_internal_block(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("未")
+        expected = [("八六四○",22877),("八六五○",22890),("八六六○",22918),
+                    ("八六七○",22931),("八六九○",22960),("八七○○",22973),
+                    ("八七一○",22985),("八二○",23030),("八七五○",23078),
+                    ("八七六○",23091),("八七七○",23108),("八七八○",23121),
+                    ("八七九○",23134),("八八○○",23151),("八八一○",23166),
+                    ("八八二○",23179),("八八三○",23191)]
+        for marker,line in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+            self.assertEqual(group["entry_count"], 10)
+        self.assertTrue(any(x["raw_group_marker"] == "八六八○" for x in data["group_anomalies"]))
