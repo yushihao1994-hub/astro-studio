@@ -2065,18 +2065,46 @@ SI_GROUP_INDEX = [
     _si_group("六一二○", 18941, list(range(18943,18953))),
     _si_group("六一三○", 18954, list(range(18955,18965))),
     _si_group("六一五○", 18973, list(range(18973,18983)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六一六○", 18985, list(range(18985,18995)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六一七○", 18997, list(range(18997,19007)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六一八○", 19021, list(range(19023,19033))),
+    _si_group("六一九○", 19034, list(range(19035,19045))),
+    {
+        "collection": "巳", "raw_group_marker": "六二○", "occurrence": 1,
+        "normalized_group_marker_candidate": "六二一○",
+        "group_header_pdf_line": 19054, "pdf_text_lines": "19054-19064",
+        "layout_status": "short_raw_marker_candidate_6210_followed_by_separate_age_block",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(19055,19065),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _si_group("六二二○", 19076, list(range(19077,19087))),
+    _si_group("六二三○", 19099, list(range(19100,19110))),
+    _si_group("六二四○", 19140, list(range(19142,19152)), "table_rows_text_layer_located"),
+    _si_group("六二五○", 19154, list(range(19156,19166)), "table_rows_text_layer_located"),
 ]
 
 SI_GROUP_ANOMALIES = [
     {"raw_group_marker": "六○○○", "pdf_text_line": None,
      "status": "ten_unheaded_entries_at_collection_start_no_explicit_group_marker"},
     {"raw_group_marker": "六一四○", "pdf_text_line": 18966,
-     "status": "marker_seen_body_not_located_before_6150"}
+     "status": "marker_seen_body_not_located_before_6150"},
+    {"raw_group_marker": "六二○○", "pdf_text_line": 19046,
+     "status": "marker_seen_body_not_located_before_short_raw_marker_620"},
+    {"raw_group_marker": "六二六○", "pdf_text_line": 19167,
+     "status": "marker_seen_body_not_located_in_current_review_window"}
 ]
 
 SI_UNASSIGNED_BLOCKS = [
     {"block_id": "si_unheaded_entries_before_6010", "pdf_text_lines": "18708-18717",
-     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "si_age_data_after_short_6210_candidate", "pdf_text_lines": "19065-19074",
+     "entry_count_candidate": 10, "status": "separate_age_column_block_alignment_pending"},
+    {"block_id": "si_age_data_after_6220", "pdf_text_lines": "19088-19097",
+     "entry_count_candidate": 10, "status": "separate_age_column_block_alignment_pending"},
+    {"block_id": "si_age_data_after_6230", "pdf_text_lines": "19110-19120",
+     "entry_count_candidate": 11, "status": "separate_age_column_block_alignment_pending"}
 ]
 
 
