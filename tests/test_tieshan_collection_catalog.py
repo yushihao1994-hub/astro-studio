@@ -2283,3 +2283,28 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         api = get_collection_branch_group_index("亥")
         self.assertEqual(api["header_exception_review_12710_12770"], audit)
         self.assertEqual(api["group_count"], 0)
+
+
+    def test_hai_unified_conflict_worklist_deduplicates_block_crosswalk_findings(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_unified_conflict_worklist,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_unified_conflict_worklist()
+        self.assertEqual(audit["anomaly_block_count"], 22)
+        self.assertEqual(audit["worklist_count"],
+                         22 + audit["global_crosswalk_issue_count"])
+        self.assertEqual(len({item["issue_key"] for item in audit["worklist"]}),
+                         audit["worklist_count"])
+        self.assertEqual(audit["ordering"], "ascending_pdf_text_line")
+        starts = [item["start_pdf_text_line"] for item in audit["worklist"]]
+        self.assertEqual(starts, sorted(starts))
+        self.assertTrue(all(item["required_review_action"] for item in audit["worklist"]))
+        self.assertTrue(all(item["formal_index_eligible"] is False
+                            for item in audit["worklist"]))
+        self.assertEqual(audit["group_count"], 0)
+        self.assertEqual(audit["entry_count"], 0)
+        self.assertGreaterEqual(audit["linked_crosswalk_finding_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["unified_conflict_worklist"], audit)
+        self.assertEqual(api["group_count"], 0)
