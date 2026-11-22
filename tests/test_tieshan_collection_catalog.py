@@ -467,7 +467,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][10]["index_status"], "partial_text_layer_index")
         self.assertEqual(data["collections"][11]["index_status"], "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending")
         self.assertEqual(data["collections"][11]["group_marker_candidate_count"], 88)
-        self.assertEqual(data["collections"][11]["layout_group_candidate_count"], 35)
+        self.assertEqual(data["collections"][11]["layout_group_candidate_count"], 48)
         self.assertEqual(data["collections"][11]["indexed_groups"], 0)
         self.assertEqual(data["collections"][11]["indexed_entries"], 0)
         self.assertEqual(data["collections"][4]["pdf_text_line_start"], 17109)
@@ -1357,8 +1357,8 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_layout_candidates_keep_only_source_line_ranges(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(data["layout_group_candidate_count"], 35)
-        self.assertEqual(len(data["layout_group_candidates"]), 35)
+        self.assertEqual(data["layout_group_candidate_count"], 48)
+        self.assertEqual(len(data["layout_group_candidates"]), 48)
         for group in data["layout_group_candidates"]:
             self.assertEqual(group["entry_count_candidate"], 10)
             self.assertEqual(len(group["entry_pdf_lines"]), 10)
