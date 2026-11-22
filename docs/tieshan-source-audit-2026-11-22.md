@@ -928,3 +928,6 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 
 
 第二十六轮字段修复补充：进一步追溯后确认12770审计的两个来源并不在同一对象：known_exceptions中的字段实际为 next_marker；下一组的行号应从 markers[12780]["line"] 读取。已改为分别读取这两个真实来源，避免把未在异常对象中存储的字段当作存在。上一轮CI失败记录：https://github.com/yushihao1994-hub/astro-studio/actions/runs/45018322127。
+
+
+第二十六轮复测收敛：修正12770下一组标记来源后，147项回归测试中仅剩1项断言失败，原因是页眉OCR「康节道具全书」也位于 HAI_UNASSIGNED_BLOCKS，而不在 boundary audit 的 known_exceptions 对象中。本次改为从未分配块原始登记读取页眉文字及行号，不在异常对象中假设不存在的字段。
