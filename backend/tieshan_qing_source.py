@@ -10,7 +10,7 @@ FILE_NAME = "鐵板神數(清刻足本).pdf"
 FILE_SIZE_BYTES = 83686820
 SCAN_PAGE_COUNT = 150
 PRINTED_PAGE_COUNT_SHOWN = 1363
-STATUS = "scan_acquired_initial_pages_image_reviewed_core_rules_pending"
+STATUS = "all_150_pdf_scan_pages_image_reviewed_core_rules_pending"
 SOURCE_CLASS = "user_provided_primary_scan"
 
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
@@ -151,7 +151,7 @@ OBSERVATIONS = [
         "status": "image_reviewed_sample_headings_and_clauses",
         "algorithm_status": "not_implemented",
         "sample_text": ["婚姻早配天喜並頭", "移花接木艱難培植", "大生兩口孝服之憂", "子孫釣於富春江游然自得", "四子送老皆庶所出", "身入宮門可以謀衣食", "五湖水順江水順好行舟", "兄弟十人數有五貴", "兄弟三人數有貴", "妻生一子妾生二兒", "鬼怪出世破財多失", "官拜巡按榮歸兩堂", "父母枯槁而起其家子孫能守其成", "財源滾滾上來吉至室中總無災", "兄弟六人數有四貴", "壽元七旬有大數已盡", "父母生于木年終于金年合納音", "父母全而生不足姻緣死也姻緣", "兄弟十二人中断惜离群", "生母當屬虎", "數有五子一子送老", "父母全年生全年死敕注前定", "見弟三人数注前定", "命帶文昌正当八洋", "兄弟五人数有二贵"],
-        "note": "PDF第66頁起版式由干支/卦名分組表轉為數字欄頭及直排斷語條文。上述僅為可辨識的短句樣本，目前可見條文涉及婚姻、子女、家宅、財祿、仕途/職業、疾病/災厄、兄弟親屬等不同主題；第81—100頁仍沿用數字欄頭與直排條文版式，條目持续覆盖六亲、婚姻、子女、财禄、仕途及寿夭等主题。尚未逐條校字、確認數字欄位意義及建立命盤到條文的檢索映射。",
+        "note": "PDF第66頁起版式由干支/卦名分組表轉為數字欄頭及直排斷語條文。上述僅為可辨識的短句樣本，目前可見條文涉及婚姻、子女、家宅、財祿、仕途/職業、疾病/災厄、兄弟親屬等不同主題；第81—150頁仍沿用數字欄頭與直排條文版式，條目持續覆蓋六親、婚姻、子女、財祿、仕途及壽夭等主題。全部150個PDF圖像頁已完成第一輪圖像檢查；尚未逐條校字、確認數字欄位意義及建立命盤到條文的檢索映射。",
     },
     {
         "id": "QING-NINE-PALACE-CHARTS",
