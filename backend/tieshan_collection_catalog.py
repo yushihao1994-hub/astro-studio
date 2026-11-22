@@ -1158,7 +1158,10 @@ CHOU_GROUP_INDEX = [
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-]72,
+]
+
+CHOU_GROUP_ANOMALIES = [
+    {"raw_group_marker": "二五○", "pdf_text_line": 12772,
      "normalized_group_marker_candidate": None,
      "status": "raw_marker_preserved_numbering_interpretation_unresolved",
      "note": "文本层原样为二五○，后文另有明确二二五○（12906行）；不得仅凭顺序自动改写。"},
