@@ -380,6 +380,13 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
   document.getElementById('homeDashboard').style.display=page==='archive'?'block':'none';
   document.querySelector('.grid').style.display=page==='calc'?'grid':'none';
   nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  if(page==='topics'&&!lastPillarData){
+   const target=document.getElementById('topicsPanel');
+   if(target){
+    target.innerHTML='<div class="panel-card"><h3>财运与婚姻专项推算</h3><p class="hint">入口已开放。请先完成出生资料与基础排盘，系统才能读取你的命盘并提交专项请求。</p><div class="topic-actions"><button type="button" class="topic-button" id="openFinanceCalc">进入排盘 · 财运</button><button type="button" class="topic-button" id="openMarriageCalc">进入排盘 · 婚姻</button></div><div class="empty-state">说明：财运、婚姻专项接口入口已开放；正式铁板神数结论仍须等待真实考刻定盘及古籍条文核验，未核验前不会伪造结果。</div></div>';
+    ['openFinanceCalc','openMarriageCalc'].forEach(id=>{const button=document.getElementById(id);if(button)button.addEventListener('click',()=>{switchPage('calc');const form=document.getElementById('birthForm');if(form)form.scrollIntoView({behavior:'smooth',block:'start'});});});
+   }
+  }
   if(page!=='archive'&&page!=='calc'&&page!=='topics'&&!lastPillarData){const target=document.getElementById(page+'Panel');if(target)target.innerHTML='<div class="empty-state">请先进入「推算」填写出生资料并完成计算。<br>已有档案会保存在当前设备。</div>';}
   window.scrollTo({top:0,behavior:'smooth'});
  }
