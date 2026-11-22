@@ -1603,6 +1603,26 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         tail = blocks["hai_unheaded_12360"]["neighbor_context"]
         self.assertEqual(tail["after_marker"]["raw"], "去集")
         self.assertIsNone(tail["after_marker"]["candidate"])
+    def test_hai_12440_12500_table_audit_preserves_duplicate_12490_and_column_mismatch(self):
+        from backend.tieshan_collection_catalog import (
+            HAI_12440_12500_TABLE_AUDIT, get_collection_branch_group_index,
+        )
+        audit = HAI_12440_12500_TABLE_AUDIT
+        segments = audit["segments"]
+        self.assertEqual([item["marker_line"] for item in segments], [34270, 34292, 34313])
+        self.assertEqual([item["clause_count"] for item in segments], [10, 10, 10])
+        self.assertEqual([len(item["sequence_labels"]) for item in segments], [9, 9, 9])
+        self.assertEqual(segments[2]["raw_marker"], "一二四九〇")
+        self.assertEqual(segments[2]["possible_correction"], 12500)
+        self.assertIn("not_confirmed", segments[2]["status"])
+        self.assertEqual(segments[2]["counter_evidence"], "source text layer explicitly reads 一二四九〇 at line 34313; no page image proof for 12500")
+        self.assertIn("never zip", audit["column_alignment_rule"])
+        data = get_collection_branch_group_index("亥")
+        self.assertEqual(data["table_region_audit_12440_12500"]["verification_status"],
+                         "pdf_text_layer_audit_page_image_pending")
+        self.assertEqual(data["group_count"], 0)
+
+
     def test_hai_crosswalk_audits_unassigned_blocks_without_assigning_groups(self):
         from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
         audit = get_hai_crosswalk_audit()
