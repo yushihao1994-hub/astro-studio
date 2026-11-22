@@ -4283,6 +4283,50 @@ def get_hai_priority_conflict_review():
 
 
 
+def get_hai_numbered_group_review_12720_12760():
+    """Expand ordinary 12720/12730/12750/12760 row ranges without treating wrapped lines as extra entries."""
+    source = HAI_12670_12800_BOUNDARY_AUDIT
+    markers = {item["candidate"]: item for item in source["markers"]}
+    cases = []
+    for candidate in (12720, 12730, 12750, 12760):
+        item = markers[candidate]
+        continuation_lines = list(item.get("continuation_lines", []))
+        entry_lines = list(item["entry_lines"])
+        cases.append({
+            "candidate_reference_only": candidate,
+            "raw_marker": item["raw"],
+            "marker_pdf_line": item["line"],
+            "pre_entry_number_line": item.get("pre_entry_number_line"),
+            "entry_pdf_lines": entry_lines,
+            "entry_count_candidate": len(entry_lines),
+            "sequence_labels": list(item["sequence_labels"]),
+            "continuation_pdf_lines": continuation_lines,
+            "continuation_count": len(continuation_lines),
+            "status": item["status"],
+            "continuation_mapping": "text_layer_observation_only_not_page_layout_verified",
+            "formal_index_eligible": False,
+            "required_evidence": [
+                f"组头及正文所在原页扫描图（候选组号{candidate}）",
+                "核对独立数字行与正文序号/条文列的实际位置",
+                "核对续行是否属于前一条正文，不把续行另计为新条目",
+                "确认十个序号标签与十条完整正文的逐项对应关系"
+            ],
+        })
+    return {
+        "source_pdf_text_lines": "34648-34719",
+        "cases": cases,
+        "rules": [
+            "Preserve the source OCR marker and PDF text line locations.",
+            "Keep continuation lines separate from the ten sequence labels until page layout is verified.",
+            "Do not infer missing content from adjacent group numbering.",
+            "All four cases remain text-layer candidates, not image-verified groups."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_numbered_group_review_page_image_verification_pending",
+    }
+
+
 def get_hai_header_exception_review_12710_12770():
     """Review truncated 12710, wrapped 12740, and header-only 12770 without inferred repair."""
     source = HAI_12670_12800_BOUNDARY_AUDIT
@@ -4624,6 +4668,7 @@ def get_collection_branch_group_index(branch):
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
+            "numbered_group_review_12720_12760": get_hai_numbered_group_review_12720_12760(),
             "header_exception_review_12710_12770": get_hai_header_exception_review_12710_12770(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
