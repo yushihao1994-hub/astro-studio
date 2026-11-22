@@ -193,9 +193,43 @@ function renderPillars(data){
   const method=(data.method||[]).map(x=>'<li style="margin:4px 0">'+escapeHtml(x)+'</li>').join('');
   const z=data.derived||{},counts=z.five_element_counts||{};
   const elementRows=['木','火','土','金','水'].map(e=>'<td>'+e+' '+(counts[e]??0)+'</td>').join('');
-  return '<div class="chart-caption">四柱基础排盘 · '+escapeHtml(data.birth.timezone)+' · '+escapeHtml(data.solar_term_boundary.month_boundary)+'交节后</div><div class="pillar-grid">'+cards+'</div><div class="chart-caption">五行数量参考</div><table class="data-table"><tbody><tr>'+elementRows+'</tr></tbody></table><div style="margin-top:13px;border-top:1px solid #eeeae2;padding-top:11px;font-size:11px;color:#777"><b style="color:#92733d">计算规则</b><ul>'+method+'</ul><b style="color:#92733d">校验提醒</b><ul>'+warnings+'</ul></div><div style="font-size:10px;color:#999;margin-top:10px">计算引擎：'+escapeHtml(data.engine)+'。四柱结果是基础历法数据，不代表已经完成铁板神数定数。</div><div style="margin-top:14px"><button class="primary" type="button" id="aiAnalyzeBtn">AI 深度解读</button><div id="aiAnalysisOutput" style="margin-top:12px"></div></div>';
+  return '<div class="chart-caption">四柱基础排盘 · '+escapeHtml(data.birth.timezone)+' · '+escapeHtml(data.solar_term_boundary.month_boundary)+'交节后</div><div class="pillar-grid">'+cards+'</div><div class="chart-caption">五行数量参考</div><table class="data-table"><tbody><tr>'+elementRows+'</tr></tbody></table><div style="margin-top:13px;border-top:1px solid #eeeae2;padding-top:11px;font-size:11px;color:#777"><b style="color:#92733d">计算规则</b><ul>'+method+'</ul><b style="color:#92733d">校验提醒</b><ul>'+warnings+'</ul></div><div style="font-size:10px;color:#999;margin-top:10px">计算引擎：'+escapeHtml(data.engine)+'。四柱结果是基础历法数据，不代表已经完成铁板神数定数。</div><div style="margin-top:14px"><button class="primary" type="button" id="aiAnalyzeBtn">AI 深度解读</button><div id="aiAnalysisOutput" style="margin-top:12px"></div></div><div style="margin-top:16px;border-top:1px solid #eeeae2;padding-top:14px"><b style="color:#92733d">铁板神数专项输出</b><p style="font-size:11px;color:#888">财运与婚姻结论只在真实考刻、定数和原文条文通过校验后开放。</p><div id="kaokeTopicPorts" style="margin-top:10px">'+renderKaokeTopicPorts(data)+'</div></div>';
 }
 let lastPillarData=null;
+function renderKaokeTopicPorts(data){
+  const k=(((data||{}).iron_plate_engine||{}).kaoke_result)||{};
+  const articles=k.matched_articles;
+  const ready=k.status==="verified"&&String(k.source_edition||"").trim()&&String(k.method_version||"").trim()&&Array.isArray(k.calculation_steps)&&k.calculation_steps.length>0&&Array.isArray(articles)&&articles.length>0&&articles.every(x=>x&&String(x.text||"").trim()&&String(x.source_ref||"").trim());
+  if(!ready)return '<div class="notice">暂未开放：当前排盘只有四柱、钟表八刻分段和部分数理对照，尚未形成经校验的传统考刻定盘与条文命中。为避免用普通八字或 AI 编造结论，财运预测、婚姻预测暂时锁定。</div>';
+  return '<div class="actions"><button class="primary" type="button" id="financePredictBtn">财运预测</button><button class="secondary" type="button" id="marriagePredictBtn">婚姻预测</button></div><div id="kaokeTopicOutput" style="margin-top:12px"></div>';
+}
+async function runTieshanTopic(topic){
+  const output=document.getElementById("kaokeTopicOutput");
+  const finance=topic==="finance";
+  const button=document.getElementById(finance?"financePredictBtn":"marriagePredictBtn");
+  if(!lastPillarData||!output||!button)return;
+  button.disabled=true;button.textContent="正在按考刻条文分析…";
+  output.innerHTML='<p style="color:#92733d">正在核对考刻步骤和命中原文，生成专项报告……</p>';
+  try{
+    await wakeApi();
+    const response=await fetch(API+(finance?"/api/tieshan/finance":"/api/tieshan/marriage"),{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({pillars:lastPillarData.pillars,birth:lastPillarData.birth,derived:lastPillarData.derived||{},gender:document.querySelector('input[name="gender"]:checked')?.value||"",iron_plate_engine:lastPillarData.iron_plate_engine||{}}),
+      signal:AbortSignal.timeout(150000)
+    });
+    const data=await response.json();
+    if(!response.ok||!data.ok)throw new Error(data.error||"专项报告生成失败。");
+    const report=data.analysis||{};
+    const sections=(report.sections||[]).map(s=>'<div style="border:1px solid #e8e3d8;border-radius:5px;margin-top:9px;padding:12px;background:#fff"><b style="color:#92733d">'+escapeHtml(s.title)+'</b><p style="font-weight:600">'+escapeHtml(s.conclusion)+'</p><details><summary>考刻依据与建议</summary><p><b>依据：</b>'+escapeHtml(s.reasoning)+'</p><p><b>建议：</b>'+escapeHtml(s.advice)+'</p></details></div>').join("");
+    const refs=(report.evidence_articles||[]).map(x=>'<li>'+escapeHtml(x.text)+' <small>（'+escapeHtml(x.source_ref)+'）</small></li>').join("");
+    output.innerHTML='<div class="status"><strong>'+escapeHtml(report.report_type||data.analysis_type)+'</strong><p>'+escapeHtml(report.summary||"")+'</p><p class="hint">底本：'+escapeHtml(report.source_edition||"")+'；算法版本：'+escapeHtml(report.method_version||"")+'</p></div>'+sections+(refs?'<details style="margin-top:10px"><summary>查看本次引用的原文条文</summary><ol>'+refs+'</ol></details>':'');
+  }catch(err){output.innerHTML='<p style="color:#a33">未能生成：'+escapeHtml(err.message||"网络异常")+'</p>';}
+  finally{button.disabled=false;button.textContent=finance?"财运预测":"婚姻预测";}
+}
+document.addEventListener("click",e=>{
+  if(e.target&&e.target.id==="financePredictBtn")runTieshanTopic("finance");
+  if(e.target&&e.target.id==="marriagePredictBtn")runTieshanTopic("marriage");
+});
 function showStep(n){
  document.querySelectorAll(".step[data-step]").forEach(b=>b.classList.toggle("active",Number(b.dataset.step)===n));
  const box=document.getElementById("stepDetail");
