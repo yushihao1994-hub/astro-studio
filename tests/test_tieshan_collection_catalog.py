@@ -466,8 +466,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][4]["index_status"], "partial_text_layer_index")
         self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][5:]))
         self.assertEqual(data["collections"][4]["pdf_text_line_start"], 17109)
-        self.assertEqual(data["collections"][4]["indexed_groups"], 27)
-        self.assertEqual(data["collections"][4]["indexed_entries"], 269)
+        self.assertEqual(data["collections"][4]["indexed_groups"], 44)
+        self.assertEqual(data["collections"][4]["indexed_entries"], 439)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
         self.assertEqual(data["collections"][3]["indexed_groups"], 78)
         self.assertEqual(data["collections"][3]["indexed_entries"], 779)
@@ -623,12 +623,17 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_chen_collection_initial_groups_and_unassigned_block(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("辰")
-        self.assertEqual(data["group_count"], 27)
-        self.assertEqual(data["entry_count"], 269)
+        self.assertEqual(data["group_count"], 44)
+        self.assertEqual(data["entry_count"], 439)
         expected = [("五○一○",17112),("五○二○",17168),("五○三○",17244),
                     ("五○四○",17257),("五○六○",17273),("五○七○",17298),
                     ("五○八○",17311),("五○九○",17329),("五一○○",17342),
-                    ("五一二○",17358),("五一三○",17369),("五一四○",17381)]
+                    ("五一二○",17358),("五一三○",17369),("五一四○",17381),
+                    ("五三三○",17653),("五三四○",17666),("五三五○",17678),
+                    ("五三六○",17693),("五三七○",17705),("五三八○",17718),
+                    ("五三九○",17745),("五四○○",17770),("五四一○",17795),
+                    ("五四三○",17822),("五四四○",17837),("五四五○",17851),
+                    ("五四六○",17864),("五四七○",17876),("五四八○",17895),("五四九○",17906)]
         for marker,line in expected:
             group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
             self.assertEqual(group["raw_group_marker"], marker)
