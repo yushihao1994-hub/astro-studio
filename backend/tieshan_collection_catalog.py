@@ -1113,6 +1113,7 @@ HAI_GROUP_MARKER_CANDIDATES = [
 
 # 亥集文本层中尚不能可靠分组的区段。仅标出待处理范围，不推断组号或条数。
 HAI_UNASSIGNED_BLOCKS = [
+    {"block_id": "hai_header_only_12560", "pdf_text_lines": "34414-34417", "group_marker_raw": "一二五六〇", "group_marker_pdf_line": 34414, "entry_count_candidate": 0, "following_header_ocr": "玄机", "following_header_pdf_line": 34416, "next_group_marker_raw": "一二五七〇", "next_group_marker_pdf_line": 34417, "status": "explicit_group_marker_but_no_entry_rows_before_next_group_header_do_not_assign"},
     {"block_id": "hai_ocr_corrupt_12080_to_12170", "pdf_text_lines": "33724-33887", "marker_cluster_pdf_lines": [33724, 33732, 33743, 33766, 33778, 33792, 33805, 33829, 33833, 33845, 33860, 33875, 33888], "marker_cluster_notes": [{"pdf_text_line": 33724, "raw_group_marker": "一二〇八〇", "normalized_candidate": 12080, "status": "clear_text_layer_marker_image_check_pending"}, {"pdf_text_line": 33732, "raw_group_marker": "一九岁", "normalized_candidate": None, "status": "corrupt_do_not_normalize"}, {"pdf_text_line": 33743, "raw_group_marker": "二〇九〇", "normalized_candidate": None, "status": "possible_12090_or_12100_prefix_loss_unresolved"}, {"pdf_text_line": 33766, "raw_group_marker": "二一〇〇", "normalized_candidate": None, "status": "possible_12100_prefix_ambiguity_unresolved"}, {"pdf_text_line": 33778, "raw_group_marker": "二一一〇", "normalized_candidate": None, "status": "possible_12110_prefix_ambiguity_unresolved"}, {"pdf_text_line": 33792, "raw_group_marker": "一二二〇", "normalized_candidate": None, "status": "truncated_12120_candidate_unresolved"}, {"pdf_text_line": 33805, "raw_group_marker": "一二二三〇", "normalized_candidate": 12230, "status": "clear_text_layer_marker_image_check_pending"}, {"pdf_text_line": 33829, "raw_group_marker": "一二二四〇", "normalized_candidate": 12240, "status": "clear_text_layer_marker_but_entry_boundary_overlaps_other_marker"}, {"pdf_text_line": 33833, "raw_group_marker": "一五四", "normalized_candidate": None, "status": "truncated_marker_shares_entry_lines_with_33829_candidate"}, {"pdf_text_line": 33845, "raw_group_marker": "一五六", "normalized_candidate": None, "status": "truncated_marker_wrapped_rows"}, {"pdf_text_line": 33860, "raw_group_marker": "一五七", "normalized_candidate": None, "status": "truncated_marker_wrapped_rows"}, {"pdf_text_line": 33875, "raw_group_marker": "一八", "normalized_candidate": None, "status": "truncated_marker_unresolved"}, {"pdf_text_line": 33888, "raw_group_marker": "一二一八〇", "normalized_candidate": 12180, "status": "clear_text_layer_marker_image_check_pending"}], "boundary_conflicts": [{"left_marker_line": 33829, "left_marker_raw": "一二二四〇", "right_marker_line": 33833, "right_marker_raw": "一五四", "shared_entry_pdf_lines": [33834, 33835, 33836, 33837, 33838, 33839, 33840, 33841, 33842, 33843, 33844], "resolution": "do_not_count_as_two_independent_groups_until_page_layout_check"}], "status": "marker_cluster_and_entry_boundaries_conflict_page_layout_required"}
     {"block_id": "hai_unheaded_12240_candidate", "pdf_text_lines": "33952-33962", "entry_count_candidate": 10, "entry_pdf_lines": list(range(33953, 33963)), "sequence_status": "序号一至十逐行可定位", "status": "ten_sequence_rows_located_no_reliable_group_header_do_not_assign", "neighbor_context": {"before_marker": {"raw": "一二二三〇", "line": 33940, "candidate": 12230}, "after_marker": {"raw": "一二二七〇", "line": 33989, "candidate": 12270}, "ordinal_slot_hypothesis": 1, "possible_slot": 12240, "assignment": "not_assigned_order_only"}},
     {"block_id": "hai_unheaded_12250_candidate", "pdf_text_lines": "33964-33974", "entry_count_candidate": 10, "entry_pdf_lines": list(range(33964, 33974)), "sequence_status": "序号一至十逐行可定位", "status": "ten_sequence_rows_located_no_reliable_group_header_do_not_assign", "neighbor_context": {"before_marker": {"raw": "一二二三〇", "line": 33940, "candidate": 12230}, "after_marker": {"raw": "一二二七〇", "line": 33989, "candidate": 12270}, "ordinal_slot_hypothesis": 2, "possible_slot": 12250, "assignment": "not_assigned_order_only"}},
@@ -1159,6 +1160,37 @@ HAI_12440_12500_TABLE_AUDIT = {
     "column_alignment_rule": "sequence column and clause column are separate OCR text streams; never zip by ordinal or infer missing first label",
     "promotion_rule": "do not create verified groups or normalize second 12490 to 12500 without page image confirmation",
     "verification_status": "pdf_text_layer_audit_page_image_pending"
+}
+
+
+HAI_12510_12660_REGION_AUDIT = {
+    "source_pdf_text_lines": "34338-34569",
+    "verified_from_source_text_layer": True,
+    "groups": [
+        {"candidate": 12510, "raw_marker": "一二五一〇", "marker_line": 34338, "entry_lines": list(range(34340, 34350)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12520, "raw_marker": "一二五二〇", "marker_line": 34351, "entry_lines": list(range(34353, 34363)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12530, "raw_marker": "一二五三〇", "marker_line": 34364, "entry_lines": list(range(34365, 34375)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12540, "raw_marker": "一二五四〇", "marker_line": 34389, "entry_lines": list(range(34390, 34400)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12550, "raw_marker": "一二五五〇", "marker_line": 34401, "entry_lines": list(range(34403, 34413)), "entry_count": 10, "sequence_labels": [2,2,3,4,5,6,7,8,9,10], "missing_sequence_candidates": [1], "duplicate_sequence_candidates": [2], "status": "ten_rows_first_label_ocr_or_layout_anomaly_do_not_repair"},
+        {"candidate": 12560, "raw_marker": "一二五六〇", "marker_line": 34414, "entry_lines": [], "following_header_ocr": "玄机", "following_header_line": 34416, "next_marker": "一二五七〇", "next_marker_line": 34417, "status": "header_only_no_entry_rows_between_marker_and_next_group"},
+        {"candidate": 12570, "raw_marker": "一二五七〇", "marker_line": 34417, "entry_lines": list(range(34418, 34428)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries_collection_header_ocr_conflict"},
+        {"candidate": 12580, "raw_marker": "一二五八〇", "marker_line": 34429, "entry_lines": list(range(34430, 34440)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12590, "raw_marker": "一二五九〇", "marker_line": 34440, "entry_lines": list(range(34441, 34451)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12600, "raw_marker": "一二六〇〇", "marker_line": 34459, "entry_lines": list(range(34463, 34473)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "layout": "three_section_markdown_table", "status": "ten_table_rows_text_layer"},
+        {"candidate": 12610, "raw_marker": "一二六一〇", "marker_line": 34474, "entry_lines": list(range(34478, 34488)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "layout": "three_section_markdown_table", "status": "ten_table_rows_text_layer"},
+        {"candidate": 12620, "raw_marker": "一二六二〇", "marker_line": 34489, "entry_lines": list(range(34493, 34503)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "layout": "three_section_markdown_table", "status": "ten_table_rows_text_layer"},
+        {"candidate": 12630, "raw_marker": "一二六三〇", "marker_line": 34519, "entry_lines": list(range(34520, 34530)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries"},
+        {"candidate": 12640, "raw_marker": "一二六四〇", "marker_line": 34530, "entry_lines": list(range(34532, 34542)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries_with_intervening_blank_line"},
+        {"candidate": 12650, "raw_marker": "一二六五〇", "marker_line": 34542, "entry_lines": list(range(34545, 34555)), "entry_count": 10, "sequence_labels": list(range(1, 11)), "status": "ten_numbered_entries_page_header_interleaved"},
+        {"candidate": 12660, "raw_marker": "一二六六〇", "marker_line": 34556, "detached_value": "五十八", "detached_value_line": 34557, "entry_lines": list(range(34559, 34569)), "entry_count": 10, "sequence_labels": [2,3,3,4,5,6,7,8,9,10], "missing_sequence_candidates": [1], "duplicate_sequence_candidates": [3], "status": "ten_rows_first_label_missing_duplicate_3_and_detached_value_unmapped"}
+    ],
+    "boundary_notes": [
+        "12560 has an explicit marker but no extracted entry rows before 12570; do not assign nearby rows to it.",
+        "12570 marker is followed by collection-header OCR 玄机 at line 34416; collection identity remains image-check pending.",
+        "12600-12620 are extracted as three ten-row table sections; preserve row labels and section boundaries.",
+        "12660 detached value 五十八 at line 34557 is not mapped to any of the ten entries."
+    ],
+    "promotion_rule": "all remain text-layer candidates; no group is promoted to image-verified status"
 }
 
 
@@ -3849,6 +3881,7 @@ def get_collection_branch_group_index(branch):
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
+            "table_region_audit_12510_12660": HAI_12510_12660_REGION_AUDIT,
             "partial_table_group_candidate_count": len(HAI_PARTIAL_TABLE_GROUP_CANDIDATES),
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
