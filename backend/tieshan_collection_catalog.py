@@ -1174,7 +1174,10 @@ CHOU_GROUP_INDEX = [
     _chou_group("二五七○", 13443, list(range(13446, 13456)), "table_rows_text_layer_located"),
     _chou_group("二五八○", 13457, list(range(13460, 13470)), "table_rows_text_layer_located"),
     _chou_group("二五九○", 13471, list(range(13474, 13484)), "table_rows_text_layer_located"),
-]72,
+]
+
+CHOU_GROUP_ANOMALIES = [
+    {"raw_group_marker": "二五○", "pdf_text_line": 12772,
      "normalized_group_marker_candidate": None,
      "status": "raw_marker_preserved_numbering_interpretation_unresolved",
      "note": "文本层原样为二五○，后文另有明确二二五○（12906行）；不得仅凭顺序自动改写。"},
