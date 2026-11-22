@@ -2142,8 +2142,6 @@ SI_GROUP_ANOMALIES = [
      "status": "marker_seen_body_not_located_before_6150"},
     {"raw_group_marker": "六二○○", "pdf_text_line": 19046,
      "status": "marker_seen_body_not_located_before_short_raw_marker_620"},
-    {"raw_group_marker": "六二○○", "pdf_text_line": 19046,
-     "status": "marker_seen_body_not_located_before_short_raw_marker_620"},
     {"raw_group_marker": "六三二○", "pdf_text_line": None,
      "status": "unheaded_ten_entry_block_between_6310_and_6330"},
     {"raw_group_marker": "六三八○", "pdf_text_line": None,
