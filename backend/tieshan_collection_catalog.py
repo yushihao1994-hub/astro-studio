@@ -4970,6 +4970,133 @@ def get_hai_p0_image_evidence_manifest():
         "verification_status": "p0_evidence_manifest_prepared_scan_images_unavailable_for_target_pages",
     }
 
+
+def get_hai_p0_coordinate_breakdown():
+    """Split P0 anomaly spans into exact text-layer coordinates; image geometry stays unknown."""
+    marker = get_hai_marker_cluster_review_12080_12180()
+    table = get_hai_table_region_review_12440_12500()
+    numeric = get_hai_detached_numeric_review_12670_12680()
+    terminal = get_hai_terminal_table_review_12920_12990()
+    terminal_cases = {x["candidate_reference_only"]: x for x in terminal["cases"]}
+    blocks = [
+        {
+            "block_id": "hai_ocr_corrupt_12080_to_12170",
+            "coordinate_layers": [
+                {"layer": "group_marker_candidates", "items": [
+                    {"pdf_text_line": x["pdf_text_line"], "raw_text": x["raw_marker"],
+                     "normalized_candidate": x["normalized_candidate"],
+                     "interpretations": list(x["candidate_interpretations"]),
+                     "status": x["marker_status"], "image_coordinates": None}
+                    for x in marker["markers"]]},
+                {"layer": "shared_entry_boundary", "items": [
+                    {"conflict_id": x["conflict_id"],
+                     "left_marker_line": x["left_marker"]["pdf_text_line"],
+                     "right_marker_line": x["right_marker"]["pdf_text_line"],
+                     "shared_entry_pdf_lines": list(x["shared_entry_pdf_lines"]),
+                     "shared_entry_line_count": x["shared_entry_line_count"],
+                     "resolution": x["resolution"], "image_coordinates": None}
+                    for x in marker["boundary_conflicts"]]},
+                {"layer": "adjacent_boundary_context", "items": [
+                    dict(x) for x in marker["adjacent_context"]]},
+            ],
+            "coordinate_status": "exact_text_lines_only_page_column_geometry_unavailable",
+            "formal_index_eligible": False,
+        },
+        {
+            "block_id": "hai_split_layout_12440_to_12500",
+            "coordinate_layers": [
+                {"layer": "table_segment_columns", "items": [
+                    {"segment_id": x["segment_id"], "marker_pdf_line": x["marker_pdf_line"],
+                     "raw_marker": x["raw_marker"],
+                     "sequence_pdf_lines": list(x["sequence_pdf_lines"]),
+                     "sequence_labels": list(x["sequence_labels"]),
+                     "clause_pdf_lines": list(x["clause_pdf_lines"]),
+                     "gap_lines": list(x["gap_lines"]),
+                     "blank_separator_lines": list(x["blank_separator_lines"]),
+                     "sequence_clause_line_overlap": list(x["sequence_clause_line_overlap"]),
+                     "row_pairing_allowed": False, "image_coordinates": None,
+                     "status": x["source_status"]}
+                    for x in table["segments"]]},
+                {"layer": "duplicate_marker_conflict", "items": [
+                    dict(x) for x in table["conflicts"]]},
+            ],
+            "coordinate_status": "separate_text_stream_lines_located_column_geometry_unavailable",
+            "formal_index_eligible": False,
+        },
+        {
+            "block_id": "hai_split_numeric_column_12670",
+            "coordinate_layers": [
+                {"layer": "detached_numeric_cells_12670", "items": [
+                    dict(x) for x in numeric["group_12670"]["detached_numeric_cells"]]},
+                {"layer": "numbered_entry_rows_12670", "items": [
+                    {"pdf_text_line": line,
+                     "sequence_label_candidate": numeric["group_12670"]["sequence_labels_observed"][i],
+                     "row_pairing": "not_established", "image_coordinates": None}
+                    for i, line in enumerate(numeric["group_12670"]["entry_pdf_lines"])]},
+                {"layer": "adjacent_header_only_12680_context", "items": [{
+                    "block_id": numeric["group_12680"]["block_id"],
+                    "marker_pdf_line": numeric["group_12680"]["marker_pdf_line"],
+                    "detached_numeric_cells": [dict(x) for x in numeric["group_12680"]["detached_numeric_cells"]],
+                    "collection_header_pdf_line": numeric["group_12680"]["collection_header_pdf_line"],
+                    "entry_pdf_lines": list(numeric["group_12680"]["entry_pdf_lines"]),
+                    "context_only_outside_p0_block": True, "image_coordinates": None}]}],
+            "coordinate_status": "numeric_and_entry_text_lines_located_row_alignment_unverified",
+            "formal_index_eligible": False,
+        },
+        {
+            "block_id": "hai_table_cell_markers_12960_to_12980",
+            "coordinate_layers": [{"layer": "embedded_marker_table_segments", "items": [
+                {"candidate_reference_only": n,
+                 "marker_pdf_line": terminal_cases[n]["marker_pdf_line"],
+                 "raw_marker": terminal_cases[n]["raw_marker"],
+                 "marker_position": terminal_cases[n]["marker_position"],
+                 "table_segment": terminal_cases[n]["table_segment"],
+                 "table_entry_lines": list(terminal_cases[n]["table_entry_lines"]),
+                 "first_table_entry_lines": list(terminal_cases[n]["first_table_entry_lines"]),
+                 "following_table_entry_lines": list(terminal_cases[n]["following_table_entry_lines"]),
+                 "image_coordinates": None, "status": terminal_cases[n]["status"]}
+                for n in (12960, 12970, 12980)]}],
+            "coordinate_status": "embedded_text_lines_located_cell_boundaries_unavailable",
+            "formal_index_eligible": False,
+        },
+        {
+            "block_id": "hai_terminal_12990_and_unheaded_following_table",
+            "coordinate_layers": [{"layer": "terminal_marker_and_two_tables", "items": [{
+                "candidate_reference_only": 12990,
+                "marker_pdf_line": terminal_cases[12990]["marker_pdf_line"],
+                "raw_marker": terminal_cases[12990]["raw_marker"],
+                "normalized_candidate": terminal_cases[12990]["normalized_candidate"],
+                "normalization_status": terminal_cases[12990]["normalization_status"],
+                "first_table_entry_lines": list(terminal_cases[12990]["first_table_entry_lines"]),
+                "first_table_sequence_labels": list(terminal_cases[12990]["first_table_sequence_labels"]),
+                "following_table_entry_lines": list(terminal_cases[12990]["following_table_entry_lines"]),
+                "following_table_sequence_labels": list(terminal_cases[12990]["following_table_sequence_labels"]),
+                "following_table_marker": terminal_cases[12990]["following_table_marker"],
+                "image_coordinates": None, "status": terminal_cases[12990]["status"]}]}],
+            "coordinate_status": "terminal_text_lines_located_raw_marker_and_table_geometry_unverified",
+            "formal_index_eligible": False,
+        },
+    ]
+    return {
+        "manifest_version": "1.0",
+        "coordinate_system": "source_pdf_text_line_only",
+        "image_geometry_available": False,
+        "blocks": blocks,
+        "block_count": len(blocks),
+        "coordinate_item_count": sum(len(layer["items"]) for block in blocks for layer in block["coordinate_layers"]),
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "entry_count": 0,
+        "image_verified_group_count": 0,
+        "policy": [
+            "Text-line coordinates are not printed-page or scan-image coordinates.",
+            "Sequence-column lines and clause-column lines are not paired without page-layout evidence.",
+            "Embedded table markers remain unresolved until original cell boundaries are visible.",
+            "Adjacent context is explicitly labeled and is not silently merged into a P0 block.",
+        ],
+        "verification_status": "p0_text_coordinate_breakdown_prepared_image_geometry_not_verified",
+    }
+
 def get_hai_registry_integrity_audit():
     """Audit registry counts, identifiers, and PDF-line bounds without resolving source conflicts."""
     import re
@@ -5143,6 +5270,7 @@ def get_collection_branch_group_index(branch):
             "priority_conflict_review": get_hai_priority_conflict_review(),
             "unified_conflict_worklist": get_hai_unified_conflict_worklist(),
             "p0_image_evidence_manifest": get_hai_p0_image_evidence_manifest(),
+            "p0_coordinate_breakdown": get_hai_p0_coordinate_breakdown(),
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
