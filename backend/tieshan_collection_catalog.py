@@ -1649,6 +1649,18 @@ MAO_GROUP_INDEX = [
     _mao_group("四四七○", 16303, list(range(16304, 16314)), "table_rows_text_layer_located"),
     _mao_group("四四八○", 16317, list(range(16319, 16329)), "raw_marker_preserved_possible_short_form"),
     _mao_group("四四九○", 16330, list(range(16331, 16341))),
+    _mao_group("四四九○", 16342, list(range(16344, 16354)), "repeated_marker_second_occurrence", occurrence=2),
+    _mao_group("四五一○", 16359, list(range(16362, 16372)), "table_rows_text_layer_located"),
+    _mao_group("四五二○", 16385, list(range(16388, 16398)), "table_rows_text_layer_located"),
+    _mao_group("四五四○", 16407, list(range(16409, 16419)), "table_rows_text_layer_located"),
+    _mao_group("四五七○", 16451, list(range(16453, 16463))),
+    _mao_group("四五八○", 16464, list(range(16465, 16475))),
+    _mao_group("四五九○", 16476, list(range(16478, 16488))),
+    _mao_group("四六○", 16496, list(range(16498, 16508)), "raw_short_marker_preserved"),
+    _mao_group("四六一", 16509, list(range(16510, 16520)), "raw_short_marker_preserved"),
+    _mao_group("四六二", 16521, list(range(16523, 16533)), "raw_short_marker_preserved"),
+    _mao_group("四六三○", 16539, list(range(16539, 16549)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _mao_group("四六四○", 16551, list(range(16551, 16561)), "table_rows_text_layer_located_title_row_is_entry_1"),
 ]
 
 MAO_GROUP_ANOMALIES = [
@@ -1667,7 +1679,15 @@ MAO_GROUP_ANOMALIES = [
     {"raw_group_marker": "四四五○", "pdf_text_line": None,
      "status": "expected_group_marker_missing_between_4440_and_4460"},
     {"raw_group_marker": "四四八○", "pdf_text_line": 16317,
-     "status": "raw_marker_possible_4480_text_layer_short_form"}
+     "status": "raw_marker_possible_4480_text_layer_short_form"},
+    {"raw_group_marker": "四五○○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_between_4490_and_4510"},
+    {"raw_group_marker": "四五三○", "pdf_text_line": 16399,
+     "status": "marker_seen_body_not_located_before_4540"},
+    {"raw_group_marker": "四五五○", "pdf_text_line": 16420,
+     "status": "raw_short_marker_with_two_following_table_blocks_boundary_unresolved"},
+    {"raw_group_marker": "四五六○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_between_4550_and_4570"}
 ]
 
 MAO_UNASSIGNED_BLOCKS = [
@@ -1682,7 +1702,16 @@ MAO_UNASSIGNED_BLOCKS = [
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "mao_bp_collection_subsection",
      "pdf_text_lines": "16192-16193", "entry_count_candidate": 0,
-     "status": "internal_section_heading_not_branch_boundary"}
+     "status": "internal_section_heading_not_branch_boundary"},
+    {"block_id": "mao_unheaded_table_after_4510",
+     "pdf_text_lines": "16374-16383", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "mao_possible_4550_table_a",
+     "pdf_text_lines": "16422-16432", "entry_count_candidate": 10,
+     "status": "group_boundary_ambiguous_do_not_promote"},
+    {"block_id": "mao_possible_4560_table_b",
+     "pdf_text_lines": "16434-16444", "entry_count_candidate": 10,
+     "status": "group_boundary_ambiguous_do_not_promote"}
 ]
 
 
