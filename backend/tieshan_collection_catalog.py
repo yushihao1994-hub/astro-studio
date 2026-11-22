@@ -1099,7 +1099,6 @@ CHOU_GROUP_INDEX = [
             {"entry_sequence": 10, "pdf_text_line": 13074, "record_span": "13074-13076"}
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
-    },        "verification_status": "pdf_text_layer_only_image_check_pending"
     },
     {
         "collection": "丑", "raw_group_marker": "二三六○", "occurrence": 1,
