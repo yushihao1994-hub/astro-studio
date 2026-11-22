@@ -381,8 +381,8 @@ TRANSCRIPTION_CANDIDATES = [
         "status": "contact_sheet_reviewed_and_selected_pages_high_resolution_spot_checked_transcription_pending",
         "note": "本批将PDF第1—50页全部以160dpi渲染并制作两张25页联系表逐页检查；另对第6、7、8、10、11页进行高分辨率抽查。第6—9页可见金四局、水二局、木三局及相邻局式图表和起长生等说明；第10—11页可见庙旺得地利益、安紫府图及纳甲卦/干支组合密集表格；第16—50页版面由分类断语和组合条目构成，页面密度与分栏方式有变化。此轮只完成结构定位，不声称50页逐字转录；图表单元格、短标记和断语对应关系仍待逐格校录。",
         "algorithm_status": "not_implemented"
-    },,
-{
+    },
+    {
         "id": "QING-P4-STAR-VERSES-AND-NAYIN-FRAGMENTS",
         "topic": "安身命星诀、左辅右弼诀、天乙贵人诀及纳音干支条目",
         "pdf_page": 4,
