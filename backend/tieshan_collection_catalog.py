@@ -4150,7 +4150,7 @@ def get_hai_review_queue():
         lines = block.get("pdf_text_lines", [])
         if isinstance(lines, str):
             import re
-            numbers = [int(value) for value in re.findall(r"\\d+", lines)]
+            numbers = [int(value) for value in re.findall(r"\d+", lines)]
         else:
             numbers = [value for value in lines if isinstance(value, int)] if isinstance(lines, list) else []
         if numbers:
