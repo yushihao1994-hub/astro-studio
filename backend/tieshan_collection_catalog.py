@@ -1005,7 +1005,7 @@ COLLECTION_METADATA = {
     "子": {"printed_page_start": 138, "pdf_text_line_start": 10664, "pdf_text_line_end": 12570, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14174, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "寅": {"printed_page_start": 206, "pdf_text_line_start": 14175, "pdf_text_line_end": 15796, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "卯": {"printed_page_start": 240, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "卯": {"printed_page_start": 240, "pdf_text_line_start": 15797, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "巳": {"printed_page_start": 308, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "午": {"printed_page_start": 342, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1596,6 +1596,64 @@ YIN_UNASSIGNED_BLOCKS = [
 ]
 
 
+def _mao_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", occurrence=1):
+    return {
+        "collection": "卯",
+        "raw_group_marker": raw_marker,
+        "occurrence": occurrence,
+        "normalized_group_marker_candidate": None,
+        "group_header_pdf_line": header_line,
+        "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
+        "layout_status": layout_status,
+        "entry_count": len(entry_lines),
+        "entries": [{"entry_sequence": sequence, "pdf_text_line": line}
+                    for sequence, line in enumerate(entry_lines, 1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending",
+    }
+
+
+MAO_GROUP_INDEX = [
+    _mao_group("四○八○", 15791, list(range(15798, 15808)), "first_sequence_label_missing_after_branch_title"),
+    _mao_group("四○九○", 15809, list(range(15811, 15821))),
+    _mao_group("四一○○", 15822, list(range(15823, 15833))),
+    _mao_group("四一二○", 15836, list(range(15837, 15847))),
+    _mao_group("四一三○", 15858, list(range(15859, 15869))),
+    _mao_group("四一五○", 15884, list(range(15886, 15896))),
+    _mao_group("四一六○", 15897, list(range(15898, 15908))),
+    _mao_group("四一八○", 15924, list(range(15925, 15935))),
+    _mao_group("四一九○", 15936, list(range(15938, 15948))),
+    _mao_group("四二○○", 15949, list(range(15952, 15962))),
+    _mao_group("四二一○", 15963, list(range(15965, 15975))),
+    _mao_group("四二二○", 15976, list(range(15977, 15987))),
+    _mao_group("四二四○", 15992, list(range(15992, 16002)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _mao_group("四二五○", 16004, list(range(16004, 16014)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _mao_group("四二六○", 16016, list(range(16016, 16026)), "table_rows_text_layer_located_title_row_is_entry_1"),
+]
+
+MAO_GROUP_ANOMALIES = [
+    {"raw_group_marker": "四一一○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_before_unheaded_ten_entry_block"},
+    {"raw_group_marker": "四一四○", "pdf_text_line": 15872,
+     "status": "branch_header_seen_body_without_group_marker"},
+    {"raw_group_marker": "四一七○", "pdf_text_line": None,
+     "status": "expected_group_marker_missing_before_4180"},
+    {"raw_group_marker": "四二三○", "pdf_text_line": 15988,
+     "status": "marker_seen_body_not_located_before_4240"}
+]
+
+MAO_UNASSIGNED_BLOCKS = [
+    {"block_id": "mao_possible_4110_group_body",
+     "pdf_text_lines": "15847-15856", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "mao_possible_4140_group_body",
+     "pdf_text_lines": "15873-15882", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "mao_possible_4170_group_body",
+     "pdf_text_lines": "15913-15922", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"}
+]
+
+
 CHOU_UNASSIGNED_BLOCKS = [
     {"block_id": "chou_unheaded_entries_after_raw_marker_二五○",
      "pdf_text_lines": "12785-12797", "entry_count_candidate": 10,
@@ -1644,6 +1702,23 @@ CHOU_UNASSIGNED_BLOCKS = [
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
+    if branch == "卯":
+        return {
+            "edition": EDITION, "collection": "卯集",
+            "status": "partial_text_layer_index_image_verification_pending",
+            "group_count": len(MAO_GROUP_INDEX),
+            "entry_count": sum(len(group["entries"]) for group in MAO_GROUP_INDEX),
+            "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]])
+                       for group in MAO_GROUP_INDEX],
+            "group_anomalies": [dict(item) for item in MAO_GROUP_ANOMALIES],
+            "unassigned_blocks": [dict(item) for item in MAO_UNASSIGNED_BLOCKS],
+            "limitations": [
+                "本批仅索引卯集已定位组号的结构记录，不能代表卯集全部内容。",
+                "组号、序号及跨页字段仅依据PDF文本层，仍待扫描图像复核。",
+                "缺组标题与无组号十条块单独保存，不按编号顺序自动补造。",
+                "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
+            ]
+        }
     if branch == "寅":
         return {
             "edition": EDITION, "collection": "寅集",
@@ -1701,7 +1776,8 @@ def get_collection_progress():
             {"collection": branch, **dict(values), **(
                 ({"indexed_groups": len(GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in GROUP_INDEX)} if branch == "子" else
                  {"indexed_groups": len(CHOU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in CHOU_GROUP_INDEX)} if branch == "丑" else
-                 {"indexed_groups": len(YIN_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in YIN_GROUP_INDEX)} if branch == "寅" else {})
+                 {"indexed_groups": len(YIN_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in YIN_GROUP_INDEX)} if branch == "寅" else
+                 {"indexed_groups": len(MAO_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in MAO_GROUP_INDEX)} if branch == "卯" else {})
             )}
             for branch, values in COLLECTION_METADATA.items()
         ],
@@ -1716,7 +1792,7 @@ def get_collection_progress():
 
 
 def get_collection_sample(branch="子"):
-    if branch in ("丑", "寅"):
+    if branch in ("丑", "寅", "卯"):
         index = get_collection_branch_group_index(branch)
         return {
             "edition": EDITION,
