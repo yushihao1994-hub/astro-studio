@@ -1006,8 +1006,8 @@ COLLECTION_METADATA = {
     "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14174, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "寅": {"printed_page_start": 206, "pdf_text_line_start": 14175, "pdf_text_line_end": 15796, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "卯": {"printed_page_start": 240, "pdf_text_line_start": 15797, "pdf_text_line_end": 17108, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "辰": {"printed_page_start": 274, "pdf_text_line_start": 17109, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "巳": {"printed_page_start": 308, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "辰": {"printed_page_start": 274, "pdf_text_line_start": 17109, "pdf_text_line_end": 18702, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "巳": {"printed_page_start": 308, "pdf_text_line_start": 18706, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "午": {"printed_page_start": 342, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "未": {"printed_page_start": 376, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "申": {"printed_page_start": 410, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1925,6 +1925,18 @@ CHEN_GROUP_INDEX = [
     _chen_group("五八三○", 18461, list(range(18467,18477)), "table_rows_text_layer_located"),
     _chen_group("五八四○", 18479, list(range(18481,18491)), "table_rows_text_layer_located"),
     _chen_group("五八五○", 18492, list(range(18494,18504)), "table_rows_text_layer_located"),
+    _chen_group("五八七○", 18518, list(range(18520,18530))),
+    _chen_group("五八八○", 18531, list(range(18532,18542))),
+    _chen_group("五八九○", 18543, list(range(18547,18557)), "header_then_page_break_before_ten_entries"),
+    _chen_group("五九○○", 18558, list(range(18559,18569))),
+    _chen_group("五九一○", 18570, list(range(18576,18586)), "header_then_page_break_before_ten_entries"),
+    _chen_group("五九三○", 18591, list(range(18594,18604)), "table_rows_text_layer_located"),
+    _chen_group("五九四○", 18605, list(range(18608,18618)), "table_rows_text_layer_located"),
+    _chen_group("五九五○", 18619, list(range(18622,18632)), "table_rows_text_layer_located"),
+    _chen_group("五九六○", 18638, list(range(18640,18650)), "first_ten_entry_block_only"),
+    _chen_group("五九七○", 18661, list(range(18663,18673))),
+    _chen_group("五九八○", 18674, list(range(18681,18691)), "section_marker_between_header_and_entries"),
+    _chen_group("五九九○", 18691, list(range(18693,18703))),
 ]
 
 CHEN_GROUP_ANOMALIES = [
@@ -1947,7 +1959,11 @@ CHEN_GROUP_ANOMALIES = [
     {"raw_group_marker": "五六八○", "pdf_text_line": None,
      "status": "expected_group_marker_missing_before_unheaded_body_5690"},
     {"raw_group_marker": "五七一○", "pdf_text_line": 18215,
-     "status": "marker_seen_body_not_located_before_5720"}
+     "status": "marker_seen_body_not_located_before_5720"},
+    {"raw_group_marker": "五八六○", "pdf_text_line": None,
+     "status": "expected_marker_not_seen_before_unheaded_block"},
+    {"raw_group_marker": "五九二○", "pdf_text_line": 18587,
+     "status": "marker_seen_body_not_located_before_5930"}
 ]
 
 CHEN_UNASSIGNED_BLOCKS = [
@@ -1965,7 +1981,13 @@ CHEN_UNASSIGNED_BLOCKS = [
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "chen_unheaded_entries_after_internal_tiesuanpan",
      "pdf_text_lines": "18260-18269", "entry_count_candidate": 10,
-     "status": "internal_subsection_block_not_assigned_to_numbered_group"}
+     "status": "internal_subsection_block_not_assigned_to_numbered_group"},
+    {"block_id": "chen_possible_5860_body",
+     "pdf_text_lines": "18507-18516", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "chen_second_5960_like_block",
+     "pdf_text_lines": "18650-18659", "entry_count_candidate": 10,
+     "status": "repeated_sequence_block_without_group_marker_do_not_assign"}
 ]
 
 
