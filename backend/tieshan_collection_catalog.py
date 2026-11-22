@@ -4199,6 +4199,86 @@ def get_hai_review_queue():
     }
 
 
+
+def get_hai_priority_conflict_review():
+    """Create a block-level, evidence-gated review sheet for all registered Hai anomalies."""
+    import re
+
+    records = []
+    for block in HAI_UNASSIGNED_BLOCKS:
+        span = block.get("pdf_text_lines", "")
+        match = re.fullmatch(r"(\\d+)-(\\d+)", span) if isinstance(span, str) else None
+        if not match:
+            continue
+        start, end = int(match.group(1)), int(match.group(2))
+        block_id = block["block_id"]
+        status = block.get("status", "")
+        if block_id in {
+            "hai_ocr_corrupt_12080_to_12170",
+            "hai_split_layout_12440_to_12500",
+            "hai_split_numeric_column_12670",
+            "hai_table_cell_markers_12960_to_12980",
+            "hai_terminal_12990_and_unheaded_following_table",
+        }:
+            priority = "P0"
+        elif any(token in status for token in (
+            "missing", "no_reliable_group_header", "header_only",
+            "sequence_3_missing", "truncated", "conflict_unresolved",
+        )):
+            priority = "P1"
+        else:
+            priority = "P2"
+
+        if "ocr_corrupt" in block_id:
+            action = "逐个比对标记簇原字形、相邻序号栏与正文栏，先解决33829/33833共用行边界"
+            evidence = ["33724-33888原页连续扫描图", "33829与33833附近横向栏线及行距", "每个标记对应的独立十项边界"]
+        elif "split_layout_12440" in block_id:
+            action = "按页面和栏位拆分重复组号及跨栏续文，不把相邻表格自动合并"
+            evidence = ["34220-34337原页扫描图", "各表格的横向栏线和组号所在列", "重复组号是否为独立印刷标题"]
+        elif "12670" in block_id or "12680" in block_id:
+            action = "核对脱离正文的数字栏与十条断语的横向对应关系"
+            evidence = ["34570-34597原页扫描图", "数字栏与序号栏的列边界", "十条正文逐行对应及序号异常解释"]
+        elif "12960" in block_id:
+            action = "确认三个组号是否印在表格末行的独立单元格，还是OCR串入正文"
+            evidence = ["34953-35000原页扫描图", "34967、34980、34993所在行的单元格边界", "组号栏与条文栏的列对应"]
+        elif "12990" in block_id:
+            action = "分别核验终端组号及其后两段表格，第二段保持无组号状态直至有证据"
+            evidence = ["35001-35025原页扫描图", "35001组号原字形", "35003-35012与35015-35024两段表格边界"]
+        elif "unheaded" in block_id or "sequence_gap" in block_id:
+            action = "核对该段是否有被OCR漏掉或移位的组头；邻组顺序只作定位线索"
+            evidence = ["该段及前后相邻页扫描图", "独立组号标题的可见字形", "十项正文的实际版面边界"]
+        else:
+            action = "核对该异常块组头、正文范围及其与下一组的边界"
+            evidence = ["该行段原页扫描图", "组号标题与正文的版面关系", "相邻组边界及序号连续性"]
+        records.append({
+            "block_id": block_id,
+            "start_pdf_text_line": start,
+            "end_pdf_text_line": end,
+            "priority": priority,
+            "source_status": status,
+            "candidate_group_marker": block.get("normalized_group_marker_candidate"),
+            "neighbor_context": block.get("neighbor_context"),
+            "boundary_conflicts": block.get("boundary_conflicts", []),
+            "required_review_action": action,
+            "required_evidence": evidence,
+            "formal_index_eligible": False,
+            "status": "image_check_required",
+        })
+    records.sort(key=lambda item: (item["start_pdf_text_line"], item["end_pdf_text_line"], item["block_id"]))
+    return {
+        "record_count": len(records),
+        "priority_counts": {
+            level: sum(item["priority"] == level for item in records)
+            for level in ("P0", "P1", "P2")
+        },
+        "records": records,
+        "ordering": "ascending_pdf_text_line",
+        "interpretation": "priority_is_review_order_only_not_source_certainty",
+        "formal_index_eligible_count": 0,
+        "verification_status": "block_level_text_audit_only_page_image_verification_pending",
+    }
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
@@ -4227,6 +4307,7 @@ def get_collection_branch_group_index(branch):
             "full_crosswalk_audit": get_hai_full_crosswalk_audit(),
             "text_line_coverage_audit": get_hai_text_line_coverage_audit(),
             "review_queue": get_hai_review_queue(),
+            "priority_conflict_review": get_hai_priority_conflict_review(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
