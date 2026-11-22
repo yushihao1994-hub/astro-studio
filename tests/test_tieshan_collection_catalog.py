@@ -1603,6 +1603,40 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         tail = blocks["hai_unheaded_12360"]["neighbor_context"]
         self.assertEqual(tail["after_marker"]["raw"], "去集")
         self.assertIsNone(tail["after_marker"]["candidate"])
+    def test_hai_numbered_group_review_12810_12850_preserves_12830_header_ocr_conflict(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_numbered_group_review_12810_12850,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_numbered_group_review_12810_12850()
+        self.assertEqual(audit["source_pdf_text_lines"], "34777-34840")
+        self.assertEqual([item["candidate_reference_only"] for item in audit["cases"]],
+                         [12810, 12820, 12830, 12840, 12850])
+        expected = {
+            12810: ("一二八一〇", 34777, list(range(34779,34789))),
+            12820: ("一二八二〇", 34790, list(range(34791,34801))),
+            12830: ("一二八三〇", 34802, list(range(34806,34816))),
+            12840: ("一二八四〇", 34817, list(range(34818,34828))),
+            12850: ("一二八五〇", 34829, list(range(34831,34841))),
+        }
+        for item in audit["cases"]:
+            raw, marker_line, entry_lines = expected[item["candidate_reference_only"]]
+            self.assertEqual((item["raw_marker"], item["marker_pdf_line"]), (raw, marker_line))
+            self.assertEqual(item["entry_pdf_lines"], entry_lines)
+            self.assertEqual(item["entry_count_candidate"], 10)
+            self.assertEqual(item["sequence_labels"], list(range(1,11)))
+            self.assertFalse(item["formal_index_eligible"])
+        conflict = audit["cases"][2]
+        self.assertEqual(conflict["intervening_header_ocr"], "贵节说易全书")
+        self.assertEqual(conflict["header_pdf_line"], 34804)
+        self.assertEqual(conflict["header_conflict_resolution"], "unresolved_preserve_raw_ocr")
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["numbered_group_review_12810_12850"], audit)
+        self.assertEqual(api["group_count"], 0)
+
+
     def test_hai_12810_12990_terminal_audit_preserves_unheaded_and_table_markers(self):
         from backend.tieshan_collection_catalog import (
             HAI_12810_12990_TERMINAL_AUDIT, get_collection_branch_group_index,
