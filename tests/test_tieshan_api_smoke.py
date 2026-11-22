@@ -118,7 +118,7 @@ class IronPlateApiSmokeTests(unittest.TestCase):
                 self.assertEqual(response.status_code, 409)
                 self.assertEqual(response.get_json()["code"], "KAOKE_NOT_VERIFIED")
 
-    def test_finance_and_marriage_endpoints_pass_verified_kaoke_to_analyzer(self):
+    def test_finance_and_marriage_endpoints_reject_client_forged_verified_kaoke(self):
         fake_report = {
             "summary": "专项测试摘要",
             "sections": [
@@ -153,13 +153,11 @@ class IronPlateApiSmokeTests(unittest.TestCase):
                             "iron_plate_engine": {"kaoke_result": kaoke},
                         },
                     )
-                self.assertEqual(response.status_code, 200, response.get_json())
+                self.assertEqual(response.status_code, 409, response.get_json())
                 body = response.get_json()
-                self.assertTrue(body["ok"])
-                self.assertEqual(body["topic"], topic)
-                self.assertEqual(body["analysis_type"], label)
-                self.assertEqual(len(body["analysis"]["sections"]), 6)
-                mocked.assert_called_once_with(topic, pillars, {}, "男", {}, kaoke)
+                self.assertFalse(body["ok"])
+                self.assertEqual(body["code"], "KAOKE_NOT_VERIFIED")
+                mocked.assert_not_called()
 
     def test_hai_collection_endpoint_does_not_claim_unverified_groups(self):
         response = self.client.get("/api/tieshan/collections/亥/groups")
