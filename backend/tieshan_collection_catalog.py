@@ -1118,7 +1118,7 @@ def get_collection_progress():
         "limitations": [
             "目录页码定位不代表正文已经转录。",
             "子集索引是PDF文本层结构记录，仍待扫描图像核验。",
-            "丑集已完成开头十组、100条序号结构索引；其余组尚未整理，扫描图像核验待完成。",
+            "丑集正式组号索引与异常组号、无组号块分开保存；扫描图像核验待完成。",
             "PDF文本层行号不是印刷页码；所有组号与条目结构仍需逐项核对。",
             "未核实的组号、对应数和条文不生成、不补齐。"
         ]
@@ -1126,6 +1126,19 @@ def get_collection_progress():
 
 
 def get_collection_sample(branch="子"):
+    if branch == "丑":
+        index = get_collection_branch_group_index(branch)
+        return {
+            "edition": EDITION,
+            "collection": "丑集",
+            "status": index["status"],
+            "printed_page_start": COLLECTION_METADATA[branch].get("printed_page_start"),
+            "entry_count": index["entry_count"],
+            "entries": [],
+            "group_index": index,
+            "field_guide": dict(FIELD_GUIDE),
+            "limitations": list(index["limitations"]),
+        }
     if branch != "子":
         details = dict(COLLECTION_METADATA.get(branch, {}))
         return {
