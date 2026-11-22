@@ -6,7 +6,7 @@ SYSTEM_NAME = "铁板神数推演基础引擎"
 ENGINE_VERSION = "0.3.0-kunji-reference"
 PRIMARY_REFERENCE = "康节说易全书·铁板神数，学林出版社2003年陈明点校本（现代异本）"
 QING_REFERENCE_STATUS = "清刻虚白庐藏本及秘钞密码表全文尚未取得，不能标记为已验证"
-from backend.tieshan_kunji import get_kunji_reference
+from tieshan_kunji import get_kunji_reference
 KUNJI_REFERENCE = get_kunji_reference()
 WORKFLOW = [
     {"key":"birth_record","name":"出生资料与历法归档","status":"verified","description":"保存原始历法输入、换算公历日期、农历日期、地点与时区。"},
