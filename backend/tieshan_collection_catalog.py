@@ -1111,6 +1111,18 @@ HAI_GROUP_MARKER_CANDIDATES = [
     {"raw_group_marker": "一九九〇", "pdf_text_line": 35001, "normalized_group_marker_candidate": None, "status": "possible_12990_marker_ocr_corrupt"}
 ]
 
+# 亥集文本层中尚不能可靠分组的区段。仅标出待处理范围，不推断组号或条数。
+HAI_UNASSIGNED_BLOCKS = [
+    {"block_id": "hai_ocr_corrupt_12080_to_12170", "pdf_text_lines": "33724-33887", "status": "marker_and_page_header_ocr_corrupt_boundary_unresolved"},
+    {"block_id": "hai_missing_or_unheaded_12240_to_12260", "pdf_text_lines": "33952-33984", "status": "ten_entry_blocks_visible_but_group_headers_missing_or_unreliable"},
+    {"block_id": "hai_unheaded_12300_to_12380", "pdf_text_lines": "34026-34150", "status": "multiple_ten_entry_blocks_without_reliable_group_headers"},
+    {"block_id": "hai_split_layout_12440_to_12500", "pdf_text_lines": "34220-34337", "status": "wrapped_columns_and_duplicate_markers_require_page_layout"},
+    {"block_id": "hai_split_numeric_column_12670_to_12680", "pdf_text_lines": "34570-34608", "status": "numeric_column_extracted_separately_from_entry_text"},
+    {"block_id": "hai_missing_header_12770_and_12810", "pdf_text_lines": "34721-34776", "status": "header_or_group_marker_not_reliably_extracted"},
+    {"block_id": "hai_header_conflict_12860_to_12920", "pdf_text_lines": "34842-34926", "status": "collection_header_ocr_conflict_and_missing_group_marker"},
+    {"block_id": "hai_table_cell_markers_12960_to_12990", "pdf_text_lines": "34967-35025", "status": "group_markers_embedded_in_table_cells_end_of_pdf_text"}
+]
+
 # 亥集开头可明确定位的十条序号行。只登记行号，不复制条文；组号/组界仍需扫描图像复核。
 HAI_LAYOUT_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二〇〇〇", "group_marker_pdf_line": 33598, "entry_pdf_lines": list(range(33600, 33610)), "entry_count_candidate": 10, "status": "ten_sequence_rows_located_text_layer_only"},
@@ -3640,10 +3652,7 @@ def get_collection_branch_group_index(branch):
             "group_marker_candidate_count": len(HAI_GROUP_MARKER_CANDIDATES),
             "layout_group_candidates": [dict(item, entry_pdf_lines=list(item["entry_pdf_lines"])) for item in HAI_LAYOUT_GROUP_CANDIDATES],
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
-            "unassigned_blocks": [
-                {"block_id": "hai_text_layer_segment", "pdf_text_lines": "33598-35025",
-                 "status": "entry_boundaries_and_ten_entry_alignment_not_yet_systematically_verified"}
-            ],
+            "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
                 "已登记88处原始组号OCR候选，其中70处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
