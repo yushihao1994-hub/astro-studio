@@ -4565,8 +4565,8 @@ def get_hai_header_exception_review_12710_12770():
                 "entry_count_candidate": len(m12770["entry_lines"]),
                 "intervening_header_ocr": e12770.get("intervening_header_ocr"),
                 "intervening_header_pdf_line": e12770.get("intervening_header_pdf_line"),
-                "next_marker_raw": e12770["next_marker"],
-                "next_marker_pdf_line": e12770["next_marker_line"],
+                "next_marker_raw": e12770["next_group_marker_raw"],
+                "next_marker_pdf_line": e12770["next_group_marker_pdf_line"],
                 "status": m12770["status"],
                 "formal_index_eligible": False,
                 "required_evidence": [
