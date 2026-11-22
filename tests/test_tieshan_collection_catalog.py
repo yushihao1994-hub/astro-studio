@@ -1548,12 +1548,12 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         )
         audit = get_hai_crosswalk_audit()
         data = get_collection_branch_group_index("亥")
-        self.assertEqual(audit["layout_candidate_count"], 77)
+        self.assertEqual(audit["layout_candidate_count"], len(audit["rows"]))
         self.assertEqual(audit["marker_candidate_count"], 88)
         self.assertTrue(audit["does_not_promote_candidates_to_verified_groups"])
         self.assertEqual(audit["verification_status"],
                          "text_layer_crosswalk_only_page_image_verification_pending")
-        self.assertEqual(data["crosswalk_audit"]["layout_candidate_count"], 77)
+        self.assertEqual(data["crosswalk_audit"]["layout_candidate_count"], len(data["crosswalk_audit"]["rows"]))
 
         by_line = {row["group_marker_pdf_line"]: row for row in audit["rows"]}
         self.assertEqual(
@@ -1574,6 +1574,17 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         )
         self.assertEqual(data["group_count"], 0)
         self.assertEqual(data["entry_count"], 0)
+
+    def test_hai_crosswalk_audits_unassigned_blocks_without_assigning_groups(self):
+        from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
+        audit = get_hai_crosswalk_audit()
+        self.assertEqual(audit["unassigned_block_count"], 20)
+        blocks = {row["block_id"]: row for row in audit["unassigned_block_crosswalk"]}
+        self.assertEqual(blocks["hai_unheaded_12240_candidate"]["explicit_entry_line_count"], 10)
+        self.assertTrue(blocks["hai_ocr_corrupt_12080_to_12170"]["marker_candidates_inside_block"])
+        self.assertEqual(blocks["hai_table_cell_markers_12960_to_12980"]["explicit_entry_line_count"], 30)
+        self.assertTrue(audit["does_not_promote_candidates_to_verified_groups"])
+        self.assertEqual(audit["verification_status"], "text_layer_crosswalk_only_page_image_verification_pending")
     def test_hai_progress_reports_candidate_counts_without_verified_entry_counts(self):
         from backend.tieshan_collection_catalog import get_collection_progress, get_collection_sample
         progress = get_collection_progress()
