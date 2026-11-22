@@ -484,8 +484,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][8]["indexed_entries"], 590)
         self.assertEqual(data["collections"][8]["pdf_text_line_start"], 23449)
         self.assertEqual(data["collections"][9]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][9]["indexed_groups"], 27)
-        self.assertEqual(data["collections"][9]["indexed_entries"], 270)
+        self.assertEqual(data["collections"][9]["indexed_groups"], 47)
+        self.assertEqual(data["collections"][9]["indexed_entries"], 470)
         self.assertEqual(data["collections"][9]["pdf_text_line_start"], 25096)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -1254,5 +1254,26 @@ class ShenAndYouCollectionTailTests(unittest.TestCase):
                          ["一○○五○","一○○六○","一○○七○","一九○九○","一○○一○","一○○一○○",
                           "一○二○","一○三○","一○四○","一○○五○","一○○六○","一○○七○","一○○八○",
                           "一○○九○","一○一○○","一○一一○","一○一二○","一○一三○","一○一四○",
-                          "一○一五○","一○一六○","一○一七○","一○一八○","一○一九○","一○二○○","一○二一○","一○二二○"])
+                          "一○一五○","一○一六○","一○一七○","一○一八○","一○一九○","一○二○○","一○二一○","一○三三○","一○三四○","一○三五○","一○三六○",
+                          "一○三七○","一○三八○","一○三九○","一○四○○","一○四一○","一○四二○",
+                          "一○四三○","一○四四○","一○四五○","一○四六○","一○四八○","一○四九○",
+                          "一○五○○","一○五一○","一○五二○","一○五三○","一○五四○"])
         self.assertEqual(get_collection_sample("酉")["group_index"]["group_count"], 27)
+
+
+class YouCollectionIndexThrough10540Tests(unittest.TestCase):
+    def test_you_groups_through_10540_and_10220_gap(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("酉")
+        expected = [("一○三三○",25547),("一○三四○",25559),("一○三五○",25572),
+                    ("一○三六○",25588),("一○三七○",25599),("一○三八○",25611),
+                    ("一○三九○",25629),("一○四○○",25642),("一○四一○",25654),
+                    ("一○四二○",25668),("一○四三○",25679),("一○四四○",25691),
+                    ("一○四五○",25706),("一○四六○",25718),("一○四八○",25733),
+                    ("一○四九○",25746),("一○五○○",25758),("一○五一○",25773),
+                    ("一○五二○",25784),("一○五三○",25796),("一○五四○",25812)]
+        for marker,line in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+            self.assertEqual(group["entry_count"], 10)
+        self.assertTrue(any(x["raw_group_marker"] == "一○四七○" for x in data["group_anomalies"]))
