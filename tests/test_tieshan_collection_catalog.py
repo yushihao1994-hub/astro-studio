@@ -50,7 +50,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_group_index_contains_seventy_five_groups_and_seven_hundred_forty_seven_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 82)
+        self.assertEqual(data["group_count"], 75)
         self.assertEqual(data["entry_count"], 747)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
