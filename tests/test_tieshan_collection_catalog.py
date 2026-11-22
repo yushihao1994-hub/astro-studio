@@ -1588,6 +1588,21 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         conflict = block["boundary_conflicts"][0]
         self.assertEqual(conflict["shared_entry_pdf_lines"], list(range(33834, 33845)))
         self.assertEqual(block["status"], "marker_cluster_and_entry_boundaries_conflict_page_layout_required")
+    def test_hai_unheaded_blocks_keep_neighbor_order_as_hypothesis_only(self):
+        from backend.tieshan_collection_catalog import HAI_UNASSIGNED_BLOCKS
+        blocks = {item["block_id"]: item for item in HAI_UNASSIGNED_BLOCKS}
+        first = blocks["hai_unheaded_12240_candidate"]["neighbor_context"]
+        self.assertEqual(first["before_marker"]["candidate"], 12230)
+        self.assertEqual(first["after_marker"]["candidate"], 12270)
+        self.assertEqual(first["possible_slot"], 12240)
+        self.assertEqual(first["assignment"], "not_assigned_order_only")
+        ambiguous = blocks["hai_unheaded_12320_or_12330"]["neighbor_context"]
+        self.assertEqual(len(ambiguous["sequence_rows"]), 10)
+        self.assertEqual(len(ambiguous["continuation_rows"]), 3)
+        self.assertEqual(ambiguous["assignment"], "ambiguous_extra_ten_entry_block_not_assignable_by_order")
+        tail = blocks["hai_unheaded_12360"]["neighbor_context"]
+        self.assertEqual(tail["after_marker"]["raw"], "去集")
+        self.assertIsNone(tail["after_marker"]["candidate"])
     def test_hai_crosswalk_audits_unassigned_blocks_without_assigning_groups(self):
         from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
         audit = get_hai_crosswalk_audit()
