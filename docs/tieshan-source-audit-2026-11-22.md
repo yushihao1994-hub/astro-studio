@@ -916,3 +916,6 @@ GitHub Actions 的 python-tests.yml 配置为 push 到 backend/tests 路径时�
 2. 新增12860—12910审计将12890页眉字段只读取 header_ocr；源审计对12890使用 intervening_header_ocr，导致该项断言得到None。
 
 本轮修正上述字段映射，并为12770的下一组行号、页眉OCR及页眉行号增加回归断言。此前失败运行链接：https://github.com/yushihao1994-hub/astro-studio/actions/runs/45017960987。修复是否生效以本轮后续push工作流结果为准。
+
+
+第二十六轮修正补充：第一次字段修复根据异常块中相邻字段名误用了 next_group_marker_pdf_line；CI复测显示源字段实际为 next_marker_line。本次改为读取源数据真实键名。上一次修复运行链接：https://github.com/yushihao1994-hub/astro-studio/actions/runs/45018141223，结果仍失败；本次提交后重新检查工作流。
