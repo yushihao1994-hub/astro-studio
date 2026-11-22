@@ -3237,9 +3237,9 @@ SHEN_UNASSIGNED_BLOCKS = [
 ]
 
 
-def _you_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending"):
+def _you_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", occurrence=1):
     return {
-        "collection": "酉", "raw_group_marker": raw_marker, "occurrence": 1,
+        "collection": "酉", "raw_group_marker": raw_marker, "occurrence": occurrence,
         "normalized_group_marker_candidate": None,
         "group_header_pdf_line": header_line,
         "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
@@ -3254,11 +3254,76 @@ YOU_GROUP_INDEX = [
     _you_group("一○○五○", 25146, list(range(25147,25157)), "table_rows_text_layer_located"),
     _you_group("一○○六○", 25171, list(range(25173,25183)), "table_rows_text_layer_located"),
     _you_group("一○○七○", 25183, list(range(25186,25196)), "header_age_line_before_ten_entries"),
+    {
+        "collection": "酉", "raw_group_marker": "一九○九○", "occurrence": 1,
+        "normalized_group_marker_candidate": "一○○九○", "group_header_pdf_line": 25204,
+        "pdf_text_lines": "25204-25218", "layout_status": "raw_ocr_marker_candidate_10090",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(25209,25219),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○○一○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25220,
+        "pdf_text_lines": "25220-25231", "layout_status": "ten_entries_text_layer_located",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(25222,25232),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○○一○○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25233,
+        "pdf_text_lines": "25233-25243", "layout_status": "nonstandard_raw_marker_ten_entries",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(25234,25244),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○二○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25251,
+        "pdf_text_lines": "25251-25261", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "source_row_line": 25251, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○三○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25263,
+        "pdf_text_lines": "25263-25273", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "source_row_line": 25263, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "酉", "raw_group_marker": "一○四○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 25274,
+        "pdf_text_lines": "25274-25285", "layout_status": "single_table_row_contains_ten_clause_cells",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "source_row_line": 25274, "cell_sequence": n} for n in range(1,11)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _you_group("一○○五○", 25301, list(range(25303,25313)), "table_rows_text_layer_located", occurrence=2),
+    _you_group("一○○六○", 25314, list(range(25315,25325)), occurrence=2),
+    _you_group("一○○七○", 25326, list(range(25330,25340)), occurrence=2),
+    _you_group("一○○八○", 25341, list(range(25342,25353))),
+    _you_group("一○○九○", 25354, list(range(25356,25368))),
+    _you_group("一○一○○", 25369, list(range(25377,25388))),
+    _you_group("一○一一○", 25389, list(range(25390,25401))),
+    _you_group("一○一二○", 25401, list(range(25402,25413))),
+    _you_group("一○一三○", 25418, list(range(25419,25430))),
+    _you_group("一○一四○", 25430, list(range(25431,25450))),
+    _you_group("一○一五○", 25455, list(range(25457,25467))),
+    _you_group("一○一六○", 25468, list(range(25470,25481))),
+    _you_group("一○一七○", 25482, list(range(25484,25495))),
+    _you_group("一○一八○", 25495, list(range(25500,25510))),
+    _you_group("一○一九○", 25510, list(range(25511,25521))),
+    _you_group("一○二○○", 25522, list(range(25523,25533))),
+    _you_group("一○二一○", 25534, list(range(25536,25546))),
+    _you_group("一○二二○", 25547, list(range(25548,25558))),
 ]
 
 YOU_GROUP_ANOMALIES = [
-    {"raw_group_marker": "一○○一○", "pdf_text_line": 25220, "status": "possible_raw_group_marker_10010"},
-    {"raw_group_marker": "一○○一○○", "pdf_text_line": 25233, "status": "raw_marker_length_variant_pending_image_check"}
+    {"raw_group_marker": "一○○八○", "pdf_text_line": 25196, "status": "marker_seen_body_not_located_before_10090"}
 ]
 YOU_UNASSIGNED_BLOCKS = [
     {"block_id": "you_unheaded_opening_group_before_10050", "pdf_text_lines": "25098-25118", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
