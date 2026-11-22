@@ -1971,6 +1971,22 @@ def get_collection_branch_group_index(branch):
             "status": "partial_text_layer_index_image_verification_pending",
             "group_count": len(CHEN_GROUP_INDEX),
             "entry_count": sum(len(group["entries"]) for group in CHEN_GROUP_INDEX),
+            "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]]) for group in CHEN_GROUP_INDEX],
+            "group_anomalies": [dict(item) for item in CHEN_GROUP_ANOMALIES],
+            "unassigned_blocks": [dict(item) for item in CHEN_UNASSIGNED_BLOCKS],
+            "limitations": [
+                "辰集目前仅完成已定位组号的结构索引，不代表全篇完成。",
+                "仅依据PDF文本层保存组号、序号与跨行范围，扫描图像逐字核验待完成。",
+                "缺组标题、无组号块和多行表格单独保存，不自动补造。",
+                "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
+            ]
+        }
+    if branch == "辰":
+        return {
+            "edition": EDITION, "collection": "辰集",
+            "status": "partial_text_layer_index_image_verification_pending",
+            "group_count": len(CHEN_GROUP_INDEX),
+            "entry_count": sum(len(group["entries"]) for group in CHEN_GROUP_INDEX),
             "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]])
                        for group in CHEN_GROUP_INDEX],
             "group_anomalies": [dict(item) for item in CHEN_GROUP_ANOMALIES],
