@@ -46,7 +46,6 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertEqual(source["scan_page_count"],665)
         self.assertEqual(source["reviewed_pdf_pages"],350)
         self.assertIn({"pdf_pages":[151,250],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
-        self.assertIn("250/665",source["review_coverage"])
         self.assertIn({"pdf_pages":[251,350],"review_status":"layout_and_section_continuity_reviewed_transcription_pending"},source["image_reviewed_ranges"])
         self.assertIn("350/665",source["review_coverage"])
         self.assertIn("清刻",PRIMARY_REFERENCE)
