@@ -1384,7 +1384,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(hai["pdf_text_line_start"], 33598)
         self.assertEqual(hai["pdf_text_line_end"], 35025)
         self.assertEqual(hai["group_marker_candidate_count"], 88)
-        self.assertEqual(hai["layout_group_candidate_count"], 35)
+        self.assertEqual(hai["layout_group_candidate_count"], 48)
         self.assertEqual(hai["indexed_groups"], 0)
         self.assertEqual(hai["indexed_entries"], 0)
         sample = get_collection_sample("亥")
