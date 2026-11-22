@@ -1255,6 +1255,69 @@ HAI_LAYOUT_GROUP_CANDIDATES = [
     {"raw_group_marker": "一二七六〇", "group_marker_pdf_line": 34706, "entry_pdf_lines": [34707, 34708, 34709, 34710, 34711, 34713, 34714, 34715, 34717, 34718], "entry_continuation_pdf_lines": [34712, 34716, 34719], "entry_count_candidate": 10, "status": "wrapped_entry_rows_located_text_layer_only"},
 ]
 
+def get_hai_crosswalk_audit():
+    """Cross-check OCR marker occurrences against the 77 text-layout candidates.
+
+    Exact PDF text-line equality is the only automatic join key. A match is
+    still a text-layer observation, never a page-image verification.
+    """
+    rows = []
+    for layout_index, layout in enumerate(HAI_LAYOUT_GROUP_CANDIDATES, 1):
+        marker_hits = [
+            marker for marker in HAI_GROUP_MARKER_CANDIDATES
+            if marker["pdf_text_line"] == layout["group_marker_pdf_line"]
+        ]
+        entry_lines = set(layout["entry_pdf_lines"])
+        entry_lines.update(layout.get("entry_continuation_pdf_lines", []))
+        overlaps = []
+        for other_index, other in enumerate(HAI_LAYOUT_GROUP_CANDIDATES, 1):
+            if other_index == layout_index:
+                continue
+            other_lines = set(other["entry_pdf_lines"])
+            other_lines.update(other.get("entry_continuation_pdf_lines", []))
+            shared = sorted(entry_lines.intersection(other_lines))
+            if shared:
+                overlaps.append({
+                    "layout_candidate_index": other_index,
+                    "raw_group_marker": other["raw_group_marker"],
+                    "shared_entry_pdf_lines": shared,
+                })
+        if len(marker_hits) > 1:
+            join_status = "multiple_marker_occurrences_at_same_line_review_required"
+        elif not marker_hits:
+            join_status = "no_exact_marker_line_match"
+        elif marker_hits[0]["raw_group_marker"] != layout["raw_group_marker"]:
+            join_status = "raw_marker_text_mismatch_at_exact_line"
+        else:
+            join_status = "exact_text_line_and_raw_marker_match_image_check_pending"
+        rows.append({
+            "layout_candidate_index": layout_index,
+            "raw_group_marker": layout["raw_group_marker"],
+            "group_marker_pdf_line": layout["group_marker_pdf_line"],
+            "entry_pdf_lines": list(layout["entry_pdf_lines"]),
+            "entry_continuation_pdf_lines": list(layout.get("entry_continuation_pdf_lines", [])),
+            "marker_candidate_hits": [dict(item) for item in marker_hits],
+            "marker_join_status": join_status,
+            "entry_line_overlaps": overlaps,
+            "layout_status": layout["status"],
+            "verification_status": "text_layer_only_page_image_not_verified",
+        })
+    status_counts = {}
+    for row in rows:
+        status_counts[row["marker_join_status"]] = status_counts.get(row["marker_join_status"], 0) + 1
+    overlap_rows = [row for row in rows if row["entry_line_overlaps"]]
+    return {
+        "method": "exact_pdf_text_line_match_plus_entry_line_overlap_detection",
+        "layout_candidate_count": len(rows),
+        "marker_candidate_count": len(HAI_GROUP_MARKER_CANDIDATES),
+        "exact_line_join_status_counts": status_counts,
+        "entry_overlap_candidate_count": len(overlap_rows),
+        "entry_overlap_candidates": overlap_rows,
+        "rows": rows,
+        "verification_status": "text_layer_crosswalk_only_page_image_verification_pending",
+        "does_not_promote_candidates_to_verified_groups": True,
+    }
+
 # 丑集首批结构索引：仅记录分组标题、序号和PDF文本行，不复制条文正文。
 # 组号保留PDF文本层的原始圆圈字符“○”，不擅自统一为“〇”。
 def _chou_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", occurrence=1):
@@ -3768,6 +3831,7 @@ def get_collection_branch_group_index(branch):
             "expected_group_sequence_gap_candidate_count": len(HAI_GROUP_SEQUENCE_GAP_CANDIDATES),
             "layout_group_candidates": [dict(item, entry_pdf_lines=list(item["entry_pdf_lines"])) for item in HAI_LAYOUT_GROUP_CANDIDATES],
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
+            "crosswalk_audit": get_hai_crosswalk_audit(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "partial_table_group_candidate_count": len(HAI_PARTIAL_TABLE_GROUP_CANDIDATES),
