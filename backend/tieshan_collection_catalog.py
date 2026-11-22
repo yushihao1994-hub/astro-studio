@@ -1380,6 +1380,17 @@ YIN_GROUP_INDEX = [
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
     _yin_group("三○七○", 14274, [14275,14277,14278,14279,14280,14281,14283,14285,14286,14287], "multi_line_age_clause_spans"),
+    _yin_group("三○九○", 14293, list(range(14295, 14305))),
+    _yin_group("三一○○", 14306, list(range(14307, 14317))),
+    _yin_group("三一一○", 14318, list(range(14320, 14330))),
+    _yin_group("三一二○", 14343, list(range(14345, 14355))),
+    _yin_group("三一三○", 14356, list(range(14357, 14367))),
+    _yin_group("三一五○", 14372, list(range(14372, 14382)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _yin_group("三一六○", 14384, list(range(14384, 14394)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _yin_group("三一七○", 14396, list(range(14396, 14406)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _yin_group("三一八○", 14413, list(range(14415, 14425))),
+    _yin_group("三一九○", 14426, list(range(14427, 14437))),
+    _yin_group("三二○○", 14438, list(range(14440, 14450))),
 ]
 
 YIN_GROUP_ANOMALIES = [
@@ -1389,7 +1400,9 @@ YIN_GROUP_ANOMALIES = [
     {"raw_group_marker": "三○五○", "pdf_text_line": 14243,
      "status": "group_marker_not_seen_possible_unheaded_group_before_3060"},
     {"raw_group_marker": "三○八○", "pdf_text_line": 14289,
-     "status": "marker_seen_body_not_located_before_3090"}
+     "status": "marker_seen_body_not_located_before_3090"},
+    {"raw_group_marker": "三一四○", "pdf_text_line": 14368,
+     "status": "marker_seen_body_not_located_before_3150"}
 ]
 
 YIN_UNASSIGNED_BLOCKS = [
@@ -1398,6 +1411,9 @@ YIN_UNASSIGNED_BLOCKS = [
      "status": "separate_section_heading_shiji_not_assigned_to_numbered_group"},
     {"block_id": "yin_possible_3050_group_body",
      "pdf_text_lines": "14245-14255", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "yin_unheaded_entries_before_3120",
+     "pdf_text_lines": "14331-14341", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign"}
 ]
 
