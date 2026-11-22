@@ -99,7 +99,7 @@ Nayona 书目/目录页面可直接读取到完整十二集目录：子138、丑
 
 ### 工程状态调整
 
-`COLLECTION_METADATA["亥"]` 已登记文本层定位范围 33598—35025，并将状态由 `not_transcribed` 调整为 `source_text_layer_located_group_index_pending`。接口仍返回 0 个已索引组、0 条已索引条目，避免把“找到文本层”误报为“完成结构索引”。下一步应先逐段提取并登记原始组号、原始 OCR、候选规范号、文本行范围和异常，再做图像复核；不得补齐缺失组号。
+`COLLECTION_METADATA["亥"]` 已登记文本层定位范围 33598—35025，并将状态由 `not_transcribed` 调整为 `source_text_layer_group_marker_candidates_indexed_entry_mapping_pending`。接口仍返回 0 个已索引组、0 条已索引条目，避免把“找到文本层”误报为“完成结构索引”。下一步应先逐段提取并登记原始组号、原始 OCR、候选规范号、文本行范围和异常，再做图像复核；不得补齐缺失组号。
 
 
 ### 亥集组号候选登记（本轮继续）
