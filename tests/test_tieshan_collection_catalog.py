@@ -784,8 +784,8 @@ class ChenCollectionIndexTests(unittest.TestCase):
         self.assertTrue(any(x["raw_group_marker"] == "五○五○" for x in data["group_anomalies"]))
         self.assertTrue(any(x["raw_group_marker"] == "五二○○" for x in data["group_anomalies"]))
         blocks = {x["block_id"] for x in data["unassigned_blocks"]}
-        self.assertIn("chen_unheaded_entries_before_5030", blocks)
-        self.assertIn("chen_second_table_after_5060", blocks)
+        self.assertIn("chen_unheaded_ten_entries_before_5030", blocks)
+        self.assertIn("chen_unheaded_ten_entries_before_5330", blocks)
         progress = get_collection_progress()
         chen = next(x for x in progress["collections"] if x["collection"] == "辰")
-        self.assertEqual((chen["indexed_groups"], chen["indexed_entries"]), (20, 199))
+        self.assertEqual((chen["indexed_groups"], chen["indexed_entries"]), (44, 439))
