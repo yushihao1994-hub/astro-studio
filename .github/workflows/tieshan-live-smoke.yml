@@ -1,0 +1,83 @@
+name: Iron Plate live backend smoke check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */2 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - '.github/workflows/tieshan-live-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  live-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check production API health, calendar, and pillars
+        env:
+          API_BASE: https://astro-studio-api.onrender.com
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import time
+          import urllib.error
+          import urllib.request
+
+          base = os.environ["API_BASE"].rstrip("/")
+
+          def request(path, method="GET", payload=None):
+              data = None if payload is None else json.dumps(payload).encode()
+              headers = {"Content-Type": "application/json"} if data else {}
+              req = urllib.request.Request(base + path, data=data, headers=headers, method=method)
+              last_error = None
+              for attempt in range(6):
+                  try:
+                      with urllib.request.urlopen(req, timeout=35) as response:
+                          body = json.loads(response.read().decode())
+                          if response.status != 200:
+                              raise RuntimeError(f"{path}: HTTP {response.status}")
+                          return body
+                  except Exception as exc:
+                      last_error = exc
+                      if attempt < 5:
+                          time.sleep(10)
+              raise RuntimeError(f"{path}: {type(last_error).__name__}: {last_error}")
+
+          health = request("/api/health")
+          assert health.get("ok") is True, health
+          assert health.get("service") == "astro-studio-api", health
+          print("PASS health:", health)
+
+          calendar = request("/api/tieshan/calendar/months?year=2024")
+          assert calendar.get("ok") is True and calendar.get("months"), calendar
+          print("PASS lunar calendar: 2024 month options =", len(calendar["months"]))
+
+          pillars = request(
+              "/api/tieshan/pillars",
+              method="POST",
+              payload={
+                  "birth_year": 1994,
+                  "birth_month": 5,
+                  "birth_day": 26,
+                  "birth_time": "10:20",
+                  "calendar": "solar",
+                  "gender": "男",
+                  "place": "河南省周口市郸城县白马镇",
+                  "latitude": 33.578217,
+                  "longitude": 115.514567,
+                  "timezone": "Asia/Shanghai",
+              },
+          )
+          assert pillars.get("ok") is True, pillars
+          assert all(key in pillars.get("pillars", {}) for key in ("year", "month", "day", "hour")), pillars
+          assert pillars.get("birth", {}).get("converted_solar_date"), pillars
+          assert "eight_ke" in pillars and "iron_plate_engine" in pillars, pillars
+          print("PASS pillars: four pillars + eight_ke + iron_plate_engine")
+          PY
