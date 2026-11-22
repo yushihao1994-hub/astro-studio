@@ -1811,3 +1811,29 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         data = get_collection_branch_group_index("亥")
         self.assertEqual(data["full_crosswalk_audit"], audit)
         self.assertEqual(data["group_count"], 0)
+
+
+    def test_hai_text_line_coverage_reports_review_ranges_without_calling_them_missing(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_text_line_coverage_audit, get_collection_branch_group_index,
+        )
+        audit = get_hai_text_line_coverage_audit()
+        self.assertEqual(audit["pdf_text_line_range"], [33598, 35025])
+        self.assertEqual(audit["total_pdf_text_lines_in_range"], 1428)
+        self.assertEqual(
+            audit["unclassified_line_count"],
+            sum(item["end"] - item["start"] + 1 for item in audit["unclassified_line_ranges"]),
+        )
+        self.assertEqual(
+            audit["multiply_classified_line_count"],
+            len(audit["multiply_classified_lines"]),
+        )
+        self.assertEqual(
+            audit["interpretation"],
+            "unclassified_lines_are_review_leads_not_proof_of_missing_entries_or_groups",
+        )
+        self.assertEqual(
+            get_collection_branch_group_index("亥")["text_line_coverage_audit"],
+            audit,
+        )
+        self.assertEqual(get_collection_branch_group_index("亥")["group_count"], 0)
