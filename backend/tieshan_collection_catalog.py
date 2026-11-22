@@ -1157,11 +1157,25 @@ CHOU_GROUP_INDEX = [
              "boundary_note": "末行含二三九○字样，是否同时承担下一组标识待版面复核"}
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
+    },        "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-]
-
-CHOU_GROUP_ANOMALIES = [
-    {"raw_group_marker": "二五○", "pdf_text_line": 12772,
+    _chou_group("二四二○", 13233, list(range(13233, 13243)), "table_ten_rows_without_explicit_sequence_column"),
+    _chou_group("二四三○", 13247, list(range(13247, 13257)), "table_ten_rows_without_explicit_sequence_column"),
+    _chou_group("二四四○", 13261, list(range(13261, 13271)), "table_ten_rows_without_explicit_sequence_column"),
+    _chou_group("二四五○", 13279, list(range(13279, 13289)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chou_group("二四六○", 13291, list(range(13291, 13301)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chou_group("二四七○", 13303, list(range(13303, 13313)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chou_group("二四八○", 13331, list(range(13333, 13343))),
+    _chou_group("二四九○", 13344, list(range(13345, 13355))),
+    _chou_group("二五一○", 13360, list(range(13362, 13372))),
+    _chou_group("二五二○", 13373, list(range(13374, 13384))),
+    _chou_group("二五三○", 13385, list(range(13387, 13397))),
+    _chou_group("二五四○", 13410, list(range(13412, 13422))),
+    _chou_group("二五五○", 13423, list(range(13424, 13434))),
+    _chou_group("二五七○", 13443, list(range(13446, 13456)), "table_rows_text_layer_located"),
+    _chou_group("二五八○", 13457, list(range(13460, 13470)), "table_rows_text_layer_located"),
+    _chou_group("二五九○", 13471, list(range(13474, 13484)), "table_rows_text_layer_located"),
+]72,
      "normalized_group_marker_candidate": None,
      "status": "raw_marker_preserved_numbering_interpretation_unresolved",
      "note": "文本层原样为二五○，后文另有明确二二五○（12906行）；不得仅凭顺序自动改写。"},
@@ -1174,7 +1188,19 @@ CHOU_GROUP_ANOMALIES = [
      "note": "前段12744行已出现同名组号，按不同出现位置独立保存。"},
     {"raw_group_marker": "二二四○", "pdf_text_line": 12894,
      "occurrence": 2, "status": "repeated_group_marker_second_occurrence",
-     "note": "前段12757行已出现同名组号，按不同出现位置独立保存。"}
+     "note": "前段12757行已出现同名组号，按不同出现位置独立保存。"},
+    {"raw_group_marker": "二三九○", "pdf_text_line": 13159,
+     "status": "marker_embedded_in_prior_group_last_entry_boundary_unresolved",
+     "candidate_entry_span": "13161-13190",
+     "note": "该字样出现在二三八○第十条的文本行中，随后出现十条序号块；是否为二三九○组界待扫描版面确认。"},
+    {"raw_group_marker": "二四○○", "pdf_text_line": 13190,
+     "status": "marker_embedded_at_prior_block_end_boundary_unresolved",
+     "candidate_entry_span": "13192-13223",
+     "note": "该字样出现在前一十条序号块末行，随后又出现十条序号块；暂不提升为正式组。"},
+    {"raw_group_marker": "二五○○", "pdf_text_line": 13356,
+     "status": "marker_seen_body_not_located_before_2510"},
+    {"raw_group_marker": "二五六○", "pdf_text_line": 13435,
+     "status": "marker_seen_body_not_located_before_2570"}
 ]
 
 CHOU_UNASSIGNED_BLOCKS = [
@@ -1188,7 +1214,19 @@ CHOU_UNASSIGNED_BLOCKS = [
     {"block_id": "chou_unheaded_entries_before_2330",
      "pdf_text_lines": "13008-13017", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign",
-     "note": "位于二三二○表格之后、二三三○标题之前，保留为独立无组号块。"}
+     "note": "位于二三二○表格之后、二三三○标题之前，保留为独立无组号块。"},
+    {"block_id": "chou_possible_2390_group_body",
+     "pdf_text_lines": "13161-13190", "entry_count_candidate": 10,
+     "status": "group_boundary_ambiguous_do_not_promote",
+     "note": "前一行13159出现二三九○字样，未见独立标题。"},
+    {"block_id": "chou_possible_2400_group_body",
+     "pdf_text_lines": "13192-13223", "entry_count_candidate": 10,
+     "status": "group_boundary_ambiguous_do_not_promote",
+     "note": "前一行13190出现二四○○字样，未见独立标题。"},
+    {"block_id": "chou_unheaded_entries_before_2480",
+     "pdf_text_lines": "13318-13329", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign",
+     "note": "位于二四七○表格之后、二四八○标题之前，保留为独立无组号块。"}
 ]
 
 
