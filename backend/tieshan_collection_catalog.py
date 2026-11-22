@@ -1888,6 +1888,80 @@ CHOU_UNASSIGNED_BLOCKS = [
 ]
 
 
+def _chen_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending"):
+    return {
+        "collection": "辰", "raw_group_marker": raw_marker,
+        "normalized_group_marker_candidate": None,
+        "group_header_pdf_line": header_line,
+        "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
+        "layout_status": layout_status, "entry_count": len(entry_lines),
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n, line in enumerate(entry_lines, 1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending",
+    }
+
+
+CHEN_GROUP_INDEX = [
+    {
+        "collection": "辰", "raw_group_marker": "五○一○",
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 17112,
+        "pdf_text_lines": "17112-17163", "layout_status": "first_sequence_missing_table_rows_2_to_10",
+        "entry_count": 9,
+        "entries": [
+            {"entry_sequence": n, "pdf_text_line": line, "record_span": span}
+            for n, line, span in zip(range(2, 11),
+                [17112,17118,17124,17130,17136,17142,17148,17154,17160],
+                ["17112-17115","17118-17121","17124-17127","17130-17133","17136-17139",
+                 "17142-17145","17148-17151","17154-17157","17160-17163"])
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _chen_group("五○二○", 17168, [17168,17174,17180,17186,17192,17198,17204,17210,17216,17222], "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五○三○", 17244, list(range(17246,17256))),
+    _chen_group("五○四○", 17257, list(range(17258,17268))),
+    _chen_group("五○六○", 17273, list(range(17275,17285)), "table_rows_text_layer_located"),
+    _chen_group("五○七○", 17298, list(range(17300,17310)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五○八○", 17311, list(range(17318,17328)), "title_followed_by_branch_header_then_ten_entries"),
+    _chen_group("五○九○", 17329, list(range(17331,17341))),
+    _chen_group("五一○○", 17342, list(range(17343,17353))),
+    {
+        "collection": "辰", "raw_group_marker": "五一二○",
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 17357,
+        "pdf_text_lines": "17356-17367", "layout_status": "first_entry_precedes_table_header",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": 1, "pdf_text_line": 17356}] +
+                   [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in zip(range(2,11),range(17358,17367))],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _chen_group("五一三○", 17369, list(range(17369,17380)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五一四○", 17381, list(range(17381,17392)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五一五○", 17411, list(range(17413,17425)), "multi_line_age_clause_spans"),
+    _chen_group("五一六○", 17425, list(range(17426,17436))),
+    _chen_group("五一七○", 17436, list(range(17442,17452)), "header_then_page_break_before_ten_entries"),
+    _chen_group("五一八○", 17453, list(range(17454,17464))),
+    _chen_group("五一九○", 17465, list(range(17467,17477))),
+    _chen_group("五二一○", 17483, list(range(17484,17494)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五二二○", 17495, list(range(17496,17506)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chen_group("五二三○", 17507, list(range(17508,17518)), "table_rows_text_layer_located_title_row_is_entry_1"),
+]
+
+CHEN_GROUP_ANOMALIES = [
+    {"raw_group_marker": "五○五○", "pdf_text_line": 17269, "status": "marker_seen_body_not_located_before_5060"},
+    {"raw_group_marker": "五一一○", "pdf_text_line": None, "status": "expected_marker_not_seen_before_5120"},
+    {"raw_group_marker": "五二○○", "pdf_text_line": 17478, "status": "marker_seen_body_not_located_before_5210"},
+    {"raw_group_marker": "五二四○", "pdf_text_line": 17535, "status": "only_sequences_2_to_10_and_extra_sequence_10_rows_located"},
+    {"raw_group_marker": "五二六○", "pdf_text_line": 17560, "status": "marker_seen_body_not_located_before_5270"},
+]
+
+CHEN_UNASSIGNED_BLOCKS = [
+    {"block_id": "chen_unheaded_entries_before_5030", "pdf_text_lines": "17232-17242", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "chen_second_table_after_5060", "pdf_text_lines": "17287-17297", "entry_count_candidate": 10, "status": "group_boundary_ambiguous_do_not_assign"},
+    {"block_id": "chen_unheaded_entries_before_5150", "pdf_text_lines": "17396-17410", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "chen_unheaded_entries_before_5240", "pdf_text_lines": "17523-17533", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+]
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
