@@ -2309,8 +2309,13 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(audit["ordering"], "ascending_pdf_text_line")
         starts = [item["start_pdf_text_line"] for item in audit["worklist"]]
         self.assertEqual(starts, sorted(starts))
-        self.assertEqual(audit["priority_counts"], priority["priority_counts"])
-        self.assertEqual(audit["priority_counts"]["P0"], 5)
+        block_priority_counts = {
+            level: sum(item["priority"] == level for item in audit["worklist"]
+                       if item["issue_kind"] == "unassigned_anomaly_block")
+            for level in ("P0", "P1", "P2")
+        }
+        self.assertEqual(block_priority_counts, priority["priority_counts"])
+        self.assertEqual(block_priority_counts["P0"], 5)
         self.assertTrue(audit["crosswalk_accounting_check"])
         self.assertEqual(
             audit["linked_crosswalk_finding_count"] +
