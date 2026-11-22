@@ -10,7 +10,7 @@ FILE_NAME = "鐵板神數(清刻足本).pdf"
 FILE_SIZE_BYTES = 83686820
 SCAN_PAGE_COUNT = 665
 PRINTED_PAGE_COUNT_SHOWN = 1363
-STATUS = "first_550_of_665_pdf_pages_image_reviewed_core_rules_pending"
+STATUS = "first_650_of_665_pdf_pages_image_reviewed_core_rules_pending"
 SOURCE_CLASS = "user_provided_primary_scan"
 
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
@@ -21,6 +21,7 @@ IMAGE_REVIEWED_RANGES = [
     {"pdf_pages": [251, 350], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
     {"pdf_pages": [351, 450], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
     {"pdf_pages": [451, 550], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
+    {"pdf_pages": [551, 650], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
 ]
 
 OBSERVATIONS = [
@@ -197,6 +198,16 @@ OBSERVATIONS = [
         "algorithm_status": "not_implemented",
         "note": "已逐页渲染并检查PDF第451—550页100张扫描图像接触表，并对第486—500页及第536—538页作高清抽查。第486页可见夫妻、子女、祖业/财帛、寿考等不同条目；第500页可见夫妻、父母、子息、仕途等条目；第536页出现父母、子女、姻缘、功名等条目。版面仍以九至一数字栏头配多列竖排断语为主，部分页内条目主题交错，需结合前后页和原始索引核验。数字栏头与各列条文的准确索引关系未证实。本批只完成图像版式初检和抽样高清观察，未逐条转录或建立可执行数值映射。"
     },
+    {
+        "id": "QING-NUMBERED-CLAUSE-SECTION-CONTINUED-551-650",
+        "topic": "数字栏头断语条文区续段",
+        "pdf_pages": [551, 650],
+        "printed_pages": [1104, 1303],
+        "location": "连续双页扫描；九至一数字栏头及多列竖排断语",
+        "status": "image_reviewed_layout_and_section_continuity_transcription_pending",
+        "algorithm_status": "not_implemented",
+        "note": "已逐页渲染并检查PDF第551—650页100张扫描图像接触表，并对第551、575、600、625、650页作220dpi高清抽查。第551页可见夫妻、子息/入泮功名、家族等断语；第575页可见夫妻、婚姻变故及子息等断语；第600页可见盗贼/侵扰、流年不利、寿考等内容；第625页可见父母、妻室、子女及家业财帛等主题；第650页可见父母寿考、婚姻、子息及功名等主题。各主题以不同条文分列在数字栏头下，条文索引与数值对应关系仍需逐条校勘。本批仅完成图像版式初检及五页高清抽查，未完成全文转录、索引验证或可执行算法。"
+    },
 ]
 
 # Conservative transcription candidates copied from the legible scan text.
@@ -358,11 +369,11 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 550,
+        "reviewed_pdf_pages": 650,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
         "blockers": list(BLOCKERS),
-        "review_coverage": "550/665 PDF页已检查（约82.7%）；剩余115页尚未检查",
+        "review_coverage": "650/665 PDF页已检查（约97.7%）；剩余15页尚未检查",
         "can_generate_final_iron_plate_number": False,
     }
