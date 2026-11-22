@@ -1443,6 +1443,105 @@ def get_hai_crosswalk_audit():
                 layout_hits.append({"layout_candidate_index": layout_row["layout_candidate_index"], "raw_group_marker": layout_row["raw_group_marker"], "shared_entry_pdf_lines": shared})
         unassigned_rows.append({"block_id": block["block_id"], "pdf_text_lines": span, "marker_candidates_inside_block": marker_hits, "layout_entry_overlaps": layout_hits, "explicit_entry_line_count": len(block_lines), "status": block["status"], "verification_status": "text_layer_only_page_image_not_verified"})
     return {"method": "exact_pdf_text_line_match_plus_entry_line_overlap_detection", "layout_candidate_count": len(rows), "marker_candidate_count": len(HAI_GROUP_MARKER_CANDIDATES), "unassigned_block_count": len(unassigned_rows), "exact_line_join_status_counts": status_counts, "entry_overlap_candidate_count": len(overlap_rows), "entry_overlap_candidates": overlap_rows, "unassigned_block_crosswalk": unassigned_rows, "unassigned_blocks_with_layout_overlap": sum(bool(row["layout_entry_overlaps"]) for row in unassigned_rows), "rows": rows, "verification_status": "text_layer_crosswalk_only_page_image_verification_pending", "does_not_promote_candidates_to_verified_groups": True}
+
+def get_hai_full_crosswalk_audit():
+    """Unified conflict register for Hai text-layer candidates; never verifies groups."""
+    base = get_hai_crosswalk_audit()
+    rows = base["rows"]
+    marker_rows = HAI_GROUP_MARKER_CANDIDATES
+
+    # Deduplicate pairwise layout overlaps while preserving every shared PDF line.
+    layout_pairs = {}
+    line_owners = {}
+    for row in rows:
+        idx = row["layout_candidate_index"]
+        for line in row["entry_pdf_lines"]:
+            line_owners.setdefault(line, []).append(idx)
+        for overlap in row["entry_line_overlaps"]:
+            other = overlap["layout_candidate_index"]
+            key = tuple(sorted((idx, other)))
+            record = layout_pairs.setdefault(key, {
+                "layout_candidate_indices": list(key),
+                "shared_entry_pdf_lines": set(),
+            })
+            record["shared_entry_pdf_lines"].update(overlap["shared_entry_pdf_lines"])
+    layout_overlap_pairs = [
+        {
+            "layout_candidate_indices": item["layout_candidate_indices"],
+            "shared_entry_pdf_lines": sorted(item["shared_entry_pdf_lines"]),
+        }
+        for item in layout_pairs.values()
+    ]
+    multiply_owned_lines = [
+        {"pdf_text_line": line, "layout_candidate_indices": sorted(set(indices))}
+        for line, indices in sorted(line_owners.items()) if len(set(indices)) > 1
+    ]
+
+    # Repeated normalized markers are retained as occurrences, not merged into groups.
+    marker_occurrences = {}
+    for marker in marker_rows:
+        normalized = marker.get("normalized_group_marker_candidate")
+        if normalized is not None:
+            marker_occurrences.setdefault(normalized, []).append({
+                "raw_group_marker": marker["raw_group_marker"],
+                "pdf_text_line": marker["pdf_text_line"],
+                "status": marker["status"],
+            })
+    duplicate_markers = [
+        {"normalized_group_marker_candidate": number, "occurrences": occurrences}
+        for number, occurrences in sorted(marker_occurrences.items())
+        if len(occurrences) > 1
+    ]
+
+    layout_header_lines = {row["group_marker_pdf_line"] for row in rows}
+    unmatched_markers = [
+        dict(marker) for marker in marker_rows
+        if marker["pdf_text_line"] not in layout_header_lines
+    ]
+    layouts_without_exact_marker_join = [
+        {
+            "layout_candidate_index": row["layout_candidate_index"],
+            "raw_group_marker": row["raw_group_marker"],
+            "group_marker_pdf_line": row["group_marker_pdf_line"],
+            "marker_join_status": row["marker_join_status"],
+        }
+        for row in rows
+        if row["marker_join_status"] != "exact_text_line_and_raw_marker_match_image_check_pending"
+    ]
+
+    unassigned_overlaps = [
+        {
+            "block_id": row["block_id"],
+            "pdf_text_lines": row["pdf_text_lines"],
+            "overlapping_layout_candidates": row["layout_entry_overlaps"],
+            "marker_candidates_inside_block": row["marker_candidates_inside_block"],
+        }
+        for row in base["unassigned_block_crosswalk"]
+        if row["layout_entry_overlaps"] or row["marker_candidates_inside_block"]
+    ]
+
+    return {
+        "method": "derived_from_exact_pdf_text_line_crosswalk_no_sequence_inference",
+        "layout_candidate_count": base["layout_candidate_count"],
+        "marker_candidate_count": base["marker_candidate_count"],
+        "unassigned_block_count": base["unassigned_block_count"],
+        "layout_entry_overlap_pair_count": len(layout_overlap_pairs),
+        "layout_entry_overlap_pairs": layout_overlap_pairs,
+        "multiply_owned_entry_line_count": len(multiply_owned_lines),
+        "multiply_owned_entry_lines": multiply_owned_lines,
+        "duplicate_normalized_marker_count": len(duplicate_markers),
+        "duplicate_normalized_markers": duplicate_markers,
+        "marker_candidates_without_layout_header_line_count": len(unmatched_markers),
+        "marker_candidates_without_layout_header_line": unmatched_markers,
+        "layouts_without_exact_marker_join_count": len(layouts_without_exact_marker_join),
+        "layouts_without_exact_marker_join": layouts_without_exact_marker_join,
+        "unassigned_blocks_with_marker_or_entry_overlap_count": len(unassigned_overlaps),
+        "unassigned_block_conflicts": unassigned_overlaps,
+        "verification_status": "text_layer_conflict_register_page_image_verification_pending",
+        "does_not_promote_candidates_to_verified_groups": True,
+    }
+
+
 # 丑集首批结构索引：仅记录分组标题、序号和PDF文本行，不复制条文正文。
 # 组号保留PDF文本层的原始圆圈字符“○”，不擅自统一为“〇”。
 def _chou_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending", occurrence=1):
@@ -3957,6 +4056,7 @@ def get_collection_branch_group_index(branch):
             "layout_group_candidates": [dict(item, entry_pdf_lines=list(item["entry_pdf_lines"])) for item in HAI_LAYOUT_GROUP_CANDIDATES],
             "layout_group_candidate_count": len(HAI_LAYOUT_GROUP_CANDIDATES),
             "crosswalk_audit": get_hai_crosswalk_audit(),
+            "full_crosswalk_audit": get_hai_full_crosswalk_audit(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
