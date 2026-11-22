@@ -1013,7 +1013,7 @@ COLLECTION_METADATA = {
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "戌": {"printed_page_start": 478, "pdf_text_line_start": 26556, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_located_group_index_pending", "indexed_groups": 0, "indexed_entries": 0},
+    "亥": {"printed_page_start": 512, "pdf_text_line_start": 33598, "pdf_text_line_end": 35025, "toc_status": "located_in_contents", "index_status": "source_text_layer_group_marker_candidates_indexed_entry_mapping_pending", "indexed_groups": 0, "indexed_entries": 0, "group_marker_candidate_count": 82},
 }
 
 
@@ -3619,7 +3619,7 @@ def get_collection_branch_group_index(branch):
             ],
             "limitations": [
                 "目录定位亥集印刷页512；PDF文本层正文候选范围为33598-35025。",
-                "文本层可见12000段组号序列及后续OCR异文，但尚未逐组核实边界。",
+                "已登记82处原始组号OCR候选，其中70处可给出数字规范化候选；候选不等于组索引完成或图像核验。",
                 "末段组号、页眉集名和数字存在OCR错字，不按连续编号推补。",
                 "目前没有完成逐页图像核对，也没有完成十条逐项映射。",
                 "该状态仅表示已定位文本层，不表示已转录或核验亥集正文。"
