@@ -104,6 +104,17 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertEqual(by_id["QING-P3-ANSHEN-MING-INTRO"]["pdf_page"],3)
         self.assertEqual(by_id["QING-P3-HETU-LUOSHU-ORDER"]["pdf_page"],3)
 
+
+    def test_page3_calendar_helpers_are_registered_but_not_number_rules(self):
+        source=get_qing_source_reference()
+        by_id={x["id"]:x for x in source["transcription_candidates"]}
+        self.assertIn("QING-P3-WUYUAN-START-MONTH",by_id)
+        self.assertIn("甲己之歲起丙寅",by_id["QING-P3-WUYUAN-START-MONTH"]["raw_text"])
+        self.assertEqual(by_id["QING-P3-WUYUAN-START-MONTH"]["algorithm_status"],"calendar_helper_candidate_not_iron_plate_number_rule")
+        self.assertIn("QING-P3-NAYIN-SONG-FRAGMENTS",by_id)
+        self.assertEqual(by_id["QING-P3-NAYIN-SONG-FRAGMENTS"]["algorithm_status"],"calendar_reference_only_not_iron_plate_number_rule")
+        self.assertFalse(source["can_generate_final_iron_plate_number"])
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
