@@ -4283,6 +4283,56 @@ def get_hai_priority_conflict_review():
 
 
 
+def get_hai_terminal_table_review_12920_12990():
+    """Review terminal table blocks while preserving embedded and malformed markers."""
+    source = HAI_12810_12990_TERMINAL_AUDIT
+    rows = {item["candidate"]: item for item in source["groups_and_blocks"]}
+    cases = []
+    for candidate in (12920, 12930, 12940, 12950, 12960, 12970, 12980, 12990):
+        item = rows[candidate]
+        cases.append({
+            "candidate_reference_only": candidate,
+            "raw_marker": item.get("raw_marker"),
+            "marker_pdf_line": item.get("marker_line"),
+            "normalized_candidate": item.get("normalized_candidate"),
+            "normalization_status": item.get("normalization_status"),
+            "collection_header_ocr": item.get("collection_header_ocr"),
+            "header_ocr": item.get("intervening_header_ocr"),
+            "header_pdf_line": item.get("header_line"),
+            "table_entry_lines": list(item.get("table_entry_lines", [])),
+            "first_table_entry_lines": list(item.get("first_table_entry_lines", [])),
+            "first_table_sequence_labels": list(item.get("first_table_sequence_labels", [])),
+            "following_table_entry_lines": list(item.get("following_table_entry_lines", [])),
+            "following_table_sequence_labels": list(item.get("following_table_sequence_labels", [])),
+            "following_table_marker": item.get("following_table_marker"),
+            "marker_position": item.get("marker_position"),
+            "table_segment": item.get("table_segment"),
+            "status": item["status"],
+            "formal_index_eligible": False,
+            "required_evidence": [
+                "原页扫描图确认表格横向单元格边界及组号标记实际位置",
+                "核对序号与断语单元格是否逐项对应",
+                "核对页眉集名OCR及原始组号是否与底本一致",
+                "不得把没有组头的表格按连续编号自动分配"
+            ],
+        })
+    return {
+        "source_pdf_text_lines": "34914-35025",
+        "cases": cases,
+        "rules": [
+            "Keep 12920's 玄集 header and ten table rows unassigned to a numbered group.",
+            "Preserve the 12950 header OCR 康节谈易全书 at line 34955.",
+            "Keep 12960-12980 markers embedded in table-row boundaries until scan-image layout is checked.",
+            "Keep 一九九〇 as the raw 12990 OCR; 12990 normalization remains hypothesis only.",
+            "The second table after line 35014 has no group marker; do not infer 13000.",
+            "Table row locations and sequence labels are text-layer observations, not image-verified clause mappings."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_terminal_table_review_page_image_verification_pending",
+    }
+
+
 def get_hai_boundary_review_12860_12910():
     """Review numbered and unheaded text blocks from 12860 through 12910."""
     source = HAI_12810_12990_TERMINAL_AUDIT
@@ -4797,6 +4847,7 @@ def get_collection_branch_group_index(branch):
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
+            "terminal_table_review_12920_12990": get_hai_terminal_table_review_12920_12990(),
             "boundary_review_12860_12910": get_hai_boundary_review_12860_12910(),
             "numbered_group_review_12810_12850": get_hai_numbered_group_review_12810_12850(),
             "numbered_group_review_12780_12800": get_hai_numbered_group_review_12780_12800(),
