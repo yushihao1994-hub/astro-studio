@@ -1486,7 +1486,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(conflict["sequence_labels_observed"], list(range(1, 11)))
         self.assertEqual(conflict["following_group_marker_pdf_line"], 34856)
         self.assertIn("unresolved", conflict["status"])
-        self.assertEqual(len(data["unassigned_blocks"]), 20)
+        self.assertEqual(len(data["unassigned_blocks"]), 22)
 
     def test_hai_12900_to_12920_unassigned_blocks_keep_sequence_and_table_boundaries(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
@@ -1720,6 +1720,17 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
         audit = get_hai_crosswalk_audit()
         self.assertEqual(audit["unassigned_block_count"], 22)
+
+        self.assertEqual(audit["unassigned_block_count"], 22)
+        self.assertEqual(len(audit["unassigned_block_crosswalk"]), 22)
+        self.assertEqual(audit["layout_candidate_count"], 77)
+        self.assertEqual(audit["marker_candidate_count"], 88)
+        self.assertEqual(audit["unassigned_blocks_with_layout_overlap"],
+                         sum(bool(row["layout_entry_overlaps"])
+                             for row in audit["unassigned_block_crosswalk"]))
+        self.assertTrue(all(row["verification_status"] ==
+                            "text_layer_only_page_image_not_verified"
+                            for row in audit["unassigned_block_crosswalk"]))
         blocks = {row["block_id"]: row for row in audit["unassigned_block_crosswalk"]}
         self.assertEqual(blocks["hai_unheaded_12240_candidate"]["explicit_entry_line_count"], 10)
         self.assertTrue(blocks["hai_ocr_corrupt_12080_to_12170"]["marker_candidates_inside_block"])
