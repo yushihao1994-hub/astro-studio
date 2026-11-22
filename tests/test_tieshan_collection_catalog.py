@@ -1603,6 +1603,53 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         tail = blocks["hai_unheaded_12360"]["neighbor_context"]
         self.assertEqual(tail["after_marker"]["raw"], "去集")
         self.assertIsNone(tail["after_marker"]["candidate"])
+    def test_hai_terminal_table_review_12920_12990_preserves_embedded_and_raw_markers(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_terminal_table_review_12920_12990,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_terminal_table_review_12920_12990()
+        self.assertEqual(audit["source_pdf_text_lines"], "34914-35025")
+        rows = {item["candidate_reference_only"]: item for item in audit["cases"]}
+        self.assertEqual(set(rows), {12920,12930,12940,12950,12960,12970,12980,12990})
+        self.assertEqual(rows[12920]["collection_header_ocr"], "玄集")
+        self.assertEqual(rows[12920]["header_pdf_line"], 34914)
+        self.assertEqual(rows[12920]["table_entry_lines"], list(range(34916,34926)))
+        self.assertEqual(rows[12930]["raw_marker"], "一二九三〇")
+        self.assertEqual(rows[12930]["marker_pdf_line"], 34927)
+        self.assertEqual(rows[12930]["table_entry_lines"], list(range(34929,34939)))
+        self.assertEqual(rows[12940]["table_entry_lines"], list(range(34942,34952)))
+        self.assertEqual(rows[12950]["raw_marker"], "一二九五〇")
+        self.assertEqual(rows[12950]["header_ocr"], "康节谈易全书")
+        self.assertEqual(rows[12950]["header_pdf_line"], 34955)
+        self.assertEqual(rows[12950]["table_entry_lines"], list(range(34957,34967)))
+        for candidate, marker, marker_line, segment, entry_lines in (
+            (12960,"一二九六〇",34967,"e1",list(range(34957,34967))),
+            (12970,"一二九七〇",34980,"e2",list(range(34970,34980))),
+            (12980,"一二九八〇",34993,"e3",list(range(34983,34993))),
+        ):
+            self.assertEqual(rows[candidate]["raw_marker"], marker)
+            self.assertEqual(rows[candidate]["marker_pdf_line"], marker_line)
+            self.assertEqual(rows[candidate]["table_segment"], segment)
+            self.assertEqual(rows[candidate]["marker_position"], "embedded_in_last_table_row")
+            self.assertEqual(rows[candidate]["table_entry_lines"], entry_lines)
+        self.assertEqual(rows[12990]["raw_marker"], "一九九〇")
+        self.assertEqual(rows[12990]["marker_pdf_line"], 35001)
+        self.assertEqual(rows[12990]["normalized_candidate"], 12990)
+        self.assertEqual(rows[12990]["normalization_status"],
+                         "hypothesis_only_raw_ocr_conflicts_with_expected_marker")
+        self.assertEqual(rows[12990]["first_table_entry_lines"], list(range(35003,35013)))
+        self.assertEqual(rows[12990]["following_table_entry_lines"], list(range(35015,35025)))
+        self.assertIsNone(rows[12990]["following_table_marker"])
+        for item in rows.values():
+            self.assertFalse(item["formal_index_eligible"])
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["terminal_table_review_12920_12990"], audit)
+        self.assertEqual(api["group_count"], 0)
+
+
     def test_hai_boundary_review_12860_12910_keeps_unheaded_blocks_unassigned(self):
         from backend.tieshan_collection_catalog import (
             get_hai_boundary_review_12860_12910,
