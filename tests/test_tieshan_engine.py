@@ -78,8 +78,8 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         source=get_qing_source_reference()
         candidates={x["id"]:x for x in source["transcription_candidates"]}
         expected={
-            "QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION",
-            "QING-P2-RIGHT-PAGE-EIGHT-TRIGRAM-VERSE",
+            "QING-HELUO-CLAUSES",
+            "QING-EIGHT-TRIGRAM-ADD",
             "QING-P3-ANSHEN-MING-INTRO",
             "QING-P3-HETU-LUOSHU-ORDER",
         }
@@ -87,7 +87,7 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         for key in expected:
             self.assertNotIn("verified",candidates[key]["status"])
             self.assertNotEqual(candidates[key]["algorithm_status"],"verified")
-        self.assertIn("己亥單四數",candidates["QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION"]["raw_text"])
+        self.assertIn("己亥單四數",candidates["QING-HELUO-CLAUSES"]["raw_text"])
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
     def test_requires_four_pillars(self):
