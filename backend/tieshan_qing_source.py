@@ -16,7 +16,7 @@ SOURCE_CLASS = "user_provided_primary_scan"
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
 # Each scan image may contain a two-page spread.
 IMAGE_REVIEWED_RANGES = [
-    {"pdf_pages": [1, 50], "review_status": "image_reviewed"},
+    {"pdf_pages": [1, 60], "review_status": "image_reviewed"},
 ]
 
 OBSERVATIONS = [
@@ -133,6 +133,16 @@ OBSERVATIONS = [
         "note": "可辨識多處以卦名作分組標題，並列干支組合條目；需逐個卦名、條目和原書位置核對，尚未確認其取數規則或映射方向。",
     },
     {
+        "id": "QING-HEXAGRAM-HEADING-GROUPS-CONTINUED",
+        "topic": "易卦卦名分組表續段",
+        "pdf_pages": [51, 60],
+        "printed_pages": [102, 121],
+        "location": "卦名標題連續分類表續段",
+        "status": "image_reviewed_headings_only",
+        "algorithm_status": "not_implemented",
+        "note": "延續前段卦名分組及干支條目格式；本段可見多個卦名標題與分組條目，未完成逐字校錄及條目對應驗證。",
+    },
+    {
         "id": "QING-NINE-PALACE-CHARTS",
         "topic": "九宫/局数图表",
         "pdf_pages": [6, 7, 8, 9],
@@ -193,7 +203,7 @@ def get_qing_source_reference():
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 50,
+        "reviewed_pdf_pages": 60,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
