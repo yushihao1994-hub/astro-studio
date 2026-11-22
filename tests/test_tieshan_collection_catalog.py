@@ -2287,11 +2287,21 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
 
     def test_hai_unified_conflict_worklist_deduplicates_block_crosswalk_findings(self):
         from backend.tieshan_collection_catalog import (
+            HAI_UNASSIGNED_BLOCKS,
             get_hai_unified_conflict_worklist,
+            get_hai_priority_conflict_review,
             get_collection_branch_group_index,
         )
         audit = get_hai_unified_conflict_worklist()
+        priority = get_hai_priority_conflict_review()
+        expected_ids = {item["block_id"] for item in HAI_UNASSIGNED_BLOCKS}
+        actual_block_ids = {
+            item["issue_key"].removeprefix("block:")
+            for item in audit["worklist"]
+            if item["issue_kind"] == "unassigned_anomaly_block"
+        }
         self.assertEqual(audit["anomaly_block_count"], 22)
+        self.assertEqual(actual_block_ids, expected_ids)
         self.assertEqual(audit["worklist_count"],
                          22 + audit["global_crosswalk_issue_count"])
         self.assertEqual(len({item["issue_key"] for item in audit["worklist"]}),
@@ -2299,12 +2309,22 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(audit["ordering"], "ascending_pdf_text_line")
         starts = [item["start_pdf_text_line"] for item in audit["worklist"]]
         self.assertEqual(starts, sorted(starts))
-        self.assertTrue(all(item["required_review_action"] for item in audit["worklist"]))
-        self.assertTrue(all(item["formal_index_eligible"] is False
-                            for item in audit["worklist"]))
+        self.assertEqual(audit["priority_counts"], priority["priority_counts"])
+        self.assertEqual(audit["priority_counts"]["P0"], 5)
+        self.assertTrue(audit["crosswalk_accounting_check"])
+        self.assertEqual(
+            audit["linked_crosswalk_finding_count"] +
+            audit["global_crosswalk_issue_count"],
+            audit["deduplicated_crosswalk_finding_count"],
+        )
+        for item in audit["worklist"]:
+            self.assertTrue(item["required_review_action"])
+            self.assertTrue(item["required_evidence"])
+            self.assertFalse(item["formal_index_eligible"])
+            for finding in item["related_crosswalk_findings"]:
+                self.assertFalse(finding["formal_index_eligible"])
         self.assertEqual(audit["group_count"], 0)
         self.assertEqual(audit["entry_count"], 0)
-        self.assertGreaterEqual(audit["linked_crosswalk_finding_count"], 0)
         api = get_collection_branch_group_index("亥")
         self.assertEqual(api["unified_conflict_worklist"], audit)
         self.assertEqual(api["group_count"], 0)
