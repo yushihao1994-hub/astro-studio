@@ -50,7 +50,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
 
     def test_group_index_contains_seventy_five_groups_and_seven_hundred_forty_seven_entries(self):
         data = get_group_index()
-        self.assertEqual(data["group_count"], 75)
+        self.assertEqual(data["group_count"], 82)
         self.assertEqual(data["entry_count"], 747)
         self.assertEqual(
             [g["group_marker"] for g in data["groups"]],
@@ -472,8 +472,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][5]["indexed_groups"], 78)
         self.assertEqual(data["collections"][5]["indexed_entries"], 780)
         self.assertEqual(data["collections"][6]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][6]["indexed_groups"], 75)
-        self.assertEqual(data["collections"][6]["indexed_entries"], 749)
+        self.assertEqual(data["collections"][6]["indexed_groups"], 82)
+        self.assertEqual(data["collections"][6]["indexed_entries"], 819)
         self.assertEqual(data["collections"][6]["pdf_text_line_start"], 20332)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -967,7 +967,7 @@ class WuCollectionInitialIndexTests(unittest.TestCase):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("午")
         self.assertEqual(data["group_count"], 75)
-        self.assertEqual(data["entry_count"], 749)
+        self.assertEqual(data["entry_count"], 819)
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]],
                          ["七○一○","七○二○","七○三○","七○四○","七○五○","七○六○","七○七○",
                           "七○八○","七○九○","七一○○","七一一○","七一二○","七一三○","七一四○",
@@ -978,10 +978,11 @@ class WuCollectionInitialIndexTests(unittest.TestCase):
                           "一九五八○","一九五九○","七六○○","七六一○","七六三○","七六四○","七六五○",
                           "七六六○","七六七○","七六八○","七六九○","七七○○","七七二○","七七三○","七七四○",
                           "七七五○","七七六○","七七八○","七七九○","七八○○","七八一○","七八二○",
-                          "七八四○","七八五○","七八六○","七八七○","七八八○","七九○○"])
+                          "七八四○","七八五○","七八六○","七八七○","七八八○","七九○○","七九三○","七九四○",
+                          "七九五○","七九六○","七九七○","七九九○","八○一○"])
         self.assertEqual(data["unassigned_blocks"][0]["pdf_text_lines"], "20359-20368")
         sample = get_collection_sample("午")
-        self.assertEqual(sample["group_index"]["group_count"], 75)
+        self.assertEqual(sample["group_index"]["group_count"], 82)
 
 
 class WuCollectionIndexThrough7350Tests(unittest.TestCase):
@@ -1052,3 +1053,21 @@ class WuCollectionIndexThrough7900Tests(unittest.TestCase):
             self.assertEqual(group["entry_count"], 10)
         self.assertTrue(any(x["raw_group_marker"] == "七七七○" for x in data["group_anomalies"]))
         self.assertTrue(any(x["raw_group_marker"] == "七八九○" for x in data["group_anomalies"]))
+
+
+class WuCollectionIndexThrough8010Tests(unittest.TestCase):
+    def test_wu_tail_groups_and_wei_boundary(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
+        data = get_collection_branch_group_index("午")
+        expected = [("七九三○",21760),("七九四○",21773),("七九五○",21785),
+                    ("七九六○",21835),("七九七○",21881),("七九九○",21938),("八○一○",21958)]
+        for marker,line in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+            self.assertEqual(group["entry_count"], 10)
+        progress = get_collection_progress()
+        wu = next(x for x in progress["collections"] if x["collection"] == "午")
+        wei = next(x for x in progress["collections"] if x["collection"] == "未")
+        self.assertEqual(wu["pdf_text_line_end"], 21988)
+        self.assertEqual(wei["pdf_text_line_start"], 21990)
+        self.assertTrue(any(x["raw_group_marker"] == "八○○○" for x in data["group_anomalies"]))
