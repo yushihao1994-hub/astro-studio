@@ -1196,37 +1196,37 @@ HAI_12510_12660_REGION_AUDIT = {
 
 
 HAI_12670_12800_BOUNDARY_AUDIT = {
-    "source_pdf_text_lines": "34570-34750",
-    "source_access_note": "PDF URL currently returns 404; exact marker positions are retained from previously indexed text layer. Do not infer entry rows from marker spacing.",
+    "source_pdf_text_lines": "34570-34761",
+    "source_access_note": "Original library PDF text layer reopened; exact row ranges rechecked. This is text-layer evidence, not page-image verification.",
     "markers": [
-        {"candidate":12670,"raw":"一二六七〇","line":34570,"detail_ref":"hai_split_numeric_column_12670","status":"detached_numeric_column_and_sequence_anomalies"},
-        {"candidate":12680,"raw":"一二六八〇","line":34589,"detail_ref":"hai_header_only_12680","status":"six_detached_values_collection_header_conflict_and_alignment_pending"},
-        {"candidate":12690,"raw":"一二六九〇","line":34609,"next_marker_line":34621,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12700,"raw":"一二七〇〇","line":34621,"next_marker_line":34632,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12710,"raw":"一二七〇","line":34632,"normalized_candidate":None,"next_marker_line":34648,"entry_mapping":"pending","status":"truncated_marker_possible_12710_not_normalized"},
-        {"candidate":12720,"raw":"一二七二〇","line":34648,"next_marker_line":34661,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12730,"raw":"一二七三〇","line":34661,"next_marker_line":34675,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12740,"raw":"一二七四〇","line":34675,"next_marker_line":34691,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12750,"raw":"一二七五〇","line":34691,"next_marker_line":34706,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12760,"raw":"一二七六〇","line":34706,"next_marker_line":34721,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12770,"raw":"一二七七〇","line":34721,"next_marker_line":34725,"detail_ref":"hai_header_only_12770","status":"header_only_no_entry_rows_before_next_marker"},
-        {"candidate":12780,"raw":"一二七八〇","line":34725,"next_marker_line":34738,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12790,"raw":"一二七九〇","line":34738,"next_marker_line":34750,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"},
-        {"candidate":12800,"raw":"一二八〇〇","line":34750,"entry_mapping":"pending","status":"marker_position_known_body_rows_not_reextracted"}
+        {"candidate":12670,"raw":"一二六七〇","line":34570,"entry_lines":list(range(34579,34589)),"sequence_labels":[2,3,3,4,5,6,7,8,9,10],"detached_value_lines":list(range(34571,34578)),"detail_ref":"hai_split_numeric_column_12670","status":"ten_rows_located_missing_sequence_1_duplicate_3_detached_values_unmapped"},
+        {"candidate":12680,"raw":"一二六八〇","line":34589,"entry_lines":list(range(34599,34609)),"sequence_labels":list(range(1,11)),"detached_value_lines":list(range(34590,34596)),"collection_header_ocr":"交集","header_line":34597,"detail_ref":"hai_header_only_12680","status":"ten_table_rows_located_numeric_column_alignment_and_header_image_check_pending"},
+        {"candidate":12690,"raw":"一二六九〇","line":34609,"entry_lines":list(range(34611,34621)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12700,"raw":"一二七〇〇","line":34621,"entry_lines":list(range(34622,34632)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12710,"raw":"一二七〇","line":34632,"normalized_candidate":None,"entry_lines":list(range(34637,34647)),"sequence_labels":list(range(1,11)),"pre_entry_number_line":34636,"status":"ten_rows_after_truncated_marker_group_association_unconfirmed_do_not_normalize"},
+        {"candidate":12720,"raw":"一二七二〇","line":34648,"entry_lines":list(range(34650,34660)),"sequence_labels":list(range(1,11)),"pre_entry_number_line":34649,"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12730,"raw":"一二七三〇","line":34661,"entry_lines":list(range(34664,34674)),"sequence_labels":list(range(1,11)),"pre_entry_number_line":34663,"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12740,"raw":"一二七四〇","line":34675,"entry_lines":list(range(34678,34690)),"sequence_labels":list(range(1,11)),"collection_header_ocr":"玄集","header_line":34677,"continuation_lines":[34686,34689],"status":"ten_sequence_rows_with_two_wrapped_continuations_collection_header_conflict"},
+        {"candidate":12750,"raw":"一二七五〇","line":34691,"entry_lines":list(range(34693,34705)),"sequence_labels":list(range(1,11)),"continuation_lines":[34701,34704],"status":"ten_sequence_rows_with_wrapped_continuations"},
+        {"candidate":12760,"raw":"一二七六〇","line":34706,"entry_lines":list(range(34707,34720)),"sequence_labels":list(range(1,11)),"continuation_lines":[34712,34716,34719],"status":"ten_sequence_rows_with_wrapped_continuations"},
+        {"candidate":12770,"raw":"一二七七〇","line":34721,"entry_lines":[],"next_marker_line":34725,"detail_ref":"hai_header_only_12770","status":"header_only_no_entry_rows_before_next_marker"},
+        {"candidate":12780,"raw":"一二七八〇","line":34725,"entry_lines":list(range(34727,34737)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12790,"raw":"一二七九〇","line":34738,"entry_lines":list(range(34739,34749)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12800,"raw":"一二八〇〇","line":34750,"entry_lines":list(range(34752,34762)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"}
     ],
     "known_exceptions": [
         {"block_id":"hai_split_numeric_column_12670","sequence_labels":[2,3,3,4,5,6,7,8,9,10],"missing":[1],"duplicate":[3],"detached_values":["六十九","六十一","五十三","五十四","三十七","十九","二十二"],"alignment":"unresolved"},
         {"block_id":"hai_header_only_12680","detached_value_count":6,"collection_header_ocr":"交集","alignment":"unresolved"},
-        {"block_id":"hai_truncated_marker_12710","raw_marker":"一二七〇","normalized_candidate":None,"status":"do_not_repair_by_sequence"},
+        {"block_id":"hai_truncated_marker_12710","raw_marker":"一二七〇","normalized_candidate":None,"following_ten_rows_located":True,"group_association":"unconfirmed"},
         {"block_id":"hai_header_only_12770","entries_before_next_marker":0,"next_marker":"一二七八〇"}
     ],
     "rules": [
-        "Marker position does not prove a complete ten-entry group.",
-        "Do not create entry line ranges for 12690-12760 or 12780-12800 until source text is recovered.",
+        "Exact row ranges are PDF text-layer locations and do not establish scan-image verification.",
         "Do not normalize truncated 一二七〇 to 12710 without page-image evidence.",
-        "12770 remains header-only; do not borrow rows from 12780."
+        "12770 remains header-only; do not borrow rows from 12780.",
+        "Keep wrapped continuation lines as text-layer structural observations."
     ],
-    "verification_status":"marker_positions_partly_recovered_text_layer_body_mapping_incomplete_page_image_pending"
+    "verification_status":"text_layer_rows_reaudited_page_image_verification_pending"
 }
 
 
@@ -1234,25 +1234,25 @@ HAI_12810_12990_TERMINAL_AUDIT = {
     "source_pdf_text_lines": "34777-35025",
     "status": "text_layer_structure_audit_image_verification_pending",
     "groups_and_blocks": [
-        {"candidate":12810,"raw_marker":"一二八一〇","marker_line":34777,"entry_lines":list(range(34779,34789)),"entry_count_candidate":10,"status":"previously_located_ten_rows_header_boundary_image_check_pending"},
-        {"candidate":12820,"raw_marker":"一二八二〇","marker_line":34790,"entry_mapping":"not_reaudited_in_this_pass"},
-        {"candidate":12830,"raw_marker":"一二八三〇","marker_line":34802,"entry_mapping":"not_reaudited_in_this_pass"},
-        {"candidate":12840,"raw_marker":"一二八四〇","marker_line":34817,"entry_mapping":"not_reaudited_in_this_pass"},
-        {"candidate":12850,"raw_marker":"一二八五〇","marker_line":34829,"entry_mapping":"not_reaudited_in_this_pass"},
-        {"candidate":12860,"raw_marker":None,"marker_line":None,"header_ocr":"支集","header_line":34842,"entry_lines":list(range(34846,34856)),"following_marker":"一二八七〇","following_marker_line":34856,"status":"ten_rows_without_numeric_group_header_do_not_assign_12860"},
-        {"candidate":12870,"raw_marker":"一二八七〇","marker_line":34856,"entry_mapping":"marker_candidate_only"},
-        {"candidate":12880,"raw_marker":"一二八八〇","marker_line":34868,"entry_mapping":"marker_candidate_only"},
-        {"candidate":12890,"raw_marker":"一二八九〇","marker_line":34879,"entry_mapping":"marker_candidate_only"},
+        {"candidate":12810,"raw_marker":"一二八一〇","marker_line":34777,"entry_lines":list(range(34779,34789)),"sequence_labels":list(range(1,11)),"entry_count_candidate":10,"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12820,"raw_marker":"一二八二〇","marker_line":34790,"entry_lines":list(range(34791,34801)),"sequence_labels":list(range(1,11)),"entry_count_candidate":10,"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12830,"raw_marker":"一二八三〇","marker_line":34802,"entry_lines":list(range(34806,34816)),"sequence_labels":list(range(1,11)),"entry_count_candidate":10,"intervening_header_ocr":"贵节说易全书","header_line":34804,"status":"ten_numbered_rows_text_layer_located_header_ocr_conflict"},
+        {"candidate":12840,"raw_marker":"一二八四〇","marker_line":34817,"entry_lines":list(range(34818,34828)),"sequence_labels":list(range(1,11)),"entry_count_candidate":10,"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12850,"raw_marker":"一二八五〇","marker_line":34829,"entry_lines":list(range(34831,34841)),"sequence_labels":list(range(1,11)),"entry_count_candidate":10,"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12860,"raw_marker":None,"marker_line":None,"header_ocr":"支集","header_line":34842,"entry_lines":list(range(34846,34856)),"sequence_labels":list(range(1,11)),"following_marker":"一二八七〇","following_marker_line":34856,"status":"ten_rows_without_numeric_group_header_do_not_assign_12860"},
+        {"candidate":12870,"raw_marker":"一二八七〇","marker_line":34856,"entry_lines":list(range(34858,34868)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12880,"raw_marker":"一二八八〇","marker_line":34868,"entry_lines":list(range(34869,34879)),"sequence_labels":list(range(1,11)),"status":"ten_numbered_rows_text_layer_located"},
+        {"candidate":12890,"raw_marker":"一二八九〇","marker_line":34879,"entry_lines":list(range(34883,34893)),"sequence_labels":list(range(1,11)),"intervening_header_ocr":"广节说易全书","header_line":34881,"status":"ten_numbered_rows_text_layer_located_header_ocr_conflict"},
         {"candidate":12900,"raw_marker":None,"marker_line":None,"entry_lines":list(range(34893,34903)),"sequence_labels":list(range(1,11)),"status":"ten_rows_after_12890_without_own_header_do_not_assign_by_sequence"},
         {"candidate":12910,"raw_marker":None,"marker_line":None,"entry_lines":list(range(34904,34913)),"sequence_labels":[1,2,4,5,6,7,8,9,10],"missing_sequence":[3],"status":"nine_rows_missing_sequence_3_and_group_header"},
-        {"candidate":12920,"raw_marker":None,"marker_line":None,"collection_header_ocr":"玄集","header_line":34914,"table_entry_lines":list(range(34916,34926)),"following_marker":"一二九三〇","following_marker_line":34927,"status":"ten_table_rows_without_numeric_header_do_not_assign_by_sequence"},
-        {"candidate":12930,"raw_marker":"一二九三〇","marker_line":34927,"entry_mapping":"marker_candidate_only"},
-        {"candidate":12940,"raw_marker":"一二九四〇","marker_line":34940,"entry_mapping":"marker_candidate_only"},
-        {"candidate":12950,"raw_marker":"一二九五〇","marker_line":34953,"entry_mapping":"marker_candidate_only"},
-        {"candidate":12960,"raw_marker":"一二九六〇","marker_line":34967,"table_segment":"e1","table_entry_lines":list(range(34957,34967)),"marker_position":"embedded_in_last_table_row"},
-        {"candidate":12970,"raw_marker":"一二九七〇","marker_line":34980,"table_segment":"e2","table_entry_lines":list(range(34970,34980)),"marker_position":"embedded_in_last_table_row"},
-        {"candidate":12980,"raw_marker":"一二九八〇","marker_line":34993,"table_segment":"e3","table_entry_lines":list(range(34983,34993)),"marker_position":"embedded_in_last_table_row"},
-        {"candidate":12990,"raw_marker":"一九九〇","marker_line":35001,"normalized_candidate":12990,"normalization_status":"hypothesis_only_raw_ocr_conflicts_with_expected_marker","first_table_entry_lines":list(range(35003,35013)),"following_table_entry_lines":list(range(35015,35025)),"following_table_marker":None,"status":"terminal_marker_and_two_tables_not_safely_pairable"}
+        {"candidate":12920,"raw_marker":None,"marker_line":None,"collection_header_ocr":"玄集","header_line":34914,"table_entry_lines":list(range(34916,34926)),"sequence_labels":list(range(1,11)),"following_marker":"一二九三〇","following_marker_line":34927,"status":"ten_table_rows_without_numeric_header_do_not_assign_by_sequence"},
+        {"candidate":12930,"raw_marker":"一二九三〇","marker_line":34927,"table_segment":"e2","table_entry_lines":list(range(34929,34939)),"sequence_labels":list(range(1,11)),"status":"ten_table_rows_after_marker_text_layer_located"},
+        {"candidate":12940,"raw_marker":"一二九四〇","marker_line":34940,"table_segment":"e3","table_entry_lines":list(range(34942,34952)),"sequence_labels":list(range(1,11)),"status":"ten_table_rows_after_marker_text_layer_located"},
+        {"candidate":12950,"raw_marker":"一二九五〇","marker_line":34953,"table_segment":"e1","table_entry_lines":list(range(34957,34967)),"sequence_labels":list(range(1,11)),"intervening_header_ocr":"康节谈易全书","header_line":34955,"status":"ten_table_rows_after_marker_text_layer_located_header_ocr_conflict"},
+        {"candidate":12960,"raw_marker":"一二九六〇","marker_line":34967,"table_segment":"e1","table_entry_lines":list(range(34957,34967)),"marker_position":"embedded_in_table_after_entry_10","status":"embedded_marker_table_boundary_image_check_pending"},
+        {"candidate":12970,"raw_marker":"一二九七〇","marker_line":34980,"table_segment":"e2","table_entry_lines":list(range(34970,34980)),"marker_position":"embedded_in_table_after_entry_10","status":"embedded_marker_table_boundary_image_check_pending"},
+        {"candidate":12980,"raw_marker":"一二九八〇","marker_line":34993,"table_segment":"e3","table_entry_lines":list(range(34983,34993)),"marker_position":"embedded_in_table_after_entry_10","status":"embedded_marker_table_boundary_image_check_pending"},
+        {"candidate":12990,"raw_marker":"一九九〇","marker_line":35001,"normalized_candidate":12990,"normalization_status":"hypothesis_only_raw_ocr_conflicts_with_expected_marker","first_table_entry_lines":list(range(35003,35013)),"first_table_sequence_labels":list(range(1,11)),"following_table_entry_lines":list(range(35015,35025)),"following_table_sequence_labels":list(range(1,11)),"following_table_marker":None,"status":"raw_marker_mismatch_two_tables_not_safely_pairable"}
     ],
     "existing_unassigned_block_refs": [
         "hai_header_conflict_12860",
@@ -1264,9 +1264,10 @@ HAI_12810_12990_TERMINAL_AUDIT = {
     ],
     "rules": [
         "Do not infer 12860, 12900, 12910 or 12920 solely from expected numbering.",
-        "Keep the three 12960-12980 table markers embedded in their last table rows; do not shift them into preceding or following tables without page-image layout.",
+        "Keep 12960-12980 markers embedded in their text-layer table boundary pending page-image layout.",
         "Keep 一九九〇 as raw OCR; 12990 remains a hypothesis only.",
-        "The second table after line 35014 has no group marker; do not automatically call it 13000."
+        "The second table after line 35014 has no group marker; do not automatically call it 13000.",
+        "Row locations and sequence labels are text-layer observations, not image-verified group assignments."
     ],
     "image_verification": "pending"
 }
