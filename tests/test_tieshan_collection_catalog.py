@@ -642,7 +642,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(any(x["raw_group_marker"] == "五二○○" for x in data["group_anomalies"]))
         self.assertTrue(any(x["raw_group_marker"] == "五二六○" for x in data["group_anomalies"]))
         self.assertTrue(any(x["raw_group_marker"] == "五三二○" for x in data["group_anomalies"]))
-        for block in ["chen_unheaded_ten_entries_before_5030","chen_unheaded_ten_entries_after_5230","chen_unheaded_ten_entries_before_5330"]:
+        for block in ["chen_unheaded_entries_before_5030","chen_unheaded_ten_entries_after_5230","chen_unheaded_ten_entries_before_5330"]:
             self.assertIn(block, {x["block_id"] for x in data["unassigned_blocks"]})
         for marker,line in [("五一五○",17411),("五一六○",17425),("五一七○",17436),
                             ("五一八○",17453),("五一九○",17465),("五二一○",17483),
@@ -775,8 +775,8 @@ class ChenCollectionIndexTests(unittest.TestCase):
     def test_chen_first_batch_preserves_partial_and_unheaded_records(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
         data = get_collection_branch_group_index("辰")
-        self.assertEqual(data["group_count"], 44)
-        self.assertEqual(data["entry_count"], 439)
+        self.assertEqual(data["group_count"], 58)
+        self.assertEqual(data["entry_count"], 579)
         first = next(g for g in data["groups"] if g["raw_group_marker"] == "五○一○")
         self.assertEqual(first["entry_count"], 9)
         self.assertEqual([e["entry_sequence"] for e in first["entries"]], list(range(2, 11)))
