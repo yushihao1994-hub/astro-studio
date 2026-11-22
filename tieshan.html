@@ -447,6 +447,32 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
     '<div class="chart-table-wrap"><table class="chart-table"><thead><tr><th>项目</th>'+cols.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+
     detailRows+
     '</tbody></table></div><p class="hint">'+escapeHtml((bd.limitations||[]).join('；'))+'</p>');
+  const topicPayload={pillars:p,birth:b,gender:(document.querySelector('input[name="gender"]:checked')||{}).value||'',derived:z,iron_plate_engine:d.iron_plate_engine||{}};
+  document.getElementById('chartPanel').innerHTML +=
+   '<div class="panel-card"><h3>专项推算</h3><p class="hint">分别查看财运与婚姻专题。只有完成真实考刻定盘并通过古籍依据核验后，才会生成铁板神数专项结论。</p><div class="topic-actions"><button type="button" class="topic-button" id="runFinance">推算财运</button><button type="button" class="topic-button" id="runMarriage">推算婚姻</button></div><div id="financeResult" class="topic-result" aria-live="polite"></div><div id="marriageResult" class="topic-result" aria-live="polite"></div></div>';
+  async function runTopic(topic){
+   const label=topic==='finance'?'财运':'婚姻',output=document.getElementById(topic+'Result');
+   const button=document.getElementById(topic==='finance'?'runFinance':'runMarriage');
+   if(!output||!button)return;
+   button.disabled=true;output.innerHTML='<p>正在提交'+label+'专项推算请求……</p>';
+   try{
+    await wakeApi();
+    const response=await fetch(API+'/api/tieshan/'+topic,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(topicPayload),signal:AbortSignal.timeout(120000)});
+    const result=await response.json();
+    if(response.status===409&&result.code==='KAOKE_NOT_VERIFIED'){
+     output.innerHTML='<div class="empty-state"><strong>'+label+'专项暂未开放正式结论</strong><p>'+escapeHtml(result.error||'真实考刻定盘尚未完成核验。')+'</p><p>前端入口和后台接口已经连通；待考刻算法与原文证据核验完成后，这里才会返回正式推算结果。</p></div>';return;
+    }
+    if(!response.ok||!result.ok)throw new Error(result.error||label+'推算失败');
+    const a=result.analysis||{};
+    const parts=[a.conclusion,a.summary,a.overview,a.reasoning,a.advice].filter(x=>typeof x==='string'&&x.trim());
+    const sections=Array.isArray(a.sections)?a.sections.map(x=>'<div class="topic-section"><b>'+escapeHtml(x.title||'')+'</b><p>'+escapeHtml(x.content||x.conclusion||'')+'</p></div>').join(''):'';
+    output.innerHTML='<div class="topic-success"><strong>'+label+'专项结果</strong>'+parts.map(x=>'<p>'+escapeHtml(x)+'</p>').join('')+sections+'</div>';
+   }catch(error){output.innerHTML='<div class="empty-state">请求未完成：'+escapeHtml(error.message||'网络异常')+'</div>';}
+   finally{button.disabled=false;}
+  }
+  document.getElementById('runFinance').addEventListener('click',()=>runTopic('finance'));
+  document.getElementById('runMarriage').addEventListener('click',()=>runTopic('marriage'));
+
   document.getElementById('tieshanPanel').innerHTML=
    card('铁板神数 · 规则资料库',
     '<p>当前接入的是《康节说易全书·铁板神数》2003年现代点校本的部分可核验对照规则，属于异本研究资料，不等同清刻足本。</p>'+
@@ -588,3 +614,14 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
 </script>
 
 </body></html>
+<style id="topic-reading-ui">
+.topic-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.topic-button{min-height:48px;border:1px solid #9b7953;border-radius:9px;background:#c18c55;color:#18242a;font-size:15px;font-weight:700}
+.topic-button:disabled{opacity:.6}
+.topic-result:empty{display:none}
+.topic-result{margin-top:10px;padding:12px;border:1px solid #38525d;border-radius:9px;background:#0b1b25;color:#dce5e2;line-height:1.8}
+.topic-result p{margin:7px 0}
+.topic-success strong{color:#f0d2a4}
+.topic-section{padding:8px 0;border-top:1px solid #38525d}
+@media(max-width:420px){.topic-actions{grid-template-columns:1fr}}
+</style>
