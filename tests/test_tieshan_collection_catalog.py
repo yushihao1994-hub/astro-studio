@@ -476,8 +476,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(data["collections"][6]["indexed_entries"], 819)
         self.assertEqual(data["collections"][6]["pdf_text_line_start"], 20332)
         self.assertEqual(data["collections"][7]["index_status"], "partial_text_layer_index")
-        self.assertEqual(data["collections"][7]["indexed_groups"], 64)
-        self.assertEqual(data["collections"][7]["indexed_entries"], 640)
+        self.assertEqual(data["collections"][7]["indexed_groups"], 77)
+        self.assertEqual(data["collections"][7]["indexed_entries"], 770)
         self.assertEqual(data["collections"][7]["pdf_text_line_start"], 21990)
         self.assertEqual(data["collections"][5]["pdf_text_line_start"], 18706)
         self.assertEqual(data["collections"][3]["pdf_text_line_start"], 15797)
@@ -1081,8 +1081,8 @@ class WeiCollectionInitialIndexTests(unittest.TestCase):
     def test_wei_first_nineteen_groups_and_unheaded_blocks(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("未")
-        self.assertEqual(data["group_count"], 64)
-        self.assertEqual(data["entry_count"], 640)
+        self.assertEqual(data["group_count"], 77)
+        self.assertEqual(data["entry_count"], 770)
         expected = ["八○三○","八○六○","八○七○","一九八○","八一二○","八一三○","八一四○",
                     "八一五○","八一六○","八一八○","八一九○","八二○○","八二一○","八二二○",
                     "八二四○","八二五○","八二七○","八二八○","八二九○",
@@ -1091,11 +1091,12 @@ class WeiCollectionInitialIndexTests(unittest.TestCase):
                     "八四六○","八四八○","八四九○","八五一○","八五二○","八五四○","八五五○",
                     "八五七○","八五八○","八五九○","八六○○","八六一○","八六二○","八六三○","八六四○","八六五○","八六六○","八六七○",
                           "八六九○","八七○○","八七一○","八二○","八七五○","八七六○","八七七○",
-                          "八七八○","八七九○","八八○○","八八一○","八八二○","八八三○"]
+                          "八七八○","八七九○","八八○○","八八一○","八八二○","八八三○","八八四○","八八五○","八八六○","八九○",
+                          "八九一○","八九二○","八九三○","八九四○","八九五○","八九六○","八九七○","八九八○","八九九○"]
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]], expected)
         self.assertEqual(len(data["unassigned_blocks"]), 8)
         sample = get_collection_sample("未")
-        self.assertEqual(sample["group_index"]["group_count"], 64)
+        self.assertEqual(sample["group_index"]["group_count"], 77)
 
 
 class WeiCollectionIndexThrough8590Tests(unittest.TestCase):
@@ -1144,3 +1145,23 @@ class WeiCollectionIndexThrough8830Tests(unittest.TestCase):
             self.assertEqual(group["raw_group_marker"], marker)
             self.assertEqual(group["entry_count"], 10)
         self.assertTrue(any(x["raw_group_marker"] == "八六八○" for x in data["group_anomalies"]))
+
+
+class WeiCollectionIndexThrough8990Tests(unittest.TestCase):
+    def test_wei_tail_groups_and_shen_boundary(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
+        data = get_collection_branch_group_index("未")
+        expected = [("八八四○",23206),("八八五○",23218),("八八六○",23231),
+                    ("八九○",23282),("八九一○",23302),("八九二○",23319),
+                    ("八九三○",23335),("八九四○",23350),("八九五○",23364),
+                    ("八九六○",23390),("八九七○",23403),("八九八○",23415),("八九九○",23432)]
+        for marker,line in expected:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+            self.assertEqual(group["entry_count"], 10)
+        progress = get_collection_progress()
+        wei = next(x for x in progress["collections"] if x["collection"] == "未")
+        shen = next(x for x in progress["collections"] if x["collection"] == "申")
+        self.assertEqual(wei["pdf_text_line_end"], 23443)
+        self.assertEqual(shen["pdf_text_line_start"], 23449)
+        self.assertTrue(any(x["raw_group_marker"] == "九○○○" for x in data["group_anomalies"]))
