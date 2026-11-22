@@ -863,6 +863,40 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(get_collection_branch_group_index("亥")["p0_coordinate_breakdown"], result)
 
 
+    def test_hai_p0_coordinate_integrity_cross_audits_registry_and_boundaries(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_p0_coordinate_integrity_audit, get_collection_branch_group_index,
+        )
+        result = get_hai_p0_coordinate_integrity_audit()
+        self.assertEqual(result["manifest_block_count"], 5)
+        self.assertEqual(result["coordinate_block_count"], 5)
+        self.assertTrue(result["manifest_coordinate_ids_match"])
+        self.assertTrue(result["manifest_registry_ids_present"])
+        self.assertTrue(result["manifest_registry_spans_match"])
+        self.assertEqual(result["missing_coordinate_blocks"], [])
+        self.assertEqual(result["extra_coordinate_blocks"], [])
+        self.assertEqual(result["missing_registry_blocks"], [])
+        self.assertEqual(result["span_mismatches"], [])
+        self.assertEqual(result["table_column_overlap_mismatches"], [])
+        self.assertEqual(result["duplicate_marker_coordinate_lines"], [])
+        self.assertEqual(result["coordinates_outside_p0_span"], [])
+        self.assertEqual(
+            len(result["p0_registry_span_checks"]), 5,
+        )
+        self.assertTrue(all(x["matches"] for x in result["p0_registry_span_checks"]))
+        for overlap in result["registry_span_overlaps"]:
+            self.assertGreater(overlap["overlap_line_count"], 0)
+            self.assertEqual(overlap["resolution"], "unresolved_preserve_both_registry_records")
+        self.assertEqual(result["unresolved_conflict_count"], len(result["unresolved_conflicts"]))
+        self.assertEqual(result["formal_index_eligible_count"], 0)
+        self.assertEqual(result["group_count"], 0)
+        self.assertEqual(result["entry_count"], 0)
+        self.assertEqual(result["image_verified_group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["p0_coordinate_integrity_audit"], result)
+        self.assertEqual(api["group_count"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
 
