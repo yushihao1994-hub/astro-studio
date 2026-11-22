@@ -651,7 +651,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
                             ("五二九○",17588),("五三○○",17616),("五三一○",17628)]:
             group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
             self.assertEqual(group["raw_group_marker"], marker)
-        self.assertIn("chen_unheaded_ten_entries_before_5030",
+        self.assertIn("chen_unheaded_entries_before_5030",
                       {x["block_id"] for x in data["unassigned_blocks"]})
         sample = get_collection_sample("辰")
         self.assertEqual(sample["collection"], "辰集")
