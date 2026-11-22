@@ -372,6 +372,15 @@ TRANSCRIPTION_CANDIDATES = [
         "status": "image_reviewed_layout_and_section_continuity_transcription_pending",
         "note": "已渲染并检查PDF第651—665页全部15张扫描图像，并对651、655、660—665页作220dpi抽查。第651—664页继续呈现九至一数字栏头及多列竖排断语；第665页为末页局部版面，仍可见数字栏头与数列断语。末段可辨婚姻、妻室、子息、功名、家宅等主题，但未逐字转录，数字栏头与具体条文索引关系未验证。",
         "algorithm_status": "not_implemented"
+    },,
+    {
+        "id": "QING-SECOND-PASS-PDF-001-050",
+        "topic": "第二阶段第1—50页结构分区与图表定位复核",
+        "pdf_pages": [1, 50],
+        "printed_pages": [1, 101],
+        "status": "contact_sheet_reviewed_and_selected_pages_high_resolution_spot_checked_transcription_pending",
+        "note": "本批将PDF第1—50页全部以160dpi渲染并制作两张25页联系表逐页检查；另对第6、7、8、10、11页进行高分辨率抽查。第6—9页可见金四局、水二局、木三局及相邻局式图表和起长生等说明；第10—11页可见庙旺得地利益、安紫府图及纳甲卦/干支组合密集表格；第16—50页版面由分类断语和组合条目构成，页面密度与分栏方式有变化。此轮只完成结构定位，不声称50页逐字转录；图表单元格、短标记和断语对应关系仍待逐格校录。",
+        "algorithm_status": "not_implemented"
     },
 ]
 
