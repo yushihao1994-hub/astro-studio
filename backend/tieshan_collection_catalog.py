@@ -2295,9 +2295,70 @@ SI_UNASSIGNED_BLOCKS = [
 ]
 
 
+def _wu_group(raw_marker, header_line, entry_lines, layout_status="text_layer_rows_located_image_check_pending"):
+    return {
+        "collection": "午", "raw_group_marker": raw_marker, "occurrence": 1,
+        "normalized_group_marker_candidate": None,
+        "group_header_pdf_line": header_line,
+        "pdf_text_lines": f"{header_line}-{entry_lines[-1]}",
+        "layout_status": layout_status, "entry_count": len(entry_lines),
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(entry_lines,1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    }
+
+
+WU_GROUP_INDEX = [
+    _wu_group("七○一○", 20334, list(range(20334,20344)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _wu_group("七○二○", 20346, list(range(20346,20356)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _wu_group("七○三○", 20370, list(range(20372,20382))),
+    _wu_group("七○四○", 20383, list(range(20384,20394))),
+    _wu_group("七○五○", 20395, list(range(20399,20409)), "page_header_before_ten_entries"),
+    _wu_group("七○六○", 20410, list(range(20411,20421))),
+    _wu_group("七○七○", 20422, list(range(20424,20434))),
+    _wu_group("七○八○", 20435, list(range(20438,20448)), "page_header_before_ten_entries"),
+    _wu_group("七○九○", 20449, list(range(20451,20461))),
+    _wu_group("七一○○", 20462, list(range(20463,20473))),
+    _wu_group("七一一○", 20474, list(range(20478,20488)), "page_header_before_ten_entries"),
+    _wu_group("七一二○", 20489, list(range(20490,20500))),
+    _wu_group("七一三○", 20501, list(range(20503,20513))),
+    {
+        "collection": "午", "raw_group_marker": "七一四○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 20514,
+        "pdf_text_lines": "20514-20536", "layout_status": "age_key_rows_then_ten_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(20527,20537),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+]
+
+WU_GROUP_ANOMALIES = []
+WU_UNASSIGNED_BLOCKS = [
+    {"block_id": "wu_unheaded_ten_entries_after_7020", "pdf_text_lines": "20359-20368",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+]
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
+    if branch == "午":
+        return {
+            "edition": EDITION, "collection": "午集",
+            "status": "partial_text_layer_index_image_verification_pending",
+            "group_count": len(WU_GROUP_INDEX),
+            "entry_count": sum(len(group["entries"]) for group in WU_GROUP_INDEX),
+            "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]]) for group in WU_GROUP_INDEX],
+            "group_anomalies": [dict(item) for item in WU_GROUP_ANOMALIES],
+            "unassigned_blocks": [dict(item) for item in WU_UNASSIGNED_BLOCKS],
+            "limitations": [
+                "午集目前仅完成开头已定位组号的结构索引，不代表全篇完成。",
+                "仅依据PDF文本层保存组号、序号和行位，扫描图像逐字核验待完成。",
+                "无组号块不自动归并到相邻组。",
+                "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
+            ]
+        }
     if branch == "巳":
         return {
             "edition": EDITION, "collection": "巳集",
@@ -2407,7 +2468,8 @@ def get_collection_progress():
                  {"indexed_groups": len(YIN_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in YIN_GROUP_INDEX)} if branch == "寅" else
                  {"indexed_groups": len(MAO_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in MAO_GROUP_INDEX)} if branch == "卯" else
                  {"indexed_groups": len(CHEN_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in CHEN_GROUP_INDEX)} if branch == "辰" else
-                 {"indexed_groups": len(SI_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in SI_GROUP_INDEX)} if branch == "巳" else {})
+                 {"indexed_groups": len(SI_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in SI_GROUP_INDEX)} if branch == "巳" else
+                 {"indexed_groups": len(WU_GROUP_INDEX), "indexed_entries": sum(len(group["entries"]) for group in WU_GROUP_INDEX)} if branch == "午" else {})
             )}
             for branch, values in COLLECTION_METADATA.items()
         ],
@@ -2422,7 +2484,7 @@ def get_collection_progress():
 
 
 def get_collection_sample(branch="子"):
-    if branch in ("丑", "寅", "卯", "辰", "巳"):
+    if branch in ("丑", "寅", "卯", "辰", "巳", "午"):
         index = get_collection_branch_group_index(branch)
         return {
             "edition": EDITION,
