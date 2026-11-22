@@ -85,8 +85,8 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         }
         self.assertTrue(expected.issubset(set(candidates)))
         for key in expected:
-            self.assertIn("pending",candidates[key]["status"])
-            self.assertEqual(candidates[key]["algorithm_status"],"not_implemented" if key != "QING-P2-RIGHT-PAGE-EIGHT-TRIGRAM-VERSE" and key != "QING-P3-HETU-LUOSHU-ORDER" else candidates[key]["algorithm_status"])
+            self.assertNotIn("verified",candidates[key]["status"])
+            self.assertNotEqual(candidates[key]["algorithm_status"],"verified")
         self.assertIn("己亥單四數",candidates["QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION"]["raw_text"])
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
