@@ -3254,7 +3254,7 @@ def _you_group(raw_marker, header_line, entry_lines, layout_status="text_layer_r
 YOU_GROUP_INDEX = [
     _you_group("一○○五○", 25146, list(range(25147,25157)), "table_rows_text_layer_located"),
     _you_group("一○○六○", 25171, list(range(25173,25183)), "table_rows_text_layer_located"),
-    _you_group("一○○七○", 25183, list(range(25185,25196)), "table_rows_text_layer_located"),
+    _you_group("一○○七○", 25183, list(range(25186,25196)), "header_age_line_before_ten_entries"),
 ]
 
 YOU_GROUP_ANOMALIES = [
