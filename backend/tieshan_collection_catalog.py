@@ -1099,11 +1099,67 @@ CHOU_GROUP_INDEX = [
             {"entry_sequence": 10, "pdf_text_line": 13074, "record_span": "13074-13076"}
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
+    },        "verification_status": "pdf_text_layer_only_image_check_pending"
     },
-]
-
-CHOU_GROUP_ANOMALIES = [
-    {"raw_group_marker": "二五○", "pdf_text_line": 12772,
+    {
+        "collection": "丑", "raw_group_marker": "二三六○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 13077,
+        "pdf_text_lines": "13077-13099", "layout_status": "multi_line_age_clause_layout_text_layer_only",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 13079, "record_span": "13079-13080"},
+            {"entry_sequence": 2, "pdf_text_line": 13081, "record_span": "13081-13082"},
+            {"entry_sequence": 3, "pdf_text_line": 13083, "record_span": "13083-13084"},
+            {"entry_sequence": 4, "pdf_text_line": 13085, "record_span": "13085-13086"},
+            {"entry_sequence": 5, "pdf_text_line": 13087, "record_span": "13087-13089"},
+            {"entry_sequence": 6, "pdf_text_line": 13090, "record_span": "13090-13091"},
+            {"entry_sequence": 7, "pdf_text_line": 13092, "record_span": "13092-13093"},
+            {"entry_sequence": 8, "pdf_text_line": 13094, "record_span": "13094-13095"},
+            {"entry_sequence": 9, "pdf_text_line": 13096, "record_span": "13096-13097"},
+            {"entry_sequence": 10, "pdf_text_line": 13098, "record_span": "13098-13099"}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "丑", "raw_group_marker": "二三七○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 13101,
+        "pdf_text_lines": "13101-13123", "layout_status": "multi_line_age_clause_layout_text_layer_only",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 13103, "record_span": "13103-13104"},
+            {"entry_sequence": 2, "pdf_text_line": 13105, "record_span": "13105-13106"},
+            {"entry_sequence": 3, "pdf_text_line": 13107, "record_span": "13107-13108"},
+            {"entry_sequence": 4, "pdf_text_line": 13109, "record_span": "13109-13110"},
+            {"entry_sequence": 5, "pdf_text_line": 13111, "record_span": "13111-13112"},
+            {"entry_sequence": 6, "pdf_text_line": 13113, "record_span": "13113-13114"},
+            {"entry_sequence": 7, "pdf_text_line": 13115, "record_span": "13115-13116"},
+            {"entry_sequence": 8, "pdf_text_line": 13117, "record_span": "13117-13118"},
+            {"entry_sequence": 9, "pdf_text_line": 13119, "record_span": "13119-13120"},
+            {"entry_sequence": 10, "pdf_text_line": 13122, "record_span": "13122-13123"}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "丑", "raw_group_marker": "二三八○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 13125,
+        "pdf_text_lines": "13125-13159", "layout_status": "multi_line_age_clause_layout_boundary_ambiguous",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 13129, "record_span": "13129-13131"},
+            {"entry_sequence": 2, "pdf_text_line": 13133, "record_span": "13133-13134"},
+            {"entry_sequence": 3, "pdf_text_line": 13136, "record_span": "13136-13137"},
+            {"entry_sequence": 4, "pdf_text_line": 13139, "record_span": "13139-13140"},
+            {"entry_sequence": 5, "pdf_text_line": 13142, "record_span": "13142-13144"},
+            {"entry_sequence": 6, "pdf_text_line": 13146, "record_span": "13146-13147"},
+            {"entry_sequence": 7, "pdf_text_line": 13149, "record_span": "13149-13150"},
+            {"entry_sequence": 8, "pdf_text_line": 13152, "record_span": "13152-13153"},
+            {"entry_sequence": 9, "pdf_text_line": 13155, "record_span": "13155-13156"},
+            {"entry_sequence": 10, "pdf_text_line": 13158, "record_span": "13158-13159",
+             "boundary_note": "末行含二三九○字样，是否同时承担下一组标识待版面复核"}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+]72,
      "normalized_group_marker_candidate": None,
      "status": "raw_marker_preserved_numbering_interpretation_unresolved",
      "note": "文本层原样为二五○，后文另有明确二二五○（12906行）；不得仅凭顺序自动改写。"},
