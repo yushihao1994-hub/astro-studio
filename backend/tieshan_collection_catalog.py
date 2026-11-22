@@ -1516,9 +1516,9 @@ YIN_GROUP_INDEX = [
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
     _yin_group("三八二○", 15421, list(range(15422, 15432))),
-    _yin_group("三八四○", 15437, list(range(15438, 15451))),
-    _yin_group("三八五○", 15451, list(range(15452, 15469))),
-    _yin_group("三八六○", 15469, list(range(15470, 15486))),
+    _yin_group("三八四○", 15437, [15438,15440,15441,15442,15443,15445,15446,15447,15448,15449], "multi_line_age_clause_spans"),
+    _yin_group("三八五○", 15451, [15452,15454,15455,15456,15458,15459,15461,15462,15464,15466], "multi_line_age_clause_spans"),
+    _yin_group("三八六○", 15469, [15470,15471,15472,15474,15476,15478,15480,15482,15484,15485], "multi_line_age_clause_spans"),
 ]
 
 YIN_GROUP_ANOMALIES = [
