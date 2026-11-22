@@ -1447,6 +1447,12 @@ def ai_full_report():
         return jsonify({"ok": False, "error": "完整报告发生内部错误（" + type(exc).__name__ + "）。"}), 500
 
 
+@app.get("/api/tieshan/collections/progress")
+def tieshan_collections_progress():
+    """Return evidence-based transcription progress for all twelve collections."""
+    return jsonify({"ok": True, "progress": get_collection_progress()})
+
+
 @app.get("/api/tieshan/collections/<branch>/groups")
 def tieshan_collection_groups(branch):
     """Return metadata-only group index for a collection."""
