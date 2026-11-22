@@ -465,8 +465,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(all(x["index_status"] == "not_transcribed" for x in data["collections"][3:]))
         self.assertEqual(data["collections"][2]["pdf_text_line_start"], 14175)
         self.assertIsNone(data["collections"][2]["pdf_text_line_end"])
-        self.assertEqual(data["collections"][2]["indexed_groups"], 46)
-        self.assertEqual(data["collections"][2]["indexed_entries"], 460)
+        self.assertEqual(data["collections"][2]["indexed_groups"], 72)
+        self.assertEqual(data["collections"][2]["indexed_entries"], 719)
         self.assertEqual(data["collections"][0]["pdf_text_line_start"], 10664)
         self.assertEqual(data["collections"][0]["pdf_text_line_end"], 12570)
         self.assertEqual(data["collections"][1]["pdf_text_line_start"], 12572)
@@ -475,8 +475,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_yin_collection_initial_groups_and_unassigned_sections(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("寅")
-        self.assertEqual(data["group_count"], 46)
-        self.assertEqual(data["entry_count"], 460)
+        self.assertEqual(data["group_count"], 72)
+        self.assertEqual(data["entry_count"], 719)
         expected = [("三○一○",14177),("三○二○",14190),("三○三○",14218),
                     ("三○四○",14230),("三○六○",14257),("三○七○",14274)]
         for marker,line in expected:
@@ -498,6 +498,24 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertTrue(any(x["raw_group_marker"] == "三四七○" for x in data["group_anomalies"]))
         self.assertTrue(any(x["raw_group_marker"] == "三五六○" for x in data["group_anomalies"]))
         self.assertIn("yin_special_section_shiji_before_3390", {x["block_id"] for x in data["unassigned_blocks"]})
+        self.assertIn("yin_special_section_shenji", {x["block_id"] for x in data["unassigned_blocks"]})
+        self.assertIn("yin_special_section_shiji_after_3680", {x["block_id"] for x in data["unassigned_blocks"]})
+        self.assertIn("yin_special_section_shiji_after_3740", {x["block_id"] for x in data["unassigned_blocks"]})
+        self.assertIn("yin_special_section_shiji_after_3860", {x["block_id"] for x in data["unassigned_blocks"]})
+        for marker,line in [("三五七○",15087),("三五八○",15099),("三六○○",15127),
+                            ("三六一○",15140),("三六二○",15153),("三六三○",15180),
+                            ("三六四○",15193),("三六六○",15212),("三六七○",15226),
+                            ("三六八○",15240),("三六九○",15267),("三七○○",15279),
+                            ("三七二○",15296),("三七三○",15308),("三七四○",15320),
+                            ("三七五○",15348),("三七六○",15360),("三七八○",15380),
+                            ("三七九○",15381),("三八○○",15382),("三八一○",15397),
+                            ("三八二○",15421),("三八四○",15437),("三八五○",15451),
+                            ("三八六○",15469)]:
+            group = next(g for g in data["groups"] if g["group_header_pdf_line"] == line)
+            self.assertEqual(group["raw_group_marker"], marker)
+        repeated_3580 = [g for g in data["groups"] if g["raw_group_marker"] == "三五八○"]
+        self.assertEqual([g["group_header_pdf_line"] for g in repeated_3580], [15099,15112])
+        self.assertEqual(next(g for g in data["groups"] if g["group_header_pdf_line"] == 15153)["entry_count"], 9)
         for marker,line in [("三三九○",14757),("三四○○",14810),("三四二○",14847),
                             ("三四三○",14859),("三四四○",14872),("三四五○",14899),
                             ("三四六○",14911),("三四八○",14940),("三四九○",14954),
@@ -524,7 +542,7 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
             self.assertEqual(len(group["entries"]), 10)
         sample = get_collection_sample("寅")
         self.assertEqual(sample["collection"], "寅集")
-        self.assertEqual(sample["group_index"]["group_count"], 46)
+        self.assertEqual(sample["group_index"]["group_count"], 72)
 
     def test_collection_progress_exposes_chou_text_range_and_indexed_groups(self):
         from backend.tieshan_collection_catalog import get_collection_progress
