@@ -1003,7 +1003,7 @@ def get_group_index():
 # 2003点校本目录页所列的分集起始印刷页。仅记录起始页，不推断结束页。
 COLLECTION_METADATA = {
     "子": {"printed_page_start": 138, "pdf_text_line_start": 10664, "pdf_text_line_end": 12570, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14290, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14174, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "寅": {"printed_page_start": 206, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "卯": {"printed_page_start": 240, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1280,6 +1280,14 @@ CHOU_GROUP_INDEX = [
         "entries": [{"entry_sequence": n, "pdf_text_line": None, "source_span": "14007-14027"} for n in range(1,11)],
         "verification_status": "pdf_text_layer_only_image_check_pending"
     },
+    _chou_group("二九○", 14044, list(range(14045, 14055)), "raw_short_marker_preserved"),
+    _chou_group("二九二", 14055, list(range(14056, 14066)), "raw_short_marker_preserved"),
+    _chou_group("二九三○", 14082, list(range(14083, 14093))),
+    _chou_group("二九四○", 14094, list(range(14096, 14106))),
+    _chou_group("二九六○", 14111, list(range(14112, 14122))),
+    _chou_group("二九七○", 14123, list(range(14125, 14135))),
+    _chou_group("二九八○", 14136, list(range(14137, 14147))),
+    _chou_group("二九九○", 14161, list(range(14162, 14172))),
 ]
 
 CHOU_GROUP_ANOMALIES = [
@@ -1320,7 +1328,13 @@ CHOU_GROUP_ANOMALIES = [
     {"raw_group_marker": "二六四○", "pdf_text_line": 13584,
      "status": "marker_seen_body_layout_unresolved"},
     {"raw_group_marker": "二七四○", "pdf_text_line": 13795,
-     "status": "marker_seen_body_not_located_before_2750"}
+     "status": "marker_seen_body_not_located_before_2750"},
+    {"raw_group_marker": "二八九○", "pdf_text_line": 14029,
+     "status": "marker_seen_body_boundary_ambiguous_before_raw_二○○"},
+    {"raw_group_marker": "二○○", "pdf_text_line": 14032,
+     "status": "raw_marker_preserved_possible_2900_body_marker_pending_image_check"},
+    {"raw_group_marker": "二九五○", "pdf_text_line": 14107,
+     "status": "marker_seen_body_not_located_before_2960"}
 ]
 
 CHOU_UNASSIGNED_BLOCKS = [
@@ -1354,7 +1368,17 @@ CHOU_UNASSIGNED_BLOCKS = [
     {"block_id": "chou_possible_2710_group_body",
      "pdf_text_lines": "13726-13747", "entry_count_candidate": 10,
      "status": "group_boundary_ambiguous_do_not_promote",
-     "note": "前置原始标题为二七○，十条正文无独立二七一○标题。"}
+     "note": "前置原始标题为二七○，十条正文无独立二七一○标题。"},
+    {"block_id": "chou_possible_2890_group_body",
+     "pdf_text_lines": "14032-14042", "entry_count_candidate": 10,
+     "status": "group_boundary_ambiguous_do_not_promote",
+     "note": "二八九○标题之后出现原始短标记二○○，其后有十条内容，组界待图像核验。"},
+    {"block_id": "chou_unheaded_entries_after_292",
+     "pdf_text_lines": "14071-14080", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "chou_unheaded_entries_before_2990",
+     "pdf_text_lines": "14150-14159", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"}
 ]
 
 
