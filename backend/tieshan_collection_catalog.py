@@ -4283,6 +4283,47 @@ def get_hai_priority_conflict_review():
 
 
 
+def get_hai_numbered_group_review_12780_12800():
+    """Expand 12780-12800 source markers and numbered rows without image-level claims."""
+    source = HAI_12670_12800_BOUNDARY_AUDIT
+    markers = {item["candidate"]: item for item in source["markers"]}
+    cases = []
+    for candidate in (12780, 12790, 12800):
+        item = markers[candidate]
+        entry_lines = list(item["entry_lines"])
+        cases.append({
+            "candidate_reference_only": candidate,
+            "raw_marker": item["raw"],
+            "marker_pdf_line": item["line"],
+            "entry_pdf_lines": entry_lines,
+            "entry_count_candidate": len(entry_lines),
+            "sequence_labels": list(item["sequence_labels"]),
+            "sequence_label_count": len(item["sequence_labels"]),
+            "status": item["status"],
+            "row_mapping_status": "ten_numbered_text_layer_rows_located_page_layout_not_verified",
+            "formal_index_eligible": False,
+            "required_evidence": [
+                f"组头及正文所在原页扫描图（候选组号{candidate}）",
+                "核对组头与正文是否处于同一版面单元",
+                "核对序号1—10与十条完整正文的逐项对应",
+                "检查是否存在跨栏、续行或文本层漏行"
+            ],
+        })
+    return {
+        "source_pdf_text_lines": "34725-34761",
+        "cases": cases,
+        "rules": [
+            "Preserve raw OCR group markers and source line numbers.",
+            "Ten sequence labels do not alone prove ten complete, image-verified entries.",
+            "Do not use these candidates to fill any neighboring group's missing content.",
+            "All three remain text-layer candidates pending original page-image review."
+        ],
+        "formal_index_eligible_count": 0,
+        "group_count": 0,
+        "verification_status": "pdf_text_layer_numbered_group_review_page_image_verification_pending",
+    }
+
+
 def get_hai_numbered_group_review_12720_12760():
     """Expand ordinary 12720/12730/12750/12760 row ranges without treating wrapped lines as extra entries."""
     source = HAI_12670_12800_BOUNDARY_AUDIT
@@ -4668,6 +4709,7 @@ def get_collection_branch_group_index(branch):
             "marker_cluster_review_12080_12180": get_hai_marker_cluster_review_12080_12180(),
             "table_region_review_12440_12500": get_hai_table_region_review_12440_12500(),
             "detached_numeric_review_12670_12680": get_hai_detached_numeric_review_12670_12680(),
+            "numbered_group_review_12780_12800": get_hai_numbered_group_review_12780_12800(),
             "numbered_group_review_12720_12760": get_hai_numbered_group_review_12720_12760(),
             "header_exception_review_12710_12770": get_hai_header_exception_review_12710_12770(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
