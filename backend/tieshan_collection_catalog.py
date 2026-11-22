@@ -1051,7 +1051,22 @@ CHOU_GROUP_INDEX = [
     _chou_group("二二四○", 12757, list(range(12758, 12768))),
     # The source text layer shows the abbreviated marker 二六○ exactly;
     # do not normalize it to 二二六○ without page-image confirmation.
-    _chou_group("二六○", 12798, list(range(12799, 12810))),
+    {
+        "collection": "丑",
+        "raw_group_marker": "二六○",
+        "normalized_group_marker_candidate": None,
+        "group_header_pdf_line": 12798,
+        "pdf_text_lines": "12798-12809",
+        "layout_status": "text_layer_span_located_entry_alignment_unresolved",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": sequence, "pdf_text_line": None,
+             "source_span": "12799-12809",
+             "alignment_status": "ten_entries_reported_span_has_eleven_text_lines_pending_image_check"}
+            for sequence in range(1, 11)
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending",
+    },
 ]
 
 CHOU_GROUP_ANOMALIES = [
