@@ -8,9 +8,9 @@ executable Iron Plate calculations.
 EDITION = "《神機妙算鐵板數》；题署邵康節先生著；封面内页见“貞元書屋藏板”"
 FILE_NAME = "鐵板神數(清刻足本).pdf"
 FILE_SIZE_BYTES = 83686820
-SCAN_PAGE_COUNT = 150
+SCAN_PAGE_COUNT = 665
 PRINTED_PAGE_COUNT_SHOWN = 1363
-STATUS = "all_150_pdf_scan_pages_image_reviewed_core_rules_pending"
+STATUS = "first_150_of_665_pdf_pages_image_reviewed_core_rules_pending"
 SOURCE_CLASS = "user_provided_primary_scan"
 
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
@@ -26,9 +26,10 @@ OBSERVATIONS = [
         "pdf_page": 1,
         "location": "封面内页说明",
         "visible_text_fragment": "八刻每一刻又推十五分",
-        "status": "image_observed_transcription_pending",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
         "algorithm_status": "not_implemented",
-        "note": "只确认书中出现八刻与每刻十五分的说明；传统考刻如何结合六亲校验、定数与刻分推进，尚未据完整例题复原。",
+        "raw_text_candidate": "每一時須推八刻，每刻又推十五分。",
+        "note": "已从原始PDF第1页300dpi图像辨认到八刻与每刻十五分的表述；仅确认时间结构文字，传统考刻如何结合六亲校验、定数与刻分推进，尚未据完整例题复原。",
     },
     {
         "id": "QING-TRUE-KE-EXAMINATION",
@@ -168,6 +169,16 @@ OBSERVATIONS = [
 # These are source strings, not executable mappings; every item remains pending
 # independent character-by-character review against the page image.
 TRANSCRIPTION_CANDIDATES = [
+
+    {
+        "id": "QING-OPENING-TRUE-KE-PARAGRAPH",
+        "topic": "真刻与命理定数开篇说明",
+        "pdf_page": 1,
+        "raw_text": "蓋聞人禀天地命屬陰陽，即旦夕吉凶各有定數，況終身禍福豈無以定之。然命之理微，變化無窮，若差毫釐必謬千里。往往八字相同而貧富名異，皆因未識真刻末分耳。唯前賢諸夫子秘傳理數，從本人父母本身八字配合五音八卦，每一時須推八刻，每刻又推十五分，推到的準時刻，自然全數悉合，禍福吉凶終毫不爽。彼夫造福損德者，未可同日而語也。",
+        "status": "high_resolution_image_transcribed_candidate_pending_second_review",
+        "ambiguities": ["“皆因未識真刻末分耳”末字需再核；此段按300dpi图像初读，未完成逐字校勘。"],
+        "algorithm_status": "not_implemented"
+    },
     {
         "id": "QING-HELUO-CLAUSES",
         "topic": "河洛配数例",
@@ -210,7 +221,7 @@ def get_qing_source_reference():
         "file_name": FILE_NAME,
         "file_size_bytes": FILE_SIZE_BYTES,
         "scan_page_count": SCAN_PAGE_COUNT,
-        "page_count_basis": "Files 文件解析服务对当前可访问 PDF 报告 150 页；原书扫描页脚印刷页码显示至 1363",
+        "page_count_basis": "对原始PDF文件执行pdfinfo，确认总计665个PDF页；Files图像读取接口目前仅直接返回前150页",
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
@@ -219,5 +230,6 @@ def get_qing_source_reference():
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
         "blockers": list(BLOCKERS),
+        "review_coverage": "150/665 PDF页已检查（约22.6%）；剩余515页尚未检查",
         "can_generate_final_iron_plate_number": False,
     }
