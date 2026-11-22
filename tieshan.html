@@ -513,39 +513,77 @@ document.getElementById('clear').addEventListener('click',()=>{form.reset();docu
 })();
 </script>
 
+<style id="clean-home-layout">
+.home-dashboard{max-width:620px;margin:0 auto;padding:12px 14px 24px}
+.home-title{text-align:left;padding:10px 2px 14px}
+.home-title-main{font-family:inherit;font-size:26px;letter-spacing:1px;color:#f0d2a4;text-shadow:none}
+.home-subtitle{font-size:13px;letter-spacing:0;color:#b7c7c9;margin-top:4px}
+.cosmic-panel,.home-info-strip,.home-actions{display:none!important}
+.home-entry-card{margin:0!important;padding:18px!important;border:1px solid #38525d!important;border-radius:14px!important;background:#10212c!important;box-shadow:0 8px 24px #0003!important}
+.home-entry-card>h3{font-size:18px!important;color:#f0d2a4!important;margin:0 0 5px!important}
+.home-entry-card>.hint{font-size:12px!important;line-height:1.7!important;color:#aebfc1!important;margin:0 0 16px!important}
+.profile-section{padding:15px 0;border-top:1px solid #2b424d}
+.profile-section-head{display:flex;align-items:center;gap:9px;margin:0 0 12px}
+.profile-section-head strong{font-size:14px;color:#e8c18f;white-space:nowrap}
+.profile-section-head span{font-size:11px;color:#91a7ad}
+.profile-section-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 12px}
+.profile-section-fields>.field{min-width:0;margin:0!important;grid-column:auto!important}
+#homeIdentity .profile-section-fields>.field:first-child,#homeBirth .profile-section-fields>.field:has(.date-parts),#homeLocation .profile-section-fields>.field{grid-column:1/-1!important}
+.profile-section label{font-size:12px!important;color:#cbd6d4!important;margin:0 0 6px!important}
+.profile-section input,.profile-section select{width:100%;min-width:0;height:46px;min-height:46px;padding:0 11px;font-size:15px;border:1px solid #3d5964;border-radius:8px;background:#0a1923;color:#f1eee7}
+.profile-section .date-parts{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}
+.profile-section .address-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible;padding:0}
+.profile-section .address-parts select{width:100%;min-width:0;height:44px;font-size:13px}
+.profile-section .choice{gap:8px}.profile-section .choice span{min-height:46px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+.profile-section small{font-size:11px!important;line-height:1.65;color:#93a9ae!important}
+#addressHint,#dateHint{margin-top:7px!important}#naturalVillage{margin-top:8px}
+.home-entry-card .actions{display:grid;grid-template-columns:1fr auto;gap:9px;margin-top:18px}
+.home-entry-card .actions button{min-height:48px;border-radius:9px;font-size:14px;padding:10px 16px}
+.home-entry-card .actions .primary{background:#c18c55;color:#151d20}
+.home-entry-card .actions .secondary{background:#1b303a;border-color:#405964;color:#d5dedd}
+@media(max-width:520px){
+.home-dashboard{padding:8px 11px 20px}.home-title{padding:8px 2px 13px}.home-title-main{font-size:24px}
+.home-entry-card{padding:15px 13px!important}.profile-section{padding:13px 0}
+.profile-section-fields{grid-template-columns:minmax(0,1fr);gap:12px}
+#homeIdentity .profile-section-fields>.field:first-child,#homeBirth .profile-section-fields>.field:has(.date-parts),#homeLocation .profile-section-fields>.field{grid-column:1!important}
+.profile-section .address-parts{grid-template-columns:repeat(2,minmax(0,1fr))}
+.home-entry-card .actions{grid-template-columns:1fr}.home-entry-card .actions button{width:100%}
+}
+</style>
 <script>
 (function(){
- const form=document.getElementById('birthForm'),home=document.getElementById('homeDashboard'),grid=document.querySelector('main.wrap > .grid'),actions=document.querySelector('.home-actions'),fields=form&&form.querySelector('.fields');
- if(!form||!home||!grid||!actions||!fields)return;
+ const form=document.getElementById('birthForm'),home=document.getElementById('homeDashboard'),grid=document.querySelector('main.wrap > .grid'),shortcuts=document.querySelector('.home-actions'),fields=form&&form.querySelector('.fields');
+ if(!form||!home||!grid||!shortcuts||!fields)return;
  const card=form.closest('.card');card.classList.add('home-entry-card');
  card.querySelector('h3').textContent='出生资料';
- card.querySelector('.hint').textContent='请按实际情况填写。资料只需录入一次，后续推算与档案均使用这份资料。';
- home.insertBefore(card,actions);
- const make=(id,title,desc)=>{const s=document.createElement('section');s.className='profile-section';s.id=id;s.innerHTML='<div class="profile-section-head"><strong>'+title+'</strong><span>'+desc+'</span></div><div class="profile-section-fields"></div>';card.insertBefore(s,form.querySelector('.actions'));return s.querySelector('.profile-section-fields');};
- const identity=make('homeIdentity','01 · 基本信息','姓名与性别');
- const birth=make('homeBirth','02 · 出生信息','历法、年月日、出生时辰与时间准确程度');
- const location=make('homeLocation','03 · 出生地点','逐级选择出生地，村/社区可选填');
+ card.querySelector('.hint').textContent='按顺序填写以下三项资料。带有“选填”标记的内容可以稍后补充。';
+ const title=document.querySelector('.home-title-main'),subtitle=document.querySelector('.home-subtitle');
+ if(title)title.textContent='出生资料录入';
+ if(subtitle)subtitle.textContent='填写基本信息 · 出生日期与时辰 · 出生地点';
+ home.insertBefore(card,shortcuts);
+ const section=(id,name,desc)=>{
+  const s=document.createElement('section');s.className='profile-section';s.id=id;
+  s.innerHTML='<div class="profile-section-head"><strong>'+name+'</strong><span>'+desc+'</span></div><div class="profile-section-fields"></div>';
+  card.insertBefore(s,form.querySelector('.actions'));return s.querySelector('.profile-section-fields');
+ };
+ const identity=section('homeIdentity','01 基本信息','姓名与性别');
+ const birth=section('homeBirth','02 出生信息','历法、日期和时辰');
+ const location=section('homeLocation','03 出生地点','按行政区逐级选择');
  const field=id=>document.getElementById(id)?.closest('.field');
  const move=(id,target)=>{const f=field(id);if(f)target.appendChild(f);};
- move('name',identity);const gf=form.querySelector('input[name="gender"]')?.closest('.field');if(gf)identity.appendChild(gf);
- move('calendar',birth);move('time',birth);const df=field('birthMonth');if(df)birth.appendChild(df);move('accuracy',birth);
- const af=field('citySelect');if(af)location.appendChild(af);
+ move('name',identity);const gender=form.querySelector('input[name="gender"]')?.closest('.field');if(gender)identity.appendChild(gender);
+ move('calendar',birth);move('time',birth);const date=field('birthMonth');if(date)birth.appendChild(date);move('accuracy',birth);
+ const address=field('citySelect');if(address)location.appendChild(address);
  fields.remove();card.querySelectorAll('.form-section-title').forEach(x=>x.closest('.field')?.remove());grid.style.display='none';
- const css=document.createElement('style');css.textContent=`
- .home-entry-card{margin:14px 0 16px!important;padding:16px!important;border:1px solid #3b5963!important;border-radius:14px!important;background:linear-gradient(145deg,#142733,#0c1b26)!important;box-shadow:0 8px 22px #0003!important}
- .home-entry-card>h3{font-size:19px!important;color:#f0c994!important;margin:0 0 4px!important}.home-entry-card>.hint{font-size:12px!important;line-height:1.7!important;margin:0 0 14px!important;color:#afc0c1!important}
- .profile-section{padding:13px 0;border-top:1px solid #38515b}.profile-section-head{display:flex;flex-direction:column;gap:2px;margin-bottom:11px}.profile-section-head strong{font-size:14px;letter-spacing:1px;color:#e9c18e}.profile-section-head span{font-size:11px;color:#9fb2b5}
- .profile-section-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.profile-section-fields>.field{min-width:0;margin:0!important;grid-column:auto!important}
- #homeIdentity .profile-section-fields>.field:first-child,#homeBirth .profile-section-fields>.field:has(.date-parts),#homeLocation .profile-section-fields>.field{grid-column:1/-1!important}
- .profile-section label{font-size:12px!important;color:#d5dfdc!important;margin-bottom:6px!important}.profile-section input,.profile-section select{width:100%;min-width:0;height:44px;min-height:44px;padding:0 10px;font-size:15px;border:1px solid #49636d;border-radius:8px;background:#0b1c27;color:#f0eee7}
- .profile-section .date-parts{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px}.profile-section .address-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible;padding:0}.profile-section .address-parts select{width:100%;min-width:0;height:44px;font-size:13px}
- .profile-section .choice{gap:8px}.profile-section .choice span{min-height:44px;display:flex;align-items:center;justify-content:center;border-radius:8px}.profile-section small{font-size:11px!important;line-height:1.65;color:#9fb2b5!important}
- #addressHint,#dateHint{margin-top:7px!important}#naturalVillage{margin-top:8px}
- .home-entry-card .actions{display:grid;grid-template-columns:1.5fr 1fr;gap:9px;margin-top:14px}.home-entry-card .actions button{min-height:48px;border-radius:9px;font-size:14px}.home-entry-card .notice{font-size:11px;line-height:1.75;border-radius:8px}
- @media(max-width:520px){.home-dashboard{padding:6px 10px 16px}.home-entry-card{margin:12px 0!important;padding:13px 12px!important}.profile-section{padding:11px 0}.profile-section-fields{grid-template-columns:minmax(0,1fr);gap:11px}#homeIdentity .profile-section-fields>.field:first-child,#homeBirth .profile-section-fields>.field:has(.date-parts),#homeLocation .profile-section-fields>.field{grid-column:1!important}.profile-section .address-parts{grid-template-columns:repeat(2,minmax(0,1fr))}.profile-section .address-parts select{font-size:13px}.home-entry-card .actions{grid-template-columns:1fr}.home-entry-card .actions button{width:100%}}
- `;document.head.appendChild(css);
- actions.querySelector('[data-go="calc"]')?.addEventListener('click',e=>{e.preventDefault();form.requestSubmit();});
- form.addEventListener('submit',e=>{if(!form.reportValidity()){e.preventDefault();return;}if(!provinceSelect.value||!citySelect.value||!districtSelect.value||!townSelect.value){e.preventDefault();document.getElementById('addressHint').textContent='请至少选择省、市、县区和乡镇；村/社区为选填。';document.getElementById('homeLocation').scrollIntoView({behavior:'smooth',block:'center'});return;}home.style.display='none';grid.style.display='grid';},true);
+ form.addEventListener('submit',event=>{
+  if(!form.reportValidity()){event.preventDefault();event.stopImmediatePropagation();return;}
+  if(!provinceSelect.value||!citySelect.value||!districtSelect.value||!townSelect.value){
+   event.preventDefault();event.stopImmediatePropagation();
+   const hint=document.getElementById('addressHint');if(hint)hint.textContent='请先选择省、市、县区和乡镇；村/社区及自然村可以选填。';
+   document.getElementById('homeLocation').scrollIntoView({behavior:'smooth',block:'center'});return;
+  }
+  home.style.display='none';grid.style.display='grid';
+ },true);
 })();
 </script>
 
