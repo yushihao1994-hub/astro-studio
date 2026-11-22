@@ -1510,7 +1510,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(block_12920["table_entry_pdf_lines"], list(range(34916, 34926)))
         self.assertEqual(block_12920["sequence_labels_observed"], list(range(1, 11)))
         self.assertEqual(block_12920["following_group_marker_pdf_line"], 34927)
-        self.assertEqual(len(data["unassigned_blocks"]), 20)
+        self.assertEqual(len(data["unassigned_blocks"]), 22)
 
     def test_hai_12960_to_12980_table_cell_markers_and_terminal_tables_are_structured(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
@@ -1539,7 +1539,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(terminal["first_table_entry_pdf_lines"], list(range(35003, 35013)))
         self.assertEqual(terminal["following_table_entry_pdf_lines"], list(range(35015, 35025)))
         self.assertIsNone(terminal["following_table_group_marker"])
-        self.assertEqual(len(data["unassigned_blocks"]), 20)
+        self.assertEqual(len(data["unassigned_blocks"]), 22)
 
 
     def test_hai_crosswalk_matches_marker_lines_and_flags_overlapping_layout_rows(self):
@@ -1663,7 +1663,7 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(markers[12670]["detail_ref"], "hai_split_numeric_column_12670")
         self.assertEqual(markers[12680]["detail_ref"], "hai_header_only_12680")
         self.assertEqual(audit["verification_status"],
-                         "marker_positions_partly_recovered_text_layer_body_mapping_incomplete_page_image_pending")
+                         "text_layer_rows_reaudited_page_image_verification_pending")
         data = get_collection_branch_group_index("亥")
         self.assertEqual(data["boundary_audit_12670_12800"]["markers"][2]["entry_lines"], list(range(34611, 34621)))
         block = next(x for x in data["unassigned_blocks"] if x["block_id"] == "hai_truncated_marker_12710")
@@ -1719,8 +1719,6 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_crosswalk_audits_unassigned_blocks_without_assigning_groups(self):
         from backend.tieshan_collection_catalog import get_hai_crosswalk_audit
         audit = get_hai_crosswalk_audit()
-        self.assertEqual(audit["unassigned_block_count"], 22)
-
         self.assertEqual(audit["unassigned_block_count"], 22)
         self.assertEqual(len(audit["unassigned_block_crosswalk"]), 22)
         self.assertEqual(audit["layout_candidate_count"], 77)
