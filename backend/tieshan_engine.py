@@ -5,7 +5,7 @@ It deliberately does not invent a final number, six-relative numbers, or clauses
 SYSTEM_NAME = "铁板神数推演基础引擎"
 ENGINE_VERSION = "0.4.0-qing-source-audit"
 PRIMARY_REFERENCE = "《神機妙算鐵板數》清刻影印本（用户提供扫描件；核心规则待逐页核验）"
-QING_REFERENCE_STATUS = "清刻足本原始PDF共665页；前650页（约97.7%）已完成图像版式初检，尚余15页待检查；原书印刷页至约1363页，起数、考刻、六亲数、秘钞密码及条文索引仍待逐条转录和验证"
+QING_REFERENCE_STATUS = "清刻足本原始PDF共665页；全部665页已完成图像版式初检（100%），但原书印刷页至约1363页的起数、考刻、六亲数、秘钞密码及条文索引仍待逐条转录和验证"
 from tieshan_kunji import get_kunji_reference
 from tieshan_qing_source import get_qing_source_reference
 KUNJI_REFERENCE = get_kunji_reference()
@@ -84,7 +84,7 @@ def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=No
         "available_foundations": {"eight_ke":eight_ke,"body_life_palaces":body_life_palaces,"classic_reference":classic_reference, "eight_trigram_addition":classic_reference.get("eight_trigram_addition"), "kunji_reference":KUNJI_REFERENCE, "qing_source_reference":QING_SOURCE_REFERENCE},
         "workflow": steps, "rule_registry": [dict(item) for item in RULE_REGISTRY],
         "stop_reasons": [
-            "清刻足本原始PDF共665页，目前前650页完成图像版式初检，尚余15页待检查；核心规则和附录密码表尚未完整转录。",
+            "清刻足本原始PDF共665页，全部扫描页已完成图像版式初检；核心规则和附录密码表尚未完整转录、复算和验证。",
             "2003年点校本乾集规则仅作异本对照；代码中的QIAN条目不得冒充清刻本已验证规则。该版本与清刻本的逐条异文校勘尚未完成。",
             "完整起数、考刻、六亲数、秘钞密码表和条文编号匹配尚未形成可逐步复算的证据链。",
             "在上述关键环节补齐并通过原文例题回归测试之前，不输出所谓最终铁板定数或人生断语。",
