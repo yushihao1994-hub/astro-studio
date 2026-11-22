@@ -1334,6 +1334,33 @@ class XuCollectionInitialIndexTests(unittest.TestCase):
         self.assertEqual(xu_progress["indexed_entries"], 80)
 
 
+class HaiUnassignedEntryRowMappingTests(unittest.TestCase):
+    def test_hai_unassigned_blocks_have_explicit_sequence_row_locations(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("亥")
+        blocks = {item["block_id"]: item for item in data["unassigned_blocks"]}
+        expected = {
+            "hai_unheaded_12240_candidate": list(range(33953, 33963)),
+            "hai_unheaded_12250_candidate": list(range(33964, 33974)),
+            "hai_unheaded_12260_candidate": list(range(33975, 33985)),
+            "hai_unheaded_12300": list(range(34028, 34038)),
+            "hai_unheaded_12310": list(range(34038, 34048)),
+            "hai_unheaded_12320": list(range(34049, 34059)),
+            "hai_unheaded_12360": list(range(34118, 34128)),
+            "hai_unheaded_12370": list(range(34129, 34139)),
+        }
+        for block_id, lines in expected.items():
+            self.assertEqual(blocks[block_id]["entry_pdf_lines"], lines)
+            self.assertIn("do_not_assign", blocks[block_id]["status"])
+        wrapped = blocks["hai_unheaded_12320_or_12330"]
+        self.assertEqual(
+            wrapped["entry_pdf_lines"],
+            [34061, 34063, 34064, 34065, 34066, 34067, 34068, 34070, 34071, 34072],
+        )
+        self.assertEqual(wrapped["entry_continuation_pdf_lines"], [34062, 34069, 34073])
+        self.assertIn("do_not_assign", wrapped["status"])
+
+
 class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
     def test_hai_candidates_preserve_ocr_and_do_not_claim_verified_groups(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index
