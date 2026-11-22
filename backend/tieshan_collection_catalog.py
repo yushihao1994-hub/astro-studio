@@ -1009,8 +1009,8 @@ COLLECTION_METADATA = {
     "辰": {"printed_page_start": 274, "pdf_text_line_start": 17109, "pdf_text_line_end": 18702, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "巳": {"printed_page_start": 308, "pdf_text_line_start": 18706, "pdf_text_line_end": 20328, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "午": {"printed_page_start": 342, "pdf_text_line_start": 20332, "pdf_text_line_end": 21988, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "未": {"printed_page_start": 376, "pdf_text_line_start": 21990, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "申": {"printed_page_start": 410, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
+    "未": {"printed_page_start": 376, "pdf_text_line_start": 21990, "pdf_text_line_end": 23443, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "酉": {"printed_page_start": 444, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "戌": {"printed_page_start": 478, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -2911,6 +2911,27 @@ WEI_GROUP_INDEX = [
     _wei_group("八八一○", 23166, list(range(23168,23178))),
     _wei_group("八八二○", 23179, list(range(23180,23190))),
     _wei_group("八八三○", 23191, list(range(23195,23205)), "page_header_before_ten_entries"),
+    _wei_group("八八四○", 23206, list(range(23207,23217))),
+    _wei_group("八八五○", 23218, list(range(23220,23230))),
+    _wei_group("八八六○", 23231, list(range(23240,23250)), "table_rows_text_layer_located"),
+    {
+        "collection": "未", "raw_group_marker": "八九○", "occurrence": 1,
+        "normalized_group_marker_candidate": "八九○○", "group_header_pdf_line": 23282,
+        "pdf_text_lines": "23282-23300", "layout_status": "short_raw_marker_candidate_8900_with_following_extra_lines",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                    for n,line in enumerate(range(23283,23293),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _wei_group("八九一○", 23302, list(range(23304,23314)), "extra_text_lines_after_tenth_entry"),
+    _wei_group("八九二○", 23319, list(range(23320,23330)), "multi_line_age_fields"),
+    _wei_group("八九三○", 23335, list(range(23339,23349)), "table_rows_text_layer_located"),
+    _wei_group("八九四○", 23350, list(range(23353,23363)), "table_rows_text_layer_located"),
+    _wei_group("八九五○", 23364, list(range(23367,23377)), "table_rows_text_layer_located"),
+    _wei_group("八九六○", 23390, list(range(23392,23402))),
+    _wei_group("八九七○", 23403, list(range(23405,23415))),
+    _wei_group("八九八○", 23415, list(range(23421,23431)), "section_header_then_ten_entries"),
+    _wei_group("八九九○", 23432, list(range(23434,23444))),
 ]
 
 WEI_GROUP_ANOMALIES = [
@@ -2930,7 +2951,10 @@ WEI_GROUP_ANOMALIES = [
     {"raw_group_marker": "八五六○", "pdf_text_line": 22767, "status": "header_seen_body_not_located_before_8570"},
     {"raw_group_marker": "八六八○", "pdf_text_line": None, "status": "末集_internal_section_heading_no_numeric_group_marker"},
     {"raw_group_marker": "八七三○", "pdf_text_line": None, "status": "unheaded_block_after_8720"},
-    {"raw_group_marker": "八七四○", "pdf_text_line": None, "status": "unheaded_block_after_8720"}
+    {"raw_group_marker": "八七四○", "pdf_text_line": None, "status": "unheaded_block_after_8720"},
+    {"raw_group_marker": "八八七○", "pdf_text_line": None, "status": "table_block_without_independent_group_header_after_8860"},
+    {"raw_group_marker": "八八八○", "pdf_text_line": None, "status": "table_block_without_independent_group_header_after_8860"},
+    {"raw_group_marker": "九○○○", "pdf_text_line": 23445, "status": "marker_seen_body_not_located_before_申集"}
 ]
 
 WEI_UNASSIGNED_BLOCKS = [
@@ -2945,7 +2969,12 @@ WEI_UNASSIGNED_BLOCKS = [
     {"block_id": "wei末集_section_block", "pdf_text_lines": "22948-22958", "entry_count_candidate": 10, "status": "internal_末集_section_no_numeric_marker"},
     {"block_id": "wei_unheaded_block_after_8720_a", "pdf_text_lines": "23042-23051", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "wei_unheaded_block_after_8720_b", "pdf_text_lines": "23053-23062", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
-    {"block_id": "wei_unheaded_block_before_8750", "pdf_text_lines": "23067-23076", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
+    {"block_id": "wei_unheaded_block_before_8750", "pdf_text_lines": "23067-23076", "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "wei_unheaded_8870_table", "pdf_text_lines": "23254-23263", "entry_count_candidate": 10, "status": "table_block_no_group_header_do_not_assign"},
+    {"block_id": "wei_unheaded_8880_table", "pdf_text_lines": "23268-23277", "entry_count_candidate": 10, "status": "table_block_no_group_header_do_not_assign"},
+    {"block_id": "wei_extra_lines_after_8900_candidate", "pdf_text_lines": "23293-23300", "entry_count_candidate": 8, "status": "extra_age_clause_lines_alignment_pending"},
+    {"block_id": "wei_extra_lines_after_8910", "pdf_text_lines": "23315-23317", "entry_count_candidate": 3, "status": "post_tenth_entry_lines_pending"},
+    {"block_id": "wei_extra_lines_after_8920", "pdf_text_lines": "23331-23332", "entry_count_candidate": 2, "status": "post_tenth_entry_lines_pending"}
 ]
 
 
