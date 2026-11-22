@@ -90,6 +90,18 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertIn("己亥單四數",candidates["QING-HELUO-CLAUSES"]["raw_text"])
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
+
+    def test_qing_transcription_candidate_ids_are_unique_and_page_scoped(self):
+        source=get_qing_source_reference()
+        candidates=source["transcription_candidates"]
+        ids=[x["id"] for x in candidates]
+        self.assertEqual(len(ids),len(set(ids)))
+        by_id={x["id"]:x for x in candidates}
+        self.assertEqual(by_id["QING-HELUO-CLAUSES"]["pdf_page"],2)
+        self.assertEqual(by_id["QING-EIGHT-TRIGRAM-ADD"]["pdf_page"],2)
+        self.assertEqual(by_id["QING-P3-ANSHEN-MING-INTRO"]["pdf_page"],3)
+        self.assertEqual(by_id["QING-P3-HETU-LUOSHU-ORDER"]["pdf_page"],3)
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
