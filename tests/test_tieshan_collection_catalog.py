@@ -1953,3 +1953,37 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         api = get_collection_branch_group_index("亥")
         self.assertEqual(api["priority_conflict_review"], audit)
         self.assertEqual(api["group_count"], 0)
+
+
+    def test_hai_table_region_review_12440_12500_keeps_columns_and_duplicate_marker_unresolved(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_table_region_review_12440_12500,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_table_region_review_12440_12500()
+        self.assertEqual(audit["segment_count"], 3)
+        self.assertEqual(
+            [item["segment_id"] for item in audit["segments"]],
+            ["12480", "12490_occurrence_1", "12490_occurrence_2"],
+        )
+        self.assertTrue(all(item["sequence_label_count"] == 9 for item in audit["segments"]))
+        self.assertTrue(all(item["clause_count"] == 10 for item in audit["segments"]))
+        self.assertTrue(all(item["row_pairing_allowed"] is False for item in audit["segments"]))
+        self.assertTrue(all(item["formal_index_eligible"] is False for item in audit["segments"]))
+        self.assertEqual(audit["segments"][2]["possible_correction"], 12500)
+        self.assertIn("no page image proof", audit["segments"][2]["counter_evidence"])
+        self.assertEqual(audit["segments"][0]["sequence_labels"], list(range(2, 11)))
+        self.assertEqual(audit["segments"][2]["blank_separator_lines"], [34323])
+        conflict = audit["conflicts"][0]
+        self.assertEqual(conflict["conflict_id"], "hai_duplicate_marker_12490_lines_34292_34313")
+        self.assertEqual(
+            [item["pdf_text_line"] for item in conflict["marker_occurrences"]],
+            [34292, 34313],
+        )
+        self.assertEqual(conflict["unconfirmed_hypothesis"]["candidate"], 12500)
+        self.assertFalse(conflict["formal_index_eligible"])
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["table_region_review_12440_12500"], audit)
+        self.assertEqual(api["group_count"], 0)
