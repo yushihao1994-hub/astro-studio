@@ -2033,6 +2033,37 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(api["group_count"], 0)
 
 
+    def test_hai_numbered_group_review_12780_12800_preserves_markers_and_ten_rows(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_numbered_group_review_12780_12800,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_numbered_group_review_12780_12800()
+        self.assertEqual(audit["source_pdf_text_lines"], "34725-34761")
+        self.assertEqual([item["candidate_reference_only"] for item in audit["cases"]],
+                         [12780, 12790, 12800])
+        expected = {
+            12780: ("一二七八〇", 34725, list(range(34727, 34737))),
+            12790: ("一二七九〇", 34738, list(range(34739, 34749))),
+            12800: ("一二八〇〇", 34750, list(range(34752, 34762))),
+        }
+        for item in audit["cases"]:
+            raw, marker_line, entry_lines = expected[item["candidate_reference_only"]]
+            self.assertEqual((item["raw_marker"], item["marker_pdf_line"]), (raw, marker_line))
+            self.assertEqual(item["entry_pdf_lines"], entry_lines)
+            self.assertEqual(item["entry_count_candidate"], 10)
+            self.assertEqual(item["sequence_labels"], list(range(1, 11)))
+            self.assertEqual(item["sequence_label_count"], 10)
+            self.assertEqual(item["row_mapping_status"],
+                             "ten_numbered_text_layer_rows_located_page_layout_not_verified")
+            self.assertFalse(item["formal_index_eligible"])
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["numbered_group_review_12780_12800"], audit)
+        self.assertEqual(api["group_count"], 0)
+
+
     def test_hai_numbered_group_review_12720_12760_keeps_continuations_separate(self):
         from backend.tieshan_collection_catalog import (
             get_hai_numbered_group_review_12720_12760,
