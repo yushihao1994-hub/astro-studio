@@ -94,6 +94,36 @@ OBSERVATIONS = [
     },
 ]
 
+# Conservative transcription candidates copied from the legible scan text.
+# These are source strings, not executable mappings; every item remains pending
+# independent character-by-character review against the page image.
+TRANSCRIPTION_CANDIDATES = [
+    {
+        "id": "QING-HELUO-CLAUSES",
+        "topic": "河洛配数例",
+        "pdf_page": 2,
+        "raw_text": "甲己子午九；乙庚丑未八；丙辛寅申七；丁壬卯酉六；戊癸辰戌五；己亥单四数。",
+        "status": "image_transcribed_candidate_pending_second_review",
+        "ambiguities": ["己同时出现在九数句与四数句，暂不裁定其适用条件。"],
+    },
+    {
+        "id": "QING-BRANCH-NUMBER",
+        "topic": "地支取数例",
+        "pdf_page": 2,
+        "raw_text": "亥子一六水；寅卯三八木；巳午二七火；申酉四九金；辰戌丑未五同归。",
+        "status": "image_transcribed_candidate_pending_second_review",
+        "ambiguities": [],
+    },
+    {
+        "id": "QING-LUOSHU-TRIGRAM",
+        "topic": "洛书数卦定局",
+        "pdf_page": 2,
+        "raw_text": "一数坎兮二数坤；三震四巽；数中分五寄。",
+        "status": "image_transcribed_candidate_pending_second_review",
+        "ambiguities": ["六至九的完整对应表需结合左页图表逐字复核。"],
+    },
+]
+
 BLOCKERS = [
     "清刻本起数/卦值日月推数的完整步骤尚未逐页转录并复算。",
     "传统考刻的六亲验证、刻分推进与最终定盘条件尚未形成可重复算法。",
@@ -116,6 +146,7 @@ def get_qing_source_reference():
         "status": STATUS,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
+        "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
         "blockers": list(BLOCKERS),
         "can_generate_final_iron_plate_number": False,
     }
