@@ -1345,6 +1345,9 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(data["group_count"], 0)
         self.assertEqual(data["entry_count"], 0)
         self.assertEqual(data["group_marker_candidate_count"], 88)
+        self.assertEqual(data["normalized_group_marker_unique_count"], 72)
+        self.assertEqual(data["expected_group_sequence_gap_candidate_count"], 28)
+        self.assertEqual(len(data["expected_group_sequence_gap_candidates"]), 28)
         self.assertEqual(len(data["group_marker_candidates"]), 88)
         self.assertEqual(
             sum(x["normalized_group_marker_candidate"] is not None
@@ -1395,6 +1398,8 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         self.assertEqual(hai["pdf_text_line_start"], 33598)
         self.assertEqual(hai["pdf_text_line_end"], 35025)
         self.assertEqual(hai["group_marker_candidate_count"], 88)
+        self.assertEqual(hai["normalized_group_marker_unique_count"], 72)
+        self.assertEqual(hai["expected_group_sequence_gap_candidate_count"], 28)
         self.assertEqual(hai["layout_group_candidate_count"], 73)
         self.assertEqual(hai["indexed_groups"], 0)
         self.assertEqual(hai["indexed_entries"], 0)
