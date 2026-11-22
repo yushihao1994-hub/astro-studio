@@ -2147,6 +2147,48 @@ SI_GROUP_INDEX = [
     _si_group("六六三○", 19736, list(range(19738,19748))),
     _si_group("六六四○", 19749, list(range(19750,19760))),
     _si_group("六六五○", 19761, list(range(19767,19777)), "page_header_before_ten_entries"),
+    {
+        "collection": "巳", "raw_group_marker": "六六六○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19778,
+        "pdf_text_lines": "19778-19799", "layout_status": "age_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(19780,19790),range(19790,19800)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "巳", "raw_group_marker": "六六七○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19801,
+        "pdf_text_lines": "19801-19824", "layout_status": "age_rows_then_clause_rows",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(19803,19813),range(19814,19824)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _si_group("六六八○", 19825, list(range(19837,19848)), "page_header_before_ten_entries"),
+    _si_group("六六九○", 19849, list(range(19851,19861))),
+    {
+        "collection": "巳", "raw_group_marker": "六七一○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 19866,
+        "pdf_text_lines": "19866-19884", "layout_status": "multi_line_age_clause_spans",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 19867},
+            {"entry_sequence": 2, "pdf_text_line": 19868},
+            {"entry_sequence": 3, "pdf_text_line": 19869, "record_span": "19869-19871"},
+            {"entry_sequence": 4, "pdf_text_line": 19872, "record_span": "19872-19873"},
+            {"entry_sequence": 5, "pdf_text_line": 19874, "record_span": "19874-19876"},
+            {"entry_sequence": 6, "pdf_text_line": 19877, "record_span": "19877-19879"},
+            {"entry_sequence": 7, "pdf_text_line": 19880},
+            {"entry_sequence": 8, "pdf_text_line": 19881},
+            {"entry_sequence": 9, "pdf_text_line": 19882},
+            {"entry_sequence": 10, "pdf_text_line": 19883}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _si_group("六七二○", 19887, list(range(19887,19897)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六七三○", 19899, list(range(19899,19909)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _si_group("六七四○", 19911, list(range(19911,19921)), "table_rows_text_layer_located_title_row_is_entry_1"),
 ]
 
 SI_GROUP_ANOMALIES = [
@@ -2173,7 +2215,9 @@ SI_GROUP_ANOMALIES = [
     {"raw_group_marker": "六五八○", "pdf_text_line": 19649,
      "status": "age_subheading_not_confirmed_as_independent_group"},
     {"raw_group_marker": "六五九○", "pdf_text_line": 19670,
-     "status": "age_subheading_not_confirmed_as_independent_group"}
+     "status": "age_subheading_not_confirmed_as_independent_group"},
+    {"raw_group_marker": "六七○○", "pdf_text_line": None,
+     "status": "expected_marker_missing_between_6690_and_6710"}
 ]
 
 SI_UNASSIGNED_BLOCKS = [
@@ -2192,7 +2236,9 @@ SI_UNASSIGNED_BLOCKS = [
     {"block_id": "si_possible_6520_body", "pdf_text_lines": "19547-19556",
      "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "si_complex_6570_age_subblocks", "pdf_text_lines": "19629-19680",
-     "entry_count_candidate": 30, "status": "age_subblocks_and_clause_block_alignment_unresolved"}
+     "entry_count_candidate": 30, "status": "age_subblocks_and_clause_block_alignment_unresolved"},
+    {"block_id": "si_possible_6700_fragment_after_6690", "pdf_text_lines": "19861-19864",
+     "entry_count_candidate": 4, "status": "group_boundary_unresolved_do_not_assign"}
 ]
 
 
