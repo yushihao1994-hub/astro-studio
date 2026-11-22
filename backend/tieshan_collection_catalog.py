@@ -1076,6 +1076,30 @@ CHOU_GROUP_INDEX = [
     _chou_group("二二四○", 12894, list(range(12895, 12905)), occurrence=2),
     _chou_group("二二五○", 12906, list(range(12908, 12918))),
     _chou_group("二二六○", 12919, list(range(12920, 12930))),
+    _chou_group("二三○○", 12969, list(range(12969, 12979)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chou_group("二三一○", 12981, list(range(12981, 12991)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chou_group("二三二○", 12993, list(range(12993, 13003)), "table_rows_text_layer_located_title_row_is_entry_1"),
+    _chou_group("二三三○", 13019, list(range(13021, 13031))),
+    _chou_group("二三四○", 13032, list(range(13033, 13043))),
+    {
+        "collection": "丑", "raw_group_marker": "二三五○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 13044,
+        "pdf_text_lines": "13044-13076", "layout_status": "multi_line_entry_layout_structured_by_sequence_markers",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 13052, "record_span": "13052-13053"},
+            {"entry_sequence": 2, "pdf_text_line": 13054, "record_span": "13054-13055"},
+            {"entry_sequence": 3, "pdf_text_line": 13056, "record_span": "13056-13057"},
+            {"entry_sequence": 4, "pdf_text_line": 13058, "record_span": "13058-13059"},
+            {"entry_sequence": 5, "pdf_text_line": 13060, "record_span": "13060-13061"},
+            {"entry_sequence": 6, "pdf_text_line": 13062, "record_span": "13062-13064"},
+            {"entry_sequence": 7, "pdf_text_line": 13065, "record_span": "13065-13067"},
+            {"entry_sequence": 8, "pdf_text_line": 13068, "record_span": "13068-13070"},
+            {"entry_sequence": 9, "pdf_text_line": 13071, "record_span": "13071-13073"},
+            {"entry_sequence": 10, "pdf_text_line": 13074, "record_span": "13074-13076"}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
 ]
 
 CHOU_GROUP_ANOMALIES = [
@@ -1102,7 +1126,11 @@ CHOU_UNASSIGNED_BLOCKS = [
     {"block_id": "chou_unheaded_entries_after_raw_marker_二六○",
      "pdf_text_lines": "12813-12823", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign",
-     "note": "位于原始组号二六○之后、二一八○标题之前，序列异常；不自动补成二二六○。"}
+     "note": "位于原始组号二六○之后、二一八○标题之前，序列异常；不自动补成二二六○。"},
+    {"block_id": "chou_unheaded_entries_before_2330",
+     "pdf_text_lines": "13008-13017", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign",
+     "note": "位于二三二○表格之后、二三三○标题之前，保留为独立无组号块。"}
 ]
 
 
