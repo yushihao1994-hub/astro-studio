@@ -34,15 +34,13 @@ RULE_REGISTRY = [
     {"id":"KUNJI-CIPHER-EDITORIAL","name":"坤集密码代号（2003点校本编者说明）","source":"坤集浅释，PDF文本行250-277；含十天干数字代号与少量示例","status":"partial_editorial_metadata_not_full_cipher"},
     {"id":"QING-FRONT-EIGHT-KE","name":"清刻本八刻十五分说明","source":"用户提供清刻扫描件，PDF图像第1页封面内页","status":"high_resolution_image_transcribed_candidate_pending_second_review"},
     {"id":"QING-TRUE-KE-EXAMINATION","name":"清刻本真刻与考刻原则","source":"用户提供清刻扫描件，PDF图像第1页封面内页","status":"high_resolution_image_transcribed_candidate_pending_second_review"},
-    {"id":"QING-EIGHT-TRIGRAM-ADD","name":"清刻本八卦加则例口诀","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_observed_variant_transcription_pending"},
-    {"id":"QING-HELUO-CLAUSES","name":"清刻本河洛配数例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_transcribed_candidate_pending_second_review"},
+    {"id":"QING-EIGHT-TRIGRAM-ADD","name":"清刻本八卦加则例口诀（PDF第2页右页/印刷页5）","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_observed_variant_transcription_pending"},
+    {"id":"QING-HELUO-CLAUSES","name":"清刻本河洛配数例（PDF第2页左页/印刷页4）","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_transcribed_candidate_pending_second_review"},
     {"id":"QING-BRANCH-NUMBER","name":"清刻本地支取数例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_transcribed_candidate_pending_second_review"},
     {"id":"QING-LUOSHU-TRIGRAM","name":"清刻本洛书数卦定局","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_transcribed_candidate_pending_second_review"},
     {"id":"QING-STEM-TRIGRAM","name":"清刻本天干配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
     {"id":"QING-DAYMASTER-TRIGRAM","name":"清刻本日主配卦例","source":"用户提供清刻扫描件，PDF图像第2页（印刷页4-5）","status":"image_located_transcription_pending"},
     {"id":"QING-BODY-LIFE","name":"清刻本安身命例","source":"用户提供清刻扫描件，PDF图像第3页（印刷页6-7）","status":"image_located_transcription_pending"},
-    {"id":"QING-P2-TABLE-TRANSCRIPTION","name":"清刻本第2页配卦/配数表转录候选","source":"用户提供清刻扫描件，PDF图像第2页左页（印刷页4）；原文候选已登记，栏位关系与异文待复核","status":"image_transcribed_candidate_pending_second_review"},
-    {"id":"QING-P2-EIGHT-TRIGRAM-VERSE","name":"清刻本第2页八卦加则例口诀","source":"用户提供清刻扫描件，PDF图像第2页右页（印刷页5）；疑字待放大校勘","status":"image_transcribed_candidate_pending_second_review"},
     {"id":"QING-P3-HETU-LUOSHU-ORDER","name":"清刻本河图洛书方位次序说明","source":"用户提供清刻扫描件，PDF图像第3页右页（印刷页7）；仅有局部转录候选","status":"partial_image_transcription_candidate"},
 ]
 
