@@ -4207,7 +4207,7 @@ def get_hai_priority_conflict_review():
     records = []
     for block in HAI_UNASSIGNED_BLOCKS:
         span = block.get("pdf_text_lines", "")
-        match = re.fullmatch(r"(\\d+)-(\\d+)", span) if isinstance(span, str) else None
+        match = re.fullmatch(r"(\d+)-(\d+)", span) if isinstance(span, str) else None
         if not match:
             continue
         start, end = int(match.group(1)), int(match.group(2))
