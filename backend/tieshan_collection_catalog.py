@@ -4090,6 +4090,87 @@ def get_hai_text_line_coverage_audit():
     }
 
 
+
+def get_hai_review_queue():
+    """Return a PDF-line-sorted work queue from text-layer audit findings."""
+    coverage = get_hai_text_line_coverage_audit()
+    crosswalk = get_hai_full_crosswalk_audit()
+    queue = []
+
+    def add(start, end, issue_type, source, action, detail=None):
+        if not isinstance(start, int):
+            return
+        finish = end if isinstance(end, int) else start
+        queue.append({
+            "start_pdf_text_line": start,
+            "end_pdf_text_line": max(start, finish),
+            "issue_type": issue_type,
+            "source": source,
+            "required_review_action": action,
+            "detail": detail,
+        })
+
+    for span in coverage["unclassified_line_ranges"]:
+        add(span["start"], span["end"], "unclassified_text_line_range",
+            "text_line_coverage",
+            "inspect source page and classify as header, pagination, layout, entry, or other",
+            "not evidence of a missing group or entry")
+    for item in coverage["multiply_classified_lines"]:
+        add(item["pdf_text_line"], item["pdf_text_line"], "multiply_classified_line",
+            "text_line_coverage",
+            "compare neighboring layout and table boundaries to resolve category overlap",
+            item["categories"])
+    for item in crosswalk["duplicate_normalized_markers"]:
+        for occurrence in item["occurrences"]:
+            add(occurrence["pdf_text_line"], occurrence["pdf_text_line"],
+                "duplicate_normalized_group_marker", "full_crosswalk",
+                "compare raw glyph and page image; retain distinct occurrences until verified",
+                {"normalized_candidate": item["normalized_group_marker_candidate"],
+                 "raw_marker": occurrence["raw_group_marker"]})
+    for marker in crosswalk["marker_candidates_without_layout_header_line"]:
+        add(marker["pdf_text_line"], marker["pdf_text_line"],
+            "marker_without_layout_header", "full_crosswalk",
+            "inspect local page layout; determine whether marker is embedded, repeated, or OCR noise",
+            marker.get("raw_group_marker"))
+    for layout in crosswalk["layouts_without_exact_marker_join"]:
+        add(layout["group_marker_pdf_line"], layout["group_marker_pdf_line"],
+            "layout_without_exact_marker_join", "full_crosswalk",
+            "compare the raw marker text at this line with the layout candidate; do not normalize by sequence",
+            {"layout_candidate_index": layout["layout_candidate_index"],
+             "raw_group_marker": layout["raw_group_marker"],
+             "join_status": layout["marker_join_status"]})
+    for pair in crosswalk["layout_entry_overlap_pairs"]:
+        lines = pair["shared_entry_pdf_lines"]
+        if lines:
+            add(min(lines), max(lines), "overlapping_layout_entry_ranges", "full_crosswalk",
+                "inspect table columns and continuation lines to establish whether overlap is structural",
+                {"layout_candidate_indices": pair["layout_candidate_indices"],
+                 "shared_pdf_lines": lines})
+    for block in crosswalk["unassigned_block_conflicts"]:
+        lines = block.get("pdf_text_lines", [])
+        if isinstance(lines, str):
+            import re
+            numbers = [int(value) for value in re.findall(r"\\d+", lines)]
+        else:
+            numbers = [value for value in lines if isinstance(value, int)] if isinstance(lines, list) else []
+        if numbers:
+            add(min(numbers), max(numbers), "unassigned_block_crosswalk_conflict",
+                "full_crosswalk",
+                "inspect block boundaries and embedded markers before assigning any group",
+                {"block_id": block["block_id"],
+                 "overlapping_layout_candidates": block["overlapping_layout_candidates"]})
+    queue.sort(key=lambda item: (
+        item["start_pdf_text_line"], item["end_pdf_text_line"], item["issue_type"]
+    ))
+    return {
+        "queue_item_count": len(queue),
+        "queue": queue,
+        "sort_order": "ascending_pdf_text_line",
+        "candidate_policy": "no_sequence_completion_no_candidate_promotion",
+        "verification_status": "review_queue_generated_from_text_layer_only_page_image_verification_pending",
+    }
+
+
 def get_collection_branch_group_index(branch):
     if branch == "子":
         return get_group_index()
@@ -4117,6 +4198,7 @@ def get_collection_branch_group_index(branch):
             "crosswalk_audit": get_hai_crosswalk_audit(),
             "full_crosswalk_audit": get_hai_full_crosswalk_audit(),
             "text_line_coverage_audit": get_hai_text_line_coverage_audit(),
+            "review_queue": get_hai_review_queue(),
             "unassigned_blocks": [dict(item) for item in HAI_UNASSIGNED_BLOCKS],
             "partial_table_group_candidates": [dict(item) for item in HAI_PARTIAL_TABLE_GROUP_CANDIDATES],
             "table_region_audit_12440_12500": HAI_12440_12500_TABLE_AUDIT,
