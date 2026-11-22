@@ -79,7 +79,7 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         candidates={x["id"]:x for x in source["transcription_candidates"]}
         expected={
             "QING-HELUO-CLAUSES",
-            "QING-EIGHT-TRIGRAM-ADD",
+            "QING-EIGHT-TRIGRAM-ADD-VERSE",
             "QING-P3-ANSHEN-MING-INTRO",
             "QING-P3-HETU-LUOSHU-ORDER",
         }
@@ -98,7 +98,7 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertEqual(len(ids),len(set(ids)))
         by_id={x["id"]:x for x in candidates}
         self.assertEqual(by_id["QING-HELUO-CLAUSES"]["pdf_page"],2)
-        self.assertEqual(by_id["QING-EIGHT-TRIGRAM-ADD"]["pdf_page"],2)
+        self.assertEqual(by_id["QING-EIGHT-TRIGRAM-ADD-VERSE"]["pdf_page"],2)
         self.assertEqual(by_id["QING-P3-ANSHEN-MING-INTRO"]["pdf_page"],3)
         self.assertEqual(by_id["QING-P3-HETU-LUOSHU-ORDER"]["pdf_page"],3)
 
