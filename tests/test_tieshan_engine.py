@@ -50,6 +50,9 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         r=build_tieshan_foundation({},self.pillars)
         self.assertEqual(r["available_foundations"]["qing_source_reference"]["status"],source["status"])
         self.assertEqual(r["overall_status"],"foundation_only")
+        candidates=source.get("transcription_candidates",[])
+        self.assertIn("QING-HELUO-CLAUSES",{x["id"] for x in candidates})
+        self.assertIn("己亥单四数",next(x for x in candidates if x["id"]=="QING-HELUO-CLAUSES")["raw_text"])
 
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
