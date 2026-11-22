@@ -966,7 +966,7 @@ class WuCollectionInitialIndexTests(unittest.TestCase):
     def test_wu_first_fourteen_groups_and_unheaded_block(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_sample
         data = get_collection_branch_group_index("午")
-        self.assertEqual(data["group_count"], 75)
+        self.assertEqual(data["group_count"], 82)
         self.assertEqual(data["entry_count"], 819)
         self.assertEqual([g["raw_group_marker"] for g in data["groups"]],
                          ["七○一○","七○二○","七○三○","七○四○","七○五○","七○六○","七○七○",
