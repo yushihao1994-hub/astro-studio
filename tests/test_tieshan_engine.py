@@ -55,6 +55,17 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertIn("QING-HELUO-CLAUSES",{x["id"] for x in candidates})
         self.assertIn("己亥单四数",next(x for x in candidates if x["id"]=="QING-HELUO-CLAUSES")["raw_text"])
 
+
+    def test_modern_qianji_rules_are_never_mislabeled_as_qing_verified(self):
+        r=build_tieshan_foundation({},self.pillars)
+        qian=[x for x in r["rule_registry"] if x["id"].startswith("QIAN-")]
+        self.assertTrue(qian)
+        self.assertTrue(all(x["status"].startswith("modern_comparator_only") for x in qian))
+        self.assertTrue(all(x.get("source_kind") == "modern_edition_comparator" for x in qian))
+        qing=[x for x in r["rule_registry"] if x["id"].startswith("QING-")]
+        self.assertTrue(qing)
+        self.assertFalse(any(x["status"] == "verified_table" for x in qing))
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
