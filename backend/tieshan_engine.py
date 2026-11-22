@@ -43,6 +43,16 @@ RULE_REGISTRY = [
     {"id":"QING-BODY-LIFE","name":"清刻本安身命例","source":"用户提供清刻扫描件，PDF图像第3页（印刷页6-7）","status":"image_located_transcription_pending"},
 ]
 
+
+def is_kaoke_attestation_trusted(kaoke_result):
+    """Fail closed: client-supplied 'verified' flags are not proof of examination.
+
+    This remains False until a server-side Qing-source calculation and
+    reproducible case verifier are implemented and issue a trusted attestation.
+    """
+    return False
+
+
 def build_tieshan_foundation(birth, pillars, eight_ke=None, body_life_palaces=None, classic_reference=None):
     """Assemble auditable Iron Plate stages without pretending the method is complete."""
     if not isinstance(pillars, dict) or any(k not in pillars for k in ("year","month","day","hour")):
