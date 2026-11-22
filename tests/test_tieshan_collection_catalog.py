@@ -775,8 +775,8 @@ class ChenCollectionIndexTests(unittest.TestCase):
     def test_chen_first_batch_preserves_partial_and_unheaded_records(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
         data = get_collection_branch_group_index("辰")
-        self.assertEqual(data["group_count"], 76)
-        self.assertEqual(data["entry_count"], 757)
+        self.assertEqual(data["group_count"], 88)
+        self.assertEqual(data["entry_count"], 877)
         first = next(g for g in data["groups"] if g["raw_group_marker"] == "五○一○")
         self.assertEqual(first["entry_count"], 9)
         self.assertEqual([e["entry_sequence"] for e in first["entries"]], list(range(2, 11)))
