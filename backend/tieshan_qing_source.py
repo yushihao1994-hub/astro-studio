@@ -10,7 +10,7 @@ FILE_NAME = "鐵板神數(清刻足本).pdf"
 FILE_SIZE_BYTES = 83686820
 SCAN_PAGE_COUNT = 665
 PRINTED_PAGE_COUNT_SHOWN = 1363
-STATUS = "first_650_of_665_pdf_pages_image_reviewed_core_rules_pending"
+STATUS = "all_665_pdf_pages_image_reviewed_core_rules_pending"
 SOURCE_CLASS = "user_provided_primary_scan"
 
 # Page numbers below are 1-based PDF image pages, not printed book page numbers.
@@ -22,6 +22,7 @@ IMAGE_REVIEWED_RANGES = [
     {"pdf_pages": [351, 450], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
     {"pdf_pages": [451, 550], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
     {"pdf_pages": [551, 650], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
+    {"pdf_pages": [651, 665], "review_status": "layout_and_section_continuity_reviewed_transcription_pending"},
 ]
 
 OBSERVATIONS = [
@@ -347,6 +348,16 @@ TRANSCRIPTION_CANDIDATES = [
         "algorithm_status": "conceptual_only"
     },
 
+
+    {
+        "id": "QING-NUMBERED-CLAUSE-SECTION-CONTINUED-651-665",
+        "topic": "九至一数字栏头下的竖排断语及末段版面",
+        "pdf_pages": [651, 665],
+        "printed_pages": [1324, 1333],
+        "status": "image_reviewed_layout_and_section_continuity_transcription_pending",
+        "note": "已渲染并检查PDF第651—665页全部15张扫描图像，并对651、655、660—665页作220dpi抽查。第651—664页继续呈现九至一数字栏头及多列竖排断语；第665页为末页局部版面，仍可见数字栏头与数列断语。末段可辨婚姻、妻室、子息、功名、家宅等主题，但未逐字转录，数字栏头与具体条文索引关系未验证。",
+        "algorithm_status": "not_implemented"
+    },
 ]
 
 BLOCKERS = [
@@ -365,15 +376,15 @@ def get_qing_source_reference():
         "file_name": FILE_NAME,
         "file_size_bytes": FILE_SIZE_BYTES,
         "scan_page_count": SCAN_PAGE_COUNT,
-        "page_count_basis": "对原始PDF文件执行pdfinfo，确认总计665个PDF页；Files图像读取接口目前仅直接返回前150页",
+        "page_count_basis": "对原始PDF执行pdfinfo确认665页；已将第1—665页扫描图像渲染并完成版式初检",
         "printed_page_count_shown": PRINTED_PAGE_COUNT_SHOWN,
         "source_class": SOURCE_CLASS,
         "status": STATUS,
-        "reviewed_pdf_pages": 650,
+        "reviewed_pdf_pages": 665,
         "image_reviewed_ranges": [dict(row) for row in IMAGE_REVIEWED_RANGES],
         "observations": [dict(row) for row in OBSERVATIONS],
         "transcription_candidates": [dict(row) for row in TRANSCRIPTION_CANDIDATES],
         "blockers": list(BLOCKERS),
-        "review_coverage": "650/665 PDF页已检查（约97.7%）；剩余15页尚未检查",
+        "review_coverage": "665/665 PDF页已完成图像版式初检（100%）；逐条转录、索引校勘和算法验证尚未完成",
         "can_generate_final_iron_plate_number": False,
     }
