@@ -225,8 +225,6 @@ TRANSCRIPTION_CANDIDATES = [
         "status": "image_transcribed_candidate_pending_second_review",
         "ambiguities": ["六至九的完整对应表需结合左页图表逐字复核。"],
     },
-]
-
 
     {
         "id": "QING-P2-LEFT-PAGE-TABLE-TRANSCRIPTION",
@@ -282,6 +280,8 @@ TRANSCRIPTION_CANDIDATES = [
         ],
         "algorithm_status": "conceptual_only"
     },
+
+]
 
 BLOCKERS = [
     "清刻本起数/卦值日月推数的完整步骤尚未逐页转录并复算。",
