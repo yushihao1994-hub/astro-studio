@@ -752,3 +752,23 @@ class ChouRawMarker2260Tests(unittest.TestCase):
         self.assertTrue(all(e["pdf_text_line"] is None for e in group["entries"]))
         self.assertIn("chou_unheaded_entries_after_raw_marker_二六○",
                       {b["block_id"] for b in data["unassigned_blocks"]})
+
+
+class ChenCollectionIndexTests(unittest.TestCase):
+    def test_chen_first_batch_preserves_partial_and_unheaded_records(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
+        data = get_collection_branch_group_index("辰")
+        self.assertEqual(data["group_count"], 20)
+        self.assertEqual(data["entry_count"], 199)
+        first = next(g for g in data["groups"] if g["raw_group_marker"] == "五○一○")
+        self.assertEqual(first["entry_count"], 9)
+        self.assertEqual([e["entry_sequence"] for e in first["entries"]], list(range(2, 11)))
+        self.assertTrue(any(g["raw_group_marker"] == "五二三○" for g in data["groups"]))
+        self.assertTrue(any(x["raw_group_marker"] == "五○五○" for x in data["group_anomalies"]))
+        self.assertTrue(any(x["raw_group_marker"] == "五二○○" for x in data["group_anomalies"]))
+        blocks = {x["block_id"] for x in data["unassigned_blocks"]}
+        self.assertIn("chen_unheaded_entries_before_5030", blocks)
+        self.assertIn("chen_second_table_after_5060", blocks)
+        progress = get_collection_progress()
+        chen = next(x for x in progress["collections"] if x["collection"] == "辰")
+        self.assertEqual((chen["indexed_groups"], chen["indexed_entries"]), (20, 199))
