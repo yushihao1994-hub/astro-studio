@@ -822,6 +822,47 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         self.assertEqual(api["group_count"], 0)
 
 
+    def test_hai_p0_coordinate_breakdown_splits_text_coordinates(self):
+        from backend.tieshan_collection_catalog import get_hai_p0_coordinate_breakdown, get_collection_branch_group_index
+        result = get_hai_p0_coordinate_breakdown()
+        self.assertEqual(result["block_count"], 5)
+        blocks = {x["block_id"]: x for x in result["blocks"]}
+        self.assertEqual(set(blocks), {
+            "hai_ocr_corrupt_12080_to_12170", "hai_split_layout_12440_to_12500",
+            "hai_split_numeric_column_12670", "hai_table_cell_markers_12960_to_12980",
+            "hai_terminal_12990_and_unheaded_following_table"})
+        self.assertFalse(result["image_geometry_available"])
+        marker_layers = {x["layer"]: x["items"] for x in blocks["hai_ocr_corrupt_12080_to_12170"]["coordinate_layers"]}
+        self.assertEqual([x["pdf_text_line"] for x in marker_layers["group_marker_candidates"]],
+                         [33724,33732,33743,33766,33778,33792,33805,33829,33833,33845,33860,33875,33888])
+        self.assertEqual(marker_layers["shared_entry_boundary"][0]["shared_entry_pdf_lines"], list(range(33834,33845)))
+        table_layers = {x["layer"]: x["items"] for x in blocks["hai_split_layout_12440_to_12500"]["coordinate_layers"]}
+        self.assertEqual([x["marker_pdf_line"] for x in table_layers["table_segment_columns"]], [34270,34292,34313])
+        self.assertEqual([x["clause_pdf_lines"] for x in table_layers["table_segment_columns"]],
+                         [list(range(34281,34291)),list(range(34302,34312)),list(range(34324,34334))])
+        numeric_layers = {x["layer"]: x["items"] for x in blocks["hai_split_numeric_column_12670"]["coordinate_layers"]}
+        self.assertEqual([x["pdf_text_line"] for x in numeric_layers["detached_numeric_cells_12670"]], list(range(34571,34578)))
+        self.assertEqual([x["pdf_text_line"] for x in numeric_layers["numbered_entry_rows_12670"]], list(range(34579,34589)))
+        self.assertTrue(numeric_layers["adjacent_header_only_12680_context"][0]["context_only_outside_p0_block"])
+        embedded = blocks["hai_table_cell_markers_12960_to_12980"]["coordinate_layers"][0]["items"]
+        self.assertEqual([x["candidate_reference_only"] for x in embedded], [12960,12970,12980])
+        self.assertEqual([x["marker_pdf_line"] for x in embedded], [34967,34980,34993])
+        terminal = blocks["hai_terminal_12990_and_unheaded_following_table"]["coordinate_layers"][0]["items"][0]
+        self.assertEqual(terminal["marker_pdf_line"], 35001)
+        self.assertEqual(terminal["first_table_entry_lines"], list(range(35003,35013)))
+        self.assertEqual(terminal["following_table_entry_lines"], list(range(35015,35025)))
+        for block in result["blocks"]:
+            self.assertFalse(block["formal_index_eligible"])
+            for layer in block["coordinate_layers"]:
+                for item in layer["items"]:
+                    self.assertIsNone(item.get("image_coordinates"))
+        self.assertEqual(result["formal_index_eligible_count"], 0)
+        self.assertEqual(result["group_count"], 0)
+        self.assertEqual(result["entry_count"], 0)
+        self.assertEqual(result["image_verified_group_count"], 0)
+        self.assertEqual(get_collection_branch_group_index("亥")["p0_coordinate_breakdown"], result)
+
+
 if __name__ == "__main__":
     unittest.main()
 
