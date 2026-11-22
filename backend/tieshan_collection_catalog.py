@@ -1005,7 +1005,7 @@ COLLECTION_METADATA = {
     "子": {"printed_page_start": 138, "pdf_text_line_start": 10664, "pdf_text_line_end": 12570, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "丑": {"printed_page_start": 172, "pdf_text_line_start": 12572, "pdf_text_line_end": 14174, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "寅": {"printed_page_start": 206, "pdf_text_line_start": 14175, "pdf_text_line_end": 15796, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "卯": {"printed_page_start": 240, "pdf_text_line_start": 15797, "pdf_text_line_end": None, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
+    "卯": {"printed_page_start": 240, "pdf_text_line_start": 15797, "pdf_text_line_end": 17108, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "辰": {"printed_page_start": 274, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "巳": {"printed_page_start": 308, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "午": {"printed_page_start": 342, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
@@ -1674,6 +1674,39 @@ MAO_GROUP_INDEX = [
     _mao_group("四七六○", 16733, list(range(16734, 16744))),
     _mao_group("四七八○", 16760, list(range(16761, 16771))),
     _mao_group("四七九○", 16772, list(range(16774, 16784))),
+    _mao_group("四八一○", 16799, list(range(16801, 16811))),
+    _mao_group("四八二○", 16812, list(range(16813, 16823))),
+    _mao_group("四八三○", 16824, list(range(16828, 16838))),
+    _mao_group("四八四○", 16839, list(range(16840, 16850))),
+    _mao_group("四八五○", 16851, list(range(16853, 16863))),
+    _mao_group("四八六○", 16864, list(range(16871, 16881))),
+    _mao_group("四八七○", 16882, list(range(16884, 16894))),
+    _mao_group("四八八○", 16895, list(range(16897, 16907))),
+    {
+        "collection": "卯", "raw_group_marker": "四九○○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 16926,
+        "pdf_text_lines": "16926-16947", "layout_status": "age_sequence_and_clause_columns_separated",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "age_data_line": age, "clause_text_line": clause}
+                    for n,(age,clause) in enumerate(zip(range(16928,16938),range(16938,16948)),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "卯", "raw_group_marker": "四九一○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 16949,
+        "pdf_text_lines": "16949-16982", "layout_status": "multi_row_age_table_and_clause_column",
+        "entry_count": 10,
+        "entries": [{"entry_sequence": n, "clause_text_line": line, "age_data_span": "16951-16972"}
+                    for n,line in enumerate(range(16973,16983),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _mao_group("四九三○", 16995, list(range(16998, 17008)), "table_rows_text_layer_located"),
+    _mao_group("四九四○", 17021, list(range(17024, 17034)), "table_rows_text_layer_located"),
+    _mao_group("四九五○", 17035, list(range(17042, 17052)), "multi_line_body_after_section_header"),
+    _mao_group("四九六○", 17053, list(range(17054, 17064))),
+    _mao_group("四九七○", 17065, list(range(17067, 17077))),
+    _mao_group("四九八○", 17078, list(range(17081, 17091))),
+    _mao_group("四九九○", 17092, list(range(17094, 17104))),
 ]
 
 MAO_GROUP_ANOMALIES = [
@@ -1708,7 +1741,11 @@ MAO_GROUP_ANOMALIES = [
     {"raw_group_marker": "四七四○", "pdf_text_line": None,
      "status": "expected_group_marker_missing_before_4750"},
     {"raw_group_marker": "四八○○", "pdf_text_line": None,
-     "status": "expected_group_marker_missing_after_internal_guaji_subsection"}
+     "status": "expected_group_marker_missing_after_internal_guaji_subsection"},
+    {"raw_group_marker": "四九二○", "pdf_text_line": 16984,
+     "status": "marker_seen_body_not_located_before_4930"},
+    {"raw_group_marker": "五○○○", "pdf_text_line": 17105,
+     "status": "marker_seen_body_not_located_before_chen_collection_boundary"}
 ]
 
 MAO_UNASSIGNED_BLOCKS = [
@@ -1744,6 +1781,9 @@ MAO_UNASSIGNED_BLOCKS = [
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "mao_unheaded_entries_after_guaji",
      "pdf_text_lines": "16788-16797", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "mao_possible_4890_group_body",
+     "pdf_text_lines": "16915-16924", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign"}
 ]
 
