@@ -1603,6 +1603,44 @@ class HaiCollectionTextLayerCandidateTests(unittest.TestCase):
         tail = blocks["hai_unheaded_12360"]["neighbor_context"]
         self.assertEqual(tail["after_marker"]["raw"], "去集")
         self.assertIsNone(tail["after_marker"]["candidate"])
+    def test_hai_boundary_review_12860_12910_keeps_unheaded_blocks_unassigned(self):
+        from backend.tieshan_collection_catalog import (
+            get_hai_boundary_review_12860_12910,
+            get_collection_branch_group_index,
+        )
+        audit = get_hai_boundary_review_12860_12910()
+        self.assertEqual(audit["source_pdf_text_lines"], "34842-34912")
+        rows = {item["candidate_reference_only"]: item for item in audit["cases"]}
+        self.assertEqual(set(rows), {12860,12870,12880,12890,12900,12910})
+        self.assertIsNone(rows[12860]["raw_marker"])
+        self.assertEqual(rows[12860]["header_ocr"], "支集")
+        self.assertEqual(rows[12860]["header_pdf_line"], 34842)
+        self.assertEqual(rows[12860]["entry_pdf_lines"], list(range(34846,34856)))
+        self.assertEqual(rows[12860]["following_marker"], "一二八七〇")
+        self.assertEqual(rows[12870]["raw_marker"], "一二八七〇")
+        self.assertEqual(rows[12870]["marker_pdf_line"], 34856)
+        self.assertEqual(rows[12870]["entry_pdf_lines"], list(range(34858,34868)))
+        self.assertEqual(rows[12880]["raw_marker"], "一二八八〇")
+        self.assertEqual(rows[12880]["entry_pdf_lines"], list(range(34869,34879)))
+        self.assertEqual(rows[12890]["raw_marker"], "一二八九〇")
+        self.assertEqual(rows[12890]["marker_pdf_line"], 34879)
+        self.assertEqual(rows[12890]["header_ocr"], "广节说易全书")
+        self.assertEqual(rows[12890]["header_pdf_line"], 34881)
+        self.assertEqual(rows[12890]["entry_pdf_lines"], list(range(34883,34893)))
+        self.assertIsNone(rows[12900]["raw_marker"])
+        self.assertEqual(rows[12900]["entry_pdf_lines"], list(range(34893,34903)))
+        self.assertEqual(rows[12910]["entry_pdf_lines"], list(range(34904,34913)))
+        self.assertEqual(rows[12910]["sequence_labels"], [1,2,4,5,6,7,8,9,10])
+        self.assertEqual(rows[12910]["missing_sequence"], [3])
+        for item in rows.values():
+            self.assertFalse(item["formal_index_eligible"])
+        self.assertEqual(audit["formal_index_eligible_count"], 0)
+        self.assertEqual(audit["group_count"], 0)
+        api = get_collection_branch_group_index("亥")
+        self.assertEqual(api["boundary_review_12860_12910"], audit)
+        self.assertEqual(api["group_count"], 0)
+
+
     def test_hai_numbered_group_review_12810_12850_preserves_12830_header_ocr_conflict(self):
         from backend.tieshan_collection_catalog import (
             get_hai_numbered_group_review_12810_12850,
