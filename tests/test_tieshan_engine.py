@@ -1,6 +1,7 @@
 import os, sys, unittest
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "backend"))
-from tieshan_engine import build_tieshan_foundation, ENGINE_VERSION
+from tieshan_engine import build_tieshan_foundation, ENGINE_VERSION, PRIMARY_REFERENCE, QING_REFERENCE_STATUS
+from tieshan_qing_source import get_qing_source_reference
 
 class TieshanFoundationEngineTests(unittest.TestCase):
     def setUp(self):
@@ -38,6 +39,17 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         status={x["key"]:x["status"] for x in r["workflow"]}
         self.assertEqual(status["cipher_lookup"],"blocked")
         self.assertFalse(r["can_generate_final_iron_plate_number"])
+
+    def test_qing_scan_is_primary_but_not_verified_for_calculation(self):
+        source=get_qing_source_reference()
+        self.assertEqual(source["source_class"],"user_provided_primary_scan")
+        self.assertEqual(source["scan_page_count"],150)
+        self.assertIn("清刻",PRIMARY_REFERENCE)
+        self.assertIn("待",QING_REFERENCE_STATUS)
+        self.assertFalse(source["can_generate_final_iron_plate_number"])
+        r=build_tieshan_foundation({},self.pillars)
+        self.assertEqual(r["available_foundations"]["qing_source_reference"]["status"],source["status"])
+        self.assertEqual(r["overall_status"],"foundation_only")
 
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
