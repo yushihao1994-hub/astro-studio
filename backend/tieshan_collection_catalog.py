@@ -1012,7 +1012,6 @@ COLLECTION_METADATA = {
     "未": {"printed_page_start": 376, "pdf_text_line_start": 21990, "pdf_text_line_end": 23443, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "申": {"printed_page_start": 410, "pdf_text_line_start": 23449, "pdf_text_line_end": 25092, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
     "酉": {"printed_page_start": 444, "pdf_text_line_start": 25096, "toc_status": "located_in_contents", "index_status": "partial_text_layer_index", "indexed_groups": None, "indexed_entries": None},
-    "酉": {"printed_page_start": 444, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "戌": {"printed_page_start": 478, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
     "亥": {"printed_page_start": 512, "toc_status": "located_in_contents", "index_status": "not_transcribed", "indexed_groups": 0, "indexed_entries": 0},
 }
