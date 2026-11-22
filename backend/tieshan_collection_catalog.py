@@ -1096,7 +1096,7 @@ CHOU_GROUP_ANOMALIES = [
 ]
 
 CHOU_UNASSIGNED_BLOCKS = [
-    {"block_id": "chou_unheaded_entries_after_probable_2250",
+    {"block_id": "chou_unheaded_entries_after_raw_marker_二五○",
      "pdf_text_lines": "12785-12797", "entry_count_candidate": 10,
      "status": "group_marker_missing_do_not_assign"},
     {"block_id": "chou_unheaded_entries_after_raw_marker_二六○",
