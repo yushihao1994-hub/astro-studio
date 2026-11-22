@@ -1047,6 +1047,25 @@ CHOU_GROUP_INDEX = [
     _chou_group("二一○○", 12689, list(range(12693, 12703)), "table_rows_text_layer_located"),
     _chou_group("二一一○", 12714, list(range(12718, 12728)), "table_rows_text_layer_located"),
     _chou_group("二一二○", 12732, list(range(12733, 12743))),
+    _chou_group("二二三○", 12744, list(range(12746, 12756))),
+    _chou_group("二二四○", 12757, list(range(12758, 12768))),
+]
+
+CHOU_GROUP_ANOMALIES = [
+    {"raw_group_marker": "二五○", "pdf_text_line": 12772,
+     "normalized_group_marker_candidate": "二二五○",
+     "status": "probable_ocr_marker_truncation_pending_image_check",
+     "note": "位于二二四○之后、二六○之前；原始文本层仅识别为二五○，不计正式组号。"}
+]
+
+CHOU_UNASSIGNED_BLOCKS = [
+    {"block_id": "chou_unheaded_entries_after_probable_2250",
+     "pdf_text_lines": "12785-12797", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign"},
+    {"block_id": "chou_unheaded_entries_after_2260",
+     "pdf_text_lines": "12813-12823", "entry_count_candidate": 10,
+     "status": "group_marker_missing_do_not_assign",
+     "note": "位于二六○组之后、二一八○标题之前，序列异常。"}
 ]
 
 
@@ -1062,12 +1081,15 @@ def get_collection_branch_group_index(branch):
             "entry_count": sum(len(group["entries"]) for group in CHOU_GROUP_INDEX),
             "groups": [dict(group, entries=[dict(entry) for entry in group["entries"]])
                        for group in CHOU_GROUP_INDEX],
+            "group_anomalies": [dict(item) for item in CHOU_GROUP_ANOMALIES],
+            "unassigned_blocks": [dict(item) for item in CHOU_UNASSIGNED_BLOCKS],
             "limitations": [
-                "本批仅索引丑集开头十组，不能代表丑集全部内容。",
+                "本批仅索引丑集已定位的十二组，不能代表丑集全部内容。",
                 "仅保存组号、序号和PDF文本行，不复制条文正文。",
                 "PDF文本层中的组号保留原始字符，未擅自规范化。",
                 "所有行号和分组结构仍需扫描页面图像复核。",
                 "未索引的中间组号、缺组和版式异常不自动补造。",
+                "丑集疑似二二五○组号及两段无组号内容单独登记为异常，不计入正式组数。",
                 "该结构索引不是坤集密码表，不可用于自动考刻、定数或断命。"
             ]
         }
