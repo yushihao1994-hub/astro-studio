@@ -2419,6 +2419,92 @@ WU_GROUP_INDEX = [
     _wu_group("七四七○", 21093, list(range(21095,21105)), "table_rows_text_layer_located_title_row_is_entry_1"),
     _wu_group("七四八○", 21123, list(range(21124,21134))),
     _wu_group("七四九○", 21135, list(range(21137,21147))),
+    _wu_group("七五○○", 21148, list(range(21151,21164)), "multi_line_age_clause_spans"),
+    {
+        "collection": "午", "raw_group_marker": "七五一○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 21165,
+        "pdf_text_lines": "21165-21183", "layout_status": "multi_line_age_clause_spans",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 21167, "record_span": "21167-21168"},
+            {"entry_sequence": 2, "pdf_text_line": 21169},
+            {"entry_sequence": 3, "pdf_text_line": 21170, "record_span": "21170-21171"},
+            {"entry_sequence": 4, "pdf_text_line": 21172},
+            {"entry_sequence": 5, "pdf_text_line": 21173, "record_span": "21173-21174"},
+            {"entry_sequence": 6, "pdf_text_line": 21175, "record_span": "21175-21176"},
+            {"entry_sequence": 7, "pdf_text_line": 21177, "record_span": "21177-21178"},
+            {"entry_sequence": 8, "pdf_text_line": 21179, "record_span": "21179-21180"},
+            {"entry_sequence": 9, "pdf_text_line": 21181},
+            {"entry_sequence": 10, "pdf_text_line": 21182, "record_span": "21182-21183"}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "午", "raw_group_marker": "七五二○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 21185,
+        "pdf_text_lines": "21185-21200", "layout_status": "multi_line_age_clause_spans",
+        "entry_count": 10,
+        "entries": [
+            {"entry_sequence": 1, "pdf_text_line": 21186},
+            {"entry_sequence": 2, "pdf_text_line": 21187},
+            {"entry_sequence": 3, "pdf_text_line": 21188, "record_span": "21188-21189"},
+            {"entry_sequence": 4, "pdf_text_line": 21190, "record_span": "21190-21191"},
+            {"entry_sequence": 5, "pdf_text_line": 21192, "record_span": "21192-21193"},
+            {"entry_sequence": 6, "pdf_text_line": 21194},
+            {"entry_sequence": 7, "pdf_text_line": 21195},
+            {"entry_sequence": 8, "pdf_text_line": 21196, "record_span": "21196-21197"},
+            {"entry_sequence": 9, "pdf_text_line": 21198},
+            {"entry_sequence": 10, "pdf_text_line": 21199, "record_span": "21199-21200"}
+        ],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _wu_group("七五三○", 21202, list(range(21206,21216)), "page_header_before_ten_entries"),
+    _wu_group("七五四○", 21217, list(range(21218,21228))),
+    {
+        "collection": "午", "raw_group_marker": "七五五○", "occurrence": 1,
+        "normalized_group_marker_candidate": None, "group_header_pdf_line": 21229,
+        "pdf_text_lines": "21229-21240", "layout_status": "sequence_1_missing_nine_entries_only",
+        "entry_count": 9,
+        "entries": [{"entry_sequence": n, "pdf_text_line": line, "record_span": span}
+                    for n,line,span in zip(range(2,11),
+                        [21231,21232,21233,21234,21235,21236,21237,21238,21239],
+                        ["21231","21232","21233","21234","21235","21236","21237","21238","21239-21240"])],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "午", "raw_group_marker": "一九五七○", "occurrence": 1,
+        "normalized_group_marker_candidate": "七五七○", "group_header_pdf_line": 21246,
+        "pdf_text_lines": "21246-21256", "layout_status": "raw_ocr_marker_variant_candidate_7570",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                                      for n,line in enumerate(range(21247,21257),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "午", "raw_group_marker": "一九五八○", "occurrence": 1,
+        "normalized_group_marker_candidate": "七五八○", "group_header_pdf_line": 21258,
+        "pdf_text_lines": "21258-21269", "layout_status": "raw_ocr_marker_variant_candidate_7580",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                                      for n,line in enumerate(range(21260,21270),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    {
+        "collection": "午", "raw_group_marker": "一九五九○", "occurrence": 1,
+        "normalized_group_marker_candidate": "七五九○", "group_header_pdf_line": 21271,
+        "pdf_text_lines": "21271-21281", "layout_status": "raw_ocr_marker_variant_candidate_7590",
+        "entry_count": 10, "entries": [{"entry_sequence": n, "pdf_text_line": line}
+                                      for n,line in enumerate(range(21272,21282),1)],
+        "verification_status": "pdf_text_layer_only_image_check_pending"
+    },
+    _wu_group("七六○○", 21299, list(range(21301,21311))),
+    _wu_group("七六一○", 21312, list(range(21313,21323))),
+    _wu_group("七六三○", 21331, list(range(21332,21342)), "age_sequence_rows_no_ordinal_labels"),
+    _wu_group("七六四○", 21343, list(range(21344,21354))),
+    _wu_group("七六五○", 21354, list(range(21355,21365))),
+    _wu_group("七六六○", 21379, list(range(21380,21390))),
+    _wu_group("七六七○", 21391, list(range(21393,21403))),
+    _wu_group("七六八○", 21404, list(range(21407,21417))),
+    _wu_group("七六九○", 21418, list(range(21420,21430))),
+    _wu_group("七七○○", 21431, list(range(21432,21442))),
 ]
 
 WU_GROUP_ANOMALIES = [
@@ -2435,7 +2521,13 @@ WU_GROUP_ANOMALIES = [
     {"raw_group_marker": "七四○○", "pdf_text_line": None,
      "status": "unheaded_table_candidate_after_7390"},
     {"raw_group_marker": "七四四○", "pdf_text_line": 21058,
-     "status": "marker_seen_body_not_located_before_7450"}
+     "status": "marker_seen_body_not_located_before_7450"},
+    {"raw_group_marker": "七五六○", "pdf_text_line": 21242,
+     "status": "marker_seen_body_not_located_before_raw_7570"},
+    {"raw_group_marker": "七六二○", "pdf_text_line": 21324,
+     "status": "marker_seen_body_not_located_before_7630"},
+    {"raw_group_marker": "七七一○", "pdf_text_line": 21443,
+     "status": "marker_seen_body_not_located_before_7720"}
 ]
 WU_UNASSIGNED_BLOCKS = [
     {"block_id": "wu_unheaded_ten_entries_after_7020", "pdf_text_lines": "20359-20368",
@@ -2451,7 +2543,9 @@ WU_UNASSIGNED_BLOCKS = [
     {"block_id": "wu_unheaded_entries_before_7360", "pdf_text_lines": "20850-20859",
      "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"},
     {"block_id": "wu_possible_7400_table", "pdf_text_lines": "20902-20924",
-     "entry_count_candidate": 10, "status": "group_boundary_ambiguous_do_not_assign"}
+     "entry_count_candidate": 10, "status": "group_boundary_ambiguous_do_not_assign"},
+    {"block_id": "wu_unheaded_entries_between_7590_and_7600", "pdf_text_lines": "21287-21297",
+     "entry_count_candidate": 10, "status": "group_marker_missing_do_not_assign"}
 ]
 
 
