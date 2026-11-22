@@ -1157,7 +1157,6 @@ CHOU_GROUP_INDEX = [
              "boundary_note": "末行含二三九○字样，是否同时承担下一组标识待版面复核"}
         ],
         "verification_status": "pdf_text_layer_only_image_check_pending"
-    },        "verification_status": "pdf_text_layer_only_image_check_pending"
     },
     _chou_group("二四二○", 13233, list(range(13233, 13243)), "table_ten_rows_without_explicit_sequence_column"),
     _chou_group("二四三○", 13247, list(range(13247, 13257)), "table_ten_rows_without_explicit_sequence_column"),
