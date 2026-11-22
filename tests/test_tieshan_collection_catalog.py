@@ -472,8 +472,8 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
         data = get_collection_progress()
         chou = next(x for x in data["collections"] if x["collection"] == "丑")
         self.assertEqual(chou["index_status"], "partial_text_layer_index")
-        self.assertEqual(chou["indexed_groups"], 12)
-        self.assertEqual(chou["indexed_entries"], 120)
+        self.assertEqual(chou["indexed_groups"], 13)
+        self.assertEqual(chou["indexed_entries"], 130)
         self.assertEqual(chou["pdf_text_line_start"], 12572)
         self.assertEqual(chou["pdf_text_line_end"], 14290)
         zi = next(x for x in data["collections"] if x["collection"] == "子")
@@ -483,17 +483,19 @@ class TieshanCollectionCatalogTests(unittest.TestCase):
     def test_chou_twelve_groups_are_indexed_without_transcribing_clause_text(self):
         from backend.tieshan_collection_catalog import get_collection_branch_group_index, get_collection_progress
         data = get_collection_branch_group_index("丑")
-        self.assertEqual(data["group_count"], 12)
-        self.assertEqual(data["entry_count"], 120)
+        self.assertEqual(data["group_count"], 13)
+        self.assertEqual(data["entry_count"], 130)
         self.assertEqual(data["groups"][0]["raw_group_marker"], "二○三○")
         self.assertEqual(data["groups"][0]["pdf_text_lines"], "12576-12586")
-        self.assertEqual(data["groups"][-1]["raw_group_marker"], "二二四○")
-        self.assertEqual(data["groups"][-1]["pdf_text_lines"], "12757-12767")
+        self.assertEqual(data["groups"][-2]["raw_group_marker"], "二二四○")
+        self.assertEqual(data["groups"][-2]["pdf_text_lines"], "12757-12767")
+        self.assertEqual(data["groups"][-1]["raw_group_marker"], "二六○")
+        self.assertEqual(data["groups"][-1]["pdf_text_lines"], "12798-12809")
         self.assertEqual(len(data["groups"][-1]["entries"]), 10)
         self.assertTrue(all("content" not in entry for group in data["groups"] for entry in group["entries"]))
         progress = get_collection_progress()
         chou = next(x for x in progress["collections"] if x["collection"] == "丑")
-        self.assertEqual((chou["indexed_groups"], chou["indexed_entries"]), (12, 120))
+        self.assertEqual((chou["indexed_groups"], chou["indexed_entries"]), (13, 130))
 
 
     def test_chou_2230_and_2240_are_indexed_and_2250_candidate_is_not_promoted(self):
@@ -513,3 +515,16 @@ if __name__ == "__main__":
     unittest.main()
 
 
+
+
+class ChouRawMarker2260Tests(unittest.TestCase):
+    def test_raw_short_marker_is_indexed_without_normalization(self):
+        from backend.tieshan_collection_catalog import get_collection_branch_group_index
+        data = get_collection_branch_group_index("丑")
+        group = next(g for g in data["groups"] if g["raw_group_marker"] == "二六○")
+        self.assertEqual(group["group_header_pdf_line"], 12798)
+        self.assertEqual(group["pdf_text_lines"], "12798-12809")
+        self.assertIsNone(group["normalized_group_marker_candidate"])
+        self.assertEqual(len(group["entries"]), 10)
+        self.assertIn("chou_unheaded_entries_after_raw_marker_二六○",
+                      {b["block_id"] for b in data["unassigned_blocks"]})
