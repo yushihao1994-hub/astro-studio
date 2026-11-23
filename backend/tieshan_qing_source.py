@@ -506,7 +506,93 @@ TRANSCRIPTION_CANDIDATES = [
             "本页十二宫排布与局数图尚无原书命例证明直接构成铁板神数考刻定数算法。"
         ],
         "algorithm_status": "not_implemented"
+    },,
+
+    {
+        "id": "QING-P8-WATER-TWO-BUREAU-CHART-CELLS",
+        "topic": "水二局方位格圖逐格候選（PDF第8頁左幅）",
+        "pdf_page": 8,
+        "printed_pages": [16],
+        "chart_center_label": "水二局",
+        "visible_branch_cells_clockwise_from_top": [
+            {"branch": "午", "visible_numerals": "十二", "review": "candidate"},
+            {"branch": "未", "visible_numerals": "十三", "review": "candidate"},
+            {"branch": "申", "visible_numerals": "十四、五", "review": "candidate"},
+            {"branch": "酉", "visible_numerals": "十六、七", "review": "candidate"},
+            {"branch": "戌", "visible_numerals": "十八、九", "review": "candidate"},
+            {"branch": "亥", "visible_numerals": "二十、十一", "review": "candidate"},
+            {"branch": "子", "visible_numerals": "二十二、十三", "review": "candidate"},
+            {"branch": "丑", "visible_numerals": "二十四、十五", "review": "candidate"},
+            {"branch": "寅", "visible_numerals": "二十六、十七", "review": "candidate"},
+            {"branch": "卯", "visible_numerals": "二十八、十九", "review": "candidate"},
+            {"branch": "辰", "visible_numerals": "三十、二十一", "review": "candidate"},
+            {"branch": "巳", "visible_numerals": "三十二、二十三", "review": "candidate"}
+        ],
+        "status": "cell_layout_reviewed_candidate_transcription_not_final",
+        "ambiguities": [
+            "圖中每格數字以兩列/兩欄書寫，個別字形及數字方向仍需對照原圖裁片逐字核驗；此處僅作候選記錄。",
+            "尚未證明這些數字如何參與起數、考刻或定數，不建立可執行映射。"
+        ],
+        "algorithm_status": "not_implemented"
     },
+    {
+        "id": "QING-P8-WOOD-THREE-BUREAU-CHART-CELLS",
+        "topic": "木三局方位格圖逐格候選（PDF第8頁右幅）",
+        "pdf_page": 8,
+        "printed_pages": [17],
+        "chart_center_label": "木三局",
+        "visible_branch_cells_clockwise_from_top": [
+            {"branch": "午", "visible_numerals": "二十七、五", "review": "candidate"},
+            {"branch": "未", "visible_numerals": "二十八、六", "review": "candidate"},
+            {"branch": "申", "visible_numerals": "二十九、七", "review": "candidate"},
+            {"branch": "酉", "visible_numerals": "三十、八", "review": "candidate"},
+            {"branch": "戌", "visible_numerals": "三十一、九", "review": "candidate"},
+            {"branch": "亥", "visible_numerals": "三十二、十", "review": "candidate"},
+            {"branch": "子", "visible_numerals": "三十三、十一", "review": "candidate"},
+            {"branch": "丑", "visible_numerals": "三十四、十二", "review": "candidate"},
+            {"branch": "寅", "visible_numerals": "三十五、十三", "review": "candidate"},
+            {"branch": "卯", "visible_numerals": "三十六、十四", "review": "candidate"},
+            {"branch": "辰", "visible_numerals": "三十七、十五", "review": "candidate"},
+            {"branch": "巳", "visible_numerals": "三十八、十六", "review": "candidate"}
+        ],
+        "status": "cell_layout_reviewed_candidate_transcription_not_final",
+        "ambiguities": [
+            "本表格内数字笔画有连写/重叠，候选数值须逐格与高分辨率裁片复核，不能视为定稿。",
+            "图表用途及数字组合的运算意义尚未通过原书例题验证。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+    {
+        "id": "QING-P9-EARTH-FIVE-AND-FIRE-SIX-BUREAU-CHARTS",
+        "topic": "土五局、火六局方位格圖（PDF第9頁）",
+        "pdf_page": 9,
+        "printed_pages": [18, 19],
+        "chart_center_labels": ["土五局", "火六局"],
+        "visible_branch_labels": ["巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰"],
+        "status": "chart_labels_confirmed_cell_numerals_pending_second_pass",
+        "ambiguities": [
+            "两幅图均可确认十二地支方位格及中心局名；各格数字有连写、交叠和疑似异体笔画，暂不录成数值。",
+            "必须按格子坐标逐个裁切并由原图复核，不能用其他局图推算补齐。",
+            "局图数字到考刻、定数的映射未由命例验证。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+    {
+        "id": "QING-P10-ZIFU-CHART-AND-PALACE-TABLE",
+        "topic": "安紫府圖與星曜宮位表（PDF第10頁）",
+        "pdf_page": 10,
+        "printed_pages": [20, 21],
+        "left_chart_visible_labels": ["巳", "辰", "卯", "寅", "丑", "子", "廟", "旺", "得地", "利", "平和", "不為陷落"],
+        "right_chart_visible_labels": ["安紫府圖", "申紫府宮", "酉府", "戌府", "亥府", "子府", "丑府", "寅府"],
+        "status": "high_resolution_image_partial_label_transcription",
+        "ambiguities": [
+            "左页为星曜在十二宫的庙旺得地利平和状态表，星名与地支栏位需逐列完整抄录。",
+            "右页紫府图中央斜线区域为空白/示意区，外围宫位文字已部分辨认，完整起布规则未抄录。",
+            "该页属于紫微星曜辅助排布资料，不能直接当作铁板神数考刻定数算法。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+
 ]
 
 BLOCKERS = [
