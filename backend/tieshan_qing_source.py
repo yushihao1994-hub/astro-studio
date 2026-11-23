@@ -506,7 +506,7 @@ TRANSCRIPTION_CANDIDATES = [
             "本页十二宫排布与局数图尚无原书命例证明直接构成铁板神数考刻定数算法。"
         ],
         "algorithm_status": "not_implemented"
-    },,
+    },
 
     {
         "id": "QING-P8-WATER-TWO-BUREAU-CHART-CELLS",
