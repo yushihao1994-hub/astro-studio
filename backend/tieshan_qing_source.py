@@ -484,7 +484,7 @@ TRANSCRIPTION_CANDIDATES = [
             "本页星曜/神煞安置材料尚无证据证明其直接参与铁板神数起数、考刻或定数。"
         ],
         "algorithm_status": "not_implemented"
-    },,
+    },
 
     {
         "id": "QING-P7-TWELVE-PALACE-EXAMPLE-AND-JIN-FOUR-BUREAU-CHART",
