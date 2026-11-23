@@ -488,23 +488,22 @@ TRANSCRIPTION_CANDIDATES = [
 
     {
         "id": "QING-P7-TWELVE-PALACE-EXAMPLE-AND-JIN-FOUR-BUREAU-CHART",
-        "topic": "十二宮例、起宮說明及金四局圖（PDF第7頁）",
+        "topic": "安十二宮例與金四局圖（PDF第7頁）",
         "pdf_page": 7,
         "printed_pages": [14, 15],
-        "location": "左頁金四局方位格圖；右頁十二宮例與起宮文字",
+        "location": "左頁金四局方位格圖；右頁十二宮例及起宮文字",
         "raw_text_fragments": [
             "安十二宮例",
-            "寅子辰人起戌宮",
-            "巳酉丑起未宮",
-            "戌午寅人起丑宮",
+            "申子辰人起戌宮",
+            "巳酉丑人起未宮",
+            "不論陰陽男順數，論陰陽女逆數",
             "一命宮、二兄弟、三夫妻、四子女、五財帛、六疾厄、七遷移、八奴僕、九官祿、十田宅"
         ],
-        "status": "high_resolution_image_first_pass_partial_transcription_pending_table_and_column_review",
+        "status": "high_resolution_image_partial_transcription_pending_full_chart_cell_review",
         "ambiguities": [
-            "右頁起宮文字為竖排，圖像可見上述起宮字樣；具體分組及後接順逆說明必須逐欄裁圖復核。",
-            "“男女俱……”後的字句涉及順逆排宮，當前只辨認到局部，不整理成規則。",
-            "左頁為金四局方位格圖；圖內十二地支/宮位單元的字形和方位對應尚未逐格校錄，不建立映射。",
-            "本頁屬於十二宮/局數輔助排布資料；未證明其直接構成鐵板神數考刻定數算法。"
+            "右頁起宮文字的完整男女順逆說明仍須逐欄核對；当前只录较清楚的句段。",
+            "左页金四局图是地支方位格图，各格数字/符号尚未逐格转录，不建立映射。",
+            "本页十二宫排布与局数图尚无原书命例证明直接构成铁板神数考刻定数算法。"
         ],
         "algorithm_status": "not_implemented"
     },
