@@ -451,8 +451,7 @@ TRANSCRIPTION_CANDIDATES = [
             "右页擎羊陀羅及火鈴星诀部分句子受版面边缘和栏间留白影响，须结合完整未裁切图与相邻页复核。"
         ],
         "algorithm_status": "not_implemented"
-    },,
-
+    },
     {
         "id": "QING-P6-TWELVE-STAGES-AND-STAR-RULES",
         "topic": "十二長生、截路空亡、六限及星曜安置（PDF第6頁）",
