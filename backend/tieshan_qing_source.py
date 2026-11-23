@@ -514,24 +514,11 @@ TRANSCRIPTION_CANDIDATES = [
         "pdf_page": 8,
         "printed_pages": [16],
         "chart_center_label": "水二局",
-        "visible_branch_cells_clockwise_from_top": [
-            {"branch": "午", "visible_numerals": "十二", "review": "candidate"},
-            {"branch": "未", "visible_numerals": "十三", "review": "candidate"},
-            {"branch": "申", "visible_numerals": "十四、五", "review": "candidate"},
-            {"branch": "酉", "visible_numerals": "十六、七", "review": "candidate"},
-            {"branch": "戌", "visible_numerals": "十八、九", "review": "candidate"},
-            {"branch": "亥", "visible_numerals": "二十、十一", "review": "candidate"},
-            {"branch": "子", "visible_numerals": "二十二、十三", "review": "candidate"},
-            {"branch": "丑", "visible_numerals": "二十四、十五", "review": "candidate"},
-            {"branch": "寅", "visible_numerals": "二十六、十七", "review": "candidate"},
-            {"branch": "卯", "visible_numerals": "二十八、十九", "review": "candidate"},
-            {"branch": "辰", "visible_numerals": "三十、二十一", "review": "candidate"},
-            {"branch": "巳", "visible_numerals": "三十二、二十三", "review": "candidate"}
-        ],
-        "status": "cell_layout_reviewed_candidate_transcription_not_final",
+        "visible_branch_labels": ["巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰"],
+        "status": "chart_layout_and_branch_labels_confirmed_numeral_transcription_pending",
         "ambiguities": [
-            "圖中每格數字以兩列/兩欄書寫，個別字形及數字方向仍需對照原圖裁片逐字核驗；此處僅作候選記錄。",
-            "尚未證明這些數字如何參與起數、考刻或定數，不建立可執行映射。"
+            "每格內有两组连写数字，高清图仍不足以可靠确定各笔画对应的完整数值；上一轮候选数字撤回，不作为原文转录。",
+            "须逐格裁片并对照原页确认数字及排列方向，暂不建立数值映射。"
         ],
         "algorithm_status": "not_implemented"
     },
@@ -541,24 +528,11 @@ TRANSCRIPTION_CANDIDATES = [
         "pdf_page": 8,
         "printed_pages": [17],
         "chart_center_label": "木三局",
-        "visible_branch_cells_clockwise_from_top": [
-            {"branch": "午", "visible_numerals": "二十七、五", "review": "candidate"},
-            {"branch": "未", "visible_numerals": "二十八、六", "review": "candidate"},
-            {"branch": "申", "visible_numerals": "二十九、七", "review": "candidate"},
-            {"branch": "酉", "visible_numerals": "三十、八", "review": "candidate"},
-            {"branch": "戌", "visible_numerals": "三十一、九", "review": "candidate"},
-            {"branch": "亥", "visible_numerals": "三十二、十", "review": "candidate"},
-            {"branch": "子", "visible_numerals": "三十三、十一", "review": "candidate"},
-            {"branch": "丑", "visible_numerals": "三十四、十二", "review": "candidate"},
-            {"branch": "寅", "visible_numerals": "三十五、十三", "review": "candidate"},
-            {"branch": "卯", "visible_numerals": "三十六、十四", "review": "candidate"},
-            {"branch": "辰", "visible_numerals": "三十七、十五", "review": "candidate"},
-            {"branch": "巳", "visible_numerals": "三十八、十六", "review": "candidate"}
-        ],
-        "status": "cell_layout_reviewed_candidate_transcription_not_final",
+        "visible_branch_labels": ["巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰"],
+        "status": "chart_layout_and_branch_labels_confirmed_numeral_transcription_pending",
         "ambiguities": [
-            "本表格内数字笔画有连写/重叠，候选数值须逐格与高分辨率裁片复核，不能视为定稿。",
-            "图表用途及数字组合的运算意义尚未通过原书例题验证。"
+            "各格内数字存在连写与重叠，尚不能可靠辨认完整数值；不以局数或相邻图表推算补齐。",
+            "数字到考刻、定数的映射未由书内例题验证。"
         ],
         "algorithm_status": "not_implemented"
     },
@@ -589,6 +563,38 @@ TRANSCRIPTION_CANDIDATES = [
             "左页为星曜在十二宫的庙旺得地利平和状态表，星名与地支栏位需逐列完整抄录。",
             "右页紫府图中央斜线区域为空白/示意区，外围宫位文字已部分辨认，完整起布规则未抄录。",
             "该页属于紫微星曜辅助排布资料，不能直接当作铁板神数考刻定数算法。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+,
+
+    {
+        "id": "QING-P11-NAYI-HEXAGRAM-TABLES-AND-STAR-PALACE-CHART",
+        "topic": "納甲卦例密集表與星曜廟旺宮位表（PDF第11頁）",
+        "pdf_page": 11,
+        "printed_pages": [22, 23],
+        "left_page_visible_headings": ["納甲卦", "納甲卦例（多欄干支/五行標記）"],
+        "right_page_visible_labels": ["廟", "旺", "得地", "利益", "平和", "不為陷落"],
+        "status": "page_layout_and_table_categories_confirmed_full_cell_transcription_pending",
+        "ambiguities": [
+            "左頁为多栏纳甲卦/干支五行组合表，需逐列记录卦名、爻位、纳干纳支及五行标记，当前未完成逐格转录。",
+            "右页为星曜在地支宫位中的状态表，行列关系须逐格核对，不能只按可见词汇生成映射。",
+            "本页资料的算法归属需后续结合清刻本起数与例题验证。"
+        ],
+        "algorithm_status": "not_implemented"
+    },
+    {
+        "id": "QING-P12-NAYI-HEXAGRAM-REFERENCE-TABLES",
+        "topic": "納甲卦例及干支五行組合續表（PDF第12頁）",
+        "pdf_page": 12,
+        "printed_pages": [24, 25],
+        "left_page_visible_headings": ["納甲卦", "納甲卦例"],
+        "right_page_visible_headings": ["納甲卦例續"],
+        "status": "page_layout_reviewed_dense_table_transcription_pending",
+        "ambiguities": [
+            "左页多栏排列卦名、干支及五行小注，右页为续表并含大块留白；每栏起讫及列间承接需逐列校录。",
+            "可见干支字样不能脱离卦名、爻位和栏序独立入库；目前不生成纳甲规则。",
+            "须继续检查相邻页确认表格是否跨页续接。"
         ],
         "algorithm_status": "not_implemented"
     },
