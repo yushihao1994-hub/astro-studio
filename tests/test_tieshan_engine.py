@@ -141,6 +141,14 @@ class TieshanFoundationEngineTests(unittest.TestCase):
         self.assertEqual(item["algorithm_status"],"not_implemented")
         self.assertFalse(source["can_generate_final_iron_plate_number"])
 
+    def test_page6_partial_transcription_is_registered_but_not_executable(self):
+        source=get_qing_source_reference()
+        item=next(x for x in source["transcription_candidates"] if x["id"]=="QING-P6-TWELVE-STAGES-AND-STAR-RULES")
+        self.assertEqual(item["pdf_page"],6)
+        self.assertIn("安六限訣論本生年支",item["raw_text_fragments"])
+        self.assertEqual(item["algorithm_status"],"not_implemented")
+        self.assertFalse(source["can_generate_final_iron_plate_number"])
+
     def test_requires_four_pillars(self):
         with self.assertRaises(ValueError):
             build_tieshan_foundation({}, {"year":self.pillars["year"]})
