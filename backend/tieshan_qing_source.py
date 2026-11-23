@@ -566,7 +566,6 @@ TRANSCRIPTION_CANDIDATES = [
         ],
         "algorithm_status": "not_implemented"
     },
-,
 
     {
         "id": "QING-P11-NAYI-HEXAGRAM-TABLES-AND-STAR-PALACE-CHART",
