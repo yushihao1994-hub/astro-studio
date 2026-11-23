@@ -484,6 +484,29 @@ TRANSCRIPTION_CANDIDATES = [
             "本页星曜/神煞安置材料尚无证据证明其直接参与铁板神数起数、考刻或定数。"
         ],
         "algorithm_status": "not_implemented"
+    },,
+
+    {
+        "id": "QING-P7-TWELVE-PALACE-EXAMPLE-AND-JIN-FOUR-BUREAU-CHART",
+        "topic": "十二宮例、起宮說明及金四局圖（PDF第7頁）",
+        "pdf_page": 7,
+        "printed_pages": [14, 15],
+        "location": "左頁金四局方位格圖；右頁十二宮例與起宮文字",
+        "raw_text_fragments": [
+            "安十二宮例",
+            "寅子辰人起戌宮",
+            "巳酉丑起未宮",
+            "戌午寅人起丑宮",
+            "一命宮、二兄弟、三夫妻、四子女、五財帛、六疾厄、七遷移、八奴僕、九官祿、十田宅"
+        ],
+        "status": "high_resolution_image_first_pass_partial_transcription_pending_table_and_column_review",
+        "ambiguities": [
+            "右頁起宮文字為竖排，圖像可見上述起宮字樣；具體分組及後接順逆說明必須逐欄裁圖復核。",
+            "“男女俱……”後的字句涉及順逆排宮，當前只辨認到局部，不整理成規則。",
+            "左頁為金四局方位格圖；圖內十二地支/宮位單元的字形和方位對應尚未逐格校錄，不建立映射。",
+            "本頁屬於十二宮/局數輔助排布資料；未證明其直接構成鐵板神數考刻定數算法。"
+        ],
+        "algorithm_status": "not_implemented"
     },
 ]
 
